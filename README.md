@@ -8,4 +8,4 @@ Everything we know about astronaut health (relationships, evidence, 81 sources) 
 - **Interactive map:** open [`knowledge/web/index.html`](knowledge/web/index.html) in a browser
 - **Every link as a list:** [`knowledge/relationships.md`](knowledge/relationships.md)
 - **Reference list:** [`knowledge/sources.md`](knowledge/sources.md)
-- **For AI agents:** [`AGENTS.md`](AGENTS.md) and the JSON in [`knowledge/data/`](knowledge/data/)
+- **For AI agents:** [`AGENTS.md`](AGENTS.md) and the JSON in `knowledge/{nodes,links,sources}.json`

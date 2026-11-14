@@ -1,6 +1,6 @@
 # Nervous system: how it plugs into the web
 
-*Researched 14 Nov 2026. Source ids refer to [sources.md](sources.md). Structured version: `layer: "nervous"` in [data/](data/).*
+*Researched 14 Nov 2026. Source ids refer to [sources.md](sources.md). Structured version: `layer: "nervous"` in [nodes.json](nodes.json) and [links.json](links.json).*
 
 ## Summary
 
