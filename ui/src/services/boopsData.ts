@@ -168,11 +168,32 @@ export interface PersistedContext {
 }
 
 export interface ManualLogEntry {
+  id?: string;
   astronaut_id: string;
   mission_day: number;
   screen: string;
   fields: Record<string, string>;
   saved_at: string;
+}
+
+export interface UserSettings {
+  watch_alerts: boolean;
+  act_now_alerts: boolean;
+  quiet_hours: string;
+  units: "metric" | "imperial";
+  language: string;
+  baseline_calibrated_day: number;
+  profile_notes: Record<string, string>;
+}
+
+export interface EmergencyLogEntry {
+  id: string;
+  astronaut_id: string;
+  mission_day: number;
+  protocol_id: string;
+  severity: string;
+  summary: string;
+  created_utc: string;
 }
 
 const STORAGE_PREFIX = "boops_v1_";
@@ -226,17 +247,45 @@ export function loadSharingSettings(): SharingSettings {
   }
 }
 
-/** Best-effort non-blocking sync to local SQLite server when running over HTTP. */
+let localApiState: "unknown" | "available" | "unavailable" = "unknown";
+let localApiProbe: Promise<boolean> | null = null;
+
+async function hasLocalApiServer(): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  if (!window.location.protocol.startsWith("http")) {
+    localApiState = "unavailable";
+    return false;
+  }
+  if (localApiState !== "unknown") return localApiState === "available";
+  if (!localApiProbe) {
+    localApiProbe = fetch("./", { method: "HEAD" })
+      .then((resp) => {
+        const enabled = resp.headers.get("X-Boops-Local-Api") === "1";
+        localApiState = enabled ? "available" : "unavailable";
+        return enabled;
+      })
+      .catch(() => {
+        localApiState = "unavailable";
+        return false;
+      });
+  }
+  return localApiProbe;
+}
+
+/** Best-effort non-blocking sync to local SQLite server when running over BOOPS API server. */
 function postLocalApi(path: string, payload: unknown): void {
   try {
     if (typeof window === "undefined") return;
     if (!window.location.protocol.startsWith("http")) return;
-    void fetch(path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }).catch(() => {
-      // Offline file:// mode or static preview without local API server stays in localStorage.
+    void hasLocalApiServer().then((available) => {
+      if (!available) return;
+      return fetch(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }).catch(() => {
+        // Offline file:// mode or static preview without local API server stays in localStorage.
+      });
     });
   } catch {
     // Ignore storage/network restrictions when running standalone.
@@ -348,18 +397,21 @@ function mapCameraLogEntry(item: Record<string, unknown>, fallbackDay: number): 
   };
 }
 
+/** Reads only manual entries saved in boops_v1_manual_logs. */
+function readStoredManualLogs(): ManualLogEntry[] {
+  const raw = safeStorageGet("manual_logs");
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as ManualLogEntry[]) : [];
+  } catch {
+    return [];
+  }
+}
+
 /** Loads manual and H1 camera check log submissions persisted in localStorage. */
 export function loadManualLogs(): ManualLogEntry[] {
-  const entries: ManualLogEntry[] = [];
-  const raw = safeStorageGet("manual_logs");
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) entries.push(...(parsed as ManualLogEntry[]));
-    } catch {
-      // Ignore corrupt localStorage manual log array.
-    }
-  }
+  const entries: ManualLogEntry[] = [...readStoredManualLogs()];
 
   try {
     const camRaw = window.localStorage.getItem("ahm.log_entries");
@@ -385,10 +437,123 @@ export function loadManualLogs(): ManualLogEntry[] {
 
 /** Appends a manual log entry to localStorage and syncs opportunistically to local SQLite. */
 export function appendManualLog(entry: ManualLogEntry): ManualLogEntry[] {
-  const current = loadManualLogs();
-  const next = [entry, ...current].slice(0, 60);
+  const withId: ManualLogEntry = {
+    ...entry,
+    id: entry.id || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+  };
+  const current = readStoredManualLogs();
+  const next = [withId, ...current].slice(0, 60);
   safeStorageSet("manual_logs", JSON.stringify(next));
-  postLocalApi("./api/log", entry);
+  postLocalApi("./api/log", {
+    astronaut_id: withId.astronaut_id,
+    mission_day: withId.mission_day,
+    category: withId.screen,
+    payload: withId,
+    created_utc: withId.saved_at,
+  });
+  return loadManualLogs();
+}
+
+/** Updates an existing manual log entry (or prepends it if no match is found). */
+export function updateManualLog(entry: ManualLogEntry): ManualLogEntry[] {
+  const current = readStoredManualLogs();
+  const idx = current.findIndex(
+    (item) =>
+      (entry.id && item.id === entry.id) ||
+      (!entry.id && item.saved_at === entry.saved_at && item.screen === entry.screen),
+  );
+  const updated: ManualLogEntry = {
+    ...entry,
+    id: entry.id || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+  };
+  const next =
+    idx >= 0
+      ? current.map((item, i) => (i === idx ? updated : item))
+      : [updated, ...current].slice(0, 60);
+  safeStorageSet("manual_logs", JSON.stringify(next));
+  postLocalApi("./api/log", {
+    astronaut_id: updated.astronaut_id,
+    mission_day: updated.mission_day,
+    category: updated.screen,
+    payload: updated,
+    created_utc: updated.saved_at,
+  });
+  return loadManualLogs();
+}
+
+/** Loads persisted notification, baseline calibration, and display preferences. */
+export function loadUserSettings(): UserSettings {
+  const defaults: UserSettings = {
+    watch_alerts: true,
+    act_now_alerts: true,
+    quiet_hours: "22:00–06:00",
+    units: "metric",
+    language: "English",
+    baseline_calibrated_day: 14,
+    profile_notes: {},
+  };
+  const raw = safeStorageGet("user_settings");
+  if (!raw) return defaults;
+  try {
+    const parsed = JSON.parse(raw) as Partial<UserSettings>;
+    return {
+      watch_alerts: typeof parsed.watch_alerts === "boolean" ? parsed.watch_alerts : true,
+      act_now_alerts: typeof parsed.act_now_alerts === "boolean" ? parsed.act_now_alerts : true,
+      quiet_hours: typeof parsed.quiet_hours === "string" && parsed.quiet_hours ? parsed.quiet_hours : defaults.quiet_hours,
+      units: parsed.units === "imperial" ? "imperial" : "metric",
+      language: typeof parsed.language === "string" && parsed.language ? parsed.language : "English",
+      baseline_calibrated_day:
+        typeof parsed.baseline_calibrated_day === "number" && parsed.baseline_calibrated_day >= 1
+          ? Math.round(parsed.baseline_calibrated_day)
+          : 14,
+      profile_notes:
+        parsed.profile_notes && typeof parsed.profile_notes === "object"
+          ? { ...parsed.profile_notes }
+          : {},
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+/** Persists notification, baseline calibration, and display preferences. */
+export function saveUserSettings(next: UserSettings): UserSettings {
+  safeStorageSet("user_settings", JSON.stringify(next));
+  return next;
+}
+
+/** Loads locally logged emergency events. */
+export function loadEmergencyEvents(): EmergencyLogEntry[] {
+  const raw = safeStorageGet("emergency_events");
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as EmergencyLogEntry[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Appends an emergency event to localStorage and syncs to local SQLite when running ./api/emergency. */
+export function appendEmergencyEvent(
+  event: Omit<EmergencyLogEntry, "id" | "created_utc">,
+): EmergencyLogEntry[] {
+  const entry: EmergencyLogEntry = {
+    ...event,
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    created_utc: new Date().toISOString().slice(0, 19).replace("T", " ") + " UTC",
+  };
+  const current = loadEmergencyEvents();
+  const next = [entry, ...current].slice(0, 40);
+  safeStorageSet("emergency_events", JSON.stringify(next));
+  postLocalApi("./api/emergency", {
+    astronaut_id: entry.astronaut_id,
+    mission_day: entry.mission_day,
+    protocol_id: entry.protocol_id,
+    severity: entry.severity,
+    summary: entry.summary,
+    created_utc: entry.created_utc,
+  });
   return next;
 }
 
@@ -401,6 +566,7 @@ export async function loadBoopsBundle(): Promise<BoopsBundle | null> {
   try {
     const resp = await fetch("./data/boops_bundle.json");
     if (!resp.ok) return null;
+    localApiState = resp.headers.get("X-Boops-Local-Api") === "1" ? "available" : "unavailable";
     const data = (await resp.json()) as BoopsBundle;
     win.BOOPS_DATA = data;
     return data;

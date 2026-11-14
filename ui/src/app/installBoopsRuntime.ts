@@ -68,11 +68,14 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       host.renderActiveScreen();
     },
     onToggleSharing: (key, val) => {
-      sharing = saveSharingSettings({
-        ...sharing,
-        [key]: val,
-        emergency_events: true,
-      });
+      sharing = saveSharingSettings(
+        {
+          ...sharing,
+          [key]: val,
+          emergency_events: true,
+        },
+        context.astronautId,
+      );
       host.renderActiveScreen();
     },
     onOpenEmergency: () => {
@@ -86,6 +89,10 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
   if (parent) {
     parent.insertBefore(overlays.topbar, host.stage);
     host.stage.after(overlays.footer);
+    const frameHud = parent.querySelector<HTMLElement>(".frame-hud");
+    if (frameHud) {
+      overlays.footer.append(frameHud);
+    }
   } else {
     host.stage.prepend(overlays.topbar);
     host.stage.append(overlays.footer);
@@ -112,25 +119,32 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
     },
     onToggleSharing: (key, nextVal) => {
       if (typeof key === "string") {
-        sharing = saveSharingSettings({
-          ...sharing,
-          [key]: nextVal,
-          emergency_events: true,
-        });
-      } else {
-        sharing = saveSharingSettings({
-          ...sharing,
-          risk_detail_share: {
-            ...sharing.risk_detail_share,
-            [key.risk]: nextVal,
+        sharing = saveSharingSettings(
+          {
+            ...sharing,
+            [key]: nextVal,
+            emergency_events: true,
           },
-          emergency_events: true,
-        });
+          context.astronautId,
+        );
+      } else {
+        sharing = saveSharingSettings(
+          {
+            ...sharing,
+            risk_detail_share: {
+              ...sharing.risk_detail_share,
+              [key.risk]: nextVal,
+            },
+            emergency_events: true,
+          },
+          context.astronautId,
+        );
       }
       host.showToast(nextVal ? "Sharing enabled for selected item" : "Sharing disabled (crew-first default)");
       host.renderActiveScreen();
     },
     openToolGuide: (guideId) => overlays.openDrawer(guideId),
+    openCameraCheck: (simulated = false) => overlays.openCameraCheck(simulated),
     openEmergencyProtocol: (protocolId) => {
       activeEmergencyId = protocolId;
       const targetScreen: ScreenId =
@@ -146,6 +160,8 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
             : "HealthRiskDetailHeart";
       host.setScreen(target);
     },
+    navigateScreen: (targetScreen) => host.setScreen(targetScreen),
+    reRenderScreen: () => host.renderActiveScreen(),
     showToast: (msg) => host.showToast(msg),
   });
 

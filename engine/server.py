@@ -47,6 +47,10 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
         self.db_path = Path(db_path)
         super().__init__(*args, directory=directory, **kwargs)
 
+    def end_headers(self) -> None:
+        self.send_header("X-Boops-Local-Api", "1")
+        super().end_headers()
+
     def _send_json(self, status: int, payload: dict[str, Any]) -> None:
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)

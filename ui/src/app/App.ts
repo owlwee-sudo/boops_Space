@@ -85,7 +85,7 @@ function mapMetricTitleToDetail(title: string, current: ScreenId): ScreenId | nu
   if (t.includes("sleep aid")) return "DetailSleepAidUse";
   if (t.includes("stress score") || t.includes("stress trend")) return "DetailStressScore";
   if (t.includes("mood")) return "DetailMood";
-  if (t.includes("mission day") || t.includes("day 43")) return "DetailMissionDay";
+  if (t.includes("mission day")) return "DetailMissionDay";
   if (t.includes("mindful") || t.includes("isolation") || t.includes("calls home")) return "DetailMindfulPractice";
   if (t.includes("calories") || t.includes("protein")) return "DetailCaloriesProtein";
   if (t.includes("water")) return "DetailWater";
@@ -207,7 +207,7 @@ function makeLogEntryNode(entry: SavedLogEntry): HTMLElement {
 export function createApp(root: HTMLElement) {
   let activeScreen: ScreenId = readScreenFromHash();
   let previousScreen: ScreenId = "LogVitals";
-  let selectedCrew = "Priya Shah";
+  let selectedCrew = "Amara Okafor";
   let hudOpen = false;
   let hudFilter = "";
   let toastTimer: number | null = null;
@@ -394,17 +394,19 @@ export function createApp(root: HTMLElement) {
       firstP.replaceWith(input);
     });
 
-    // 2. Prepend saved log entries for this screen
-    const existingLogs = savedLogs.get(activeScreen);
-    if (existingLogs && existingLogs.length > 0) {
-      const historyWrap = artboard.querySelector<HTMLElement>('[data-name="History"]');
-      const sectionHeader = historyWrap?.querySelector<HTMLElement>('[data-name="Section header"]');
-      if (historyWrap && sectionHeader) {
-        const frag = document.createDocumentFragment();
-        for (const entry of existingLogs) {
-          frag.appendChild(makeLogEntryNode(entry));
+    // 2. Prepend saved log entries when standalone (without boopsRuntime)
+    if (!boopsRuntime) {
+      const existingLogs = savedLogs.get(activeScreen);
+      if (existingLogs && existingLogs.length > 0) {
+        const historyWrap = artboard.querySelector<HTMLElement>('[data-name="History"]');
+        const sectionHeader = historyWrap?.querySelector<HTMLElement>('[data-name="Section header"]');
+        if (historyWrap && sectionHeader) {
+          const frag = document.createDocumentFragment();
+          for (const entry of existingLogs) {
+            frag.appendChild(makeLogEntryNode(entry));
+          }
+          sectionHeader.after(frag);
         }
-        sectionHeader.after(frag);
       }
     }
 
@@ -422,10 +424,10 @@ export function createApp(root: HTMLElement) {
         img.setAttribute(
           "src",
           isOn
-            ? "/assets/figma/imgToggleOn.svg"
+            ? "./assets/figma/imgToggleOn.svg"
             : tEl.getAttribute("data-name") === "Share toggle"
-              ? "/assets/figma/imgShareToggle.svg"
-              : "/assets/figma/imgToggleOff.svg",
+              ? "./assets/figma/imgShareToggle.svg"
+              : "./assets/figma/imgToggleOff.svg",
         );
       }
       tEl.dataset.toggleKey = key;
@@ -483,18 +485,20 @@ export function createApp(root: HTMLElement) {
         return;
       }
 
-      // 2. Toggle switches (Settings & Risk footer)
-      const toggleEl = target.closest<HTMLElement>('[data-name="Toggle"], [data-name="Share toggle"]');
-      if (toggleEl && toggleEl.dataset.toggleKey) {
-        const key = toggleEl.dataset.toggleKey;
-        const next = !(toggleState.get(key) === true);
-        toggleState.set(key, next);
-        const img = toggleEl.querySelector("img");
-        if (img) {
-          img.setAttribute("src", next ? "/assets/figma/imgToggleOn.svg" : "/assets/figma/imgToggleOff.svg");
+      // 2. Toggle switches fallback (handled by bindEngineData when boopsRuntime is active)
+      if (!boopsRuntime) {
+        const toggleEl = target.closest<HTMLElement>('[data-name="Toggle"], [data-name="Share toggle"]');
+        if (toggleEl && toggleEl.dataset.toggleKey) {
+          const key = toggleEl.dataset.toggleKey;
+          const next = !(toggleState.get(key) === true);
+          toggleState.set(key, next);
+          const img = toggleEl.querySelector("img");
+          if (img) {
+            img.setAttribute("src", next ? "./assets/figma/imgToggleOn.svg" : "./assets/figma/imgToggleOff.svg");
+          }
+          showToast(next ? "Setting enabled (local state)" : "Setting disabled (local state)");
+          return;
         }
-        showToast(next ? "Setting enabled (local state)" : "Setting disabled (local state)");
-        return;
       }
 
       // 3. Log Chips (toggle active state)
@@ -539,9 +543,9 @@ export function createApp(root: HTMLElement) {
         return;
       }
 
-      // 5. Save entry button on Log screens
+      // 5. Save entry fallback on Log screens (handled persistently by bindEngineData when boopsRuntime is active)
       const clickedBtn = target.closest<HTMLElement>('[data-name="Button"], [data-name="Primary button"]');
-      if (clickedBtn && getCleanText(clickedBtn).toLowerCase() === "save entry") {
+      if (!boopsRuntime && clickedBtn && getCleanText(clickedBtn).toLowerCase() === "save entry") {
         const inputs = Array.from(artboard.querySelectorAll<HTMLInputElement>(".figma-field-input"));
         const filled = inputs
           .filter((inp) => inp.value.trim().length > 0)
@@ -735,8 +739,8 @@ export function createApp(root: HTMLElement) {
           showToast(`Offline mission alert queued for ${selectedCrew}: "${getCleanText(actionBtn)}"`);
           return;
         }
-        if (txt === "edit profile" || txt === "see all" || txt === "export") {
-          showToast(`${getCleanText(actionBtn)} · local prototype preview`);
+        if (txt === "export") {
+          showToast(`${getCleanText(actionBtn)} · use top bar Export / Summary`);
           return;
         }
       }
@@ -803,8 +807,11 @@ export function createApp(root: HTMLElement) {
       stage,
       getScreen: () => activeScreen,
       setScreen: (nextId: ScreenId) => {
-        activeScreen = nextId;
-        renderActiveScreen();
+        if (nextId !== activeScreen) {
+          navigateTo(nextId);
+        } else {
+          renderActiveScreen();
+        }
       },
       renderActiveScreen: () => renderActiveScreen(),
       showToast: (msg: string) => {

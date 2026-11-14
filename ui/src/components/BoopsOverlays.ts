@@ -22,6 +22,24 @@ import {
   getRangeSeries,
 } from "../services/boopsData";
 
+export type BoopsUiMode = "app" | "debug";
+
+function detectInitialUiMode(): BoopsUiMode {
+  try {
+    const url = new URL(window.location.href);
+    const qMode = url.searchParams.get("mode")?.toLowerCase();
+    const qDebug = url.searchParams.get("debug")?.toLowerCase();
+    if (qMode === "debug" || qDebug === "1" || qDebug === "true") return "debug";
+    if (qMode === "app" || qDebug === "0" || qDebug === "false") return "app";
+    const preset = (window as unknown as { __BOOPS_DEFAULT_MODE?: string }).__BOOPS_DEFAULT_MODE;
+    if (preset === "debug") return "debug";
+    if (window.sessionStorage?.getItem("boops_ui_mode") === "debug") return "debug";
+  } catch {
+    // Ignore storage/URL errors in restricted offline contexts.
+  }
+  return "app";
+}
+
 export interface OverlayController {
   topbar: HTMLElement;
   footer: HTMLElement;
@@ -32,6 +50,9 @@ export interface OverlayController {
   closeDrawer: () => void;
   openExport: () => void;
   closeExport: () => void;
+  openCameraCheck: (simulated?: boolean) => void;
+  getUiMode: () => BoopsUiMode;
+  setUiMode: (mode: BoopsUiMode) => void;
 }
 
 export interface OverlayCallbacks {
@@ -46,6 +67,7 @@ export interface OverlayCallbacks {
 /** Creates and wires all global B.O.O.P.S. controls outside the Figma artboard. */
 export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   let activeGuideId = "wearable_hrv_fit";
+  let uiMode: BoopsUiMode = detectInitialUiMode();
 
   // -------------------------------------------------------------------------
   // 1. Mission Control Bar
@@ -72,7 +94,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     className: "boops-day-slider",
     "aria-label": "Mission Day Slider",
   }) as HTMLInputElement;
-  const dayReadout = h("span", { className: "text-[12px] font-semibold text-[#111827] min-w-[78px]" }, "Day 96 / 180");
+  const dayReadout = h("span", { className: "boops-day-readout" }, "Day 96 / 180");
 
   prevBtn.addEventListener("click", () => {
     const { astronautId, missionDay } = cb.getContext();
@@ -107,7 +129,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     cb.onToast(msg);
   });
 
-  function launchCameraCheck(simulated: boolean) {
+  function launchCameraCheck(simulated = false) {
     const { astronautId } = cb.getContext();
     const qs = simulated ? `?sim=steady&astronaut=${encodeURIComponent(astronautId)}` : `?astronaut=${encodeURIComponent(astronautId)}`;
     const relUrl = `./camera/${qs}`;
@@ -119,9 +141,6 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     if (!opened) window.location.href = relUrl;
   }
 
-  const cameraBtn = h("button", { type: "button", className: "boops-btn", title: "30s Camera Heart-Rate Check (H1 rPPG)" }, "📷 Camera Check");
-  cameraBtn.addEventListener("click", () => launchCameraCheck(false));
-
   const guidesBtn = h("button", { type: "button", className: "boops-btn" }, "ⓘ Tool Guides");
   guidesBtn.addEventListener("click", () => openDrawer(activeGuideId));
 
@@ -131,7 +150,48 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   const emergencyBtn = h("button", { type: "button", className: "boops-btn boops-btn-danger" }, "Emergency Protocols");
   emergencyBtn.addEventListener("click", () => cb.onOpenEmergency());
 
-  const demoStrip = h("div", { className: "boops-demo-strip" });
+  const modeToggleBtn = h(
+    "button",
+    {
+      type: "button",
+      className: "boops-btn boops-mode-toggle",
+      "data-boops-mode-toggle": "1",
+      title: "Switch between clean Crew App view and Demo / Debug controls",
+    },
+    "Demo / Debug",
+  );
+
+  function syncModeUi() {
+    document.documentElement.dataset.boopsMode = uiMode;
+    topbar.dataset.boopsMode = uiMode;
+    if (uiMode === "debug") {
+      modeToggleBtn.textContent = "← App View";
+      modeToggleBtn.classList.add("is-active");
+      modeToggleBtn.title = "Switch back to clean Crew App interface";
+    } else {
+      modeToggleBtn.textContent = "Demo / Debug";
+      modeToggleBtn.classList.remove("is-active");
+      modeToggleBtn.title = "Open Demo & Debug controls (Day 1–180 scrubber, presets, frame HUD)";
+    }
+  }
+
+  function setUiMode(next: BoopsUiMode) {
+    uiMode = next;
+    try {
+      window.sessionStorage?.setItem("boops_ui_mode", next);
+    } catch {
+      // Ignore storage errors.
+    }
+    syncModeUi();
+  }
+
+  modeToggleBtn.addEventListener("click", () => {
+    const next: BoopsUiMode = uiMode === "app" ? "debug" : "app";
+    setUiMode(next);
+    cb.onToast(next === "debug" ? "Demo & Debug controls enabled" : "Switched to clean Crew App view");
+  });
+
+  const demoStrip = h("div", { className: "boops-demo-strip boops-debug-only" });
   const demoButtons = DEMO_JUMPS.map((jump) => {
     const btn = h("button", { type: "button", className: "boops-demo-chip", title: jump.note }, jump.label);
     btn.addEventListener("click", () => {
@@ -142,9 +202,17 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     return { jump, btn };
   });
 
+  const scrubberGroup = h(
+    "div",
+    { className: "boops-topbar-group boops-debug-only", "data-boops-scrubber": "1" },
+    prevBtn,
+    daySlider,
+    nextBtn,
+  );
+
   const topbar = h(
     "header",
-    { className: "boops-topbar" },
+    { className: "boops-topbar", "data-boops-mode": uiMode },
     h(
       "div",
       { className: "boops-topbar-main" },
@@ -157,25 +225,25 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
           "B.O.O.P.S.",
           h("span", { className: "boops-tag-offline" }, "Offline"),
           h("span", { className: "boops-tag-sim" }, "Simulated"),
+          h("span", { className: "boops-tag-debug boops-debug-only" }, "Demo / Debug"),
         ),
         crewSelect,
-        prevBtn,
-        daySlider,
-        nextBtn,
+        scrubberGroup,
         dayReadout,
         dqBadge,
       ),
       h(
         "div",
         { className: "boops-topbar-group" },
-        cameraBtn,
         guidesBtn,
         exportBtn,
         emergencyBtn,
+        modeToggleBtn,
       ),
     ),
     demoStrip,
   );
+  syncModeUi();
 
   // -------------------------------------------------------------------------
   // 2. Tool-Guide Drawer (all 7 offline guides from content/tool_guides.json)
@@ -196,14 +264,16 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
 
     const pills = h(
       "div",
-      { className: "flex flex-wrap gap-1.5" },
+      { className: "boops-drawer-pills" },
       ...guides.map((g) => {
         const active = g.id === guide?.id;
         const p = h(
           "button",
           {
             type: "button",
-            className: active ? "boops-btn boops-btn-dark text-[11px]" : "boops-btn text-[11px]",
+            className: active
+              ? "boops-btn boops-btn-dark boops-drawer-pill-btn"
+              : "boops-btn boops-drawer-pill-btn",
           },
           g.title.replace(/ Guide$/i, "").replace(/ \(Microgravity Protocol\)/i, ""),
         );
@@ -217,8 +287,13 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
 
     if (!guide) {
       drawerPanel.replaceChildren(
-        h("div", { className: "flex items-center justify-between" }, h("h2", { className: "text-[18px] font-bold" }, "Instrument Tool Guides"), closeBtn),
-        h("p", { className: "text-[13px] text-[#6b7280]" }, "Offline bundle not loaded yet."),
+        h(
+          "div",
+          { className: "boops-drawer-head" },
+          h("h2", { className: "boops-drawer-title" }, "Instrument Tool Guides"),
+          closeBtn,
+        ),
+        h("p", { className: "boops-drawer-meta" }, "Offline bundle not loaded yet."),
       );
       return;
     }
@@ -226,62 +301,66 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     drawerPanel.replaceChildren(
       h(
         "div",
-        { className: "flex items-center justify-between border-b border-[#e5e7eb] pb-3" },
+        { className: "boops-drawer-head" },
         h(
           "div",
           null,
-          h("span", { className: "text-[11px] font-semibold uppercase text-[#6b7280]" }, "OFFLINE INSTRUMENT GUIDE"),
-          h("h2", { className: "text-[19px] font-semibold text-[#111827]" }, guide.title),
+          h("span", { className: "boops-drawer-kicker" }, "OFFLINE INSTRUMENT GUIDE"),
+          h("h2", { className: "boops-drawer-title" }, guide.title),
         ),
         closeBtn,
       ),
       pills,
       h(
         "div",
-        { className: "bg-[#f9fafb] border border-[#e5e7eb] rounded-[14px] p-3.5" },
-        h("p", { className: "text-[11px] font-bold uppercase text-[#6b7280] mb-1" }, "Why it matters"),
-        h("p", { className: "text-[13px] text-[#111827] leading-[1.45]" }, guide.why_it_matters),
+        { className: "boops-drawer-card" },
+        h("p", { className: "boops-drawer-label" }, "Why it matters"),
+        h("p", { className: "boops-drawer-body" }, guide.why_it_matters),
       ),
       h(
         "div",
-        { className: "flex flex-col gap-1.5" },
-        h("p", { className: "text-[11px] font-bold uppercase text-[#6b7280]" }, "Measurement steps"),
+        { className: "boops-drawer-steps" },
+        h("p", { className: "boops-drawer-label" }, "Measurement steps"),
         ...guide.steps.map((s, idx) =>
           h(
             "div",
-            { className: "flex items-start gap-2.5 bg-white border border-[#e5e7eb] rounded-[12px] p-3 text-[13px] text-[#111827]" },
-            h("span", { className: "inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#111827] text-white text-[11px] font-semibold shrink-0" }, String(idx + 1)),
+            { className: "boops-drawer-step" },
+            h("span", { className: "boops-drawer-step-num" }, String(idx + 1)),
             h("span", null, s),
           ),
         ),
       ),
       h(
         "div",
-        { className: "bg-[#fef3c7] border border-[#fde68a] rounded-[14px] p-3.5 flex flex-col gap-1" },
-        h("p", { className: "text-[11px] font-bold uppercase text-[#92400e]" }, "Common mistakes"),
-        ...guide.common_mistakes.map((m) => h("p", { className: "text-[12px] text-[#78350f]" }, `• ${m}`)),
+        { className: "boops-drawer-card boops-drawer-card-warn" },
+        h("p", { className: "boops-drawer-label boops-drawer-label-warn" }, "Common mistakes"),
+        ...guide.common_mistakes.map((m) =>
+          h("p", { className: "boops-drawer-bullet boops-drawer-bullet-warn" }, `• ${m}`),
+        ),
       ),
       h(
         "div",
-        { className: "bg-[#ecfdf5] border border-[#a7f3d0] rounded-[14px] p-3.5 flex flex-col gap-1" },
-        h("p", { className: "text-[11px] font-bold uppercase text-[#065f46]" }, "How to fix an odd reading"),
-        ...guide.how_to_fix_bad_reading.map((f) => h("p", { className: "text-[12px] text-[#064e3b]" }, `• ${f}`)),
+        { className: "boops-drawer-card boops-drawer-card-ok" },
+        h("p", { className: "boops-drawer-label boops-drawer-label-ok" }, "How to fix an odd reading"),
+        ...guide.how_to_fix_bad_reading.map((f) =>
+          h("p", { className: "boops-drawer-bullet boops-drawer-bullet-ok" }, `• ${f}`),
+        ),
       ),
       h(
         "p",
-        { className: "text-[11px] text-[#6b7280]" },
+        { className: "boops-drawer-meta" },
         `Linked CSV / log fields: ${guide.linked_log_fields.join(", ")} · Prototype · Not a medical device`,
       ),
       ...(guide.id.includes("camera") || guide.id.includes("rppg")
         ? [
             h(
               "div",
-              { className: "flex flex-wrap gap-2 pt-1" },
+              { className: "boops-drawer-actions" },
               h(
                 "button",
                 {
                   type: "button",
-                  className: "boops-btn boops-btn-dark text-[12px]",
+                  className: "boops-btn boops-btn-dark",
                   onClick: () => launchCameraCheck(false),
                 },
                 "Open Live Camera Check ↗",
@@ -290,7 +369,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
                 "button",
                 {
                   type: "button",
-                  className: "boops-btn text-[12px]",
+                  className: "boops-btn",
                   onClick: () => launchCameraCheck(true),
                 },
                 "Open Simulated Demo (?sim=steady) ↗",
@@ -330,17 +409,17 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       min: "1",
       max: "180",
       value: String(Math.max(1, missionDay - 14)),
-      className: "boops-input w-[84px]",
+      className: "boops-input boops-modal-input-num",
     }) as HTMLInputElement;
     const endInput = h("input", {
       type: "number",
       min: "1",
       max: "180",
       value: String(missionDay),
-      className: "boops-input w-[84px]",
+      className: "boops-input boops-modal-input-num",
     }) as HTMLInputElement;
 
-    const previewBox = h("div", { className: "flex flex-col gap-3" });
+    const previewBox = h("div", { className: "boops-modal-preview-wrap" });
 
     const refreshPreview = () => {
       if (!bundle) return;
@@ -361,16 +440,20 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       previewBox.replaceChildren(
         h(
           "div",
-          { className: "bg-[#f9fafb] border border-[#e5e7eb] rounded-[14px] p-4 flex flex-col gap-2" },
+          { className: "boops-modal-preview" },
           h(
             "div",
-            { className: "flex items-center justify-between" },
-            h("strong", { className: "text-[14px] text-[#111827]" }, `Flight-Surgeon Summary · ${profile.id} ${profile.name} (Days ${sDay}–${eDay})`),
+            { className: "boops-modal-preview-head" },
+            h(
+              "strong",
+              { className: "boops-modal-preview-title" },
+              `Flight-Surgeon Summary · ${profile.id} ${profile.name} (Days ${sDay}–${eDay})`,
+            ),
             h("span", { className: "boops-tag-sim" }, "Simulated · Not a medical device"),
           ),
           h(
             "p",
-            { className: "text-[12px] text-[#374151]" },
+            { className: "boops-modal-preview-body" },
             emergencyOnly
               ? "Privacy filter active: Daily Summary OFF & Raw Data OFF -> Exporting EMERGENCY EVENTS ONLY (required for crew safety)."
               : latestSharing.raw_data
@@ -380,13 +463,13 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
           last && latestSharing.daily_summary
             ? h(
                 "p",
-                { className: "text-[12px] text-[#111827]" },
+                { className: "boops-modal-preview-strong" },
                 `Latest Day ${last.mission_day}: Immune ${formatRiskLevel(last.risks.immune.level)} (${last.risks.immune.score}), Bone/Muscle ${formatRiskLevel(last.risks.musculoskeletal.level)} (${last.risks.musculoskeletal.score}), Heart ${formatRiskLevel(last.risks.cardio.level)} (${last.risks.cardio.score})`,
               )
             : null,
           h(
             "p",
-            { className: "text-[12px] text-[#991b1b] font-medium" },
+            { className: "boops-modal-preview-alert" },
             `Flagged Act / Early-Warning days in window: ${alerts.length > 0 ? alerts.map((a) => `Day ${a.engine.mission_day}`).join(", ") : "None"}`,
           ),
         ),
@@ -451,25 +534,25 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     modalCard.replaceChildren(
       h(
         "div",
-        { className: "flex items-center justify-between border-b border-[#e5e7eb] pb-3" },
+        { className: "boops-modal-head" },
         h(
           "div",
           null,
-          h("h2", { className: "text-[18px] font-semibold text-[#111827]" }, "Export & Flight-Surgeon Summary"),
-          h("p", { className: "text-[12px] text-[#6b7280]" }, "100% offline · Honors crew-first sharing settings"),
+          h("h2", { className: "boops-modal-title" }, "Export & Flight-Surgeon Summary"),
+          h("p", { className: "boops-modal-sub" }, "100% offline · Honors crew-first sharing settings"),
         ),
         closeBtn,
       ),
       h(
         "div",
-        { className: "flex flex-wrap items-center gap-3 boops-no-print" },
-        h("label", { className: "text-[12px] font-medium flex items-center gap-1.5" }, "Start Day", startInput),
-        h("label", { className: "text-[12px] font-medium flex items-center gap-1.5" }, "End Day", endInput),
+        { className: "boops-modal-row boops-no-print" },
+        h("label", { className: "boops-modal-label" }, "Start Day", startInput),
+        h("label", { className: "boops-modal-label" }, "End Day", endInput),
         h(
           "button",
           {
             type: "button",
-            className: "boops-btn text-[11px]",
+            className: "boops-btn boops-drawer-pill-btn",
             onClick: () => {
               startInput.value = "85";
               endInput.value = "100";
@@ -482,7 +565,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
           "button",
           {
             type: "button",
-            className: "boops-btn text-[11px]",
+            className: "boops-btn boops-drawer-pill-btn",
             onClick: () => {
               startInput.value = "1";
               endInput.value = "180";
@@ -494,13 +577,13 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       ),
       h(
         "div",
-        { className: "flex flex-wrap items-center gap-4 text-[12px] boops-no-print" },
-        h("label", { className: "flex items-center gap-1.5 cursor-pointer" }, dailyChk, "Share daily summary"),
-        h("label", { className: "flex items-center gap-1.5 cursor-pointer" }, rawChk, "Share raw readings"),
-        h("span", { className: "text-[#059669] font-medium" }, "✓ Emergency events: Always ON (locked)"),
+        { className: "boops-modal-row boops-no-print" },
+        h("label", { className: "boops-modal-check" }, dailyChk, "Share daily summary"),
+        h("label", { className: "boops-modal-check" }, rawChk, "Share raw readings"),
+        h("span", { className: "boops-modal-locked" }, "✓ Emergency events: Always ON (locked)"),
       ),
       previewBox,
-      h("div", { className: "flex flex-wrap items-center justify-end gap-2 boops-no-print" }, csvBtn, jsonBtn, printBtn),
+      h("div", { className: "boops-modal-actions boops-no-print" }, csvBtn, jsonBtn, printBtn),
     );
 
     refreshPreview();
@@ -521,7 +604,11 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   const footer = h(
     "footer",
     { className: "boops-footer" },
-    "B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
+    h(
+      "span",
+      null,
+      "B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
+    ),
   );
 
   function updateBar() {
@@ -566,5 +653,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     closeDrawer,
     openExport,
     closeExport,
+    openCameraCheck: (simulated = false) => launchCameraCheck(simulated),
+    getUiMode: () => uiMode,
+    setUiMode,
   };
 }
