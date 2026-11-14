@@ -47,7 +47,8 @@ CLAUDE.md      imports this file for Claude Code
 ```
 Run everything: `python engine/run_all.py`, then open `/web`.
 Camera check: `python3 -m http.server 8000 --directory web`, then open `http://localhost:8000/camera/` (add `?sim=steady` for a Simulated signal with no camera).
-Tests for the hard features: `node --test hard/rppg/test_rppg_core.mjs` and `pytest tests/`.
+Tests for the hard features: `node --test hard/rppg/test_rppg_core.mjs` and `pytest tests/`. Python packages: `pip install -r hard/requirements.txt`.
+WESAD stress model (needs the dataset, see `hard/wesad/README.md`): `python hard/wesad/train.py`.
 
 ---
 
@@ -144,7 +145,7 @@ quality_parts{snr,motion,face,light}, labels[]
 | 10 Tests + README | Claude Code (easy) | feat/easy-tests | ⏳ todo |
 | H1 Camera rPPG (browser) | Fable 5.2 | feat/hard-rppg | 🛠 built, simulated tests pass. Real-face test still to do by the team: `hard/VALIDATION.md` section 3 |
 | H2 Facial-behaviour features | Fable 5.2 | feat/hard-face | ⏳ todo |
-| H3 WESAD stress classifier | Fable 5.2 | feat/hard-wesad | ⏳ todo |
+| H3 WESAD stress classifier | Fable 5.2 | feat/hard-wesad | ✅ trained + LOSO evaluated (91.0 % wrist, see `hard/wesad/REPORT.md`). Hook ready in `hard/wesad/stress_model.py`; `analysis.py` must add the `STRESS_MODEL` flag (default "rules") when it exists |
 | H4 Isolation Forest anomalies | Fable 5.2 | feat/hard-anomaly | ⏳ todo |
 | H5 LSTM autoencoder (optional) | — | feat/hard-lstm | 💤 optional |
 | Figma: risk detail, emergency, tool guides, settings | Design | — | 🛠 in progress |
@@ -160,6 +161,8 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-14: Micro-expressions dropped; facial input = opt-in "change vs own baseline", no emotion labels.
 - 2026-11-14: Camera rPPG runs in the browser for an offline live demo.
 - 2026-11-14: Camera check uses POS (Wang 2017). Signal quality < 0.5 hides the number and asks for a retry. One badly failing part (face, motion, light, pulse) caps quality at 0.40.
+- 2026-11-14: WESAD stress model is a second opinion only. `STRESS_MODEL` defaults to "rules": the lab model gives HRV almost no weight and its calibration does not transfer to daily data (`hard/wesad/REPORT.md` section 5).
+- 2026-11-14: WESAD wrist HRV is motion noise during the stress task (checked against chest ECG). The app-facing "daily" model takes heart rate and RMSSD from ECG. Do not trust wrist HRV during activity.
 - 2026-11-14: Camera HRV (RMSSD) is saved with `hrv_confidence: "low"` and must not feed the personal baseline or stress score: in simulation camera noise inflates it (`hard/VALIDATION.md`).
 - 2026-11-14: Knowledge base added: 40 concepts, 77 evidence links, 81 sources in /knowledge (incl. nervous-system layer: brain, SANS, vestibular, autonomic, cognition). Motion sickness (first days + after landing) is treated like fluid shift: normal adaptation, not illness.
 

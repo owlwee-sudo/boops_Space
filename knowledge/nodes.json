@@ -323,7 +323,12 @@
     "signal_verdict": "good",
     "sources": [
       "mentalhrv",
-      "autonomic"
+      "autonomic",
+      "wesad",
+      "wesad_data",
+      "neurokit2",
+      "sklearn",
+      "numpy"
     ]
   },
   {

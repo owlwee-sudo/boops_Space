@@ -63,6 +63,11 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `autonomic` — [Autonomic function in spaceflight review](https://pmc.ncbi.nlm.nih.gov/articles/PMC4465859)
 - `barger14` — [Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436)
 - `sweat` — [Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103)
+- `wesad` — [Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)](https://doi.org/10.1145/3242969.3242985)
+- `wesad_data` — [WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)](https://ubi29.informatik.uni-siegen.de/usi/data_wesad.html)
+- `neurokit2` — [Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)](https://doi.org/10.3758/s13428-020-01516-y)
+- `sklearn` — [Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)](https://jmlr.org/papers/v12/pedregosa11a.html)
+- `numpy` — [Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling](https://doi.org/10.1038/s41586-020-2649-2)
 
 ## Symptoms
 

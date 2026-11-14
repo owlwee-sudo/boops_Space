@@ -252,6 +252,41 @@
     "layer": "core"
   },
   {
+    "id": "wesad",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)",
+    "url": "https://doi.org/10.1145/3242969.3242985",
+    "layer": "core"
+  },
+  {
+    "id": "wesad_data",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)",
+    "url": "https://ubi29.informatik.uni-siegen.de/usi/data_wesad.html",
+    "layer": "core"
+  },
+  {
+    "id": "neurokit2",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)",
+    "url": "https://doi.org/10.3758/s13428-020-01516-y",
+    "layer": "core"
+  },
+  {
+    "id": "sklearn",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)",
+    "url": "https://jmlr.org/papers/v12/pedregosa11a.html",
+    "layer": "core"
+  },
+  {
+    "id": "numpy",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling",
+    "url": "https://doi.org/10.1038/s41586-020-2649-2",
+    "layer": "core"
+  },
+  {
     "id": "crucian16",
     "group": "Symptoms",
     "title": "Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight",
