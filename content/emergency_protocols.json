@@ -1,0 +1,127 @@
+[
+  {
+    "id": "solar_radiation_storm",
+    "title": "Solar Radiation Storm (SPE)",
+    "severity": "critical",
+    "first_screen_message": "Move to the shielded storm shelter immediately. Countdown to peak proton arrival: 05:45:00 — suspend all EVAs and check personal dosimeter.",
+    "steps": [
+      "Suspend any planned or active EVA and close viewport shutters.",
+      "Move all crew to the water/polyethylene-shielded storm shelter module.",
+      "Verify each crew member's personal dosimeter is powered and synced; compare today's dose + mission cumulative dose against NASA's 600 mSv career limit.",
+      "Log shelter entry time and verify cabin CO2 scrubber and potable water supply inside the shielded zone.",
+      "Remain sheltered until NOAA SWPC / onboard particle flux returns below storm threshold."
+    ],
+    "why_this_happens": "Solar Particle Events eject high-energy protons that acutely raise radiation dose, suppressing radio-sensitive lymphocytes and increasing oxidative and vascular strain.",
+    "when_to_escalate": "Escalate to Mission Control & Flight Surgeon immediately if acute daily dose exceeds 10 mSv, shelter shielding is compromised, or any crew member reports nausea, fatigue, or prodromal symptoms.",
+    "related_tool_guides": [
+      "personal_dosimeter",
+      "wearable_hrv_fit"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  },
+  {
+    "id": "fainting_dizziness",
+    "title": "Fainting / Dizziness (Orthostatic / Fluid Shift)",
+    "severity": "high",
+    "first_screen_message": "Secure the crew member in a safe floating/seated strap position, check airway and pulse, and begin guided oral rehydration + lower-body compression check.",
+    "steps": [
+      "Stabilize the crew member so they cannot drift into hardware; keep head neutral and airway clear.",
+      "Check manual radial/carotid pulse and wearable RHR, then measure SpO2 and blood pressure (cuff at heart level).",
+      "Compare blood pressure to the astronaut's in-flight personal baseline (microgravity lowers BP ~10 mmHg).",
+      "Offer 500 mL electrolyte fluid if alert and able to swallow; check cabin CO2 for hypercapnia.",
+      "Monitor vitals every 5 minutes for 30 minutes and log episode in Emergency Events."
+    ],
+    "why_this_happens": "Microgravity shifts blood headward and reduces plasma volume; dehydration, CO2 buildup, or transition back toward gravity/LBNP can trigger sudden lightheadedness or presyncope.",
+    "when_to_escalate": "Escalate immediately if unresponsive > 30 s, systolic BP drops > 20 mmHg below personal in-flight baseline, SpO2 < 92%, or dizziness recurs.",
+    "related_tool_guides": [
+      "blood_pressure_cuff",
+      "pulse_oximeter",
+      "wearable_hrv_fit"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  },
+  {
+    "id": "chest_pain",
+    "title": "Chest Pain / Acute Cardiac Symptoms",
+    "severity": "critical",
+    "first_screen_message": "Stop all physical exertion immediately. Strap crew member safely, attach chest ECG / wearable + pulse oximeter, and alert the Flight Surgeon.",
+    "steps": [
+      "Halt exercise or EVA prep immediately and restrain the crew member comfortably in neutral posture.",
+      "Measure resting heart rate, SpO2, and bilateral blood pressure (2 readings 1 min apart); verify chest ECG lead contact.",
+      "Ask about pain character, radiation to arm/jaw, shortness of breath, nausea, or diaphoresis.",
+      "Keep emergency medical kit and AED staged nearby in microgravity restraint straps.",
+      "Transmit buffered ECG, vitals trend, and onset timestamp directly to Mission Control / Flight Surgeon."
+    ],
+    "why_this_happens": "Long-duration spaceflight alters cardiac loading, autonomic balance, and electrolyte shifts; chest pain requires immediate rule-out of arrhythmia, ischemia, or pericardial irritation.",
+    "when_to_escalate": "Always escalate immediately on any unexplained chest pressure, resting HR > 115 bpm with symptoms, SpO2 < 92%, or ECG abnormality.",
+    "related_tool_guides": [
+      "wearable_hrv_fit",
+      "blood_pressure_cuff",
+      "pulse_oximeter"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  },
+  {
+    "id": "injury_bleeding",
+    "title": "Injury / Bleeding in Microgravity",
+    "severity": "high",
+    "first_screen_message": "Apply direct firm pressure with sterile gauze and contain fluids immediately using absorbent microgravity wound sleeves.",
+    "steps": [
+      "Don nitrile gloves and eye protection to prevent free-floating fluid droplets.",
+      "Apply direct continuous pressure over the wound with sterile hemostatic gauze; anchor both patient and responder.",
+      "Once bleeding slows, enclose the area in a transparent containment sleeve and clean skin before dressing.",
+      "Record resting heart rate, blood pressure, and temperature to watch for shock or early wound infection.",
+      "Log mechanism of injury, time of hemostasis, and wound photo for Flight Surgeon review."
+    ],
+    "why_this_happens": "In microgravity, blood pools into domes and floats off surfaces if disturbed; delayed immune healing in space increases infection risk if wounds are not cleanly sealed.",
+    "when_to_escalate": "Escalate immediately if arterial/pulsing bleeding continues after 5 minutes of pressure, wound requires sutures, or signs of shock (HR rising, BP falling) develop.",
+    "related_tool_guides": [
+      "blood_pressure_cuff",
+      "thermometer",
+      "wearable_hrv_fit"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  },
+  {
+    "id": "severe_rash_fever",
+    "title": "Severe Rash or Fever (Possible Viral Reactivation)",
+    "severity": "high",
+    "first_screen_message": "Isolate skin lesions under sterile occlusive dressing, measure oral/tympanic temperature, and collect a saliva sample kit.",
+    "steps": [
+      "Measure temperature twice (verify sensor contact) and record resting HR + HRV vs personal baseline.",
+      "Inspect skin for grouped vesicles, dermatomal rash (shingles/HSV-1/VZV), or cold sores; photograph and cover lesions to avoid viral shedding in cabin air.",
+      "Collect a saliva swab sample per kit instructions and store in the chilled sample slot.",
+      "Avoid touching eyes after touching lesions; sanitize shared crew surfaces and headset microphones.",
+      "Initiate crew quarantine/droplet precautions if temperature ≥ 38.0 °C or rash is spreading."
+    ],
+    "why_this_happens": "High stress, sleep deficiency, and EVA workload suppress T-cell immunity, triggering reactivation of latent herpesviruses (HSV-1, EBV, VZV) documented on ISS missions.",
+    "when_to_escalate": "Escalate immediately if temperature ≥ 38.3 °C, rash involves the eye/face, fever persists > 24 h, or resting HR stays ≥ 2 SD above baseline.",
+    "related_tool_guides": [
+      "thermometer",
+      "saliva_sample_kit",
+      "wearable_hrv_fit"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  },
+  {
+    "id": "breathing_difficulty",
+    "title": "Breathing Difficulty / Cabin Air Check",
+    "severity": "critical",
+    "first_screen_message": "Check pulse oximeter (SpO2) and cabin CO2 ppm immediately; move crew to ventilated module and prepare supplemental O2 if SpO2 < 92%.",
+    "steps": [
+      "Check cabin partial pressure of O2 and CO2 (target CO2 < 2,000 ppm; watch for > 3,000 ppm pockets in stagnant corners).",
+      "Measure SpO2 with a warmed finger clip and record respiratory rate and resting heart rate.",
+      "Seat or strap crew member upright/neutral in a module with strong airflow near a supply diffuser.",
+      "Check for wheezing, chemical/smoke odor, choking, or fever; administer emergency O2 mask if trained and SpO2 < 92%.",
+      "If CO2 pocket suspected, switch on auxiliary circulation fans and inspect CDRA scrubber status."
+    ],
+    "why_this_happens": "In microgravity, exhaled CO2 forms localized pockets without fans, causing headaches and air hunger; smoke, ammonia, or respiratory infection can also drop SpO2 rapidly.",
+    "when_to_escalate": "Escalate immediately if SpO2 < 90%, crew member cannot speak full sentences, cabin CO2 exceeds emergency threshold, or toxic leak is suspected.",
+    "related_tool_guides": [
+      "pulse_oximeter",
+      "thermometer",
+      "wearable_hrv_fit"
+    ],
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+  }
+]

@@ -1,0 +1,160 @@
+[
+  {
+    "id": "blood_pressure_cuff",
+    "title": "Blood Pressure Cuff (Microgravity Protocol)",
+    "steps": [
+      "Strap into a crew restraint and rest quietly for 5 minutes before inflating.",
+      "Position the cuffed upper arm cleanly at heart level (avoid floating elevation).",
+      "Take 2 consecutive readings spaced 1 minute apart and log the average systolic/diastolic values.",
+      "Compare against YOUR personal in-flight baseline (days 1–14), not Earth 120/80 norms."
+    ],
+    "why_it_matters": "Microgravity cephalad fluid shift and reduced vascular resistance typically lower astronaut blood pressure by ~10 mmHg compared to pre-flight Earth baselines.",
+    "common_mistakes": [
+      "Measuring immediately after ARED resistance exercise or floating upside-down.",
+      "Placing the cuff over thick flight-suit sleeves or below/above heart height.",
+      "Comparing single readings against Earth clinical cutoffs instead of in-flight personal baseline."
+    ],
+    "how_to_fix_bad_reading": [
+      "Re-wrap cuff snugly (two-finger slack), align artery marker over brachial artery, rest 5 minutes, and re-measure.",
+      "If readings differ by > 10 mmHg between attempts, take a 3rd reading after 2 minutes."
+    ],
+    "linked_log_fields": [
+      "sbp_mmhg",
+      "dbp_mmhg"
+    ]
+  },
+  {
+    "id": "wearable_hrv_fit",
+    "title": "Wearable / Chest ECG & HRV Fit Check",
+    "steps": [
+      "Moisten electrode contact pads lightly with water or conductive gel before strapping on.",
+      "Center the strap snugly below the pectoral line (or tighten wrist optical band 1 notch above the wrist bone).",
+      "Remain still for 60 seconds during spot checks or verify green signal-quality indicator (≥ 0.7) before sleep.",
+      "Sync buffered RR-interval / RMSSD data locally before morning review."
+    ],
+    "why_it_matters": "HRV (RMSSD) and resting heart rate are our primary day-to-day autonomic stress and early infection signals (Mishra et al. 2020; Mehta et al. 2017).",
+    "common_mistakes": [
+      "Loose wristband during sleep causing motion artifacts and fake HR > 200 bpm spikes.",
+      "Dry chest strap electrodes causing dropped beats (missing HRV / NaN).",
+      "Measuring HRV right after caffeine or exercise instead of resting morning window."
+    ],
+    "how_to_fix_bad_reading": [
+      "When B.O.O.P.S. flags 'Check device', tighten strap contact, wipe optical sensor, and perform a 2-minute seated resting check.",
+      "If chest strap stays noisy, use the offline camera rPPG spot-check module as a cross-sensor confirmation."
+    ],
+    "linked_log_fields": [
+      "rhr_bpm",
+      "hrv_rmssd_ms",
+      "signal_quality"
+    ]
+  },
+  {
+    "id": "thermometer",
+    "title": "Core / Oral Thermometer Guide",
+    "steps": [
+      "Wait at least 15 minutes after hot drinks, cold water, or intense exercise before oral measurement.",
+      "Place probe under the posterior sublingual pocket and keep lips sealed until the steady tone.",
+      "If using infrared tympanic mode, pull ear gently upward/backward and aim at the eardrum.",
+      "Repeat once on the opposite side if reading is < 35.5 °C or ≥ 37.5 °C."
+    ],
+    "why_it_matters": "Subtle temperature rises (+0.5–1.0 °C) combined with resting HR jumps distinguish true early infection from isolated sleep loss or stress.",
+    "common_mistakes": [
+      "Cold probe air gap yielding implausible values (< 30 °C) flagged as Check device.",
+      "Measuring immediately after drinking cold pouch water."
+    ],
+    "how_to_fix_bad_reading": [
+      "Warm probe tip briefly in clean hand, reseal probe cover, and re-measure in the opposite sublingual pocket.",
+      "Cross-check resting HR and symptoms if temperature reads ≥ 37.5 °C."
+    ],
+    "linked_log_fields": [
+      "temp_c"
+    ]
+  },
+  {
+    "id": "saliva_sample_kit",
+    "title": "Saliva Sample Kit (Cortisol & Viral Shedding)",
+    "steps": [
+      "Collect immediately upon waking (before brushing teeth, eating, or drinking) for baseline cortisol rhythm.",
+      "Rinse mouth gently with potable water, wait 10 minutes, then saturate the Salivette cotton swab for 2 minutes without chewing excessively.",
+      "Seal tube, scan/log crew ID + mission day, and place in the onboard cold-stowage / biomarker reader slot.",
+      "Log collection timestamp and any oral sores or throat symptoms."
+    ],
+    "why_it_matters": "Salivary cortisol, DHEA, and viral DNA shedding (EBV/HSV-1/VZV) directly confirm HPA-axis stress and latent virus reactivation before severe clinical symptoms appear.",
+    "common_mistakes": [
+      "Collecting within 30 minutes of food, coffee, or toothpaste (contaminates assay).",
+      "Bleeding gums contaminating sample with serum cortisol."
+    ],
+    "how_to_fix_bad_reading": [
+      "Discard visually blood-tinted swabs, rinse mouth gently, wait 15 minutes, and repeat with a fresh swab.",
+      "Always pair a Watch/Act immune alert with a morning saliva test."
+    ],
+    "linked_log_fields": [
+      "symptoms"
+    ]
+  },
+  {
+    "id": "personal_dosimeter",
+    "title": "Personal Radiation Dosimeter Guide",
+    "steps": [
+      "Wear active personal dosimeter clipped consistently to the chest flight pocket (never inside shielded lockers).",
+      "Read daily cumulative dose (mSv) at the same UTC time each day and log total mission + career cumulative mSv.",
+      "Verify comparison against NASA's 600 mSv career limit and check NOAA/module storm alarm state."
+    ],
+    "why_it_matters": "Space radiation spikes during Solar Particle Events suppress lymphocytes and amplify bone resorption and oxidative stress.",
+    "common_mistakes": [
+      "Leaving the dosimeter inside a sleeping berth or shielded water-wall area during normal shifts.",
+      "Confusing dose rate (µSv/h) with 24-hour cumulative dose (mSv)."
+    ],
+    "how_to_fix_bad_reading": [
+      "Compare personal dosimeter reading with the module area radiation monitor (RAM); if only one spikes, inspect battery/shielding placement.",
+      "During an active SPE alert, prioritize shelter move before manual logging."
+    ],
+    "linked_log_fields": [
+      "radiation_msv"
+    ]
+  },
+  {
+    "id": "pulse_oximeter",
+    "title": "Pulse Oximeter (SpO2) Guide",
+    "steps": [
+      "Warm hands for 30 seconds (microgravity reduces peripheral fingertip perfusion if cabin is cool).",
+      "Clip sensor fully onto index or middle finger with nail facing upward; rest hand still for 20 seconds.",
+      "Wait for a steady pulse waveform bar before recording SpO2 (%) and pulse rate."
+    ],
+    "why_it_matters": "SpO2 verifies respiratory oxygen delivery and serves as an independent cross-sensor check against wrist optical heart rate.",
+    "common_mistakes": [
+      "Cold fingers or motion causing false SpO2 < 85% drops.",
+      "Ambient cabin glare hitting an unshielded sensor."
+    ],
+    "how_to_fix_bad_reading": [
+      "Warm fingers, switch to another finger, shield sensor from direct LED cabin light, and verify pulse waveform matches manual radial pulse.",
+      "If SpO2 stays < 92% with shortness of breath or high CO2, launch the Breathing Difficulty emergency protocol immediately."
+    ],
+    "linked_log_fields": [
+      "spo2_pct"
+    ]
+  },
+  {
+    "id": "exercise_device_log",
+    "title": "ARED / CEVIS / T2 Exercise Countermeasure Log",
+    "steps": [
+      "Log total aerobic + resistive exercise minutes and separate ARED resistance minutes after each session.",
+      "Record load settings, number of completed sets, and mark EVA days (eva = 1) accurately.",
+      "Aim for ≥ 120 total exercise min/day including ~60 min ARED mechanical loading."
+    ],
+    "why_it_matters": "Exercise offsets cardiac atrophy and bone/muscle unloading; skipping resistance training interacts multiplicatively with stress cortisol to accelerate muscle loss.",
+    "common_mistakes": [
+      "Logging aerobic CEVIS cycling as resistance loading (does not load lumbar spine/femur sufficiently).",
+      "Forgetting to mark an EVA day, causing post-EVA RHR/HRV shifts to look like unexplained illness."
+    ],
+    "how_to_fix_bad_reading": [
+      "Reconcile manual log with ARED / CEVIS onboard counter files at end of crew day.",
+      "Mark EVA = 1 for every spacewalk day so the infection early-warning filter accounts for EVA load."
+    ],
+    "linked_log_fields": [
+      "exercise_min",
+      "resistance_min",
+      "eva"
+    ]
+  }
+]

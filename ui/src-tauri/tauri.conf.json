@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "boops Space",
+  "productName": "BOOPS",
   "version": "0.1.0",
   "identifier": "space.boops.crewhealth",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "boops Space · Crew Health",
+        "title": "B.O.O.P.S. · Biobehavioral Observation & Offline Predictive System",
         "width": 1440,
         "height": 900,
         "minWidth": 1024,

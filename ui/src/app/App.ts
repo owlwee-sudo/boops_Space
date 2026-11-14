@@ -220,6 +220,7 @@ export function createApp(root: HTMLElement) {
   const scaleBox = h("div", { className: "figma-scale-box" });
   const stage = h("div", { className: "app-stage" }, scaleBox);
   const toastEl = h("div", { className: "figma-toast", hidden: true });
+  let boopsRuntime: { enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void } | null = null;
 
   // Floating 52-Frame Switcher HUD
   const hudPillLabel = h("span", null, "");
@@ -767,6 +768,7 @@ export function createApp(root: HTMLElement) {
     const artboard = entry.render();
     enhanceFormsAndState(artboard);
     wireInteractions(artboard);
+    boopsRuntime?.enhanceArtboard(artboard, activeScreen);
     scaleBox.replaceChildren(artboard);
     applyScaleAndHeight(artboard);
     updateHud();
@@ -784,6 +786,37 @@ export function createApp(root: HTMLElement) {
     const artboard = scaleBox.firstElementChild as HTMLElement | null;
     if (artboard) applyScaleAndHeight(artboard);
   });
+
+  const boopsInstallFn = (
+    globalThis as unknown as {
+      __boopsInstall?: (host: {
+        stage: HTMLElement;
+        getScreen: () => ScreenId;
+        setScreen: (id: ScreenId) => void;
+        renderActiveScreen: () => void;
+        showToast: (msg: string) => void;
+      }) => { enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void };
+    }
+  ).__boopsInstall;
+  if (boopsInstallFn) {
+    boopsRuntime = boopsInstallFn({
+      stage,
+      getScreen: () => activeScreen,
+      setScreen: (nextId: ScreenId) => {
+        activeScreen = nextId;
+        renderActiveScreen();
+      },
+      renderActiveScreen: () => renderActiveScreen(),
+      showToast: (msg: string) => {
+        toastEl.textContent = msg;
+        toastEl.hidden = false;
+        if (toastTimer != null) window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          toastEl.hidden = true;
+        }, 3200);
+      },
+    });
+  }
 
   renderActiveScreen();
 }

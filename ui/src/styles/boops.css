@@ -1,0 +1,277 @@
+/* Interactive B.O.O.P.S. Mission Control Bar, Tool-Guide Drawer, Export Modal, Footer & Emergency Contrast */
+
+.boops-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+.boops-topbar-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.boops-topbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.boops-brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #111827;
+  padding: 4px 10px;
+  background: #f4f5f7;
+  border-radius: 999px;
+}
+
+.boops-tag-offline {
+  font-size: 10px;
+  font-weight: 600;
+  color: #065f46;
+  background: #d1fae5;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.boops-tag-sim {
+  font-size: 10px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #e5e7eb;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.boops-select,
+.boops-input {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.boops-day-slider {
+  width: 150px;
+  accent-color: #111827;
+  cursor: pointer;
+}
+
+.boops-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.boops-btn:hover {
+  background: #f3f4f6;
+}
+
+.boops-btn-dark {
+  background: #111827;
+  border-color: #111827;
+  color: #ffffff;
+}
+
+.boops-btn-dark:hover {
+  background: #1f2937;
+}
+
+.boops-btn-danger {
+  background: #dc2626;
+  border-color: #991b1b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.boops-btn-danger:hover {
+  background: #b91c1c;
+}
+
+.boops-dq-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.boops-dq-ok {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+
+.boops-dq-check_device {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+}
+
+.boops-dq-check_yourself,
+.boops-dq-act_now {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}
+
+.boops-demo-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.boops-demo-chip {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #374151;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.boops-demo-chip:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.boops-demo-chip.is-active {
+  background: #c6f432;
+  color: #111827;
+  border-color: #a3e635;
+  font-weight: 600;
+}
+
+/* Emergency high-contrast red/white styling */
+.figma-artboard.boops-emergency-surface {
+  background: #fef2f2 !important;
+  outline: 3px solid #dc2626;
+}
+
+/* Right-side Tool-Guide Drawer */
+.boops-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.boops-drawer-backdrop[hidden] {
+  display: none;
+}
+
+.boops-drawer-panel {
+  width: min(480px, 96vw);
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.18);
+  padding: 20px 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+/* Export & Printable Summary Modal */
+.boops-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(17, 24, 39, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.boops-modal-backdrop[hidden] {
+  display: none;
+}
+
+.boops-modal-card {
+  width: min(680px, 96vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+.boops-footer {
+  width: 100%;
+  text-align: center;
+  padding: 10px 16px 18px;
+  font-size: 12px;
+  color: #6b7280;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+@media print {
+  .boops-topbar,
+  .boops-drawer-backdrop,
+  .frame-hud-toggle,
+  .frame-hud,
+  .boops-footer,
+  .app-stage > .figma-scale-box {
+    display: none !important;
+  }
+
+  .boops-modal-backdrop {
+    position: static;
+    background: #ffffff;
+    padding: 0;
+  }
+
+  .boops-modal-card {
+    box-shadow: none;
+    max-height: none;
+    width: 100%;
+  }
+
+  .boops-no-print {
+    display: none !important;
+  }
+}

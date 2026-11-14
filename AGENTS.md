@@ -4,7 +4,7 @@
 ---
 
 ## 1. Project in one paragraph
-**Astronaut Health Monitor** (name TBD) is our entry for the **NASA Space Apps Challenge 2026**, challenge *"Create Health Monitoring Software for Astronauts on Space Missions"* (event: 14–15 Nov 2026). It is an **offline, crew-first** app that turns daily wearable, sleep and environment data into **early warnings** for downstream health risks (**immune, bone & muscle, heart**), using each astronaut's **personal in-flight baseline**. It explains **why** each risk matters (evidence chains with ⭐ strength + sources), **how to fix** it (actions ranked by root cause), **how to use each instrument** (tool guides) and **what to do in an emergency** (offline protocols).
+**B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System)** is our entry for the **NASA Space Apps Challenge 2026**, challenge *"Create Health Monitoring Software for Astronauts on Space Missions"* (event: 14–15 Nov 2026). It is an **offline, crew-first** app that turns daily wearable, sleep and environment data into **early warnings** for downstream health risks (**immune, bone & muscle, heart**), using each astronaut's **personal in-flight baseline**. It explains **why** each risk matters (evidence chains with ⭐ strength + sources), **how to fix** it (actions ranked by root cause), **how to use each instrument** (tool guides) and **what to do in an emergency** (offline protocols).
 
 **The judges asked for:** (1) track health data, (2) what to do in an emergency, (3) explain how to use each tool, why it matters, and how to fix it.
 
@@ -121,16 +121,16 @@ flags{infection_early_warning}, labels["Simulated"]
 ## 9. Status board (update me!)
 | Task | Owner / agent | Branch | Status |
 |---|---|---|---|
-| 1 Simulated mission data | Claude Code (easy) | feat/easy-data | ⏳ todo |
-| 2 Analysis engine | Claude Code (easy) | feat/easy-analysis | ⏳ todo |
-| 3 Risk + recommendation engine | Claude Code (easy) | feat/easy-risk | ⏳ todo |
-| 4 Odd-reading checker | Claude Code (easy) | feat/easy-quality | ⏳ todo |
-| 5 SQLite database | Claude Code (easy) | feat/easy-db | ⏳ todo |
-| 6 Pipeline runner | Claude Code (easy) | feat/easy-pipeline | ⏳ todo |
-| 7 Emergency + tool-guide content | Claude Code (easy) | feat/easy-content | ⏳ todo |
-| 8 Front-end dashboard | Claude Code (easy) | feat/easy-web | ⏳ todo |
-| 9 Export | Claude Code (easy) | feat/easy-export | ⏳ todo |
-| 10 Tests + README | Claude Code (easy) | feat/easy-tests | ⏳ todo |
+| 1 Simulated mission data | Claude Code (easy) | feat/easy-data | ✅ done |
+| 2 Analysis engine | Claude Code (easy) | feat/easy-analysis | ✅ done |
+| 3 Risk + recommendation engine | Claude Code (easy) | feat/easy-risk | ✅ done |
+| 4 Odd-reading checker | Claude Code (easy) | feat/easy-quality | ✅ done |
+| 5 SQLite database | Claude Code (easy) | feat/easy-db | ✅ done |
+| 6 Pipeline runner | Claude Code (easy) | feat/easy-pipeline | ✅ done |
+| 7 Emergency + tool-guide content | Claude Code (easy) | feat/easy-content | ✅ done |
+| 8 Front-end dashboard | Claude Code (easy) | feat/easy-web | ✅ done |
+| 9 Export | Claude Code (easy) | feat/easy-export | ✅ done |
+| 10 Tests + README | Claude Code (easy) | feat/easy-tests | ✅ done |
 | H1 Camera rPPG (browser) | Fable 5.2 | feat/hard-rppg | ⏳ todo |
 | H2 Facial-behaviour features | Fable 5.2 | feat/hard-face | ⏳ todo |
 | H3 WESAD stress classifier | Fable 5.2 | feat/hard-wesad | ⏳ todo |
@@ -148,6 +148,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-14: HRV is the main stress signal; BP and SpO₂ are context only.
 - 2026-11-14: Micro-expressions dropped; facial input = opt-in "change vs own baseline", no emotion labels.
 - 2026-11-14: Camera rPPG runs in the browser for an offline live demo.
+- 2026-11-14: Official project name set to B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System).
 
 ---
 

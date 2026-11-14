@@ -1,0 +1,112 @@
+[
+  {
+    "id": "adaptation_phase",
+    "astronaut_id": "all",
+    "start_day": 1,
+    "end_day": 14,
+    "type": "adaptation",
+    "title": "Microgravity fluid-shift adaptation",
+    "description": "Cephalad fluid shift causes slightly higher RHR, ~10 mmHg lower BP, and lower HRV; forms personal in-flight baseline.",
+    "expected_signal": "Alerts dampened; labeled adaptation phase."
+  },
+  {
+    "id": "a1_glitch_rhr",
+    "astronaut_id": "A1",
+    "start_day": 30,
+    "end_day": 30,
+    "type": "sensor_glitch",
+    "title": "Wearable optical spike while asleep",
+    "description": "Implausible HR=220 bpm reading with low signal quality (0.20) and no symptoms.",
+    "expected_signal": "data_quality.status = check_device (not Act)."
+  },
+  {
+    "id": "a1_eva_41",
+    "astronaut_id": "A1",
+    "start_day": 41,
+    "end_day": 43,
+    "type": "eva",
+    "title": "EVA #1 (Day 41) + 48h recovery window",
+    "description": "EVA on day 41 causes HRV drop, RHR bump, and shorter sleep through day 43.",
+    "expected_signal": "Stress ↑, Immune Watch on day 41–43."
+  },
+  {
+    "id": "a2_glitch_temp",
+    "astronaut_id": "A2",
+    "start_day": 50,
+    "end_day": 50,
+    "type": "sensor_glitch",
+    "title": "Thermometer contact failure",
+    "description": "Implausible body temperature 25.0 °C with signal quality 0.30.",
+    "expected_signal": "data_quality.status = check_device."
+  },
+  {
+    "id": "a2_resistance_skip",
+    "astronaut_id": "A2",
+    "start_day": 60,
+    "end_day": 75,
+    "type": "inactivity",
+    "title": "Skipped ARED resistance exercise",
+    "description": "A2 skips resistance exercise for 16 days (resistance_min ≈ 0) with elevated stress.",
+    "expected_signal": "Musculoskeletal risk rises into Watch/Act."
+  },
+  {
+    "id": "a1_bad_sleep",
+    "astronaut_id": "A1",
+    "start_day": 88,
+    "end_day": 94,
+    "type": "sleep_deficit",
+    "title": "7-day sleep deficiency streak",
+    "description": "Operational workload limits A1 sleep to ≤ 5 h/night from day 88 to 94.",
+    "expected_signal": "Sleep score drops; immune risk climbs."
+  },
+  {
+    "id": "solar_particle_event",
+    "astronaut_id": "all",
+    "start_day": 92,
+    "end_day": 93,
+    "type": "solar_particle_event",
+    "title": "Solar Particle Event (SPE)",
+    "description": "Radiation dose spikes on days 92–93 (modeled after NOAA SWPC GOES / NASA OSDR RadLab SPE curves).",
+    "expected_signal": "Alert banner + shelter emergency protocol."
+  },
+  {
+    "id": "a1_infection_presymptomatic",
+    "astronaut_id": "A1",
+    "start_day": 95,
+    "end_day": 96,
+    "type": "infection_early_warning",
+    "title": "Pre-symptomatic infection onset",
+    "description": "A1 resting HR jumps +6 to +8 bpm (≥ 2 SD above baseline) with no logged symptoms and no EVA/hard exercise.",
+    "expected_signal": "infection_early_warning = true before symptoms on day 97; Immune = Act."
+  },
+  {
+    "id": "a1_infection_symptomatic",
+    "astronaut_id": "A1",
+    "start_day": 97,
+    "end_day": 98,
+    "type": "symptoms",
+    "title": "Viral reactivation / clinical symptoms",
+    "description": "Fatigue and sore throat logged on day 97, followed by cold sore on day 98.",
+    "expected_signal": "Immune = Act; Fix sleep first + take saliva test."
+  },
+  {
+    "id": "a3_glitch_hrv_spo2",
+    "astronaut_id": "A3",
+    "start_day": 110,
+    "end_day": 110,
+    "type": "sensor_glitch",
+    "title": "Missing HRV + SpO2 drop-out",
+    "description": "Wearable signal drop-out: HRV missing (NaN), SpO2=65%, signal_quality=0.25, no symptoms.",
+    "expected_signal": "data_quality.status = check_device."
+  },
+  {
+    "id": "a1_eva_120",
+    "astronaut_id": "A1",
+    "start_day": 120,
+    "end_day": 122,
+    "type": "eva",
+    "title": "EVA #2 (Day 120) + 48h recovery window",
+    "description": "Second EVA triggers transient HRV drop, RHR bump, and shorter sleep on days 120–122.",
+    "expected_signal": "Stress ↑, Immune Watch."
+  }
+]

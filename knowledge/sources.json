@@ -1,0 +1,730 @@
+[
+  {
+    "id": "hazards",
+    "group": "Read first",
+    "title": "NASA – 5 Hazards of Human Spaceflight",
+    "url": "https://www.nasa.gov/hrp/hazards",
+    "layer": "core",
+    "citation": "NASA – 5 Hazards of Human Spaceflight"
+  },
+  {
+    "id": "immrisk",
+    "group": "Read first",
+    "title": "NASA Immune Risk page (incl. Immune Risk DAG)",
+    "url": "https://www.nasa.gov/directorates/esdmd/hhp/immune-risk/",
+    "layer": "core",
+    "citation": "NASA Immune Risk page (incl. Immune Risk DAG)"
+  },
+  {
+    "id": "crucian18",
+    "group": "Read first",
+    "title": "Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)",
+    "url": "https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full",
+    "layer": "core",
+    "citation": "Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)"
+  },
+  {
+    "id": "mehta17",
+    "group": "Stress → immune",
+    "title": "Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581",
+    "layer": "core",
+    "citation": "Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)"
+  },
+  {
+    "id": "salivary",
+    "group": "Stress → immune",
+    "title": "Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226",
+    "layer": "core",
+    "citation": "Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission"
+  },
+  {
+    "id": "evrep",
+    "group": "Stress → immune",
+    "title": "NASA Evidence Report: Risk of Crew Adverse Health Event Due to Altered Immune Response (Crucian & Sams)",
+    "url": "https://ntrs.nasa.gov/citations/20140002769",
+    "layer": "core",
+    "citation": "NASA Evidence Report: Risk of Crew Adverse Health Event Due to Altered Immune Response (Crucian & Sams)"
+  },
+  {
+    "id": "klos25",
+    "group": "Isolation",
+    "title": "Klos et al. 2025 – Effects of ICE environments on the immune system: systematic review",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11975566/",
+    "layer": "core",
+    "citation": "Klos et al. 2025 – Effects of ICE environments on the immune system: systematic review"
+  },
+  {
+    "id": "ponomarev21",
+    "group": "Isolation",
+    "title": "Ponomarev et al. 2021 – Immunological Aspects of Isolation and Confinement",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8264770",
+    "layer": "core",
+    "citation": "Ponomarev et al. 2021 – Immunological Aspects of Isolation and Confinement"
+  },
+  {
+    "id": "mars500",
+    "group": "Isolation",
+    "title": "Mars-500 CoSI study (isolation → chronic cortisol)",
+    "url": "https://iafastro.directory/iac/paper/id/20164/abstract-pdf/IAC-13,A5,2,8,x20164.brief.pdf",
+    "layer": "core",
+    "citation": "Mars-500 CoSI study (isolation → chronic cortisol)"
+  },
+  {
+    "id": "wadhwa24",
+    "group": "Radiation + microgravity",
+    "title": "Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)",
+    "url": "https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w",
+    "layer": "core",
+    "citation": "Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)"
+  },
+  {
+    "id": "continuum",
+    "group": "Radiation + microgravity",
+    "title": "NASA poster – Immune dysregulation: spaceflight vs ground analogs (\"continuum\" figure)",
+    "url": "https://ntrs.nasa.gov/api/citations/20200001675/downloads/20200001675.pdf",
+    "layer": "core",
+    "citation": "NASA poster – Immune dysregulation: spaceflight vs ground analogs (\"continuum\" figure)"
+  },
+  {
+    "id": "proton",
+    "group": "Radiation + microgravity",
+    "title": "Proton radiation + simulated microgravity on immune cells",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3743739/",
+    "layer": "core",
+    "citation": "Proton radiation + simulated microgravity on immune cells"
+  },
+  {
+    "id": "hls_spe",
+    "group": "Radiation + microgravity",
+    "title": "Hindlimb suspension + SPE-like radiation impairs bacterial clearance",
+    "url": "https://www.pubmed.gov/24454913/",
+    "layer": "core",
+    "citation": "Hindlimb suspension + SPE-like radiation impairs bacterial clearance"
+  },
+  {
+    "id": "radiso",
+    "group": "Radiation + microgravity",
+    "title": "Space radiation + social isolation in rats (Life 2025)",
+    "url": "https://doaj.org/article/3ced14d5fd544cd29d2035dc98753f8c",
+    "layer": "core",
+    "citation": "Space radiation + social isolation in rats (Life 2025)"
+  },
+  {
+    "id": "zhang17",
+    "group": "Radiation + microgravity",
+    "title": "Zhang et al. 2017 – Microgravity + radiation on osteoclast fusion",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5713410",
+    "layer": "core",
+    "citation": "Zhang et al. 2017 – Microgravity + radiation on osteoclast fusion"
+  },
+  {
+    "id": "willey",
+    "group": "Radiation + microgravity",
+    "title": "Willey et al. – Ionizing radiation and bone loss",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3401480",
+    "layer": "core",
+    "citation": "Willey et al. – Ionizing radiation and bone loss"
+  },
+  {
+    "id": "chang",
+    "group": "Microgravity → immune cells",
+    "title": "Chang et al. – Spaceflight impairs T-cell tolerance; microgravity directly disrupts T-cell activation",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6137544",
+    "layer": "core",
+    "citation": "Chang et al. – Spaceflight impairs T-cell tolerance; microgravity directly disrupts T-cell activation"
+  },
+  {
+    "id": "receptors",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Receptors implicated in microgravity-induced bone loss (MDPI)",
+    "url": "https://mdpi.com/2813-2564/3/2/14",
+    "layer": "core",
+    "citation": "Receptors implicated in microgravity-induced bone loss (MDPI)"
+  },
+  {
+    "id": "osteoclast",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Osteoclast-mediated bone disease & microgravity (Encyclopedia)",
+    "url": "https://encyclopedia.pub/entry/2143",
+    "layer": "core",
+    "citation": "Osteoclast-mediated bone disease & microgravity (Encyclopedia)"
+  },
+  {
+    "id": "il6",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "IL-6 and spaceflight (npj Microgravity)",
+    "url": "https://www.nature.com/articles/s41526-018-0057-9",
+    "layer": "core",
+    "citation": "IL-6 and spaceflight (npj Microgravity)"
+  },
+  {
+    "id": "twinsland",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Twins Study landing re-analysis (muscle regeneration vs inflammation)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9444344",
+    "layer": "core",
+    "citation": "Twins Study landing re-analysis (muscle regeneration vs inflammation)"
+  },
+  {
+    "id": "inact",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Inactivity amplifies muscle’s catabolic response to cortisol (NTRS)",
+    "url": "https://ntrs.nasa.gov/citations/20040141797",
+    "layer": "core",
+    "citation": "Inactivity amplifies muscle’s catabolic response to cortisol (NTRS)"
+  },
+  {
+    "id": "bedrest28",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "28-day bed rest with hypercortisolemia → insulin resistance",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856785",
+    "layer": "core",
+    "citation": "28-day bed rest with hypercortisolemia → insulin resistance"
+  },
+  {
+    "id": "muscgen",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Muscle loss genetics in simulated microgravity (The Scientist)",
+    "url": "https://www.the-scientist.com/zero-gravity-zero-gain-the-genetics-behind-muscle-loss-in-space-71612",
+    "layer": "core",
+    "citation": "Muscle loss genetics in simulated microgravity (The Scientist)"
+  },
+  {
+    "id": "cvmeta",
+    "group": "Cardiovascular",
+    "title": "Effects of weightlessness on the cardiovascular system: meta-analysis (Frontiers 2024)",
+    "url": "https://www.frontiersin.org/articles/10.3389/fphys.2024.1438089/full",
+    "layer": "core",
+    "citation": "Effects of weightlessness on the cardiovascular system: meta-analysis (Frontiers 2024)"
+  },
+  {
+    "id": "norsk15",
+    "group": "Cardiovascular",
+    "title": "Norsk et al. 2015 – Fluid shifts & BP reduction in long spaceflight",
+    "url": "https://www.physoc.org/?p=70744",
+    "layer": "core",
+    "citation": "Norsk et al. 2015 – Fluid shifts & BP reduction in long spaceflight"
+  },
+  {
+    "id": "perhonen01",
+    "group": "Cardiovascular",
+    "title": "Perhonen et al. 2001 – Cardiac atrophy after bed rest and spaceflight",
+    "url": "https://pubmed.ncbi.nlm.nih.gov/11457776/",
+    "layer": "core",
+    "citation": "Perhonen et al. 2001 – Cardiac atrophy after bed rest and spaceflight"
+  },
+  {
+    "id": "jacc23",
+    "group": "Cardiovascular",
+    "title": "Cardiac effects of long-duration spaceflight (JACC 2023)",
+    "url": "https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight",
+    "layer": "core",
+    "citation": "Cardiac effects of long-duration spaceflight (JACC 2023)"
+  },
+  {
+    "id": "delp16",
+    "group": "Cardiovascular",
+    "title": "Delp et al. 2016 – Apollo astronauts’ CVD mortality & deep-space radiation",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4964660/",
+    "layer": "core",
+    "citation": "Delp et al. 2016 – Apollo astronauts’ CVD mortality & deep-space radiation"
+  },
+  {
+    "id": "arterial20",
+    "group": "Cardiovascular",
+    "title": "Arterial structure & function during and after long spaceflight (2020)",
+    "url": "https://pesquisa.bvsalud.org/portal/resource/e/mdl-32525433",
+    "layer": "core",
+    "citation": "Arterial structure & function during and after long spaceflight (2020)"
+  },
+  {
+    "id": "arteries25",
+    "group": "Cardiovascular",
+    "title": "Arteries normal 5 years after spaceflight (APS 2025)",
+    "url": "https://www.physiology.org/detail/news/2025/07/24/good-news-for-astronauts--arteries-remain-normal-years-after-long-duration-spaceflight",
+    "layer": "core",
+    "citation": "Arteries normal 5 years after spaceflight (APS 2025)"
+  },
+  {
+    "id": "vascular",
+    "group": "Cardiovascular",
+    "title": "CSA Vascular Series (stiffness + insulin resistance)",
+    "url": "https://revibiomedica.sld.cu/index.php/ibi/article/download/250/386",
+    "layer": "core",
+    "citation": "CSA Vascular Series (stiffness + insulin resistance)"
+  },
+  {
+    "id": "mentalhrv",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Mental stress & autonomic cardiac modulation in weightlessness",
+    "url": "https://bvbvf1.bib-bvb.de/vufind/PrimoRecord/cdi_proquest_miscellaneous_734199460",
+    "layer": "core",
+    "citation": "Mental stress & autonomic cardiac modulation in weightlessness"
+  },
+  {
+    "id": "autonomic",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Autonomic function in spaceflight review",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4465859",
+    "layer": "core",
+    "citation": "Autonomic function in spaceflight review"
+  },
+  {
+    "id": "barger14",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436",
+    "layer": "core",
+    "citation": "Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)"
+  },
+  {
+    "id": "sweat",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103",
+    "layer": "core",
+    "citation": "Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)"
+  },
+  {
+    "id": "crucian16",
+    "group": "Symptoms",
+    "title": "Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5098747",
+    "layer": "core",
+    "citation": "Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight"
+  },
+  {
+    "id": "hsv1",
+    "group": "Symptoms",
+    "title": "HSV-1 dermatitis during long-duration spaceflight",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9028032",
+    "layer": "core",
+    "citation": "HSV-1 dermatitis during long-duration spaceflight"
+  },
+  {
+    "id": "shingles",
+    "group": "Symptoms",
+    "title": "Shingles in an ISS astronaut",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10992860/",
+    "layer": "core",
+    "citation": "Shingles in an ISS astronaut"
+  },
+  {
+    "id": "wang25",
+    "group": "Wearables",
+    "title": "Wang et al. 2025 – Flexible wearables for astronaut health: status & challenges",
+    "url": "https://doi.org/10.1016/j.wees.2024.12.007",
+    "layer": "core",
+    "citation": "Wang et al. 2025 – Flexible wearables for astronaut health: status & challenges"
+  },
+  {
+    "id": "astroskin",
+    "group": "Wearables",
+    "title": "CSA Bio-Monitor / Astroskin",
+    "url": "https://www.asc-csa.gc.ca/eng/sciences/astroskin.asp",
+    "layer": "core",
+    "citation": "CSA Bio-Monitor / Astroskin"
+  },
+  {
+    "id": "trialx",
+    "group": "Wearables",
+    "title": "Wearables used in space missions (TrialX)",
+    "url": "https://trialx.com/space-health-research-wearable-devices/",
+    "layer": "core",
+    "citation": "Wearables used in space missions (TrialX)"
+  },
+  {
+    "id": "archer",
+    "group": "Wearables",
+    "title": "Artemis II ARCHeR wristbands",
+    "url": "https://www.newsbytesapp.com/news/science/nasa-s-artemis-ii-astronauts-to-wear-special-wristband-monitors/story",
+    "layer": "core",
+    "citation": "Artemis II ARCHeR wristbands"
+  },
+  {
+    "id": "nowara",
+    "group": "Camera / rPPG / NIR",
+    "title": "Nowara et al. – Near-infrared imaging PPG during driving (MERL)",
+    "url": "https://shadow.merl.com/publications/docs/TR2020-161.pdf",
+    "layer": "core",
+    "citation": "Nowara et al. – Near-infrared imaging PPG during driving (MERL)"
+  },
+  {
+    "id": "rgbnir",
+    "group": "Camera / rPPG / NIR",
+    "title": "RGB-NIR dual-modality heart-rate estimation (Sensors 2023)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10346879",
+    "layer": "core",
+    "citation": "RGB-NIR dual-modality heart-rate estimation (Sensors 2023)"
+  },
+  {
+    "id": "repss",
+    "group": "Camera / rPPG / NIR",
+    "title": "RePSS RGB+NIR fusion challenge",
+    "url": "https://ceur-ws.org/Vol-4095/paper1.pdf",
+    "layer": "core",
+    "citation": "RePSS RGB+NIR fusion challenge"
+  },
+  {
+    "id": "fullbody",
+    "group": "Camera / rPPG / NIR",
+    "title": "Full-body rPPG & pulse transit time (arXiv)",
+    "url": "https://ar5iv.labs.arxiv.org/html/2303.09638",
+    "layer": "core",
+    "citation": "Full-body rPPG & pulse transit time (arXiv)"
+  },
+  {
+    "id": "mayo",
+    "group": "Camera / rPPG / NIR",
+    "title": "Mayo Clinic hands-free camera in space",
+    "url": "https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs",
+    "layer": "core",
+    "citation": "Mayo Clinic hands-free camera in space"
+  },
+  {
+    "id": "intelomed",
+    "group": "Camera / rPPG / NIR",
+    "title": "Intelomed NASA video-based vital signs project",
+    "url": "https://us.inspiralia.com/our-work-list/intelomed-inc/",
+    "layer": "core",
+    "citation": "Intelomed NASA video-based vital signs project"
+  },
+  {
+    "id": "barrett19",
+    "group": "Facial expression & stress",
+    "title": "Barrett et al. 2019 – Emotional Expressions Reconsidered",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6640856",
+    "layer": "core",
+    "citation": "Barrett et al. 2019 – Emotional Expressions Reconsidered"
+  },
+  {
+    "id": "microexp",
+    "group": "Facial expression & stress",
+    "title": "Micro-expressions training tool fails (phys.org)",
+    "url": "https://phys.org/news/2019-09-flaws-tool.pdf",
+    "layer": "core",
+    "citation": "Micro-expressions training tool fails (phys.org)"
+  },
+  {
+    "id": "jyu",
+    "group": "Facial expression & stress",
+    "title": "Stress from rPPG + facial features in online meetings (JYU)",
+    "url": "https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download",
+    "layer": "core",
+    "citation": "Stress from rPPG + facial features in online meetings (JYU)"
+  },
+  {
+    "id": "facebio",
+    "group": "Facial expression & stress",
+    "title": "Facial videos + biosignals for stress estimation (arXiv 2026)",
+    "url": "https://arxiv.org/html/2601.04376v2",
+    "layer": "core",
+    "citation": "Facial videos + biosignals for stress estimation (arXiv 2026)"
+  },
+  {
+    "id": "euai",
+    "group": "Facial expression & stress",
+    "title": "EU AI Act emotion-recognition prohibition explained (FPF)",
+    "url": "https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/",
+    "layer": "core",
+    "citation": "EU AI Act emotion-recognition prohibition explained (FPF)"
+  },
+  {
+    "id": "mishra20",
+    "group": "Early infection detection",
+    "title": "Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data",
+    "url": "https://bohrium.dp.tech/paper/arxiv/565ddbdf6dd250a4a1a24832b221d0cbf76f9e38e192400ab71d148581f79a7d",
+    "layer": "core",
+    "citation": "Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data"
+  },
+  {
+    "id": "stanford",
+    "group": "Early infection detection",
+    "title": "Stanford Medicine – Smartwatch can detect early signs of illness",
+    "url": "https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html",
+    "layer": "core",
+    "citation": "Stanford Medicine – Smartwatch can detect early signs of illness"
+  },
+  {
+    "id": "laad",
+    "group": "Early infection detection",
+    "title": "LAAD – deep learning on resting HR for early infection (medRxiv)",
+    "url": "https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf",
+    "layer": "core",
+    "citation": "LAAD – deep learning on resting HR for early infection (medRxiv)"
+  },
+  {
+    "id": "twins19",
+    "group": "Big picture",
+    "title": "NASA Twins Study (Science 2019)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7580864",
+    "layer": "core",
+    "citation": "NASA Twins Study (Science 2019)"
+  },
+  {
+    "id": "astroimm",
+    "group": "Big picture",
+    "title": "Astroimmunology review (Nat Rev Immunol 2025)",
+    "url": "https://vivo.weill.cornell.edu/display/pubid41102553",
+    "layer": "core",
+    "citation": "Astroimmunology review (Nat Rev Immunol 2025)"
+  },
+  {
+    "id": "insp4",
+    "group": "Big picture",
+    "title": "Inspiration4 crew multi-omics & immune profiles",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11166952",
+    "layer": "core",
+    "citation": "Inspiration4 crew multi-omics & immune profiles"
+  },
+  {
+    "id": "mcgregor23",
+    "group": "Nervous system: brain structure",
+    "title": "McGregor et al. 2023 – Impacts of spaceflight experience on human brain structure (Scientific Reports)",
+    "url": "https://www.nature.com/articles/s41598-023-33331-8",
+    "layer": "nervous",
+    "citation": "McGregor et al. 2023 – Impacts of spaceflight experience on human brain structure (Scientific Reports)"
+  },
+  {
+    "id": "vanombergen19",
+    "group": "Nervous system: brain structure",
+    "title": "Van Ombergen et al. 2019 – Brain ventricular volume changes induced by long-duration spaceflight (PNAS)",
+    "url": "https://www.pnas.org/content/early/2019/05/01/1820354116",
+    "layer": "nervous",
+    "citation": "Van Ombergen et al. 2019 – Brain ventricular volume changes induced by long-duration spaceflight (PNAS)"
+  },
+  {
+    "id": "hupfeld22",
+    "group": "Nervous system: brain structure",
+    "title": "Hupfeld et al. – The impact of 6 and 12 months in space on human brain structure and intracranial fluid shifts",
+    "url": "https://lmi.bwh.harvard.edu/publications/impact-6-and-12-months-space-human-brain-structure-and-intracranial-fluid-shifts",
+    "layer": "nervous",
+    "citation": "Hupfeld et al. – The impact of 6 and 12 months in space on human brain structure and intracranial fluid shifts"
+  },
+  {
+    "id": "pvs",
+    "group": "Nervous system: brain structure",
+    "title": "Jillings et al. – Perivascular space enlargement after 6-month ISS flights, linked to SANS (author publication list)",
+    "url": "https://scite.ai/authors/steven-jillings-OjzMba",
+    "layer": "nervous",
+    "citation": "Jillings et al. – Perivascular space enlargement after 6-month ISS flights, linked to SANS (author publication list)"
+  },
+  {
+    "id": "sansreview26",
+    "group": "Nervous system: eyes (SANS)",
+    "title": "SANS review: consensus knowledge and prevalence (Eye, 2026)",
+    "url": "https://link.springer.com/10.1038/s41433-026-04651-6",
+    "layer": "nervous",
+    "citation": "SANS review: consensus knowledge and prevalence (Eye, 2026)"
+  },
+  {
+    "id": "sans_nasa23",
+    "group": "Nervous system: eyes (SANS)",
+    "title": "NASA – SANS: 2023 clinical update (NTRS)",
+    "url": "https://ntrs.nasa.gov/citations/20220014606",
+    "layer": "nervous",
+    "citation": "NASA – SANS: 2023 clinical update (NTRS)"
+  },
+  {
+    "id": "sans_wjg",
+    "group": "Nervous system: eyes (SANS)",
+    "title": "Ocular adaptations to spaceflight and SANS: review (World Journal of Clinical Cases)",
+    "url": "https://www.wjgnet.com/2307-8960/full/v14/i3/117257.htm",
+    "layer": "nervous",
+    "citation": "Ocular adaptations to spaceflight and SANS: review (World Journal of Clinical Cases)"
+  },
+  {
+    "id": "sans_sr20",
+    "group": "Nervous system: eyes (SANS)",
+    "title": "Paez et al. 2020 – SANS: a systematic review and future directions (Eye and Brain)",
+    "url": "https://www.dovepress.com/spaceflight-associated-neuro-ocular-syndrome-sans-a-systematic-review--peer-reviewed-article-EB",
+    "layer": "nervous",
+    "citation": "Paez et al. 2020 – SANS: a systematic review and future directions (Eye and Brain)"
+  },
+  {
+    "id": "eyebrain23",
+    "group": "Nervous system: eyes (SANS)",
+    "title": "Eye-brain axis in microgravity and its implications for SANS (npj Microgravity 2023)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10359255",
+    "layer": "nervous",
+    "citation": "Eye-brain axis in microgravity and its implications for SANS (npj Microgravity 2023)"
+  },
+  {
+    "id": "vestib15",
+    "group": "Nervous system: balance (vestibular)",
+    "title": "Cullen et al. 2015 – Rapid adaptation of multisensory integration in vestibular pathways (Front. Syst. Neurosci.)",
+    "url": "https://www.frontiersin.org/articles/10.3389/fnsys.2015.00059/full",
+    "layer": "nervous",
+    "citation": "Cullen et al. 2015 – Rapid adaptation of multisensory integration in vestibular pathways (Front. Syst. Neurosci.)"
+  },
+  {
+    "id": "neurovest17",
+    "group": "Nervous system: balance (vestibular)",
+    "title": "Neurovestibular symptoms in astronauts immediately after Shuttle and ISS missions (OTO Open 2017)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6239149",
+    "layer": "nervous",
+    "citation": "Neurovestibular symptoms in astronauts immediately after Shuttle and ISS missions (OTO Open 2017)"
+  },
+  {
+    "id": "reentry25",
+    "group": "Nervous system: balance (vestibular)",
+    "title": "Vestibular adaptation, motion sickness and parastronauts (Front. Neurol. 2025)",
+    "url": "https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2025.1556553/pdf",
+    "layer": "nervous",
+    "citation": "Vestibular adaptation, motion sickness and parastronauts (Front. Neurol. 2025)"
+  },
+  {
+    "id": "gcr18",
+    "group": "Nervous system: radiation & brain",
+    "title": "Cekanaviciute et al. 2018 – CNS responses to simulated galactic cosmic rays (IJMS)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6275046/",
+    "layer": "nervous",
+    "citation": "Cekanaviciute et al. 2018 – CNS responses to simulated galactic cosmic rays (IJMS)"
+  },
+  {
+    "id": "gcr23",
+    "group": "Nervous system: radiation & brain",
+    "title": "Kokhan & Dobynde 2023 – Effects of galactic cosmic rays on the CNS: negative to unexpectedly positive (Biology)",
+    "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10044754/",
+    "layer": "nervous",
+    "citation": "Kokhan & Dobynde 2023 – Effects of galactic cosmic rays on the CNS: negative to unexpectedly positive (Biology)"
+  },
+  {
+    "id": "cucinotta",
+    "group": "Nervous system: radiation & brain",
+    "title": "Critical review of rodent cognitive detriments from heavy ions at low dose",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6606350",
+    "layer": "nervous",
+    "citation": "Critical review of rodent cognitive detriments from heavy ions at low dose"
+  },
+  {
+    "id": "mcat",
+    "group": "Nervous system: radiation & brain",
+    "title": "Simulated microgravity + isolation drive neuroimmune oxidative stress in MCAT mice (summary)",
+    "url": "https://astrobiology.com/?p=15717",
+    "layer": "nervous",
+    "citation": "Simulated microgravity + isolation drive neuroimmune oxidative stress in MCAT mice (summary)"
+  },
+  {
+    "id": "cog24",
+    "group": "Nervous system: cognition",
+    "title": "Dev, Bell et al. 2024 – Cognitive performance in ISS astronauts on 6-month missions (Front. Physiol.)",
+    "url": "https://frontiersin.org/articles/10.3389/fphys.2024.1451269/full",
+    "layer": "nervous",
+    "citation": "Dev, Bell et al. 2024 – Cognitive performance in ISS astronauts on 6-month missions (Front. Physiol.)"
+  },
+  {
+    "id": "winscat",
+    "group": "Nervous system: cognition",
+    "title": "NASA – Cognitive assessment during long-duration spaceflight (WinSCAT, NTRS)",
+    "url": "https://ntrs.nasa.gov/citations/20100036584",
+    "layer": "nervous",
+    "citation": "NASA – Cognitive assessment during long-duration spaceflight (WinSCAT, NTRS)"
+  },
+  {
+    "id": "stowe03",
+    "group": "Nervous system: neuro-immune",
+    "title": "Stowe, Sams & Pierson 2003 – Effects of mission duration on neuroimmune responses in astronauts",
+    "url": "https://insight.jci.org/references/scholar/146/B27",
+    "layer": "nervous",
+    "citation": "Stowe, Sams & Pierson 2003 – Effects of mission duration on neuroimmune responses in astronauts"
+  },
+  {
+    "id": "capri25",
+    "group": "Nervous system: neuro-immune",
+    "title": "Capri et al. 2025 – Spaceflight exposome effects on the psychoimmunoneuroendocrine system (npj Microgravity)",
+    "url": "https://cris.unibo.it/handle/11585/1038058",
+    "layer": "nervous",
+    "citation": "Capri et al. 2025 – Spaceflight exposome effects on the psychoimmunoneuroendocrine system (npj Microgravity)"
+  },
+  {
+    "id": "thymus24",
+    "group": "Nervous system: neuro-immune",
+    "title": "Spaceflight stressors and thymus homeostasis: mini review (Front. Immunol. 2024)",
+    "url": "https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2024.1534444/full",
+    "layer": "nervous",
+    "citation": "Spaceflight stressors and thymus homeostasis: mini review (Front. Immunol. 2024)"
+  },
+  {
+    "id": "mehta2017",
+    "group": "Stress → immune",
+    "title": "Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581",
+    "layer": "core",
+    "citation": "Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)"
+  },
+  {
+    "id": "crucian2018",
+    "group": "Read first",
+    "title": "Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)",
+    "url": "https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full",
+    "layer": "core",
+    "citation": "Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)"
+  },
+  {
+    "id": "barger2014",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Barger et al. 2014 – Prevalence of sleep deficiency and use of hypnotic drugs in astronauts (Lancet Neurology)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436",
+    "layer": "core",
+    "citation": "Barger et al. 2014 – Prevalence of sleep deficiency and use of hypnotic drugs in astronauts (Lancet Neurology)"
+  },
+  {
+    "id": "iss_saliva2020",
+    "group": "Stress → immune",
+    "title": "Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226",
+    "layer": "core",
+    "citation": "Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission"
+  },
+  {
+    "id": "mishra2020",
+    "group": "Early infection detection",
+    "title": "Mishra et al. 2020 – Pre-symptomatic detection of COVID-19 from smartwatch data (Stanford)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7673274/",
+    "layer": "core",
+    "citation": "Mishra et al. 2020 – Pre-symptomatic detection of COVID-19 from smartwatch data (Stanford)"
+  },
+  {
+    "id": "wadhwa2024",
+    "group": "Radiation + microgravity",
+    "title": "Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)",
+    "url": "https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w",
+    "layer": "core",
+    "citation": "Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)"
+  },
+  {
+    "id": "jacc2023",
+    "group": "Cardiovascular",
+    "title": "Cardiac effects of long-duration spaceflight (JACC 2023)",
+    "url": "https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight",
+    "layer": "core",
+    "citation": "Cardiac effects of long-duration spaceflight (JACC 2023)"
+  },
+  {
+    "id": "ferrando2004",
+    "group": "Bone / muscle / osteoimmunology",
+    "title": "Ferrando et al. 2004 – Inactivity amplifies muscle catabolic response to cortisol (NTRS)",
+    "url": "https://ntrs.nasa.gov/citations/20040141797",
+    "layer": "core",
+    "citation": "Ferrando et al. 2004 – Inactivity amplifies muscle catabolic response to cortisol (NTRS)"
+  },
+  {
+    "id": "nasa_radlab",
+    "group": "Radiation + microgravity",
+    "title": "NASA OSDR RadLab Portal – Spaceflight Radiation Dosimetry",
+    "url": "https://visualization.osdr.nasa.gov/radlab/",
+    "layer": "core",
+    "citation": "NASA OSDR RadLab Portal – Spaceflight Radiation Dosimetry"
+  },
+  {
+    "id": "noaa_swpc",
+    "group": "Radiation + microgravity",
+    "title": "NOAA SWPC GOES Primary Integral Protons 1-Day Feed",
+    "url": "https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json",
+    "layer": "core",
+    "citation": "NOAA SWPC GOES Primary Integral Protons 1-Day Feed"
+  }
+]
