@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+# Node
+node_modules/
+# Large local-only data (WESAD is ~2.5 GB, never commit it)
+hard/wesad/data/
+hard/wesad/cache/
+*.joblib.tmp
+.DS_Store
+# Local agent/editor settings and worktrees
+.claude/
