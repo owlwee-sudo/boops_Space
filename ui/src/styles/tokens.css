@@ -1,0 +1,45 @@
+/*
+ * Figma Design System Tokens ("NASA Space App" · ver.1)
+ * Exact light-surface clinical/crew tokens extracted from Figma variables.
+ */
+:root {
+  /* Colors — Backgrounds */
+  --color-bg-surface: #f4f5f7;
+  --color-bg-card: #ffffff;
+  --color-bg-active: #c6f432;
+  --color-accent: #c6f432;
+  --color-bg-strong: #111827;
+  --color-bg-warning: #fef3c7;
+  --color-bg-danger: #fee2e2;
+
+  /* Colors — Borders & Status */
+  --color-border-default: #e5e7eb;
+  --color-border-danger: #ef4444;
+  --color-status-normal: #22c55e;
+  --color-status-watch: #f59e0b;
+  --color-status-alert: #ef4444;
+  --color-viz-placeholder: #111827;
+
+  /* Colors — Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #374151;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-text-danger: #dc2626;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* Typography */
+  --font-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}

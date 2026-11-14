@@ -1,0 +1,53 @@
+.status-badge {
+  --badge-color: var(--status-nominal);
+  --badge-bg: var(--status-nominal-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px 0 8px;
+  border-radius: var(--radius-pill);
+  background: var(--badge-bg);
+  color: var(--badge-color);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex: none;
+}
+
+.status-badge--plain {
+  height: auto;
+  padding: 0;
+  background: none;
+}
+
+.status-badge[data-status="watch"] {
+  --badge-color: var(--status-watch);
+  --badge-bg: var(--status-watch-soft);
+}
+
+.status-badge[data-status="alert"] {
+  --badge-color: var(--status-alert);
+  --badge-bg: var(--status-alert-soft);
+}
+
+.status-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge[data-status="alert"] .status-badge__dot {
+  animation: status-pulse 1.4s var(--ease) infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--badge-color) 70%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}

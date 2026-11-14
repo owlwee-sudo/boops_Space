@@ -1,0 +1,154 @@
+.radiation-card {
+  --level: var(--status-nominal);
+  display: flex;
+  flex-direction: column;
+}
+
+.radiation-card[data-level="watch"] {
+  --level: var(--status-watch);
+}
+
+.radiation-card[data-level="alert"] {
+  --level: var(--status-alert);
+}
+
+.radiation-card__reading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.radiation-card__total {
+  font-size: var(--text-display);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.radiation-card__unit {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.radiation-card__share {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.radiation-card__meter {
+  position: relative;
+  padding: 4px 0;
+}
+
+.radiation-card__track {
+  position: relative;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* Projected end-of-mission dose: a hollow marker on the track. */
+.radiation-card__projected {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px var(--surface);
+}
+
+.radiation-card__scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-faint);
+}
+
+.radiation-card__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.radiation-card__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radiation-card__legend-item .num {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.radiation-card__key {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+
+.radiation-card__key--now {
+  background: var(--level);
+}
+
+.radiation-card__key--projected {
+  width: 2px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--text);
+}
+
+.radiation-card__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--level) 55%, transparent), var(--level));
+  transition: width 600ms var(--ease);
+}
+
+.radiation-card__tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-strong);
+}
+
+.radiation-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-5);
+}
+
+.radiation-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+}
+
+.radiation-card__stat-label {
+  font-size: var(--text-xs);
+  color: var(--text-faint);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.radiation-card__stat-value {
+  font-weight: 600;
+  white-space: nowrap;
+}

@@ -1,0 +1,117 @@
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.app__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-8) var(--space-8);
+  max-width: 1480px;
+  width: 100%;
+  min-width: 0;
+}
+
+.app__vitals-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+/*
+ * Lower dashboard: trends (wide) + alerts on the right spanning two rows,
+ * radiation and sleep side by side under the trend chart.
+ */
+.app__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-areas:
+    "trends trends trends trends trends trends trends trends alerts alerts alerts alerts"
+    "radiation radiation radiation radiation sleep sleep sleep sleep alerts alerts alerts alerts";
+  gap: var(--space-4);
+}
+
+.app__grid > div {
+  display: flex;
+  min-width: 0;
+}
+
+.app__grid > div > * {
+  flex: 1;
+}
+
+.app__trends {
+  grid-area: trends;
+}
+.app__alerts {
+  grid-area: alerts;
+}
+.app__radiation {
+  grid-area: radiation;
+}
+.app__sleep {
+  grid-area: sleep;
+}
+
+/* Alerts scroll inside the card instead of stretching the row. */
+.app__alerts {
+  position: relative;
+}
+.app__alerts > .alerts-panel {
+  position: absolute;
+  inset: 0;
+}
+
+/* Narrower windows: 3 vitals on the first row, 2 wider ones on the second. */
+@media (max-width: 1360px) {
+  .app__vitals-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .app__vitals-grid > * {
+    grid-column: span 2;
+  }
+  .app__vitals-grid > :nth-child(n + 4) {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 1240px) {
+  .app__grid {
+    grid-template-areas:
+      "trends trends trends trends trends trends trends trends trends trends trends trends"
+      "radiation radiation radiation radiation radiation radiation sleep sleep sleep sleep sleep sleep"
+      "alerts alerts alerts alerts alerts alerts alerts alerts alerts alerts alerts alerts";
+  }
+  .app__alerts > .alerts-panel {
+    position: static;
+    max-height: 520px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .app__main {
+    padding: var(--space-5) var(--space-4) var(--space-8);
+  }
+  .app__vitals-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .app__vitals-grid > *,
+  .app__vitals-grid > :nth-child(n + 4) {
+    grid-column: span 1;
+  }
+  .app__vitals-grid > :last-child {
+    grid-column: span 2;
+  }
+  .app__grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "trends" "alerts" "radiation" "sleep";
+  }
+}

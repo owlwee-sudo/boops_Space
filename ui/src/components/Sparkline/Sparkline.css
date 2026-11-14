@@ -1,0 +1,38 @@
+.sparkline {
+  position: relative;
+  width: 100%;
+}
+
+.sparkline__svg {
+  display: block;
+  overflow: visible;
+}
+
+.sparkline__line {
+  fill: none;
+  stroke: var(--metric, var(--accent));
+  stroke-width: 1.75;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.sparkline__stop-top {
+  stop-color: var(--metric, var(--accent));
+  stop-opacity: 0.28;
+}
+
+.sparkline__stop-bottom {
+  stop-color: var(--metric, var(--accent));
+  stop-opacity: 0;
+}
+
+.sparkline__dot {
+  fill: var(--metric, var(--accent));
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.sparkline__halo {
+  fill: var(--metric, var(--accent));
+  opacity: 0.18;
+}

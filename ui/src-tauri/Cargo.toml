@@ -1,0 +1,19 @@
+[package]
+name = "boops-space"
+version = "0.1.0"
+description = "Crew health monitor for NASA Space Apps 2026 (team boops)"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+# The `_lib` suffix avoids a name clash with the binary on Windows.
+name = "boops_space_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
