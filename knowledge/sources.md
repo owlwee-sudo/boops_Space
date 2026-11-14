@@ -109,6 +109,7 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `mishra20` — [Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data](https://bohrium.dp.tech/paper/arxiv/565ddbdf6dd250a4a1a24832b221d0cbf76f9e38e192400ab71d148581f79a7d)
 - `stanford` — [Stanford Medicine – Smartwatch can detect early signs of illness](https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html)
 - `laad` — [LAAD – deep learning on resting HR for early infection (medRxiv)](https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf)
+- `iforest` — [Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)](https://doi.org/10.1109/ICDM.2008.17)
 
 ## Big picture
 

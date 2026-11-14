@@ -469,6 +469,13 @@
     "layer": "core"
   },
   {
+    "id": "iforest",
+    "group": "Early infection detection",
+    "title": "Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)",
+    "url": "https://doi.org/10.1109/ICDM.2008.17",
+    "layer": "core"
+  },
+  {
     "id": "twins19",
     "group": "Big picture",
     "title": "NASA Twins Study (Science 2019)",
