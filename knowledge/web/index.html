@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astronaut Health Relationship Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a left-to-right causal map (stressors → hubs → body → illness) with a monitoring column on the right; a side panel explains whatever you click. */
+:root{
+  --bg:#eef1f5; --panel:#ffffff; --ink:#152033; --muted:#5a6678; --line:#d5dbe4; --accent:#2f5bd3;
+  --font-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --c-stressor:#d4532b; --c-hub:#7448d4; --c-body:#b07c0c; --c-outcome:#c2366b; --c-signal:#0f8584; --c-counter:#2c8a45; --c-device:#3d6fb8;
+  --e-causal:#6d7889; --e-confound:#cf3434;
+  --v-good:#2c8a45; --v-caution:#c98a00; --v-weak:#cf3434; --v-early:#3d6fb8;
+  --halo:#ffffff; --chip:#eef1f6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131b; --panel:#151c27; --ink:#e4e9f1; --muted:#95a1b3; --line:#283243; --accent:#7f9cf5;
+    --c-stressor:#f07c55; --c-hub:#a789f2; --c-body:#e2b043; --c-outcome:#ef6c9a; --c-signal:#3cc2bd; --c-counter:#5fc477; --c-device:#73a2ea;
+    --e-causal:#8794a8; --e-confound:#f26b6b;
+    --v-good:#5fc477; --v-caution:#e7b23c; --v-weak:#f26b6b; --v-early:#73a2ea;
+    --halo:#151c27; --chip:#1e2735;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131b; --panel:#151c27; --ink:#e4e9f1; --muted:#95a1b3; --line:#283243; --accent:#7f9cf5;
+  --c-stressor:#f07c55; --c-hub:#a789f2; --c-body:#e2b043; --c-outcome:#ef6c9a; --c-signal:#3cc2bd; --c-counter:#5fc477; --c-device:#73a2ea;
+  --e-causal:#8794a8; --e-confound:#f26b6b;
+  --v-good:#5fc477; --v-caution:#e7b23c; --v-weak:#f26b6b; --v-early:#73a2ea;
+  --halo:#151c27; --chip:#1e2735;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;display:flex;flex-direction:column}
+header{padding:14px 20px 10px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);background:var(--panel)}
+h1{margin:0;font-size:20px;line-height:1.2;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:2px 0 0;color:var(--muted);font-size:13px}
+.controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.controls .lbl{font-size:12px;color:var(--muted);margin-right:2px}
+.tog{font:500 12.5px var(--font-body);color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 11px 4px 9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.tog .sw{width:14px;height:3px;border-radius:2px;background:currentColor}
+.tog[data-layer][aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+#strong[aria-pressed="true"]{border-color:var(--c-body);background:color-mix(in srgb,var(--c-body) 18%,var(--panel))}
+.tog:focus-visible,.btn:focus-visible,.tab:focus-visible,.link:focus-visible,.node:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0}
+.graph-wrap{position:relative;overflow:auto;padding:8px 12px 12px}
+svg#web{width:100%;min-width:900px;height:auto;display:block;user-select:none;touch-action:none}
+.hint{position:absolute;left:20px;bottom:10px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;pointer-events:none}
+aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 12px}
+.tab{font:600 13px var(--font-body);color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:11px 10px 9px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{overflow:auto;padding:16px 18px 28px;flex:1}
+.pane h2{font-size:18px;margin:0 0 4px;line-height:1.25;text-wrap:balance}
+.pane h3{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px;font-weight:600}
+.pane p{margin:6px 0}
+.lede{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 4px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.stat b{display:block;font:600 22px var(--font-mono);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--muted)}
+ul.plain{margin:0;padding-left:18px}
+ul.plain li{margin:3px 0}
+.callout{border-left:3px solid var(--accent);background:var(--chip);padding:8px 12px;border-radius:0 8px 8px 0;margin:10px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 11.5px var(--font-body);padding:2px 9px;border-radius:999px;background:var(--chip);border:1px solid var(--line)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.link{display:flex;width:100%;text-align:left;gap:8px;align-items:baseline;font:14px var(--font-body);color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:6px 9px;margin:4px 0;cursor:pointer}
+.link:hover{border-color:var(--accent)}
+.link .arr{font-family:var(--font-mono);color:var(--muted);flex:none}
+.link small{color:var(--muted);display:block;font-size:12.5px}
+.stars{font-size:11px;letter-spacing:-1px;color:var(--c-body)}
+.src{margin:8px 0;padding:0 0 8px;border-bottom:1px solid var(--line)}
+.src:last-child{border-bottom:0}
+.src a{color:var(--accent);text-decoration:none;font-weight:500}
+.src a:hover{text-decoration:underline}
+.src .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:3px;font-size:12px;color:var(--muted)}
+.src.active{background:var(--chip);border-radius:8px;padding:6px 8px;border-bottom-color:transparent}
+.btn{font:600 12.5px var(--font-body);color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:7px;padding:4px 10px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.btn.small{font-size:11.5px;padding:2px 8px}
+.warn{color:var(--e-confound);font-weight:600}
+.bar{height:6px;border-radius:3px;background:var(--accent);opacity:.75}
+.reach{display:grid;grid-template-columns:110px 1fr 28px;gap:8px;align-items:center;font-size:13px;margin:4px 0;cursor:pointer;background:none;border:0;color:var(--ink);width:100%;padding:2px 0;text-align:left;font-family:var(--font-body)}
+.reach span:last-child{font-family:var(--font-mono);text-align:right;font-variant-numeric:tabular-nums}
+.legend-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:center;font-size:13px}
+.legend-grid svg{display:block}
+textarea.copybox{width:100%;height:120px;font:12px var(--font-mono);margin-top:8px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+#status{font-size:12px;color:var(--muted);margin-left:8px}
+
+/* SVG */
+.colhead{font:600 10.5px var(--font-body);letter-spacing:.12em;fill:var(--muted)}
+.colrule{stroke:var(--line);stroke-width:1}
+.node{cursor:pointer;outline:none}
+.node rect{stroke-width:1.6;transition:opacity .15s}
+.node text{font:500 12.5px var(--font-body);fill:var(--ink);pointer-events:none}
+.cat-stressor rect{fill:color-mix(in srgb,var(--c-stressor) 16%,var(--panel));stroke:var(--c-stressor)}
+.cat-hub rect{fill:color-mix(in srgb,var(--c-hub) 16%,var(--panel));stroke:var(--c-hub)}
+.cat-body rect{fill:color-mix(in srgb,var(--c-body) 14%,var(--panel));stroke:var(--c-body)}
+.cat-outcome rect{fill:color-mix(in srgb,var(--c-outcome) 14%,var(--panel));stroke:var(--c-outcome)}
+.cat-signal rect{fill:var(--panel);stroke:var(--c-signal)}
+.cat-counter rect{fill:color-mix(in srgb,var(--c-counter) 16%,var(--panel));stroke:var(--c-counter)}
+.cat-device rect{fill:var(--panel);stroke:var(--c-device);stroke-dasharray:4 3}
+.cat-stressor text,.cat-hub text{font-weight:600}
+.node.sel rect{stroke-width:3}
+.node.dim{opacity:.22}
+.edge{fill:none;transition:opacity .15s}
+.et-causal{stroke:var(--e-causal)}
+.et-amplifies{stroke:var(--c-stressor);stroke-dasharray:8 4}
+.et-protects{stroke:var(--c-counter)}
+.et-measures{stroke:var(--c-signal);stroke-dasharray:2 3}
+.et-confounds{stroke:var(--e-confound);stroke-dasharray:5 4}
+.edge{opacity:.62}
+.edge.dim{opacity:.07}
+.edge.hl{opacity:1}
+.edge.off,.hit.off{display:none}
+.mk-causal{fill:var(--e-causal)} .mk-amplifies{fill:var(--c-stressor)} .mk-protects{fill:var(--c-counter)} .mk-measures{fill:var(--c-signal)} .mk-confounds{fill:var(--e-confound)}
+.hit{fill:none;stroke:transparent;stroke-width:12;cursor:pointer}
+.elabel{font:500 11px var(--font-body);fill:var(--ink);paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+
+@media (max-width: 900px){
+  .layout{grid-template-columns:1fr;grid-template-rows:auto auto}
+  aside{border-left:0;border-top:1px solid var(--line)}
+  .pane{overflow:visible}
+  body{height:auto}
+  html{height:auto}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Astronaut Health Relationship Web</h1>
+    <p class="sub">NASA Space Apps 2026 · health monitoring for astronauts · built from your research notes (13 Nov 2026)</p>
+  </div>
+  <div class="controls" role="group" aria-label="Show link types">
+    <span class="lbl">Show:</span>
+    <button class="tog" data-layer="causal" aria-pressed="true" style="color:var(--e-causal)"><span class="sw"></span><span style="color:var(--ink)">Causes</span></button>
+    <button class="tog" data-layer="protects" aria-pressed="true" style="color:var(--c-counter)"><span class="sw"></span><span style="color:var(--ink)">Protects</span></button>
+    <button class="tog" data-layer="measures" aria-pressed="true" style="color:var(--c-signal)"><span class="sw"></span><span style="color:var(--ink)">Measures</span></button>
+    <button class="tog" data-layer="confounds" aria-pressed="true" style="color:var(--e-confound)"><span class="sw"></span><span style="color:var(--ink)">Confounds</span></button>
+    <button class="tog" id="strong" aria-pressed="false" style="color:var(--c-body)"><span style="color:var(--ink)">Strongest evidence only ⭐⭐⭐</span></button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="graph-wrap" id="graphWrap">
+    <svg id="web" viewBox="0 0 1240 760" role="img" aria-label="Relationship web: four spaceflight stressors act through cortisol, inflammation, fluid shift and unloading on immune, bone, muscle, heart, vessels and glucose, ending in latent virus reactivation and symptoms; a right-hand column lists the signals that can measure each node."></svg>
+    <div class="hint">Hover to trace · click for details and sources · drag boxes to rearrange</div>
+  </section>
+  <aside>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-overview" aria-selected="true">Overview</button>
+      <button class="tab" role="tab" id="tab-details" aria-selected="false">Details</button>
+      <button class="tab" role="tab" id="tab-sources" aria-selected="false">Sources</button>
+    </div>
+    <div class="pane" id="pane"></div>
+  </aside>
+</main>
+
+<script>
+/* ---------------- DATA ---------------- */
+const SOURCES = [
+  // Read first
+  {id:'hazards',g:'Read first',t:'NASA – 5 Hazards of Human Spaceflight',u:'https://www.nasa.gov/hrp/hazards'},
+  {id:'immrisk',g:'Read first',t:'NASA Immune Risk page (incl. Immune Risk DAG)',u:'https://www.nasa.gov/directorates/esdmd/hhp/immune-risk/'},
+  {id:'crucian18',g:'Read first',t:'Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)',u:'https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full'},
+  // Stress → immune
+  {id:'mehta17',g:'Stress → immune',t:'Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581'},
+  {id:'salivary',g:'Stress → immune',t:'Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226'},
+  {id:'evrep',g:'Stress → immune',t:'NASA Evidence Report: Risk of Crew Adverse Health Event Due to Altered Immune Response (Crucian & Sams)',u:'https://ntrs.nasa.gov/citations/20140002769'},
+  // Isolation
+  {id:'klos25',g:'Isolation',t:'Klos et al. 2025 – Effects of ICE environments on the immune system: systematic review',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11975566/'},
+  {id:'ponomarev21',g:'Isolation',t:'Ponomarev et al. 2021 – Immunological Aspects of Isolation and Confinement',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC8264770'},
+  {id:'mars500',g:'Isolation',t:'Mars-500 CoSI study (isolation → chronic cortisol)',u:'https://iafastro.directory/iac/paper/id/20164/abstract-pdf/IAC-13,A5,2,8,x20164.brief.pdf'},
+  // Radiation + microgravity
+  {id:'wadhwa24',g:'Radiation + microgravity',t:'Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)',u:'https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w'},
+  {id:'continuum',g:'Radiation + microgravity',t:'NASA poster – Immune dysregulation: spaceflight vs ground analogs ("continuum" figure)',u:'https://ntrs.nasa.gov/api/citations/20200001675/downloads/20200001675.pdf'},
+  {id:'proton',g:'Radiation + microgravity',t:'Proton radiation + simulated microgravity on immune cells',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3743739/'},
+  {id:'hls_spe',g:'Radiation + microgravity',t:'Hindlimb suspension + SPE-like radiation impairs bacterial clearance',u:'https://www.pubmed.gov/24454913/'},
+  {id:'radiso',g:'Radiation + microgravity',t:'Space radiation + social isolation in rats (Life 2025)',u:'https://doaj.org/article/3ced14d5fd544cd29d2035dc98753f8c'},
+  {id:'zhang17',g:'Radiation + microgravity',t:'Zhang et al. 2017 – Microgravity + radiation on osteoclast fusion',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5713410'},
+  {id:'willey',g:'Radiation + microgravity',t:'Willey et al. – Ionizing radiation and bone loss',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3401480'},
+  // Microgravity → immune cells
+  {id:'chang',g:'Microgravity → immune cells',t:'Chang et al. – Spaceflight impairs T-cell tolerance; microgravity directly disrupts T-cell activation',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6137544'},
+  // Bone / muscle
+  {id:'receptors',g:'Bone / muscle / osteoimmunology',t:'Receptors implicated in microgravity-induced bone loss (MDPI)',u:'https://mdpi.com/2813-2564/3/2/14'},
+  {id:'osteoclast',g:'Bone / muscle / osteoimmunology',t:'Osteoclast-mediated bone disease & microgravity (Encyclopedia)',u:'https://encyclopedia.pub/entry/2143'},
+  {id:'il6',g:'Bone / muscle / osteoimmunology',t:'IL-6 and spaceflight (npj Microgravity)',u:'https://www.nature.com/articles/s41526-018-0057-9'},
+  {id:'twinsland',g:'Bone / muscle / osteoimmunology',t:'Twins Study landing re-analysis (muscle regeneration vs inflammation)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC9444344'},
+  {id:'inact',g:'Bone / muscle / osteoimmunology',t:'Inactivity amplifies muscle’s catabolic response to cortisol (NTRS)',u:'https://ntrs.nasa.gov/citations/20040141797'},
+  {id:'bedrest28',g:'Bone / muscle / osteoimmunology',t:'28-day bed rest with hypercortisolemia → insulin resistance',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC2856785'},
+  {id:'muscgen',g:'Bone / muscle / osteoimmunology',t:'Muscle loss genetics in simulated microgravity (The Scientist)',u:'https://www.the-scientist.com/zero-gravity-zero-gain-the-genetics-behind-muscle-loss-in-space-71612'},
+  // Cardiovascular
+  {id:'cvmeta',g:'Cardiovascular',t:'Effects of weightlessness on the cardiovascular system: meta-analysis (Frontiers 2024)',u:'https://www.frontiersin.org/articles/10.3389/fphys.2024.1438089/full'},
+  {id:'norsk15',g:'Cardiovascular',t:'Norsk et al. 2015 – Fluid shifts & BP reduction in long spaceflight',u:'https://www.physoc.org/?p=70744'},
+  {id:'perhonen01',g:'Cardiovascular',t:'Perhonen et al. 2001 – Cardiac atrophy after bed rest and spaceflight',u:'https://pubmed.ncbi.nlm.nih.gov/11457776/'},
+  {id:'jacc23',g:'Cardiovascular',t:'Cardiac effects of long-duration spaceflight (JACC 2023)',u:'https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight'},
+  {id:'delp16',g:'Cardiovascular',t:'Delp et al. 2016 – Apollo astronauts’ CVD mortality & deep-space radiation',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4964660/'},
+  {id:'arterial20',g:'Cardiovascular',t:'Arterial structure & function during and after long spaceflight (2020)',u:'https://pesquisa.bvsalud.org/portal/resource/e/mdl-32525433'},
+  {id:'arteries25',g:'Cardiovascular',t:'Arteries normal 5 years after spaceflight (APS 2025)',u:'https://www.physiology.org/detail/news/2025/07/24/good-news-for-astronauts--arteries-remain-normal-years-after-long-duration-spaceflight'},
+  {id:'vascular',g:'Cardiovascular',t:'CSA Vascular Series (stiffness + insulin resistance)',u:'https://revibiomedica.sld.cu/index.php/ibi/article/download/250/386'},
+  // Stress signals
+  {id:'mentalhrv',g:'Stress signals: HRV, sleep, sweat',t:'Mental stress & autonomic cardiac modulation in weightlessness',u:'https://bvbvf1.bib-bvb.de/vufind/PrimoRecord/cdi_proquest_miscellaneous_734199460'},
+  {id:'autonomic',g:'Stress signals: HRV, sleep, sweat',t:'Autonomic function in spaceflight review',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4465859'},
+  {id:'barger14',g:'Stress signals: HRV, sleep, sweat',t:'Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436'},
+  {id:'sweat',g:'Stress signals: HRV, sleep, sweat',t:'Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103'},
+  // Symptoms
+  {id:'crucian16',g:'Symptoms',t:'Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5098747'},
+  {id:'hsv1',g:'Symptoms',t:'HSV-1 dermatitis during long-duration spaceflight',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC9028032'},
+  {id:'shingles',g:'Symptoms',t:'Shingles in an ISS astronaut',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10992860/'},
+  // Wearables
+  {id:'wang25',g:'Wearables',t:'Wang et al. 2025 – Flexible wearables for astronaut health: status & challenges',u:'https://doi.org/10.1016/j.wees.2024.12.007'},
+  {id:'astroskin',g:'Wearables',t:'CSA Bio-Monitor / Astroskin',u:'https://www.asc-csa.gc.ca/eng/sciences/astroskin.asp'},
+  {id:'trialx',g:'Wearables',t:'Wearables used in space missions (TrialX)',u:'https://trialx.com/space-health-research-wearable-devices/'},
+  {id:'archer',g:'Wearables',t:'Artemis II ARCHeR wristbands',u:'https://www.newsbytesapp.com/news/science/nasa-s-artemis-ii-astronauts-to-wear-special-wristband-monitors/story'},
+  // Camera
+  {id:'nowara',g:'Camera / rPPG / NIR',t:'Nowara et al. – Near-infrared imaging PPG during driving (MERL)',u:'https://shadow.merl.com/publications/docs/TR2020-161.pdf'},
+  {id:'rgbnir',g:'Camera / rPPG / NIR',t:'RGB-NIR dual-modality heart-rate estimation (Sensors 2023)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10346879'},
+  {id:'repss',g:'Camera / rPPG / NIR',t:'RePSS RGB+NIR fusion challenge',u:'https://ceur-ws.org/Vol-4095/paper1.pdf'},
+  {id:'fullbody',g:'Camera / rPPG / NIR',t:'Full-body rPPG & pulse transit time (arXiv)',u:'https://ar5iv.labs.arxiv.org/html/2303.09638'},
+  {id:'mayo',g:'Camera / rPPG / NIR',t:'Mayo Clinic hands-free camera in space',u:'https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs'},
+  {id:'intelomed',g:'Camera / rPPG / NIR',t:'Intelomed NASA video-based vital signs project',u:'https://us.inspiralia.com/our-work-list/intelomed-inc/'},
+  // Face
+  {id:'barrett19',g:'Facial expression & stress',t:'Barrett et al. 2019 – Emotional Expressions Reconsidered',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6640856'},
+  {id:'microexp',g:'Facial expression & stress',t:'Micro-expressions training tool fails (phys.org)',u:'https://phys.org/news/2019-09-flaws-tool.pdf'},
+  {id:'jyu',g:'Facial expression & stress',t:'Stress from rPPG + facial features in online meetings (JYU)',u:'https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download'},
+  {id:'facebio',g:'Facial expression & stress',t:'Facial videos + biosignals for stress estimation (arXiv 2026)',u:'https://arxiv.org/html/2601.04376v2'},
+  {id:'euai',g:'Facial expression & stress',t:'EU AI Act emotion-recognition prohibition explained (FPF)',u:'https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/'},
+  // Early infection
+  {id:'mishra20',g:'Early infection detection',t:'Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data',u:'https://bohrium.dp.tech/paper/arxiv/565ddbdf6dd250a4a1a24832b221d0cbf76f9e38e192400ab71d148581f79a7d'},
+  {id:'stanford',g:'Early infection detection',t:'Stanford Medicine – Smartwatch can detect early signs of illness',u:'https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html'},
+  {id:'laad',g:'Early infection detection',t:'LAAD – deep learning on resting HR for early infection (medRxiv)',u:'https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf'},
+  // Big picture
+  {id:'twins19',g:'Big picture',t:'NASA Twins Study (Science 2019)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7580864'},
+  {id:'astroimm',g:'Big picture',t:'Astroimmunology review (Nat Rev Immunol 2025)',u:'https://vivo.weill.cornell.edu/display/pubid41102553'},
+  {id:'insp4',g:'Big picture',t:'Inspiration4 crew multi-omics & immune profiles',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11166952'}
+];
+
+const COLS = [
+  {x:120,t:'STRESSORS'},{x:370,t:'MECHANISM HUBS'},{x:630,t:'BODY EFFECTS'},{x:860,t:'ILLNESS'},{x:1110,t:'WHAT YOU CAN MEASURE'}
+];
+
+const NODES = [
+  // stressors
+  {id:'isolation',cat:'stressor',label:'Isolation & confinement',x:120,y:130,varies:'Slowly, grows with mission days',src:['hazards','klos25','ponomarev21'],
+   desc:'Always on, and grows with mission length. Acts mostly upstream through stress, plus a direct immune effect from meeting fewer new microbes.'},
+  {id:'stress',cat:'stressor',label:'Psychological stress',x:120,y:280,varies:'Yes: EVA, sleep loss, conflict',src:['hazards'],
+   desc:'The most useful factor to monitor: it varies day to day and reaches immune, muscle, bone, vessels and glucose through cortisol. Trackable with HRV, sleep and saliva cortisol.'},
+  {id:'radiation',cat:'stressor',label:'Space radiation',x:120,y:450,varies:'Yes: spikes with solar particle events',src:['hazards','wadhwa24','continuum'],
+   desc:'Varies with solar events and is already tracked by dosimeters. Hits lymphocytes, bone and, in deep space, blood vessels.'},
+  {id:'microgravity',cat:'stressor',label:'Microgravity',x:120,y:620,varies:'No: always ~100%',src:['hazards','continuum'],
+   desc:'The biggest cause in the map (muscle, bone, heart, direct immune effect, and it amplifies stress). Because it never changes, track its variable version: exercise and loading logs.'},
+  // hubs
+  {id:'cortisol',cat:'hub',label:'Cortisol / HPA axis',x:370,y:200,src:['mehta17','salivary'],
+   desc:'Stress hormone hub (with DHEA). Connects stress to immune suppression, muscle breakdown, bone resorption and insulin resistance.'},
+  {id:'inflam',cat:'hub',label:'Inflammation / oxidative stress',x:370,y:360,src:['wadhwa24','il6'],
+   desc:'The main hub. Shared signalling molecules (IL-6, RANKL, TNF-α) link the immune system, bone, muscle and blood vessels. Radiation and unloading both raise oxidative stress.'},
+  {id:'fluidshift',cat:'hub',label:'Fluid shift',x:370,y:500,src:['cvmeta','norsk15'],
+   desc:'Blood moves toward the head: puffy face, headache, stuffy head, flu-like feeling. Changes HR, HRV and BP baselines and can look like illness, so it confounds several signals.'},
+  {id:'unloading',cat:'hub',label:'Unloading / inactivity',x:370,y:620,src:['receptors'],
+   desc:'No weight-bearing, so muscle, bone and heart shrink together. Inactivity also makes muscle about 3× more sensitive to cortisol.'},
+  {id:'exercise',cat:'counter',label:'Exercise & loading',x:370,y:730,src:['jacc23','il6'],
+   desc:'The one countermeasure that protects muscle, bone and heart together. Fully offsets cardiac atrophy; only slows muscle and bone loss.'},
+  // body
+  {id:'immune',cat:'body',label:'Immune dysregulation',x:630,y:110,src:['immrisk','crucian18','evrep','continuum','twins19','astroimm','insp4'],
+   desc:'About 50% of astronauts. White-cell counts look normal, but T-cell and NK-cell function drops and plasma cytokines rise. Lasts the whole 6-month mission. NASA: still unclear whether it causes more disease.'},
+  {id:'glucose',cat:'body',label:'Insulin resistance (glucose)',x:630,y:230,src:['vascular','bedrest28'],
+   desc:'Fasting insulin was elevated in flight in all astronauts (CSA Vascular). Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min. CGMs already used in space research.'},
+  {id:'bone',cat:'body',label:'Bone loss',x:630,y:360,src:['receptors','osteoclast'],
+   desc:'Osteoclasts dominate: resorption up, formation down. Hit from four directions: unloading, radiation, cortisol and inflammation (RANKL).'},
+  {id:'muscle',cat:'body',label:'Muscle loss',x:630,y:480,src:['receptors','muscgen','il6'],
+   desc:'Atrophy continues despite exercise programmes. Muscle also signals back to immunity through myokines such as IL-6.'},
+  {id:'heart',cat:'body',label:'Heart & blood pressure',x:630,y:600,src:['cvmeta','perhonen01','jacc23'],
+   desc:'HR up, BP down ~10 mmHg, HRV down. Left-ventricle mass −12% after a short flight. A smaller heart can still be healthy (normal adaptation vs a problem). Fainting on standing after landing.'},
+  {id:'vessels',cat:'body',label:'Blood vessels',x:630,y:720,src:['delp16','arterial20','arteries25','vascular'],
+   desc:'Real risk for deep space (Apollo data, mouse radiation studies), but in low Earth orbit arteries showed no thickening or stiffening over 5 years.'},
+  // outcomes
+  {id:'viral',cat:'outcome',label:'Latent virus reactivation',x:860,y:160,src:['mehta17','crucian18'],
+   desc:'EBV, VZV, CMV and HSV-1 shed by 53% of shuttle and 61% of ISS astronauts. Rises with mission length. Mostly without symptoms.'},
+  {id:'symptoms',cat:'outcome',label:'Illness & symptoms',x:860,y:330,src:['crucian16','hsv1','shingles'],
+   desc:'ISS records: skin rashes 1.12 per flight-year, upper respiratory 0.97. 46% of crew had a notable event. In one shingles case vital signs stayed normal, so symptom logging matters.'},
+  // devices
+  {id:'wearables',cat:'device',label:'Wearables (Astroskin, ARCHeR)',x:860,y:575,src:['wang25','astroskin','trialx','archer'],
+   desc:'Already flown: Astroskin smart shirt on ISS since 2018 (ECG, BP, SpO₂, breathing, skin temp, activity), Garmin on Polaris Dawn, ARCHeR wristbands on Artemis II. Hardware is mostly solved; the software that fuses signals is the gap.'},
+  {id:'rppg',cat:'device',label:'Camera rPPG (RGB + NIR)',x:860,y:690,src:['nowara','rgbnir','repss','mayo','intelomed','fullbody'],
+   desc:'Contact-free HR, HRV and breathing from facial colour changes. RGB+NIR fusion is most robust. Not yet validated on astronauts in orbit: an opportunity. Hackathon-friendly with a webcam and rPPG-Toolbox.'},
+  // signals
+  {id:'missionday',cat:'signal',label:'Mission day count',x:1110,y:60,verdict:'good',src:[],desc:'Free proxy for isolation load and for viral reactivation risk, which grows with mission length.'},
+  {id:'saliva',cat:'signal',label:'Saliva cortisol + viral DNA',x:1110,y:115,verdict:'good',src:['mehta17','salivary','archer'],desc:'Reads the stress → virus chain directly. Needs a lab, but saliva is easy to collect; used on ISS and Artemis II.'},
+  {id:'sweat',cat:'signal',label:'Sweat cortisol',x:1110,y:170,verdict:'early',src:['sweat'],desc:'Direct hormone reading, but only prototypes; some need visible sweat; not tested in space.'},
+  {id:'cgm',cat:'signal',label:'CGM (glucose)',x:1110,y:225,verdict:'good',src:[],desc:'Continuous glucose monitors are already used in space health research.'},
+  {id:'symptomlog',cat:'signal',label:'Symptom log',x:1110,y:280,verdict:'good',src:['crucian16','shingles'],desc:'Rash, sore throat, fatigue. Open question: how to collect it without annoying a busy crew.'},
+  {id:'face',cat:'signal',label:'Facial behaviour change',x:1110,y:335,verdict:'caution',src:['barrett19','microexp','jyu','facebio','euai'],desc:'Faces are not reliable emotion readers; drop micro-expressions. Useful only as one input in fusion, as change from the person’s own baseline. Frame as medical/safety under the EU AI Act; crew own their data.'},
+  {id:'bp',cat:'signal',label:'Blood pressure',x:1110,y:390,verdict:'weak',src:['mentalhrv','norsk15'],desc:'Stress raises it ~7 mmHg, but spaceflight lowers it ~10 mmHg. Weak stress signal.'},
+  {id:'hrv',cat:'signal',label:'HRV (ECG / PPG)',x:1110,y:445,verdict:'good',src:['mentalhrv','autonomic'],desc:'Stress shifts it toward sympathetic, and that response is unchanged in space. Baseline is lowered by microgravity, so compare to the astronaut’s own in-flight baseline.'},
+  {id:'restHR',cat:'signal',label:'Resting HR vs own baseline',x:1110,y:500,verdict:'good',src:['mishra20','stanford','laad'],desc:'Smartwatch study: 63% of COVID cases flaggable before symptoms; LSTM autoencoder (LAAD) flagged 92%. Catches symptomatic infection, not silent viral shedding.'},
+  {id:'sleep',cat:'signal',label:'Sleep (actigraphy)',x:1110,y:555,verdict:'good',src:['barger14'],desc:'Astronauts average ~6 h vs 8.5 h scheduled; ~75% used sleep meds. Both a cause and a symptom of stress.'},
+  {id:'scans',cat:'signal',label:'Scans & strength tests',x:1110,y:610,verdict:'weak',src:[],desc:'Only way to see muscle and bone change, and it is slow. No daily reading.'},
+  {id:'exerciselog',cat:'signal',label:'Exercise / loading log',x:1110,y:665,verdict:'good',src:[],desc:'The variable version of microgravity: how much loading each astronaut actually got.'},
+  {id:'dosimeter',cat:'signal',label:'Radiation dosimeter',x:1110,y:720,verdict:'good',src:[],desc:'Already exists on every mission; captures dose spikes from solar events.'}
+];
+
+const EDGES = [
+  // ----- causal
+  {s:'isolation',t:'stress',type:'causal',label:'chronic high cortisol',ev:'H',stars:3,sec:'3.1',src:['mars500','klos25'],note:'Mars-500 (520 days, no microgravity or radiation) produced long-lasting high cortisol from isolation and confinement alone.'},
+  {s:'isolation',t:'immune',type:'causal',label:'fewer microbes → "immune amnesia"',ev:'H',stars:2,sec:'3.2',src:['klos25','ponomarev21','mars500'],note:'Mars-500 immune system was dysregulated rather than simply weak. A review of 140 ICE studies found dysregulation in every setting, mostly reversing afterwards. Antarctic crews had lower salivary immunoglobulins.'},
+  {s:'stress',t:'cortisol',type:'causal',label:'activates HPA axis',ev:'H',stars:3,sec:'3.3',src:['mehta17','salivary'],note:'Raises cortisol and DHEA. Long-duration flight also changed the daily salivary cortisol rhythm.'},
+  {s:'stress',t:'inflam',type:'causal',label:'adds inflammatory load',ev:'H',stars:1,sec:'3.14',src:['arterial20'],note:'Psychological stress is one of several sources of oxidative and inflammatory damage (with radiation, low activity, poor nutrition and high oxygen during EVA).'},
+  {s:'cortisol',t:'immune',type:'causal',label:'weakens cellular immunity',ev:'H',stars:3,sec:'3.3',src:['mehta17','salivary','evrep','crucian18'],note:'On the ISS, crew who shed a latent virus had higher salivary cortisol. Reactivation was distinct to crew who did spacewalks (EVA).'},
+  {s:'cortisol',t:'muscle',type:'causal',label:'muscle protein loss',ev:'H',stars:3,sec:'3.4',src:['inact'],note:'After 14 days of bed rest, high cortisol tripled amino-acid loss from muscle.'},
+  {s:'cortisol',t:'bone',type:'causal',label:'osteoclast activity ↑',ev:'H',stars:1,sec:'3.5',src:[],note:'Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid.'},
+  {s:'cortisol',t:'glucose',type:'causal',label:'insulin resistance',ev:'H',stars:2,sec:'3.15',src:['bedrest28'],note:'Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min.'},
+  {s:'radiation',t:'inflam',type:'causal',label:'reactive oxygen species',ev:'AC',stars:2,sec:'3.7',src:['willey','zhang17','wadhwa24'],note:'Radiation and unloading share a mechanism: both raise oxidative stress.'},
+  {s:'radiation',t:'immune',type:'causal',label:'lymphocytes most radio-sensitive',ev:'ACH',stars:2,sec:'3.6',src:['proton','hls_spe','wadhwa24','radiso'],note:'Dose-dependent lymphocyte drop after proton radiation (animals). Human lymphocytes show more chromosomal aberrations after long missions. A strong solar particle event plus simulated microgravity impaired bacterial clearance in mice.'},
+  {s:'radiation',t:'bone',type:'causal',label:'resorption ↑ then formation ↓',ev:'A',stars:2,sec:'3.7',src:['willey','zhang17'],note:'Mouse tibia osteoclasts: radiation +46%, hindlimb unloading +47%, both combined +64%.'},
+  {s:'radiation',t:'vessels',type:'causal',label:'endothelial damage (deep space)',ev:'AH',stars:1,sec:'3.13',src:['delp16'],note:'Apollo lunar astronauts: 43% cardiovascular deaths vs 9–11% for others, but only 3 of 7 people. In mice, deep-space-type radiation caused lasting damage to the vessel lining.',bend:-.08},
+  {s:'microgravity',t:'immune',type:'causal',label:'directly disrupts T-cell activation',ev:'CA',stars:2,sec:'3.8',src:['chang'],note:'Independent of stress hormones: a second route to weak T cells and viral reactivation.',bend:-.06},
+  {s:'microgravity',t:'fluidshift',type:'causal',label:'blood moves headward',ev:'H',stars:3,sec:'3.12',src:['cvmeta','norsk15'],note:''},
+  {s:'microgravity',t:'unloading',type:'causal',label:'no weight-bearing',ev:'H',stars:3,sec:'3.9',src:['receptors'],note:'',bend:0},
+  {s:'microgravity',t:'inflam',type:'causal',label:'oxidative stress',ev:'AC',stars:2,sec:'3.7 · 3.10',src:['wadhwa24','zhang17'],note:'Inflammation from microgravity plus radiation can trigger bone loss.'},
+  {s:'microgravity',t:'stress',type:'amplifies',label:'amplifies stress effects',ev:'H',stars:3,sec:'3.4',src:['inact'],note:'Stress and microgravity multiply rather than add: inactivity makes muscle ~3× more responsive to cortisol.',bend:.25},
+  {s:'unloading',t:'muscle',type:'causal',label:'atrophy',ev:'H',stars:3,sec:'3.9',src:['receptors','muscgen'],note:'Strongest link in the map. Happens despite exercise programmes.'},
+  {s:'unloading',t:'bone',type:'causal',label:'resorption ↑, formation ↓',ev:'H',stars:3,sec:'3.9',src:['receptors','osteoclast','zhang17'],note:'Microgravity impairs osteocytes and osteoblasts, so osteoclasts dominate.'},
+  {s:'unloading',t:'heart',type:'causal',label:'cardiac atrophy',ev:'H',stars:3,sec:'3.12',src:['perhonen01','jacc23'],note:'Left-ventricle mass fell ~12% after a short flight. Scott Kelly’s heart shrank ~0.74 g/week but still worked well.'},
+  {s:'unloading',t:'glucose',type:'causal',label:'inactivity → insulin resistance',ev:'H',stars:2,sec:'3.15',src:['bedrest28','vascular'],note:''},
+  {s:'fluidshift',t:'heart',type:'causal',label:'HR ↑ · BP ↓ · HRV ↓',ev:'H',stars:3,sec:'3.12',src:['cvmeta','norsk15','autonomic'],note:'BP about 10 mmHg lower on long missions. After landing: orthostatic intolerance (fainting on standing).'},
+  {s:'inflam',t:'immune',type:'causal',label:'plasma cytokines ↑',ev:'H',stars:2,sec:'2 · 3.10',src:['crucian18','wadhwa24'],note:''},
+  {s:'inflam',t:'bone',type:'causal',label:'RANKL → osteoclasts',ev:'AC',stars:2,sec:'3.10',src:['receptors','osteoclast','wadhwa24'],note:'RANKL binding RANK is required to make osteoclasts.'},
+  {s:'inflam',t:'vessels',type:'causal',label:'oxidative damage',ev:'H',stars:1,sec:'3.14',src:['arterial20','arteries25'],note:'In LEO, biomarkers rose in flight but returned to baseline within a week, and arteries showed no thickening or stiffening over 5 years. Real deep-space risk; mostly theoretical for ISS-length missions.'},
+  {s:'immune',t:'bone',type:'causal',label:'T/B cells make RANKL (two-way)',ev:'AC',stars:2,sec:'3.10',src:['receptors','osteoclast'],note:'Osteoimmunology: bone and immune cells share RANKL, so effects run both ways.',bend:.18},
+  {s:'muscle',t:'immune',type:'causal',label:'myokines (IL-6)',ev:'A',stars:1,sec:'3.11',src:['il6','muscgen'],note:'Partly hypothesis. Post-exercise IL-6 scales with body weight; less IL-6 in space may explain why exercise does not fully stop loss.',bend:.22},
+  {s:'immune',t:'viral',type:'causal',label:'T/NK ↓ → herpes reactivation',ev:'H',stars:3,sec:'2',src:['mehta17','crucian18','immrisk','evrep'],note:'Frequency and viral load rise with mission length. Resembles shingles patients, but milder.'},
+  {s:'viral',t:'symptoms',type:'causal',label:'rash, cold sores, shingles',ev:'H',stars:2,sec:'6',src:['crucian16','hsv1','shingles'],note:'Most reactivation is asymptomatic. Cases include an HSV-1 rash lasting ~200 days and shingles with normal vital signs.'},
+  {s:'glucose',t:'vessels',type:'causal',label:'stiffer arteries',ev:'H',stars:2,sec:'3.15',src:['vascular'],note:'CSA Vascular: carotid stiffness and insulin resistance rose together.',bend:-.3},
+  // ----- protects
+  {s:'exercise',t:'heart',type:'protects',label:'offsets cardiac atrophy',ev:'H',stars:3,sec:'3.12',src:['jacc23'],note:'13-astronaut ISS study.'},
+  {s:'exercise',t:'muscle',type:'protects',label:'slows loss (partial)',ev:'H',stars:2,sec:'3.9 · 3.11',src:['il6'],note:'Loss continues despite exercise programmes.'},
+  {s:'exercise',t:'bone',type:'protects',label:'slows loss (partial)',ev:'H',stars:2,sec:'3.11',src:['il6'],note:''},
+  // ----- confounds
+  {s:'fluidshift',t:'symptoms',type:'confounds',label:'puffy face & headache look like illness',ev:'H',sec:'6',src:['cvmeta'],note:'Do not flag fluid-shift symptoms as infection.'},
+  {s:'fluidshift',t:'restHR',type:'confounds',label:'raises HR → set baseline in flight',ev:'H',sec:'7',src:['cvmeta'],note:'Other HR confounders: stress, intense exercise, medications, vaccination.',bend:.2},
+  {s:'fluidshift',t:'hrv',type:'confounds',label:'lowers HRV baseline',ev:'H',sec:'5',src:['autonomic'],note:'',bend:.2},
+  {s:'fluidshift',t:'bp',type:'confounds',label:'lowers BP ~10 mmHg',ev:'H',sec:'5',src:['norsk15'],note:'',bend:.2},
+  {s:'fluidshift',t:'face',type:'confounds',label:'puffy face changes geometry',ev:'',sec:'10',src:[],note:'Set the facial baseline in flight. Astronauts are also trained to stay composed.',bend:.2},
+  {s:'fluidshift',t:'rppg',type:'confounds',label:'may shift rPPG baseline (untested)',ev:'',sec:'9',src:[],note:''},
+  {s:'muscle',t:'inflam',type:'confounds',label:'landing cytokine spike may be regeneration',ev:'H',sec:'3.11',src:['twinsland'],note:'Twins Study re-analysis: inflammatory markers spiking at landing may reflect muscle repair, not illness. High cytokines are not always "sick".'},
+  // ----- measures
+  {s:'missionday',t:'isolation',type:'measures',label:'days confined',sec:'4',src:[],note:''},
+  {s:'saliva',t:'cortisol',type:'measures',label:'direct hormone',sec:'5',src:['mehta17','salivary'],note:''},
+  {s:'saliva',t:'viral',type:'measures',label:'viral DNA shedding',sec:'5',src:['mehta17','archer'],note:''},
+  {s:'sweat',t:'cortisol',type:'measures',label:'hormone (prototype)',sec:'5',src:['sweat'],note:''},
+  {s:'cgm',t:'glucose',type:'measures',label:'continuous glucose',sec:'3.15',src:[],note:''},
+  {s:'symptomlog',t:'symptoms',type:'measures',label:'daily check-in',sec:'6',src:['crucian16','shingles'],note:''},
+  {s:'face',t:'stress',type:'measures',label:'change vs own baseline (fusion only)',sec:'10',src:['barrett19','microexp','jyu','facebio','euai'],note:'Video-meeting study: rPPG alone 78.75%, face alone 73.75%, combined 82.50%.'},
+  {s:'bp',t:'stress',type:'measures',label:'+~7 mmHg (weak)',sec:'5',src:['mentalhrv'],note:''},
+  {s:'hrv',t:'stress',type:'measures',label:'sympathetic shift',sec:'5',src:['mentalhrv','autonomic'],note:''},
+  {s:'restHR',t:'symptoms',type:'measures',label:'pre-symptom flag (63%)',sec:'7',src:['mishra20','stanford','laad'],note:'81% of COVID cases changed HR, steps or sleep. Limit: catches symptomatic infection, not silent viral shedding.'},
+  {s:'sleep',t:'stress',type:'measures',label:'cause and symptom',sec:'5',src:['barger14'],note:''},
+  {s:'scans',t:'muscle',type:'measures',label:'slow, not daily',sec:'4',src:[],note:''},
+  {s:'scans',t:'bone',type:'measures',label:'slow, not daily',sec:'4',src:[],note:''},
+  {s:'exerciselog',t:'unloading',type:'measures',label:'loading actually received',sec:'4',src:[],note:''},
+  {s:'dosimeter',t:'radiation',type:'measures',label:'dose & solar spikes',sec:'4',src:[],note:''},
+  {s:'wearables',t:'hrv',type:'measures',label:'chest ECG',sec:'8',src:['astroskin','wang25'],note:'Wrist PPG is noisier than chest ECG.'},
+  {s:'wearables',t:'restHR',type:'measures',label:'HR, 48 h continuous',sec:'8',src:['astroskin','trialx'],note:''},
+  {s:'wearables',t:'sleep',type:'measures',label:'wristband actigraphy',sec:'8',src:['archer','trialx'],note:''},
+  {s:'rppg',t:'hrv',type:'measures',label:'contact-free HRV',sec:'9',src:['nowara','rgbnir','repss'],note:''},
+  {s:'rppg',t:'restHR',type:'measures',label:'contact-free HR',sec:'9',src:['mayo','intelomed'],note:''},
+  {s:'rppg',t:'vessels',type:'measures',label:'pulse transit time (partial proxy)',sec:'9',src:['fullbody'],note:'Reads the pulse, not vessel walls; stiffness needs ultrasound.'}
+];
+
+/* ---------------- META ---------------- */
+const CAT = {
+  stressor:{n:'Stressor',c:'--c-stressor'}, hub:{n:'Mechanism hub',c:'--c-hub'}, counter:{n:'Countermeasure',c:'--c-counter'},
+  body:{n:'Body effect',c:'--c-body'}, outcome:{n:'Illness outcome',c:'--c-outcome'}, device:{n:'Sensing device',c:'--c-device'}, signal:{n:'Measurable signal',c:'--c-signal'}
+};
+const VERDICT = {good:{t:'Good signal',c:'--v-good'},caution:{t:'Use with care',c:'--v-caution'},weak:{t:'Weak',c:'--v-weak'},early:{t:'Early / unproven in space',c:'--v-early'}};
+const ETYPE = {causal:{t:'Causes',c:'--e-causal'},amplifies:{t:'Amplifies',c:'--c-stressor'},protects:{t:'Protects',c:'--c-counter'},measures:{t:'Measures',c:'--c-signal'},confounds:{t:'Confounds',c:'--e-confound'}};
+const EVI = {H:'🧑 humans',A:'🐭 animals',C:'🧫 cells'};
+const LAYER_OF = {causal:'causal',amplifies:'causal',protects:'protects',measures:'measures',confounds:'confounds'};
+
+const byId = Object.fromEntries(NODES.map(n=>[n.id,n]));
+const srcById = Object.fromEntries(SOURCES.map(s=>[s.id,s]));
+EDGES.forEach((e,i)=>e.i=i);
+
+/* ---------------- STATE ---------------- */
+const state = {hover:null, sel:null, layers:{causal:true,protects:true,measures:true,confounds:true}, strong:false, tab:'overview'};
+function visible(e){
+  if(!state.layers[LAYER_OF[e.type]]) return false;
+  if(state.strong && (e.type==='causal'||e.type==='amplifies'||e.type==='protects') && e.stars<3) return false;
+  return true;
+}
+
+/* ---------------- SVG ---------------- */
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('web');
+function mk(tag,attrs,parent){const el=document.createElementNS(NS,tag);for(const k in (attrs||{}))el.setAttribute(k,attrs[k]);if(parent)parent.appendChild(el);return el;}
+const defs=mk('defs',{},svg);
+Object.keys(ETYPE).forEach(t=>{
+  const m=mk('marker',{id:'ar-'+t,viewBox:'0 0 10 10',refX:'8.5',refY:'5',markerWidth:'9',markerHeight:'9',markerUnits:'userSpaceOnUse',orient:'auto'},defs);
+  mk('path',{d:'M0,0 L10,5 L0,10 z',class:'mk-'+t},m);
+});
+const gCols=mk('g',{},svg);
+const bg=mk('rect',{x:0,y:0,width:1240,height:760,fill:'transparent'},gCols);
+COLS.forEach(c=>{const t=mk('text',{x:c.x,y:24,'text-anchor':'middle',class:'colhead'},gCols);t.textContent=c.t;});
+const devHead=mk('text',{x:860,y:528,'text-anchor':'middle',class:'colhead'},gCols);devHead.textContent='SENSING DEVICES';
+mk('line',{x1:990,y1:40,x2:990,y2:750,class:'colrule'},gCols);
+const gE=mk('g',{},svg), gH=mk('g',{},svg), gN=mk('g',{},svg), gL=mk('g',{},svg);
+
+EDGES.forEach(e=>{
+  const w = e.type==='measures'?1.4 : e.type==='confounds'?1.5 : [1.2,1.3,2.2,3.2][e.stars||0];
+  e.el=mk('path',{class:'edge et-'+e.type,'stroke-width':w,'marker-end':'url(#ar-'+e.type+')'},gE);
+  e.hit=mk('path',{class:'hit'},gH);
+  e.hit.addEventListener('pointerenter',()=>{state.hover={kind:'edge',id:e.i};render();});
+  e.hit.addEventListener('pointerleave',()=>{state.hover=null;render();});
+  e.hit.addEventListener('click',ev=>{ev.stopPropagation();select({kind:'edge',id:e.i});});
+});
+NODES.forEach(n=>{
+  const g=mk('g',{class:'node cat-'+n.cat,tabindex:'0',role:'button','aria-label':n.label+' ('+CAT[n.cat].n+')'},gN);
+  n.rect=mk('rect',{rx:14,ry:14},g);
+  if(n.verdict){n.dot=mk('circle',{r:4.5,style:'fill:var('+VERDICT[n.verdict].c+')'},g);}
+  n.text=mk('text',{'text-anchor':'middle',dy:'0.35em'},g);n.text.textContent=n.label;
+  n.g=g; n.h=28;
+  g.addEventListener('pointerenter',()=>{if(!drag){state.hover={kind:'node',id:n.id};render();}});
+  g.addEventListener('pointerleave',()=>{if(!drag){state.hover=null;render();}});
+  g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();select({kind:'node',id:n.id});}});
+  g.addEventListener('pointerdown',ev=>startDrag(ev,n));
+});
+bg.addEventListener('click',()=>{state.sel=null;render();showTab('overview');});
+
+function measure(){
+  NODES.forEach(n=>{
+    const tw=n.text.getComputedTextLength();
+    const pad=n.verdict?36:24; n.w=Math.ceil(tw+pad);
+    n.rect.setAttribute('x',-n.w/2);n.rect.setAttribute('y',-n.h/2);n.rect.setAttribute('width',n.w);n.rect.setAttribute('height',n.h);
+    if(n.verdict){n.dot.setAttribute('cx',-n.w/2+13);n.dot.setAttribute('cy',0);n.text.setAttribute('x',6);}
+  });
+  place();
+}
+function place(){NODES.forEach(n=>n.g.setAttribute('transform','translate('+n.x+','+n.y+')'));EDGES.forEach(geom);render();}
+function clip(n,px,py){
+  const dx=px-n.x, dy=py-n.y, hw=n.w/2+3, hh=n.h/2+3;
+  const t=Math.min(hw/Math.max(Math.abs(dx),1e-6), hh/Math.max(Math.abs(dy),1e-6));
+  return t>=1?[px,py]:[n.x+dx*t,n.y+dy*t];
+}
+function geom(e){
+  const a=byId[e.s], b=byId[e.t];
+  const dx=b.x-a.x, dy=b.y-a.y, len=Math.hypot(dx,dy)||1;
+  const k=(e.bend!==undefined?e.bend:0.1);
+  const cx=(a.x+b.x)/2-dy/len*len*k, cy=(a.y+b.y)/2+dx/len*len*k;
+  const p0=clip(a,cx,cy), p1=clip(b,cx,cy);
+  e.mid=[.25*p0[0]+.5*cx+.25*p1[0], .25*p0[1]+.5*cy+.25*p1[1]];
+  const d='M'+p0[0].toFixed(1)+','+p0[1].toFixed(1)+' Q'+cx.toFixed(1)+','+cy.toFixed(1)+' '+p1[0].toFixed(1)+','+p1[1].toFixed(1);
+  e.el.setAttribute('d',d); e.hit.setAttribute('d',d);
+}
+
+/* drag */
+let drag=null;
+function svgPt(ev){const p=svg.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+function startDrag(ev,n){
+  ev.stopPropagation();
+  const p=svgPt(ev); drag={n,ox:p.x-n.x,oy:p.y-n.y,sx:ev.clientX,sy:ev.clientY,moved:false};
+  n.g.setPointerCapture(ev.pointerId);
+  const move=e=>{
+    if(!drag)return;
+    if(!drag.moved && Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)<4) return;
+    drag.moved=true; const q=svgPt(e);
+    n.x=Math.max(n.w/2,Math.min(1240-n.w/2,q.x-drag.ox)); n.y=Math.max(40,Math.min(748,q.y-drag.oy));
+    n.g.setAttribute('transform','translate('+n.x+','+n.y+')');
+    EDGES.forEach(ed=>{if(ed.s===n.id||ed.t===n.id)geom(ed);}); render();
+  };
+  const up=()=>{
+    n.g.removeEventListener('pointermove',move); n.g.removeEventListener('pointerup',up); n.g.removeEventListener('pointercancel',up);
+    const wasDrag=drag&&drag.moved; drag=null;
+    if(!wasDrag) select({kind:'node',id:n.id});
+  };
+  n.g.addEventListener('pointermove',move); n.g.addEventListener('pointerup',up); n.g.addEventListener('pointercancel',up);
+}
+
+function focusSet(){
+  const f=state.hover||state.sel; if(!f) return null;
+  const N=new Set(), E=new Set();
+  if(f.kind==='node'){N.add(f.id);EDGES.forEach(e=>{if(visible(e)&&(e.s===f.id||e.t===f.id)){E.add(e.i);N.add(e.s);N.add(e.t);}});}
+  else if(f.kind==='edge'){const e=EDGES[f.id];E.add(e.i);N.add(e.s);N.add(e.t);}
+  else if(f.kind==='source'){NODES.forEach(n=>{if(n.src.includes(f.id))N.add(n.id);});EDGES.forEach(e=>{if(e.src.includes(f.id)){E.add(e.i);N.add(e.s);N.add(e.t);}});}
+  return {N,E};
+}
+function render(){
+  const fs=focusSet();
+  EDGES.forEach(e=>{
+    const v=visible(e);
+    e.el.classList.toggle('off',!v); e.hit.classList.toggle('off',!v);
+    e.el.classList.toggle('dim',!!fs&&!fs.E.has(e.i)); e.el.classList.toggle('hl',!!fs&&fs.E.has(e.i));
+  });
+  NODES.forEach(n=>{
+    n.g.classList.toggle('dim',!!fs&&!fs.N.has(n.id));
+    n.g.classList.toggle('sel',!!state.sel&&state.sel.kind==='node'&&state.sel.id===n.id);
+  });
+  gL.textContent='';
+  if(fs){fs.E.forEach(i=>{const e=EDGES[i];if(!visible(e))return;const t=mk('text',{x:e.mid[0].toFixed(1),y:(e.mid[1]-5).toFixed(1),'text-anchor':'middle',class:'elabel'},gL);t.textContent=e.label;});}
+}
+
+/* ---------------- PANEL ---------------- */
+const pane=document.getElementById('pane');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const stars=n=>n?'<span class="stars" aria-label="'+n+' of 3 stars">'+'⭐'.repeat(n)+'</span>':'';
+const evi=ev=>ev?ev.split('').map(c=>EVI[c]).join(' · '):'';
+function catChip(n){return '<span class="chip"><span class="dot" style="background:var('+CAT[n.cat].c+')"></span>'+CAT[n.cat].n+'</span>';}
+function typeChip(t){return '<span class="chip"><span class="dot" style="background:var('+ETYPE[t].c+')"></span>'+ETYPE[t].t+'</span>';}
+function srcList(ids){
+  if(!ids.length) return '<p class="lede">No source attached in your notes yet.</p>';
+  return ids.map(id=>{const s=srcById[id];return '<div class="src"><a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.t)+'</a><div class="meta"><span>'+esc(s.g)+'</span></div></div>';}).join('');
+}
+function edgeBtn(e,dir){
+  const other=dir==='out'?byId[e.t]:byId[e.s];
+  return '<button class="link" data-edge="'+e.i+'"><span class="arr">'+(dir==='out'?'→':'←')+'</span><span>'+esc(other.label)+' '+stars(e.stars)+'<small>'+esc(e.label)+'</small></span></button>';
+}
+function nodeDetails(n){
+  const out=EDGES.filter(e=>e.s===n.id), inc=EDGES.filter(e=>e.t===n.id);
+  const groups=[
+    ['Leads to',out.filter(e=>e.type==='causal'||e.type==='amplifies'),'out'],
+    ['Comes from',inc.filter(e=>e.type==='causal'||e.type==='amplifies'),'in'],
+    ['Protects',out.filter(e=>e.type==='protects'),'out'],
+    ['Protected by',inc.filter(e=>e.type==='protects'),'in'],
+    ['Measured by',inc.filter(e=>e.type==='measures'),'in'],
+    ['Measures',out.filter(e=>e.type==='measures'),'out'],
+    ['Confounds',out.filter(e=>e.type==='confounds'),'out'],
+    ['Confounded by',inc.filter(e=>e.type==='confounds'),'in']
+  ];
+  const allSrc=[...new Set([...n.src,...out.flatMap(e=>e.src),...inc.flatMap(e=>e.src)])];
+  let h='<div class="row">'+catChip(n)+(n.verdict?'<span class="chip"><span class="dot" style="background:var('+VERDICT[n.verdict].c+')"></span>'+VERDICT[n.verdict].t+'</span>':'')+'</div>';
+  h+='<h2 style="margin-top:8px">'+esc(n.label)+'</h2><p>'+esc(n.desc)+'</p>';
+  if(n.varies) h+='<p class="lede"><b>Varies day to day?</b> '+esc(n.varies)+'</p>';
+  const r=reach(n.id); if(r.size && n.cat!=='signal' && n.cat!=='device') h+='<p class="lede"><b>Downstream reach:</b> '+r.size+' nodes through cause links.</p>';
+  groups.forEach(([t,list,dir])=>{if(list.length) h+='<h3>'+t+' ('+list.length+')</h3>'+list.map(e=>edgeBtn(e,dir)).join('');});
+  if(n.cat==='signal'&&!inc.some(e=>e.type==='measures')&&false){}
+  h+='<h3>Sources ('+allSrc.length+')</h3>'+srcList(allSrc);
+  return h;
+}
+function edgeDetails(e){
+  const a=byId[e.s], b=byId[e.t];
+  let h='<div class="row">'+typeChip(e.type)+(e.sec?'<span class="chip">Notes §'+esc(e.sec)+'</span>':'')+'</div>';
+  h+='<h2 style="margin-top:8px">'+esc(a.label)+' → '+esc(b.label)+'</h2>';
+  h+='<p><b>'+esc(e.label)+'</b></p>';
+  if(e.ev||e.stars) h+='<p class="lede">Evidence: '+evi(e.ev)+' '+stars(e.stars)+'</p>';
+  if(e.note) h+='<p>'+esc(e.note)+'</p>';
+  h+='<div class="row" style="margin-top:8px"><button class="btn" data-node="'+a.id+'">Open '+esc(a.label)+'</button><button class="btn" data-node="'+b.id+'">Open '+esc(b.label)+'</button></div>';
+  h+='<h3>Sources ('+e.src.length+')</h3>'+srcList(e.src);
+  if(!e.src.length && (e.type==='causal')) h+='<p class="warn">Add a citation for this link before submitting.</p>';
+  return h;
+}
+function reach(id){
+  const seen=new Set(), stack=[id];
+  while(stack.length){const c=stack.pop();EDGES.forEach(e=>{if(e.s===c&&(e.type==='causal'||e.type==='amplifies')&&!seen.has(e.t)&&e.t!==id){seen.add(e.t);stack.push(e.t);}});}
+  return seen;
+}
+function overview(){
+  const causal=EDGES.filter(e=>e.type==='causal'||e.type==='amplifies').length;
+  const ranks=NODES.filter(n=>['stressor','hub'].includes(n.cat)).map(n=>({n,r:reach(n.id).size})).sort((x,y)=>y.r-x.r);
+  const max=ranks[0].r;
+  let h='<h2>How the pieces connect</h2><p class="lede">Four stressors reach the body through a few shared hubs. The right column shows what you can actually measure. Click any box or line for the evidence behind it.</p>';
+  h+='<div class="stats"><div class="stat"><b>'+NODES.length+'</b><span>concepts</span></div><div class="stat"><b>'+EDGES.length+'</b><span>links ('+causal+' causal)</span></div><div class="stat"><b>'+SOURCES.length+'</b><span>sources</span></div></div>';
+  h+='<h3>Downstream reach</h3><p class="lede" style="font-size:13px">How many nodes each factor can affect through cause links.</p>';
+  ranks.forEach(({n,r})=>{h+='<button class="reach" data-node="'+n.id+'"><span>'+esc(n.label.replace(' / HPA axis','').replace(' / oxidative stress',''))+'</span><span class="bar" style="width:'+(r/max*100).toFixed(0)+'%;background:var('+CAT[n.cat].c+')"></span><span>'+r+'</span></button>';});
+  h+='<div class="callout"><b>Most connected ≠ most useful to monitor.</b> Microgravity is the biggest cause but never changes. Stress, radiation dose, exercise/loading and sleep vary, so they are the signals worth tracking, each against the astronaut’s own in-flight baseline.</div>';
+  h+='<h3>What the map shows</h3><ul class="plain">'+
+     '<li>Most arrows pass through two hubs: <b>cortisol</b> and <b>inflammation / oxidative stress</b> (IL-6, RANKL, TNF-α).</li>'+
+     '<li>Two separate routes weaken T cells: cortisol, and microgravity acting directly on the cells.</li>'+
+     '<li>Unloading shrinks muscle, bone and heart together; exercise is the one countermeasure for all three.</li>'+
+     '<li>Fluid shift confounds five measures (red dashed lines), so baselines must be set in flight.</li>'+
+     '<li>Vessel damage is a deep-space risk; in low Earth orbit arteries held up.</li></ul>';
+  h+='<h3>Legend</h3><div class="legend-grid">';
+  Object.entries(ETYPE).forEach(([k,v])=>{const dash={causal:'',amplifies:'8 4',protects:'',measures:'2 3',confounds:'5 4'}[k];
+    h+='<svg width="44" height="10" aria-hidden="true"><line x1="2" y1="5" x2="42" y2="5" style="stroke:var('+v.c+')" stroke-width="2.4" stroke-dasharray="'+dash+'"/></svg><span>'+v.t+'</span>';});
+  Object.entries(CAT).forEach(([k,v])=>{h+='<svg width="44" height="16" aria-hidden="true"><rect x="4" y="2" width="36" height="12" rx="6" style="fill:var(--panel);stroke:var('+v.c+')" stroke-width="1.6"/></svg><span>'+v.n+'</span>';});
+  Object.values(VERDICT).forEach(v=>{h+='<svg width="44" height="10" aria-hidden="true"><circle cx="22" cy="5" r="4.5" style="fill:var('+v.c+')"/></svg><span>Signal: '+v.t+'</span>';});
+  h+='</div><p class="lede" style="margin-top:10px;font-size:13px">Line thickness = evidence strength (⭐ to ⭐⭐⭐). Evidence type: 🧑 humans · 🐭 animals · 🧫 cells.</p>';
+  return h;
+}
+function sourcesPane(){
+  const uses={}; SOURCES.forEach(s=>uses[s.id]={n:[],e:[]});
+  NODES.forEach(n=>n.src.forEach(id=>uses[id].n.push(n)));
+  EDGES.forEach(e=>e.src.forEach(id=>uses[id].e.push(e)));
+  const unlinked=SOURCES.filter(s=>!uses[s.id].n.length&&!uses[s.id].e.length);
+  const noSrc=EDGES.filter(e=>e.type==='causal'&&!e.src.length);
+  let h='<h2>Sources</h2><p class="lede">Click <b>Show links</b> to see which parts of the web a source supports.</p>';
+  h+='<div class="row" style="margin:10px 0"><button class="btn" id="copyRefs">Copy reference list</button><span id="status" role="status"></span></div>';
+  if(noSrc.length) h+='<p class="warn" style="font-size:13px">Causal links with no citation: '+noSrc.map(e=>esc(byId[e.s].label+' → '+byId[e.t].label)).join('; ')+'.</p>';
+  if(unlinked.length) h+='<p class="warn" style="font-size:13px">Not linked to the web yet: '+unlinked.map(s=>esc(s.t)).join('; ')+'.</p>';
+  const groups=[...new Set(SOURCES.map(s=>s.g))];
+  groups.forEach(g=>{
+    h+='<h3>'+esc(g)+'</h3>';
+    SOURCES.filter(s=>s.g===g).forEach(s=>{
+      const u=uses[s.id], cnt=u.n.length+u.e.length;
+      const supports=[...u.e.map(e=>byId[e.s].label+' → '+byId[e.t].label),...u.n.map(n=>n.label)];
+      const active=state.sel&&state.sel.kind==='source'&&state.sel.id===s.id;
+      h+='<div class="src'+(active?' active':'')+'"><a href="'+esc(s.u)+'" target="_blank" rel="noopener">'+esc(s.t)+'</a>'+
+         '<div class="meta"><button class="btn small" data-src="'+s.id+'" aria-pressed="'+active+'">'+(active?'Showing':'Show links')+' ('+cnt+')</button>'+
+         '<span>'+esc(supports.slice(0,3).join(' · '))+(supports.length>3?' · +'+(supports.length-3)+' more':'')+'</span></div></div>';
+    });
+  });
+  h+='<p class="lede" style="font-size:12.5px;margin-top:14px">Space Apps rule: every resource used must be cited, open-source tools included.</p>';
+  return h;
+}
+function showTab(t){
+  state.tab=t;
+  ['overview','details','sources'].forEach(x=>document.getElementById('tab-'+x).setAttribute('aria-selected',x===t));
+  if(t==='overview') pane.innerHTML=overview();
+  else if(t==='sources') pane.innerHTML=sourcesPane();
+  else{
+    const s=state.sel;
+    if(s&&s.kind==='node') pane.innerHTML=nodeDetails(byId[s.id]);
+    else if(s&&s.kind==='edge') pane.innerHTML=edgeDetails(EDGES[s.id]);
+    else pane.innerHTML='<h2>Nothing selected</h2><p class="lede">Click a box or a line in the web to see what it does, how strong the evidence is and which papers back it.</p>';
+  }
+  pane.scrollTop=0;
+}
+function select(s){
+  state.sel=s; render();
+  if(s.kind==='source') showTab('sources'); else showTab('details');
+}
+pane.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-edge],[data-node],[data-src],#copyRefs'); if(!b) return;
+  if(b.id==='copyRefs'){copyRefs();return;}
+  if(b.dataset.edge!==undefined) select({kind:'edge',id:+b.dataset.edge});
+  else if(b.dataset.node) select({kind:'node',id:b.dataset.node});
+  else if(b.dataset.src){ if(state.sel&&state.sel.kind==='source'&&state.sel.id===b.dataset.src){state.sel=null;render();showTab('sources');} else select({kind:'source',id:b.dataset.src}); }
+});
+pane.addEventListener('mouseover',ev=>{const b=ev.target.closest('[data-edge],[data-node]');if(!b)return;state.hover=b.dataset.edge!==undefined?{kind:'edge',id:+b.dataset.edge}:{kind:'node',id:b.dataset.node};render();});
+pane.addEventListener('mouseout',ev=>{if(ev.target.closest('[data-edge],[data-node]')){state.hover=null;render();}});
+['overview','details','sources'].forEach(t=>document.getElementById('tab-'+t).addEventListener('click',()=>showTab(t)));
+
+function copyRefs(){
+  const groups=[...new Set(SOURCES.map(s=>s.g))];
+  const txt=groups.map(g=>'## '+g+'\n'+SOURCES.filter(s=>s.g===g).map(s=>'- '+s.t+' — '+s.u).join('\n')).join('\n\n');
+  const st=document.getElementById('status');
+  const fallback=()=>{st.textContent='Copy blocked here: select the text below.';const ta=document.createElement('textarea');ta.className='copybox';ta.readOnly=true;ta.value=txt;st.parentNode.after(ta);ta.focus();ta.select();};
+  try{navigator.clipboard.writeText(txt).then(()=>{st.textContent='Copied '+SOURCES.length+' references';},fallback);}catch(e){fallback();}
+}
+
+/* toggles */
+document.querySelectorAll('.tog[data-layer]').forEach(b=>b.addEventListener('click',()=>{
+  const l=b.dataset.layer; state.layers[l]=!state.layers[l]; b.setAttribute('aria-pressed',state.layers[l]); render();
+}));
+document.getElementById('strong').addEventListener('click',e=>{
+  state.strong=!state.strong; e.currentTarget.setAttribute('aria-pressed',state.strong); render();
+});
+
+measure();
+showTab('overview');
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
+</script>
+</body>
+</html>

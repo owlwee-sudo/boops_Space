@@ -1,0 +1,1127 @@
+[
+  {
+    "from": "isolation",
+    "to": "stress",
+    "type": "causal",
+    "label": "chronic high cortisol",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.1",
+    "layer": "core",
+    "note": "Mars-500 (520 days, no microgravity or radiation) produced long-lasting high cortisol from isolation and confinement alone.",
+    "sources": [
+      "mars500",
+      "klos25"
+    ]
+  },
+  {
+    "from": "isolation",
+    "to": "immune",
+    "type": "causal",
+    "label": "fewer microbes → \"immune amnesia\"",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.2",
+    "layer": "core",
+    "note": "Mars-500 immune system was dysregulated rather than simply weak. A review of 140 ICE studies found dysregulation in every setting, mostly reversing afterwards. Antarctic crews had lower salivary immunoglobulins.",
+    "sources": [
+      "klos25",
+      "ponomarev21",
+      "mars500"
+    ]
+  },
+  {
+    "from": "stress",
+    "to": "cortisol",
+    "type": "causal",
+    "label": "activates HPA axis",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.3",
+    "layer": "core",
+    "note": "Raises cortisol and DHEA. Long-duration flight also changed the daily salivary cortisol rhythm.",
+    "sources": [
+      "mehta17",
+      "salivary"
+    ]
+  },
+  {
+    "from": "stress",
+    "to": "inflam",
+    "type": "causal",
+    "label": "adds inflammatory load",
+    "evidence": "H",
+    "stars": 1,
+    "notes_section": "3.14",
+    "layer": "core",
+    "note": "Psychological stress is one of several sources of oxidative and inflammatory damage (with radiation, low activity, poor nutrition and high oxygen during EVA).",
+    "sources": [
+      "arterial20"
+    ]
+  },
+  {
+    "from": "cortisol",
+    "to": "immune",
+    "type": "causal",
+    "label": "weakens cellular immunity",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.3",
+    "layer": "core",
+    "note": "On the ISS, crew who shed a latent virus had higher salivary cortisol. Reactivation was distinct to crew who did spacewalks (EVA).",
+    "sources": [
+      "mehta17",
+      "salivary",
+      "evrep",
+      "crucian18"
+    ]
+  },
+  {
+    "from": "cortisol",
+    "to": "muscle",
+    "type": "causal",
+    "label": "muscle protein loss",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.4",
+    "layer": "core",
+    "note": "After 14 days of bed rest, high cortisol tripled amino-acid loss from muscle.",
+    "sources": [
+      "inact"
+    ]
+  },
+  {
+    "from": "cortisol",
+    "to": "bone",
+    "type": "causal",
+    "label": "osteoclast activity ↑",
+    "evidence": "H",
+    "stars": 1,
+    "notes_section": "3.5",
+    "layer": "core",
+    "note": "Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid.",
+    "sources": []
+  },
+  {
+    "from": "cortisol",
+    "to": "glucose",
+    "type": "causal",
+    "label": "insulin resistance",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.15",
+    "layer": "core",
+    "note": "Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min.",
+    "sources": [
+      "bedrest28"
+    ]
+  },
+  {
+    "from": "radiation",
+    "to": "inflam",
+    "type": "causal",
+    "label": "reactive oxygen species",
+    "evidence": "AC",
+    "stars": 2,
+    "notes_section": "3.7",
+    "layer": "core",
+    "note": "Radiation and unloading share a mechanism: both raise oxidative stress.",
+    "sources": [
+      "willey",
+      "zhang17",
+      "wadhwa24"
+    ]
+  },
+  {
+    "from": "radiation",
+    "to": "immune",
+    "type": "causal",
+    "label": "lymphocytes most radio-sensitive",
+    "evidence": "ACH",
+    "stars": 2,
+    "notes_section": "3.6",
+    "layer": "core",
+    "note": "Dose-dependent lymphocyte drop after proton radiation (animals). Human lymphocytes show more chromosomal aberrations after long missions. A strong solar particle event plus simulated microgravity impaired bacterial clearance in mice.",
+    "sources": [
+      "proton",
+      "hls_spe",
+      "wadhwa24",
+      "radiso"
+    ]
+  },
+  {
+    "from": "radiation",
+    "to": "bone",
+    "type": "causal",
+    "label": "resorption ↑ then formation ↓",
+    "evidence": "A",
+    "stars": 2,
+    "notes_section": "3.7",
+    "layer": "core",
+    "note": "Mouse tibia osteoclasts: radiation +46%, hindlimb unloading +47%, both combined +64%.",
+    "sources": [
+      "willey",
+      "zhang17"
+    ]
+  },
+  {
+    "from": "radiation",
+    "to": "vessels",
+    "type": "causal",
+    "label": "endothelial damage (deep space)",
+    "evidence": "AH",
+    "stars": 1,
+    "notes_section": "3.13",
+    "layer": "core",
+    "note": "Apollo lunar astronauts: 43% cardiovascular deaths vs 9–11% for others, but only 3 of 7 people. In mice, deep-space-type radiation caused lasting damage to the vessel lining.",
+    "sources": [
+      "delp16"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "immune",
+    "type": "causal",
+    "label": "directly disrupts T-cell activation",
+    "evidence": "CA",
+    "stars": 2,
+    "notes_section": "3.8",
+    "layer": "core",
+    "note": "Independent of stress hormones: a second route to weak T cells and viral reactivation.",
+    "sources": [
+      "chang"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "fluidshift",
+    "type": "causal",
+    "label": "blood moves headward",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.12",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "cvmeta",
+      "norsk15"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "unloading",
+    "type": "causal",
+    "label": "no weight-bearing",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.9",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "receptors"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "inflam",
+    "type": "causal",
+    "label": "oxidative stress",
+    "evidence": "AC",
+    "stars": 2,
+    "notes_section": "3.7 · 3.10",
+    "layer": "core",
+    "note": "Inflammation from microgravity plus radiation can trigger bone loss.",
+    "sources": [
+      "wadhwa24",
+      "zhang17"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "stress",
+    "type": "amplifies",
+    "label": "amplifies stress effects",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.4",
+    "layer": "core",
+    "note": "Stress and microgravity multiply rather than add: inactivity makes muscle ~3× more responsive to cortisol.",
+    "sources": [
+      "inact"
+    ]
+  },
+  {
+    "from": "unloading",
+    "to": "muscle",
+    "type": "causal",
+    "label": "atrophy",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.9",
+    "layer": "core",
+    "note": "Strongest link in the map. Happens despite exercise programmes.",
+    "sources": [
+      "receptors",
+      "muscgen"
+    ]
+  },
+  {
+    "from": "unloading",
+    "to": "bone",
+    "type": "causal",
+    "label": "resorption ↑, formation ↓",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.9",
+    "layer": "core",
+    "note": "Microgravity impairs osteocytes and osteoblasts, so osteoclasts dominate.",
+    "sources": [
+      "receptors",
+      "osteoclast",
+      "zhang17"
+    ]
+  },
+  {
+    "from": "unloading",
+    "to": "heart",
+    "type": "causal",
+    "label": "cardiac atrophy",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.12",
+    "layer": "core",
+    "note": "Left-ventricle mass fell ~12% after a short flight. Scott Kelly’s heart shrank ~0.74 g/week but still worked well.",
+    "sources": [
+      "perhonen01",
+      "jacc23"
+    ]
+  },
+  {
+    "from": "unloading",
+    "to": "glucose",
+    "type": "causal",
+    "label": "inactivity → insulin resistance",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.15",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "bedrest28",
+      "vascular"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "heart",
+    "type": "causal",
+    "label": "HR ↑ · BP ↓ · HRV ↓",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.12",
+    "layer": "core",
+    "note": "BP about 10 mmHg lower on long missions. After landing: orthostatic intolerance (fainting on standing).",
+    "sources": [
+      "cvmeta",
+      "norsk15",
+      "autonomic"
+    ]
+  },
+  {
+    "from": "inflam",
+    "to": "immune",
+    "type": "causal",
+    "label": "plasma cytokines ↑",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "2 · 3.10",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "crucian18",
+      "wadhwa24"
+    ]
+  },
+  {
+    "from": "inflam",
+    "to": "bone",
+    "type": "causal",
+    "label": "RANKL → osteoclasts",
+    "evidence": "AC",
+    "stars": 2,
+    "notes_section": "3.10",
+    "layer": "core",
+    "note": "RANKL binding RANK is required to make osteoclasts.",
+    "sources": [
+      "receptors",
+      "osteoclast",
+      "wadhwa24"
+    ]
+  },
+  {
+    "from": "inflam",
+    "to": "vessels",
+    "type": "causal",
+    "label": "oxidative damage",
+    "evidence": "H",
+    "stars": 1,
+    "notes_section": "3.14",
+    "layer": "core",
+    "note": "In LEO, biomarkers rose in flight but returned to baseline within a week, and arteries showed no thickening or stiffening over 5 years. Real deep-space risk; mostly theoretical for ISS-length missions.",
+    "sources": [
+      "arterial20",
+      "arteries25"
+    ]
+  },
+  {
+    "from": "immune",
+    "to": "bone",
+    "type": "causal",
+    "label": "T/B cells make RANKL (two-way)",
+    "evidence": "AC",
+    "stars": 2,
+    "notes_section": "3.10",
+    "layer": "core",
+    "note": "Osteoimmunology: bone and immune cells share RANKL, so effects run both ways.",
+    "sources": [
+      "receptors",
+      "osteoclast"
+    ]
+  },
+  {
+    "from": "muscle",
+    "to": "immune",
+    "type": "causal",
+    "label": "myokines (IL-6)",
+    "evidence": "A",
+    "stars": 1,
+    "notes_section": "3.11",
+    "layer": "core",
+    "note": "Partly hypothesis. Post-exercise IL-6 scales with body weight; less IL-6 in space may explain why exercise does not fully stop loss.",
+    "sources": [
+      "il6",
+      "muscgen"
+    ]
+  },
+  {
+    "from": "immune",
+    "to": "viral",
+    "type": "causal",
+    "label": "T/NK ↓ → herpes reactivation",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "2",
+    "layer": "core",
+    "note": "Frequency and viral load rise with mission length. Resembles shingles patients, but milder. HSV-1 and VZV hide in cranial nerve ganglia, so reactivation is also a nervous-system event.",
+    "sources": [
+      "mehta17",
+      "crucian18",
+      "immrisk",
+      "evrep",
+      "thymus24"
+    ]
+  },
+  {
+    "from": "viral",
+    "to": "symptoms",
+    "type": "causal",
+    "label": "rash, cold sores, shingles",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "6",
+    "layer": "core",
+    "note": "Most reactivation is asymptomatic. Cases include an HSV-1 rash lasting ~200 days and shingles with normal vital signs.",
+    "sources": [
+      "crucian16",
+      "hsv1",
+      "shingles"
+    ]
+  },
+  {
+    "from": "glucose",
+    "to": "vessels",
+    "type": "causal",
+    "label": "stiffer arteries",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.15",
+    "layer": "core",
+    "note": "CSA Vascular: carotid stiffness and insulin resistance rose together.",
+    "sources": [
+      "vascular"
+    ]
+  },
+  {
+    "from": "exercise",
+    "to": "heart",
+    "type": "protects",
+    "label": "offsets cardiac atrophy",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "3.12",
+    "layer": "core",
+    "note": "13-astronaut ISS study.",
+    "sources": [
+      "jacc23"
+    ]
+  },
+  {
+    "from": "exercise",
+    "to": "muscle",
+    "type": "protects",
+    "label": "slows loss (partial)",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.9 · 3.11",
+    "layer": "core",
+    "note": "Loss continues despite exercise programmes.",
+    "sources": [
+      "il6"
+    ]
+  },
+  {
+    "from": "exercise",
+    "to": "bone",
+    "type": "protects",
+    "label": "slows loss (partial)",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "3.11",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "il6"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "symptoms",
+    "type": "confounds",
+    "label": "puffy face & headache look like illness",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "6",
+    "layer": "core",
+    "note": "Do not flag fluid-shift symptoms as infection.",
+    "sources": [
+      "cvmeta"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "restHR",
+    "type": "confounds",
+    "label": "raises HR → set baseline in flight",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "7",
+    "layer": "core",
+    "note": "Other HR confounders: stress, intense exercise, medications, vaccination.",
+    "sources": [
+      "cvmeta"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "hrv",
+    "type": "confounds",
+    "label": "lowers HRV baseline",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "autonomic"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "bp",
+    "type": "confounds",
+    "label": "lowers BP ~10 mmHg",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "norsk15"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "face",
+    "type": "confounds",
+    "label": "puffy face changes geometry",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "10",
+    "layer": "core",
+    "note": "Set the facial baseline in flight. Astronauts are also trained to stay composed.",
+    "sources": []
+  },
+  {
+    "from": "fluidshift",
+    "to": "rppg",
+    "type": "confounds",
+    "label": "may shift rPPG baseline (untested)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "9",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "muscle",
+    "to": "inflam",
+    "type": "confounds",
+    "label": "landing cytokine spike may be regeneration",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "3.11",
+    "layer": "core",
+    "note": "Twins Study re-analysis: inflammatory markers spiking at landing may reflect muscle repair, not illness. High cytokines are not always \"sick\".",
+    "sources": [
+      "twinsland"
+    ]
+  },
+  {
+    "from": "missionday",
+    "to": "isolation",
+    "type": "measures",
+    "label": "days confined",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "4",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "saliva",
+    "to": "cortisol",
+    "type": "measures",
+    "label": "direct hormone",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "mehta17",
+      "salivary"
+    ]
+  },
+  {
+    "from": "saliva",
+    "to": "viral",
+    "type": "measures",
+    "label": "viral DNA shedding",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "mehta17",
+      "archer"
+    ]
+  },
+  {
+    "from": "sweat",
+    "to": "cortisol",
+    "type": "measures",
+    "label": "hormone (prototype)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "sweat"
+    ]
+  },
+  {
+    "from": "cgm",
+    "to": "glucose",
+    "type": "measures",
+    "label": "continuous glucose",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "3.15",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "symptomlog",
+    "to": "symptoms",
+    "type": "measures",
+    "label": "daily check-in",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "6",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "crucian16",
+      "shingles"
+    ]
+  },
+  {
+    "from": "face",
+    "to": "stress",
+    "type": "measures",
+    "label": "change vs own baseline (fusion only)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "10",
+    "layer": "core",
+    "note": "Video-meeting study: rPPG alone 78.75%, face alone 73.75%, combined 82.50%.",
+    "sources": [
+      "barrett19",
+      "microexp",
+      "jyu",
+      "facebio",
+      "euai"
+    ]
+  },
+  {
+    "from": "bp",
+    "to": "stress",
+    "type": "measures",
+    "label": "+~7 mmHg (weak)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "mentalhrv"
+    ]
+  },
+  {
+    "from": "hrv",
+    "to": "stress",
+    "type": "measures",
+    "label": "sympathetic shift",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "mentalhrv",
+      "autonomic"
+    ]
+  },
+  {
+    "from": "restHR",
+    "to": "symptoms",
+    "type": "measures",
+    "label": "pre-symptom flag (63%)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "7",
+    "layer": "core",
+    "note": "81% of COVID cases changed HR, steps or sleep. Limit: catches symptomatic infection, not silent viral shedding.",
+    "sources": [
+      "mishra20",
+      "stanford",
+      "laad"
+    ]
+  },
+  {
+    "from": "sleep",
+    "to": "stress",
+    "type": "measures",
+    "label": "cause and symptom",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "5",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "barger14"
+    ]
+  },
+  {
+    "from": "scans",
+    "to": "muscle",
+    "type": "measures",
+    "label": "slow, not daily",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "4",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "scans",
+    "to": "bone",
+    "type": "measures",
+    "label": "slow, not daily",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "4",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "exerciselog",
+    "to": "unloading",
+    "type": "measures",
+    "label": "loading actually received",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "4",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "dosimeter",
+    "to": "radiation",
+    "type": "measures",
+    "label": "dose & solar spikes",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "4",
+    "layer": "core",
+    "note": "",
+    "sources": []
+  },
+  {
+    "from": "wearables",
+    "to": "hrv",
+    "type": "measures",
+    "label": "chest ECG",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "8",
+    "layer": "core",
+    "note": "Wrist PPG is noisier than chest ECG.",
+    "sources": [
+      "astroskin",
+      "wang25"
+    ]
+  },
+  {
+    "from": "wearables",
+    "to": "restHR",
+    "type": "measures",
+    "label": "HR, 48 h continuous",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "8",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "astroskin",
+      "trialx"
+    ]
+  },
+  {
+    "from": "wearables",
+    "to": "sleep",
+    "type": "measures",
+    "label": "wristband actigraphy",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "8",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "archer",
+      "trialx"
+    ]
+  },
+  {
+    "from": "rppg",
+    "to": "hrv",
+    "type": "measures",
+    "label": "contact-free HRV",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "9",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "nowara",
+      "rgbnir",
+      "repss"
+    ]
+  },
+  {
+    "from": "rppg",
+    "to": "restHR",
+    "type": "measures",
+    "label": "contact-free HR",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "9",
+    "layer": "core",
+    "note": "",
+    "sources": [
+      "mayo",
+      "intelomed"
+    ]
+  },
+  {
+    "from": "rppg",
+    "to": "vessels",
+    "type": "measures",
+    "label": "pulse transit time (partial proxy)",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "9",
+    "layer": "core",
+    "note": "Reads the pulse, not vessel walls; stiffness needs ultrasound.",
+    "sources": [
+      "fullbody"
+    ]
+  },
+  {
+    "from": "stress",
+    "to": "sns",
+    "type": "causal",
+    "label": "amygdala → hypothalamus → sympathetic activation",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "The same brain stress system drives the HPA axis (cortisol hub).",
+    "sources": [
+      "capri25"
+    ]
+  },
+  {
+    "from": "sns",
+    "to": "immune",
+    "type": "causal",
+    "label": "adrenergic immune modulation",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Short flights (9 d): sympathetic responses dominate. Longer flights (16 d): cortisol-mediated changes at landing.",
+    "sources": [
+      "stowe03",
+      "capri25"
+    ]
+  },
+  {
+    "from": "sns",
+    "to": "heart",
+    "type": "causal",
+    "label": "HR ↑, HRV ↓",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "capri25",
+      "autonomic"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "brain",
+    "type": "causal",
+    "label": "brain shifts up, ventricles enlarge",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Likely reduced CSF resorption in microgravity.",
+    "sources": [
+      "mcgregor23",
+      "vanombergen19",
+      "hupfeld22"
+    ]
+  },
+  {
+    "from": "fluidshift",
+    "to": "sans",
+    "type": "causal",
+    "label": "venous congestion, altered CSF flow",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Not simply raised intracranial pressure.",
+    "sources": [
+      "sans_wjg",
+      "sansreview26",
+      "sans_nasa23",
+      "sans_sr20"
+    ]
+  },
+  {
+    "from": "brain",
+    "to": "sans",
+    "type": "causal",
+    "label": "eye–brain axis (perivascular spaces)",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Astronauts who developed SANS had larger white-matter perivascular spaces before and after flight.",
+    "sources": [
+      "eyebrain23",
+      "pvs"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "vestibular",
+    "type": "causal",
+    "label": "sensory mismatch",
+    "evidence": "H",
+    "stars": 3,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "vestib15",
+      "neurovest17",
+      "reentry25"
+    ]
+  },
+  {
+    "from": "microgravity",
+    "to": "cognition",
+    "type": "causal",
+    "label": "early-flight slowing (mild, reversible)",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Head-down bed rest (fluid shift analog) also gives mild early slowing.",
+    "sources": [
+      "cog24"
+    ]
+  },
+  {
+    "from": "radiation",
+    "to": "cognition",
+    "type": "causal",
+    "label": "deep-space CNS risk (rodents)",
+    "evidence": "A",
+    "stars": 1,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Rodent deficits at ≥0.1 Gy heavy ions, but missions give <0.04 Gy/yr; some studies even show pro-cognitive effects. Uncertain.",
+    "sources": [
+      "gcr18",
+      "gcr23",
+      "cucinotta"
+    ]
+  },
+  {
+    "from": "isolation",
+    "to": "inflam",
+    "type": "causal",
+    "label": "neuroinflammation (with microgravity)",
+    "evidence": "A",
+    "stars": 1,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Mitochondrial ROS drove the brain immune response in mice.",
+    "sources": [
+      "mcat"
+    ]
+  },
+  {
+    "from": "sleep",
+    "to": "cognition",
+    "type": "causal",
+    "label": "sleep loss → worse attention",
+    "evidence": "H",
+    "stars": 2,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Analog studies with sleep restriction; in ISS data no clear link was found.",
+    "sources": [
+      "cog24"
+    ]
+  },
+  {
+    "from": "vestibular",
+    "to": "symptoms",
+    "type": "confounds",
+    "label": "motion sickness looks like illness",
+    "evidence": "H",
+    "stars": null,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "Malaise, appetite loss, headache.",
+    "sources": [
+      "reentry25"
+    ]
+  },
+  {
+    "from": "hrv",
+    "to": "sns",
+    "type": "measures",
+    "label": "autonomic balance",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "autonomic",
+      "mentalhrv"
+    ]
+  },
+  {
+    "from": "cogtest",
+    "to": "cognition",
+    "type": "measures",
+    "label": "10-domain test battery",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "cog24",
+      "winscat"
+    ]
+  },
+  {
+    "from": "oct",
+    "to": "sans",
+    "type": "measures",
+    "label": "optic disc & retina",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "sans_nasa23",
+      "sans_wjg"
+    ]
+  },
+  {
+    "from": "mri",
+    "to": "brain",
+    "type": "measures",
+    "label": "pre/post flight only",
+    "evidence": "",
+    "stars": null,
+    "notes_section": "nervous",
+    "layer": "nervous",
+    "note": "",
+    "sources": [
+      "mcgregor23"
+    ]
+  }
+]

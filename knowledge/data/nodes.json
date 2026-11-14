@@ -1,0 +1,470 @@
+[
+  {
+    "id": "isolation",
+    "label": "Isolation & confinement",
+    "category": "stressor",
+    "layer": "core",
+    "description": "Always on, and grows with mission length. Acts mostly upstream through stress, plus a direct immune effect from meeting fewer new microbes.",
+    "varies_day_to_day": "Slowly, grows with mission days",
+    "sources": [
+      "hazards",
+      "klos25",
+      "ponomarev21"
+    ]
+  },
+  {
+    "id": "stress",
+    "label": "Psychological stress",
+    "category": "stressor",
+    "layer": "core",
+    "description": "The most useful factor to monitor: it varies day to day and reaches immune, muscle, bone, vessels and glucose through cortisol. Trackable with HRV, sleep and saliva cortisol.",
+    "varies_day_to_day": "Yes: EVA, sleep loss, conflict",
+    "sources": [
+      "hazards"
+    ]
+  },
+  {
+    "id": "radiation",
+    "label": "Space radiation",
+    "category": "stressor",
+    "layer": "core",
+    "description": "Varies with solar events and is already tracked by dosimeters. Hits lymphocytes, bone and, in deep space, blood vessels.",
+    "varies_day_to_day": "Yes: spikes with solar particle events",
+    "sources": [
+      "hazards",
+      "wadhwa24",
+      "continuum"
+    ]
+  },
+  {
+    "id": "microgravity",
+    "label": "Microgravity",
+    "category": "stressor",
+    "layer": "core",
+    "description": "The biggest cause in the map (muscle, bone, heart, direct immune effect, and it amplifies stress). Because it never changes, track its variable version: exercise and loading logs.",
+    "varies_day_to_day": "No: always ~100%",
+    "sources": [
+      "hazards",
+      "continuum"
+    ]
+  },
+  {
+    "id": "cortisol",
+    "label": "Cortisol / HPA axis",
+    "category": "hub",
+    "layer": "core",
+    "description": "Stress hormone hub (with DHEA). Connects stress to immune suppression, muscle breakdown, bone resorption and insulin resistance.",
+    "sources": [
+      "mehta17",
+      "salivary"
+    ]
+  },
+  {
+    "id": "inflam",
+    "label": "Inflammation / oxidative stress",
+    "category": "hub",
+    "layer": "core",
+    "description": "The main hub. Shared signalling molecules (IL-6, RANKL, TNF-α) link the immune system, bone, muscle and blood vessels. Radiation and unloading both raise oxidative stress.",
+    "sources": [
+      "wadhwa24",
+      "il6"
+    ]
+  },
+  {
+    "id": "fluidshift",
+    "label": "Fluid shift",
+    "category": "hub",
+    "layer": "core",
+    "description": "Blood moves toward the head: puffy face, headache, stuffy head, flu-like feeling. Changes HR, HRV and BP baselines and can look like illness, so it confounds several signals.",
+    "sources": [
+      "cvmeta",
+      "norsk15"
+    ]
+  },
+  {
+    "id": "unloading",
+    "label": "Unloading / inactivity",
+    "category": "hub",
+    "layer": "core",
+    "description": "No weight-bearing, so muscle, bone and heart shrink together. Inactivity also makes muscle about 3× more sensitive to cortisol.",
+    "sources": [
+      "receptors"
+    ]
+  },
+  {
+    "id": "exercise",
+    "label": "Exercise & loading",
+    "category": "counter",
+    "layer": "core",
+    "description": "The one countermeasure that protects muscle, bone and heart together. Fully offsets cardiac atrophy; only slows muscle and bone loss.",
+    "sources": [
+      "jacc23",
+      "il6"
+    ]
+  },
+  {
+    "id": "immune",
+    "label": "Immune dysregulation",
+    "category": "body",
+    "layer": "core",
+    "description": "About 50% of astronauts. White-cell counts look normal, but T-cell and NK-cell function drops and plasma cytokines rise. Lasts the whole 6-month mission. NASA: still unclear whether it causes more disease.",
+    "sources": [
+      "immrisk",
+      "crucian18",
+      "evrep",
+      "continuum",
+      "twins19",
+      "astroimm",
+      "insp4"
+    ]
+  },
+  {
+    "id": "glucose",
+    "label": "Insulin resistance (glucose)",
+    "category": "body",
+    "layer": "core",
+    "description": "Fasting insulin was elevated in flight in all astronauts (CSA Vascular). Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min. CGMs already used in space research.",
+    "sources": [
+      "vascular",
+      "bedrest28"
+    ]
+  },
+  {
+    "id": "bone",
+    "label": "Bone loss",
+    "category": "body",
+    "layer": "core",
+    "description": "Osteoclasts dominate: resorption up, formation down. Hit from four directions: unloading, radiation, cortisol and inflammation (RANKL).",
+    "sources": [
+      "receptors",
+      "osteoclast"
+    ]
+  },
+  {
+    "id": "muscle",
+    "label": "Muscle loss",
+    "category": "body",
+    "layer": "core",
+    "description": "Atrophy continues despite exercise programmes. Muscle also signals back to immunity through myokines such as IL-6.",
+    "sources": [
+      "receptors",
+      "muscgen",
+      "il6"
+    ]
+  },
+  {
+    "id": "heart",
+    "label": "Heart & blood pressure",
+    "category": "body",
+    "layer": "core",
+    "description": "HR up, BP down ~10 mmHg, HRV down. Left-ventricle mass −12% after a short flight. A smaller heart can still be healthy (normal adaptation vs a problem). Fainting on standing after landing.",
+    "sources": [
+      "cvmeta",
+      "perhonen01",
+      "jacc23"
+    ]
+  },
+  {
+    "id": "vessels",
+    "label": "Blood vessels",
+    "category": "body",
+    "layer": "core",
+    "description": "Real risk for deep space (Apollo data, mouse radiation studies), but in low Earth orbit arteries showed no thickening or stiffening over 5 years.",
+    "sources": [
+      "delp16",
+      "arterial20",
+      "arteries25",
+      "vascular"
+    ]
+  },
+  {
+    "id": "viral",
+    "label": "Latent virus reactivation",
+    "category": "outcome",
+    "layer": "core",
+    "description": "EBV, VZV, CMV and HSV-1 shed by 53% of shuttle and 61% of ISS astronauts. Rises with mission length. Mostly without symptoms.",
+    "sources": [
+      "mehta17",
+      "crucian18"
+    ]
+  },
+  {
+    "id": "symptoms",
+    "label": "Illness & symptoms",
+    "category": "outcome",
+    "layer": "core",
+    "description": "ISS records: skin rashes 1.12 per flight-year, upper respiratory 0.97. 46% of crew had a notable event. In one shingles case vital signs stayed normal, so symptom logging matters.",
+    "sources": [
+      "crucian16",
+      "hsv1",
+      "shingles"
+    ]
+  },
+  {
+    "id": "wearables",
+    "label": "Wearables (Astroskin, ARCHeR)",
+    "category": "device",
+    "layer": "core",
+    "description": "Already flown: Astroskin smart shirt on ISS since 2018 (ECG, BP, SpO₂, breathing, skin temp, activity), Garmin on Polaris Dawn, ARCHeR wristbands on Artemis II. Hardware is mostly solved; the software that fuses signals is the gap.",
+    "sources": [
+      "wang25",
+      "astroskin",
+      "trialx",
+      "archer"
+    ]
+  },
+  {
+    "id": "rppg",
+    "label": "Camera rPPG (RGB + NIR)",
+    "category": "device",
+    "layer": "core",
+    "description": "Contact-free HR, HRV and breathing from facial colour changes. RGB+NIR fusion is most robust. Not yet validated on astronauts in orbit: an opportunity. Hackathon-friendly with a webcam and rPPG-Toolbox.",
+    "sources": [
+      "nowara",
+      "rgbnir",
+      "repss",
+      "mayo",
+      "intelomed",
+      "fullbody"
+    ]
+  },
+  {
+    "id": "missionday",
+    "label": "Mission day count",
+    "category": "signal",
+    "layer": "core",
+    "description": "Free proxy for isolation load and for viral reactivation risk, which grows with mission length.",
+    "signal_verdict": "good",
+    "sources": []
+  },
+  {
+    "id": "saliva",
+    "label": "Saliva cortisol + viral DNA",
+    "category": "signal",
+    "layer": "core",
+    "description": "Reads the stress → virus chain directly. Needs a lab, but saliva is easy to collect; used on ISS and Artemis II.",
+    "signal_verdict": "good",
+    "sources": [
+      "mehta17",
+      "salivary",
+      "archer"
+    ]
+  },
+  {
+    "id": "sweat",
+    "label": "Sweat cortisol",
+    "category": "signal",
+    "layer": "core",
+    "description": "Direct hormone reading, but only prototypes; some need visible sweat; not tested in space.",
+    "signal_verdict": "early",
+    "sources": [
+      "sweat"
+    ]
+  },
+  {
+    "id": "cgm",
+    "label": "CGM (glucose)",
+    "category": "signal",
+    "layer": "core",
+    "description": "Continuous glucose monitors are already used in space health research.",
+    "signal_verdict": "good",
+    "sources": []
+  },
+  {
+    "id": "symptomlog",
+    "label": "Symptom log",
+    "category": "signal",
+    "layer": "core",
+    "description": "Rash, sore throat, fatigue. Open question: how to collect it without annoying a busy crew.",
+    "signal_verdict": "good",
+    "sources": [
+      "crucian16",
+      "shingles"
+    ]
+  },
+  {
+    "id": "face",
+    "label": "Facial behaviour change",
+    "category": "signal",
+    "layer": "core",
+    "description": "Faces are not reliable emotion readers; drop micro-expressions. Useful only as one input in fusion, as change from the person’s own baseline. Frame as medical/safety under the EU AI Act; crew own their data.",
+    "signal_verdict": "caution",
+    "sources": [
+      "barrett19",
+      "microexp",
+      "jyu",
+      "facebio",
+      "euai"
+    ]
+  },
+  {
+    "id": "bp",
+    "label": "Blood pressure",
+    "category": "signal",
+    "layer": "core",
+    "description": "Stress raises it ~7 mmHg, but spaceflight lowers it ~10 mmHg. Weak stress signal.",
+    "signal_verdict": "weak",
+    "sources": [
+      "mentalhrv",
+      "norsk15"
+    ]
+  },
+  {
+    "id": "hrv",
+    "label": "HRV (ECG / PPG)",
+    "category": "signal",
+    "layer": "core",
+    "description": "Stress shifts it toward sympathetic, and that response is unchanged in space. Baseline is lowered by microgravity, so compare to the astronaut’s own in-flight baseline.",
+    "signal_verdict": "good",
+    "sources": [
+      "mentalhrv",
+      "autonomic"
+    ]
+  },
+  {
+    "id": "restHR",
+    "label": "Resting HR vs own baseline",
+    "category": "signal",
+    "layer": "core",
+    "description": "Smartwatch study: 63% of COVID cases flaggable before symptoms; LSTM autoencoder (LAAD) flagged 92%. Catches symptomatic infection, not silent viral shedding.",
+    "signal_verdict": "good",
+    "sources": [
+      "mishra20",
+      "stanford",
+      "laad"
+    ]
+  },
+  {
+    "id": "sleep",
+    "label": "Sleep (actigraphy)",
+    "category": "signal",
+    "layer": "core",
+    "description": "Astronauts average ~6 h vs 8.5 h scheduled; ~75% used sleep meds. Both a cause and a symptom of stress.",
+    "signal_verdict": "good",
+    "sources": [
+      "barger14"
+    ]
+  },
+  {
+    "id": "scans",
+    "label": "Scans & strength tests",
+    "category": "signal",
+    "layer": "core",
+    "description": "Only way to see muscle and bone change, and it is slow. No daily reading.",
+    "signal_verdict": "weak",
+    "sources": []
+  },
+  {
+    "id": "exerciselog",
+    "label": "Exercise / loading log",
+    "category": "signal",
+    "layer": "core",
+    "description": "The variable version of microgravity: how much loading each astronaut actually got.",
+    "signal_verdict": "good",
+    "sources": []
+  },
+  {
+    "id": "dosimeter",
+    "label": "Radiation dosimeter",
+    "category": "signal",
+    "layer": "core",
+    "description": "Already exists on every mission; captures dose spikes from solar events.",
+    "signal_verdict": "good",
+    "sources": []
+  },
+  {
+    "id": "sns",
+    "label": "Sympathetic / autonomic nervous system",
+    "category": "hub",
+    "layer": "nervous",
+    "description": "The stress system lives in the brain: amygdala → hypothalamus → both the HPA axis (cortisol) and the sympathetic nervous system. Sympathetic responses dominate after short flights; cortisol-driven changes dominate after longer ones. HRV is a direct read-out of this system.",
+    "sources": [
+      "capri25",
+      "stowe03"
+    ]
+  },
+  {
+    "id": "brain",
+    "label": "Brain structure & CSF",
+    "category": "body",
+    "layer": "nervous",
+    "description": "Brain shifts upward in the skull; ventricles enlarge ~11–25%. Growth slows after ~6 months and recovers only partly 6–12 months after landing. Crews with <3 years between missions showed little further enlargement. Medical meaning still unclear.",
+    "sources": [
+      "mcgregor23",
+      "vanombergen19",
+      "hupfeld22"
+    ]
+  },
+  {
+    "id": "sans",
+    "label": "Eyes (SANS)",
+    "category": "body",
+    "layer": "nervous",
+    "description": "Spaceflight-associated neuro-ocular syndrome: optic disc edema, globe flattening, choroidal folds, hyperopic shift. ~81% of NASA long-duration astronauts had at least one finding; ~66% show the earliest sign. So far vision effects have been correctable with glasses.",
+    "sources": [
+      "sansreview26",
+      "sans_nasa23",
+      "sans_wjg",
+      "sans_sr20",
+      "eyebrain23"
+    ]
+  },
+  {
+    "id": "vestibular",
+    "label": "Balance & motion sickness (vestibular)",
+    "category": "body",
+    "layer": "nervous",
+    "description": "Sensory mismatch in microgravity: ~70% of astronauts have space motion sickness or impaired motor performance, mostly resolving within 1 h to 4 days. Re-entry motion sickness is worse after long missions and does not reliably improve with repeat flights.",
+    "sources": [
+      "vestib15",
+      "neurovest17",
+      "reentry25"
+    ]
+  },
+  {
+    "id": "cognition",
+    "label": "Cognition & performance",
+    "category": "outcome",
+    "layer": "nervous",
+    "description": "25 ISS astronauts: no systematic decline on 6-month missions. Early flight: slower processing speed, visual working memory, sustained attention. Late flight: slower emotion recognition. Processing speed recovered only after return.",
+    "sources": [
+      "cog24",
+      "winscat"
+    ]
+  },
+  {
+    "id": "cogtest",
+    "label": "Cognition test battery",
+    "category": "signal",
+    "layer": "nervous",
+    "description": "Computerised tests (Cognition battery, WinSCAT). WinSCAT is a medical requirement for US long-duration crew.",
+    "signal_verdict": "good",
+    "sources": [
+      "cog24",
+      "winscat"
+    ]
+  },
+  {
+    "id": "oct",
+    "label": "Eye imaging (OCT)",
+    "category": "signal",
+    "layer": "nervous",
+    "description": "Optical coherence tomography detects optic disc edema and globe changes; in-flight imaging and AI detection are improving.",
+    "signal_verdict": "early",
+    "sources": [
+      "sans_nasa23",
+      "sans_wjg"
+    ]
+  },
+  {
+    "id": "mri",
+    "label": "Brain MRI",
+    "category": "signal",
+    "layer": "nervous",
+    "description": "Only pre- and post-flight; not available in orbit.",
+    "signal_verdict": "weak",
+    "sources": [
+      "mcgregor23"
+    ]
+  }
+]
