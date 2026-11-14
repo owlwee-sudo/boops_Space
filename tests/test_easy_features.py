@@ -27,7 +27,10 @@ from engine.db import (
     get_day,
     init_db,
     insert_daily_records,
+    save_emergency_event,
     save_engine_output,
+    save_log_entry,
+    save_sharing_settings,
 )
 from engine.export import export_astronaut_range, generate_flight_surgeon_pdf, normalize_sharing
 from engine.generate_mission import CSV_COLUMNS
@@ -294,3 +297,224 @@ def test_task7_and_task8_web_bundle_and_privacy_export(tmp_path):
     tmp_pdf = tmp_path / "summary_A2.pdf"
     generate_flight_surgeon_pdf("A2", 55, 76, tmp_pdf)
     assert tmp_pdf.exists() and tmp_pdf.read_bytes().startswith(b"%PDF")
+
+
+def test_sqlite_persistence_helpers_and_local_server(tmp_path: Path) -> None:
+    """Verify log, emergency, and crew-first sharing persistence in SQLite and HTTP API."""
+    import json
+    import sqlite3
+    import threading
+    import urllib.request
+
+    from engine.server import create_server
+
+    db_path = tmp_path / "test_mission.db"
+    init_db(db_path)
+
+    log_id = save_log_entry(
+        astronaut_id="A1",
+        mission_day=95,
+        category="symptoms",
+        payload={"symptoms": ["fatigue"], "note": "pre-symptomatic check"},
+        db_path=db_path,
+    )
+    assert log_id >= 1
+
+    sharing = save_sharing_settings(
+        astronaut_id="A1",
+        daily_summary=False,
+        raw_data=True,
+        db_path=db_path,
+    )
+    assert sharing["daily_summary"] is False
+    assert sharing["raw_data"] is True
+    assert sharing["emergency_events"] is True
+
+    em_id = save_emergency_event(
+        astronaut_id="A1",
+        mission_day=92,
+        protocol_id="spe_shelter",
+        severity="critical",
+        summary="Solar particle event drill logged",
+        db_path=db_path,
+    )
+    assert em_id >= 1
+
+    with sqlite3.connect(db_path) as conn:
+        row = conn.execute(
+            "SELECT daily_summary, raw_data, emergency_events FROM sharing_settings WHERE astronaut_id = ?",
+            ("A1",),
+        ).fetchone()
+        assert row == (0, 1, 1)
+
+    server = create_server(
+        host="127.0.0.1",
+        port=0,
+        web_dir=ROOT_DIR / "web",
+        db_path=db_path,
+    )
+    port = server.server_address[1]
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/health") as resp:
+            health = json.loads(resp.read().decode("utf-8"))
+            assert health["status"] == "ok"
+            assert health["offline"] is True
+
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/sharing",
+            data=json.dumps(
+                {
+                    "astronaut_id": "A2",
+                    "daily_summary": True,
+                    "raw_data": False,
+                    "emergency_events": False,
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            assert body["ok"] is True
+            assert body["sharing"]["emergency_events"] is True
+
+        log_req = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/log",
+            data=json.dumps(
+                {
+                    "astronaut_id": "A2",
+                    "mission_day": 70,
+                    "category": "exercise",
+                    "payload": {"resistance_min": 45},
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(log_req) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            assert body["ok"] is True
+            assert body["id"] >= 1
+
+        cam_req = urllib.request.Request(
+            f"http://127.0.0.1:{port}/api/log_entries",
+            data=json.dumps(
+                {
+                    "astronaut_id": "A1",
+                    "entry_type": "camera_check",
+                    "rhr_bpm": 72,
+                    "signal_quality": 0.91,
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(cam_req) as resp:
+            body = json.loads(resp.read().decode("utf-8"))
+            assert body["ok"] is True
+            assert body["id"] >= 2
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_hard_feature_hooks_integration() -> None:
+    """Verify H1-H4 integration hooks stay OFF/safe by default and activate cleanly."""
+    import json
+    import pandas as pd
+
+    from engine import analysis as analysis_mod
+    from engine.data_quality import check_reading
+
+    assert analysis_mod.STRESS_MODEL == "rules"
+    assert analysis_mod.FACE_WEIGHT == 0.0
+
+    row = {
+        "mission_day": 50,
+        "rhr_bpm": 78.0,
+        "hrv_rmssd_ms": 28.0,
+        "eda_mean_us": 2.4,
+        "mood_1to5": 2,
+        "temp_c": 36.8,
+        "spo2_pct": 98.0,
+        "signal_quality": 0.9,
+        "eva": 0,
+        "symptoms": "",
+        "facial_change_z": 2.8,
+        "face_opted_in": True,
+    }
+    baseline = {
+        "rhr_bpm": {"mean": 62.0, "sd": 3.0},
+        "hrv_rmssd_ms": {"mean": 48.0, "sd": 6.0},
+        "eda_mean_us": {"mean": 1.2, "sd": 0.3},
+        "temp_c": {"mean": 36.7, "sd": 0.2},
+        "spo2_pct": {"mean": 98.0, "sd": 0.5},
+        "exercise_min": {"mean": 115.0, "sd": 10.0},
+    }
+    z = {"rhr_bpm": 2.0, "hrv_rmssd_ms": -2.0, "eda_mean_us": 2.0}
+
+    rules_score = analysis_mod.stress_score(row, z, baseline)
+    # Opt-in face input must have zero effect when FACE_WEIGHT is default 0.0
+    assert rules_score == analysis_mod.stress_score({**row, "face_opted_in": False}, z, baseline)
+
+    orig_model = analysis_mod.STRESS_MODEL
+    orig_weight = analysis_mod.FACE_WEIGHT
+    try:
+        analysis_mod.STRESS_MODEL = "wesad"
+        wesad_score = analysis_mod.stress_score(row, z, baseline)
+        assert 0 <= wesad_score <= 100
+        assert wesad_score != rules_score
+
+        analysis_mod.STRESS_MODEL = "rules"
+        analysis_mod.FACE_WEIGHT = 0.12
+        blended = analysis_mod.stress_score(row, z, baseline)
+        unopted = analysis_mod.stress_score({**row, "face_opted_in": False}, z, baseline)
+        assert blended != unopted
+        assert 0 <= blended <= 100
+    finally:
+        analysis_mod.STRESS_MODEL = orig_model
+        analysis_mod.FACE_WEIGHT = orig_weight
+
+    # H4 anomaly_score hook on normal day vs dangerous safety-rule override
+    normal_row = {
+        "mission_day": 55,
+        "rhr_bpm": 62.0,
+        "hrv_rmssd_ms": 48.0,
+        "temp_c": 36.7,
+        "spo2_pct": 98.0,
+        "signal_quality": 0.9,
+        "eva": 0,
+        "symptoms": "",
+    }
+    normal_z = {"rhr_bpm": 0.0, "hrv_rmssd_ms": 0.0, "temp_c": 0.0, "spo2_pct": 0.0}
+    dq_spike = check_reading(
+        normal_row,
+        baseline,
+        pd.DataFrame(),
+        z=normal_z,
+        anomaly_score=0.85,
+        anomaly_kind="point",
+    )
+    assert dq_spike["status"] == "check_device"
+    assert dq_spike["anomaly_score"] == 0.85
+    assert dq_spike["anomaly_kind"] == "point"
+
+    danger_row = {**normal_row, "temp_c": 39.2, "symptoms": "fever"}
+    dq_danger = check_reading(
+        danger_row,
+        baseline,
+        pd.DataFrame(),
+        z=normal_z,
+        anomaly_score=0.90,
+        anomaly_kind="point",
+    )
+    assert dq_danger["status"] == "act_now"
+
+    # Pipeline outputs must include merged H4 anomaly_score fields
+    engine_outputs = json.loads((ROOT_DIR / "data" / "engine_output.json").read_text(encoding="utf-8"))
+    assert len(engine_outputs) == 540
+    assert all("anomaly_score" in d["data_quality"] for d in engine_outputs)
+    assert (ROOT_DIR / "data" / "anomaly_scores.json").exists()

@@ -75,12 +75,13 @@ Readings are simulated, not real sensor data. Each value is a pure function of t
    ```
    *(Uses `pandas`, `numpy`, and `matplotlib`.)*
 2. **Open the offline dashboard:**
-   - Open `web/index.html` directly in a browser (`file://`, no internet or server required), **or**
-   - Run a local server: `python3 -m http.server 8000 --directory web`, **or**
+   - Run the local server with SQLite persistence & camera access: `python engine/server.py`, then open `http://127.0.0.1:8000` (and `/camera/` or `/camera/?sim=steady` for the camera rPPG + facial-behaviour check), **or**
+   - Open `web/index.html` directly in a browser (`file://`, localStorage fallback, zero server needed), **or**
    - Run the Vite / Tauri desktop frontend inside `ui/`: `cd ui && npm install && npm run dev`.
 3. **Run verification tests & knowledge validation:**
    ```bash
    node tools/build-docs.mjs
+   node --test hard/rppg/test_rppg_core.mjs hard/face/test_face_core.mjs
    pytest tests/ -v
    ```
 
@@ -90,7 +91,13 @@ Readings are simulated, not real sensor data. Each value is a pure function of t
 - **`engine/data_quality.py`**: 4-step **"device or astronaut?"** odd-reading funnel (`signal_quality` -> `plausibility` -> `cross-sensor agreement` -> `context + ask the human`) with safety rule `act_now` for dangerous corroborated values. Bad readings are marked (`check_device`), never deleted.
 - **`engine/risk_engine.py`**: Models cross-system causal rules (`immune`, `musculoskeletal`, `cardio` scores `0–100`; levels `normal < 40`, `watch 40–70`, `act > 70`) with evidence star ratings (`⭐⭐⭐` human data, `⭐⭐` animal + some human, `⭐` hypothesis), adaptation dampening on days 1–14, stress × inactivity muscle-loss interaction, and ranked root-cause recommendations.
 - **`engine/db.py` & `engine/export.py`**: Offline SQLite single source of truth (`data/mission.db`, 9 tables) plus JSON/CSV exports (`data/engine_output.json`, `data/daily_records.csv`) and 2-page `data/flight_surgeon_summary_A1.pdf` respecting **crew-first privacy** (`daily_summary` on by default, `raw_data` off by default, `emergency_events` locked always on).
+- **`engine/server.py`**: Optional localhost-only (`127.0.0.1:8000`) HTTP server for `/web` + `/web/camera/` with SQLite write-back (`/api/log`, `/api/log_entries`, `/api/sharing`, `/api/emergency`).
 - **`content/emergency_protocols.json` & `content/tool_guides.json`**: 6 offline emergency checklists (with crew responder/patient role handoff and timestamped steps) and 7 step-by-step instrument measurement guides.
+- **`hard/` & `web/camera/` (ML & Sensor Modules H1–H4)**:
+  - **H1 Camera rPPG (`/web/camera/`, `hard/rppg_reference.py`)**: 30-second webcam pulse check using POS (Wang et al. 2017) + vendored offline MediaPipe FaceLandmarker (`/web/vendor/mediapipe`). Saves into `ahm.log_entries` (`hrv_confidence: "low"`).
+  - **H2 Facial Behaviour (`web/camera/face-behaviour-core.js`, `hard/face/stress_hook.py`)**: Opt-in 5-feature change-vs-baseline tracker (no emotion labels). Optional stress blend hook (`FACE_WEIGHT = 0.0` default, capped at `0.15`) in `engine/analysis.py`.
+  - **H3 WESAD Stress Classifier (`hard/wesad/`, `web/models/wesad_stress_model.json`)**: Leave-one-subject-out validated logistic model (second opinion via `STRESS_MODEL = "rules" | "wesad"`, default `"rules"`).
+  - **H4 Isolation Forest Anomaly Detector (`hard/anomaly/`)**: Unsupervised `point` vs `trend` vs `new` second opinion integrated into `engine/data_quality.py` and `engine/run_all.py` (never overrides safety `act_now`).
 
 ### Data Labels & Limitations
 - **Simulated telemetry:** Because real day-by-day astronaut biometrics are private, all 540 crew-day records (`source="simulated"`) and demo emergency/clinical scenarios are simulated synthetic approximations.
@@ -98,7 +105,7 @@ Readings are simulated, not real sensor data. Each value is a pure function of t
 - **Not validated for flight medicine:** Thresholds (2 SD RHR, 40/70 risk cutoffs, unweighted/weighted rule coefficients) are transparent heuristic indicators for crew self-monitoring and ground triage, not clinical diagnostics.
 
 ### Core Scientific & Public Data Citations
-Full bibliography (91 sources, 41 concepts, 83 evidence links) is maintained in `knowledge/sources.json` and `knowledge/sources.md`:
+Full bibliography (103 sources, 41 concepts, 83 evidence links) is maintained in `knowledge/sources.json` and `knowledge/sources.md`:
 - `hazards` — NASA – 5 Hazards of Human Spaceflight (`https://www.nasa.gov/hrp/hazards`)
 - `immrisk` — NASA Immune Risk page incl. Immune Risk DAG (`https://www.nasa.gov/directorates/esdmd/hhp/immune-risk/`)
 - `mehta2017` — Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS, *npj Microgravity* (`https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581`)

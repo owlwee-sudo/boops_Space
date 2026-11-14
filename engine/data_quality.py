@@ -46,11 +46,56 @@ def _has_symptoms(row: pd.Series | dict[str, Any]) -> bool:
     return bool(str(raw).strip())
 
 
+_SUGGESTED_STEPS: dict[str, str] = {
+    "act_now": "Follow the matching emergency protocol immediately and notify the crew medical officer.",
+    "check_device": "Check wearable strap fit, warm skin contact, and re-measure using the Tool Guide. Reading retained.",
+    "check_yourself": "Any new symptoms? Re-measure resting HR/temp with the Tool Guide and take a saliva sample.",
+}
+
+
+def _attach_anomaly(
+    result: dict[str, Any],
+    anomaly_score: float | None,
+    anomaly_kind: str,
+    sq: float | None,
+    symptoms_raw: Any,
+    eva: int,
+) -> dict[str, Any]:
+    """Attach optional H4 Isolation Forest score and refine 'ok' readings safely."""
+    if anomaly_score is None:
+        return result
+
+    if result["status"] == "ok":
+        from hard.anomaly.anomaly import suggest_status
+
+        s_status, s_reason = suggest_status(
+            anomaly_score,
+            sq,
+            anomaly_kind,
+            "" if symptoms_raw is None else str(symptoms_raw),
+            eva,
+        )
+        if s_status is not None:
+            result = {
+                "status": s_status,
+                "reasons": [*result["reasons"], s_reason] if s_reason else list(result["reasons"]),
+                "suggested_step": _SUGGESTED_STEPS.get(s_status, result["suggested_step"]),
+            }
+
+    out = dict(result)
+    out["anomaly_score"] = round(float(anomaly_score), 3)
+    if anomaly_kind:
+        out["anomaly_kind"] = str(anomaly_kind)
+    return out
+
+
 def check_reading(
     row: pd.Series | dict[str, Any],
     baseline: dict[str, dict[str, float]],
     history_df: pd.DataFrame | None = None,
     z: dict[str, float] | None = None,
+    anomaly_score: float | None = None,
+    anomaly_kind: str = "",
 ) -> dict[str, Any]:
     """Run the 4-step odd-reading funnel and return {status, reasons, suggested_step}."""
     z_map = z if z is not None else zscores(row, baseline)
@@ -62,7 +107,11 @@ def check_reading(
     temp = _to_float(row.get("temp_c"))
     spo2 = _to_float(row.get("spo2_pct"))
     eva = int(_to_float(row.get("eva")) or 0)
+    symptoms_raw = row.get("symptoms")
     symptoms_present = _has_symptoms(row)
+
+    def finish(res: dict[str, Any]) -> dict[str, Any]:
+        return _attach_anomaly(res, anomaly_score, anomaly_kind, sq, symptoms_raw, eva)
 
     # 0. Safety rule: dangerous-if-real values corroborated by symptoms or severe multi-channel agreement
     severe_reasons: list[str] = []
@@ -73,11 +122,11 @@ def check_reading(
     if spo2 is not None and 70.0 <= spo2 < DANGEROUS_THRESHOLDS["spo2_low"] and (symptoms_present or (sq is not None and sq >= 0.7)):
         severe_reasons.append(f"Low blood oxygen SpO2 ({spo2:.1f}%)")
     if severe_reasons:
-        return {
+        return finish({
             "status": "act_now",
             "reasons": severe_reasons,
-            "suggested_step": "Follow the matching emergency protocol immediately and notify the crew medical officer.",
-        }
+            "suggested_step": _SUGGESTED_STEPS["act_now"],
+        })
 
     # 1. Signal quality check
     device_reasons: list[str] = []
@@ -97,11 +146,11 @@ def check_reading(
         device_reasons.append(f"Implausible SpO2 ({spo2:.1f}%) without symptoms")
 
     if device_reasons:
-        return {
+        return finish({
             "status": "check_device",
             "reasons": device_reasons,
-            "suggested_step": "Check wearable strap fit, warm skin contact, and re-measure using the Tool Guide. Reading retained.",
-        }
+            "suggested_step": _SUGGESTED_STEPS["check_device"],
+        })
 
     # 3. Cross-sensor agreement & single-day isolated spike check
     abnormal_metrics = [
@@ -123,11 +172,11 @@ def check_reading(
 
     if len(extreme_metrics) == 1 and len(abnormal_metrics) == 1 and not prior_abnormal and not symptoms_present and eva == 0:
         m = extreme_metrics[0]
-        return {
+        return finish({
             "status": "check_device",
             "reasons": [f"Isolated single-sensor 1-day jump in {m} (z={z_map[m]:+.2f}) without cross-sensor agreement"],
             "suggested_step": "Re-seat sensor and take a manual confirmation reading using the Tool Guide.",
-        }
+        })
 
     # 4. Context + human check
     ex_mean = baseline.get("exercise_min", {}).get("mean", 118.0)
@@ -141,11 +190,11 @@ def check_reading(
         recent_eva = bool((recent_rows.get("eva", pd.Series(dtype=int)) == 1).any())
 
     if recent_eva or ex_min > ex_mean + 1.5 * ex_sd:
-        return {
+        return finish({
             "status": "ok",
             "reasons": ["Sensor readings consistent with recent EVA or elevated exercise load"],
             "suggested_step": "Prioritize post-EVA hydration and sleep recovery.",
-        }
+        })
 
     rhr_z = z_map.get("rhr_bpm", 0.0)
     hrv_z = z_map.get("hrv_rmssd_ms", 0.0)
@@ -156,14 +205,14 @@ def check_reading(
             reasons.append(f"Resting HR elevated ({rhr_z:+.2f} SD) with multi-sensor or multi-day trend")
         if hrv_z <= -2.0:
             reasons.append(f"HRV suppressed ({hrv_z:+.2f} SD) confirming autonomic strain")
-        return {
+        return finish({
             "status": "check_yourself",
             "reasons": reasons,
-            "suggested_step": "Any new symptoms? Re-measure resting HR/temp with the Tool Guide and take a saliva sample.",
-        }
+            "suggested_step": _SUGGESTED_STEPS["check_yourself"],
+        })
 
-    return {
+    return finish({
         "status": "ok",
         "reasons": [],
         "suggested_step": "",
-    }
+    })

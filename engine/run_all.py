@@ -96,11 +96,24 @@ def run_pipeline() -> list[dict[str, Any]]:
                 }
             )
 
-    # Save engine_output.json
+    # Attach H4 Isolation Forest anomaly scores & write data/anomaly_scores.json
+    from hard.anomaly.anomaly import score_mission
+    from hard.anomaly.run_anomaly import merge_into_engine_output, to_records
+
+    anomaly_records = to_records(score_mission(df))
+    anomaly_json_path = DATA_DIR / "anomaly_scores.json"
+    with open(anomaly_json_path, "w", encoding="utf-8") as f:
+        json.dump(anomaly_records, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+    # Save engine_output.json and merge anomaly_score / anomaly_kind fields
     engine_json_path = DATA_DIR / "engine_output.json"
     with open(engine_json_path, "w", encoding="utf-8") as f:
         json.dump(outputs, f, indent=2, ensure_ascii=False)
         f.write("\n")
+    merge_into_engine_output(anomaly_records, path=engine_json_path)
+    with open(engine_json_path, "r", encoding="utf-8") as f:
+        outputs = json.load(f)
 
     # Persist to SQLite DB (single source of truth)
     db_path = DATA_DIR / "mission.db"

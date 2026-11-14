@@ -1,0 +1,149 @@
+{
+  "name": "WESAD stress classifier (logistic regression)",
+  "created": "2026-11-14",
+  "trained_on": "WESAD (Schmidt et al. 2018): 15 people, lab stress. Real labelled data, not simulated.",
+  "target": "stress (WESAD label 2) vs non-stress (baseline 1 + amusement 3)",
+  "window_s": 60,
+  "evaluation": "leave-one-subject-out",
+  "warning": "Lab stress in 15 young adults on Earth. Not validated for spaceflight. Risk indicator, not a diagnosis.",
+  "models": {
+    "wrist_all": {
+      "features": [
+        "hr_mean",
+        "hrv_rmssd",
+        "hrv_sdnn",
+        "hrv_pnn50",
+        "eda_tonic_mean",
+        "eda_scr_count",
+        "eda_scr_amp_mean",
+        "temp_mean",
+        "temp_slope",
+        "acc_mag_mean",
+        "acc_mag_sd"
+      ],
+      "maps_to": null,
+      "input": "z-score of each feature against all of the same person's windows",
+      "normalisation": "subject",
+      "impute_missing_with": [
+        -0.19760681337841443,
+        -0.04806028334788236,
+        -0.1464311845326626,
+        0.02820469470510209,
+        -0.4676685859789234,
+        -0.47938480247660753,
+        -0.2956576528980493,
+        0.2676759394228591,
+        -0.06585609077371289,
+        -0.0830013634268296,
+        -0.3184519217991445
+      ],
+      "scaler_mean": [
+        -0.01284931003248821,
+        -0.003125102168433809,
+        -0.009521633674044992,
+        0.0018339998527455667,
+        -1.4350863136041434e-16,
+        -1.0500631562957146e-17,
+        -1.1375684193203575e-17,
+        2.5131511540677435e-15,
+        -1.400084208394286e-17,
+        5.127808413244073e-16,
+        -1.9251157865421433e-17
+      ],
+      "scaler_scale": [
+        0.9681680514763169,
+        0.9670138553765768,
+        0.9676150949876102,
+        0.9669662524145318,
+        0.9502632538207021,
+        0.9879937279373047,
+        1.0,
+        0.9999999999999999,
+        1.0,
+        1.0,
+        0.9999999999999999
+      ],
+      "coef": [
+        1.5874153501773065,
+        -0.410970946577068,
+        0.5649295079937666,
+        -0.10537798012015756,
+        2.142536917339376,
+        0.49080208306734846,
+        0.4321592092694306,
+        -0.5951598149915989,
+        -0.8386259899614324,
+        -0.2560668279071609,
+        0.7393644909239164
+      ],
+      "intercept": -1.2624904377415358,
+      "formula": "p_stress = 1 / (1 + exp(-(intercept + sum(coef[i] * (x[i] - scaler_mean[i]) / scaler_scale[i]))))",
+      "loso": {
+        "accuracy": 0.9103448275862069,
+        "balanced_accuracy": 0.8980104585605082,
+        "f1_stress": 0.8520325203252033,
+        "per_subject_mean": 0.911014114462601,
+        "per_subject_sd": 0.10678844694358461,
+        "per_subject_min": 0.6376811594202898,
+        "per_subject_max": 1.0,
+        "confusion": {
+          "true_nonstress_pred_nonstress": 662,
+          "true_nonstress_pred_stress": 51,
+          "true_stress_pred_nonstress": 40,
+          "true_stress_pred_stress": 262
+        }
+      }
+    },
+    "daily": {
+      "features": [
+        "ecg_hr_mean",
+        "ecg_hrv_rmssd",
+        "eda_tonic_mean"
+      ],
+      "maps_to": [
+        "rhr_bpm",
+        "hrv_rmssd_ms",
+        "eda_mean_us"
+      ],
+      "input": "z-score of each feature against the same person's calm baseline (personal baseline)",
+      "normalisation": "baseline",
+      "impute_missing_with": [
+        0.49598683525100945,
+        -0.2781394288837976,
+        0.0691157127268982
+      ],
+      "scaler_mean": [
+        2.8519557748123754,
+        -0.6365751658865485,
+        1.4195494599211662
+      ],
+      "scaler_scale": [
+        6.314991677105267,
+        2.370310787312876,
+        3.238386975713
+      ],
+      "coef": [
+        4.595188984378268,
+        0.05387638168751554,
+        4.998644941937389
+      ],
+      "intercept": 0.05058019626460727,
+      "formula": "p_stress = 1 / (1 + exp(-(intercept + sum(coef[i] * (x[i] - scaler_mean[i]) / scaler_scale[i]))))",
+      "loso": {
+        "accuracy": 0.9448275862068966,
+        "balanced_accuracy": 0.9320983067534807,
+        "f1_stress": 0.9066666666666666,
+        "per_subject_mean": 0.9442666771544126,
+        "per_subject_sd": 0.07050728432809152,
+        "per_subject_min": 0.7971014492753623,
+        "per_subject_max": 1.0,
+        "confusion": {
+          "true_nonstress_pred_nonstress": 687,
+          "true_nonstress_pred_stress": 26,
+          "true_stress_pred_nonstress": 30,
+          "true_stress_pred_stress": 272
+        }
+      }
+    }
+  }
+}

@@ -16,6 +16,8 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 BASELINE_DAYS = (1, 14)
 MIN_SIGNAL_QUALITY = 0.5
+STRESS_MODEL = "rules"  # "rules" | "wesad" (H3 optional second opinion; default rules)
+FACE_WEIGHT = 0.0       # 0.0 = off; H2 opt-in facial-behaviour weight (max 0.15)
 
 STRESS_WEIGHTS: dict[str, float] = {
     "hrv": 0.50,
@@ -145,13 +147,36 @@ def stress_score(
         else 28.0
     )
 
-    score = (
-        STRESS_WEIGHTS["hrv"] * hrv_component
-        + STRESS_WEIGHTS["rhr"] * rhr_component
-        + STRESS_WEIGHTS["eda"] * eda_component
-        + STRESS_WEIGHTS["mood"] * mood_component
+    if STRESS_MODEL == "wesad":
+        from hard.wesad.stress_model import wesad_stress_score
+
+        score = float(
+            wesad_stress_score(
+                z.get("rhr_bpm", 0.0),
+                z.get("hrv_rmssd_ms", 0.0),
+                z.get("eda_mean_us", 0.0),
+            )
+        )
+    else:
+        score = (
+            STRESS_WEIGHTS["hrv"] * hrv_component
+            + STRESS_WEIGHTS["rhr"] * rhr_component
+            + STRESS_WEIGHTS["eda"] * eda_component
+            + STRESS_WEIGHTS["mood"] * mood_component
+        )
+    base_score = int(round(float(np.clip(score, 0.0, 100.0))))
+
+    from hard.face.stress_hook import blend_face_into_stress
+
+    return int(
+        blend_face_into_stress(
+            base_score,
+            _to_float(row.get("facial_change_z")),
+            bool(row.get("face_opted_in", False)),
+            _to_float(row.get("signal_quality")),
+            face_weight=FACE_WEIGHT,
+        )
     )
-    return int(round(float(np.clip(score, 0.0, 100.0))))
 
 
 def sleep_score(

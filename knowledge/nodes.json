@@ -225,7 +225,12 @@
       "repss",
       "mayo",
       "intelomed",
-      "fullbody"
+      "fullbody",
+      "pos17",
+      "chrom13",
+      "rppgtoolbox",
+      "mediapipe",
+      "eqcookbook"
     ]
   },
   {
@@ -294,7 +299,9 @@
       "microexp",
       "jyu",
       "facebio",
-      "euai"
+      "euai",
+      "stressid",
+      "mediapipe"
     ]
   },
   {
@@ -318,7 +325,12 @@
     "signal_verdict": "good",
     "sources": [
       "mentalhrv",
-      "autonomic"
+      "autonomic",
+      "wesad",
+      "wesad_data",
+      "neurokit2",
+      "sklearn",
+      "numpy"
     ]
   },
   {
@@ -331,7 +343,8 @@
     "sources": [
       "mishra20",
       "stanford",
-      "laad"
+      "laad",
+      "iforest"
     ]
   },
   {

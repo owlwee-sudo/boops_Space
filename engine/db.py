@@ -428,3 +428,113 @@ def export_csv(
         )
     df.to_csv(out, index=False)
     return out
+
+
+def _utc_timestamp(created_utc: str | None) -> str:
+    """Return a caller-supplied UTC timestamp or current ISO-8601 UTC time."""
+    if created_utc:
+        return str(created_utc)
+    from datetime import datetime, timezone
+
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def save_log_entry(
+    astronaut_id: str,
+    mission_day: int,
+    category: str,
+    payload: Any,
+    created_utc: str | None = None,
+    db_path: Path | str = DEFAULT_DB_PATH,
+) -> int:
+    """Insert a manual or system log entry into SQLite and return its row id."""
+    import json
+
+    payload_json = (
+        payload if isinstance(payload, str) else json.dumps(payload, sort_keys=True)
+    )
+    timestamp = _utc_timestamp(created_utc)
+    with _connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO log_entries (
+                astronaut_id, mission_day, category, payload_json, created_utc
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                str(astronaut_id),
+                int(mission_day),
+                str(category),
+                payload_json,
+                timestamp,
+            ),
+        )
+        conn.commit()
+        return int(cur.lastrowid or 0)
+
+
+def save_sharing_settings(
+    astronaut_id: str,
+    daily_summary: bool,
+    raw_data: bool,
+    db_path: Path | str = DEFAULT_DB_PATH,
+) -> dict[str, Any]:
+    """Persist sharing toggles to SQLite while keeping emergency_events locked ON."""
+    daily_int = 1 if daily_summary else 0
+    raw_int = 1 if raw_data else 0
+    # Crew-first privacy rule: emergency alerts stay enabled for safety.
+    emergency_int = 1
+    with _connect(db_path) as conn:
+        conn.execute(
+            """
+            INSERT INTO sharing_settings (
+                astronaut_id, daily_summary, raw_data, emergency_events
+            )
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(astronaut_id) DO UPDATE SET
+                daily_summary = excluded.daily_summary,
+                raw_data = excluded.raw_data,
+                emergency_events = 1
+            """,
+            (str(astronaut_id), daily_int, raw_int, emergency_int),
+        )
+        conn.commit()
+    return {
+        "astronaut_id": str(astronaut_id),
+        "daily_summary": bool(daily_int),
+        "raw_data": bool(raw_int),
+        "emergency_events": True,
+    }
+
+
+def save_emergency_event(
+    astronaut_id: str,
+    mission_day: int,
+    protocol_id: str,
+    severity: str,
+    summary: str,
+    created_utc: str | None = None,
+    db_path: Path | str = DEFAULT_DB_PATH,
+) -> int:
+    """Insert an offline emergency event record into SQLite and return its row id."""
+    timestamp = _utc_timestamp(created_utc)
+    with _connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            INSERT INTO emergency_events (
+                astronaut_id, mission_day, protocol_id, severity, summary, created_utc
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                str(astronaut_id),
+                int(mission_day),
+                str(protocol_id),
+                str(severity),
+                str(summary),
+                timestamp,
+            ),
+        )
+        conn.commit()
+        return int(cur.lastrowid or 0)

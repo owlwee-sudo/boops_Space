@@ -2,7 +2,7 @@
 
 # Relationship list
 
-41 concepts · 83 links · 91 sources. Evidence: 🧑 humans · 🐭 animals · 🧫 cells · ⭐ to ⭐⭐⭐ strength. Signal quality: 🟢 good · 🟡 use with care · 🔴 weak · 🔵 early. `[id]` = entry in [sources.md](sources.md).
+41 concepts · 83 links · 103 sources. Evidence: 🧑 humans · 🐭 animals · 🧫 cells · ⭐ to ⭐⭐⭐ strength. Signal quality: 🟢 good · 🟡 use with care · 🔴 weak · 🔵 early. `[id]` = entry in [sources.md](sources.md).
 
 ## Core web
 

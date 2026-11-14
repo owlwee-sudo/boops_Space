@@ -1,0 +1,2754 @@
+{
+  "created": "2026-11-14",
+  "seed": 0,
+  "windows": {
+    "60": {
+      "n_windows": 1015,
+      "n_subjects": 15,
+      "n_stress": 302,
+      "n_nonstress": 713,
+      "majority_class_accuracy": 0.7024630541871921,
+      "sensor_quality": {
+        "baseline": {
+          "windows": 557,
+          "wrist_clean_beat_share": 0.7241044563476912,
+          "ecg_clean_beat_share": 0.9889896138001196,
+          "wrist_hr": 71.79160231793418,
+          "ecg_hr": 72.40767924177368,
+          "wrist_rmssd": 92.25063133567858,
+          "ecg_rmssd": 47.75020277969734,
+          "wrist_heart_features_missing": 0.01615798922800718
+        },
+        "stress": {
+          "windows": 302,
+          "wrist_clean_beat_share": 0.5186335377589224,
+          "ecg_clean_beat_share": 0.9727095449158166,
+          "wrist_hr": 84.69259514825453,
+          "ecg_hr": 97.89293231510295,
+          "wrist_rmssd": 103.68161913335207,
+          "ecg_rmssd": 28.883713359592488,
+          "wrist_heart_features_missing": 0.09933774834437085
+        },
+        "amusement": {
+          "windows": 156,
+          "wrist_clean_beat_share": 0.6499339116499593,
+          "ecg_clean_beat_share": 0.9832080954541923,
+          "wrist_hr": 70.23439000596578,
+          "ecg_hr": 72.7789314397745,
+          "wrist_rmssd": 94.69799232579497,
+          "ecg_rmssd": 47.37540031579074,
+          "wrist_heart_features_missing": 0.17307692307692307
+        },
+        "wrist_vs_ecg_hr_mean_abs_error_bpm": 5.434990849113569
+      },
+      "runs": [
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8551724137931035,
+            "balanced_accuracy": 0.8530135701215831,
+            "f1_stress": 0.7769347496206374,
+            "per_subject_mean": 0.8554605720525482,
+            "per_subject_sd": 0.12771534982747385,
+            "per_subject_min": 0.5362318840579711,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8,
+              "S3": 0.7611940298507462,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9701492537313433,
+              "S7": 0.8656716417910447,
+              "S8": 0.9411764705882353,
+              "S9": 0.8181818181818182,
+              "S10": 0.8985507246376812,
+              "S11": 1.0,
+              "S13": 0.6376811594202898,
+              "S14": 0.8405797101449275,
+              "S15": 0.5362318840579711,
+              "S16": 0.8656716417910447,
+              "S17": 0.9565217391304348
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 612,
+              "true_nonstress_pred_stress": 101,
+              "true_stress_pred_nonstress": 46,
+              "true_stress_pred_stress": 256
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.896551724137931,
+            "balanced_accuracy": 0.8719685500125391,
+            "f1_stress": 0.8235294117647058,
+            "per_subject_mean": 0.8963092346995083,
+            "per_subject_sd": 0.07969999986371032,
+            "per_subject_min": 0.7384615384615385,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7384615384615385,
+              "S3": 0.7910447761194029,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9850746268656716,
+              "S7": 0.8656716417910447,
+              "S8": 0.8970588235294118,
+              "S9": 0.8939393939393939,
+              "S10": 0.782608695652174,
+              "S11": 0.9571428571428572,
+              "S13": 0.9855072463768116,
+              "S14": 0.8260869565217391,
+              "S15": 0.9420289855072463,
+              "S16": 0.9701492537313433,
+              "S17": 0.8695652173913043
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 665,
+              "true_nonstress_pred_stress": 48,
+              "true_stress_pred_nonstress": 57,
+              "true_stress_pred_stress": 245
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8788177339901477,
+            "balanced_accuracy": 0.8583914622479403,
+            "f1_stress": 0.7986906710310966,
+            "per_subject_mean": 0.8788581441419552,
+            "per_subject_sd": 0.09741348778188653,
+            "per_subject_min": 0.6376811594202898,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7384615384615385,
+              "S3": 0.7611940298507462,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9552238805970149,
+              "S7": 0.9104477611940298,
+              "S8": 0.9117647058823529,
+              "S9": 0.8787878787878788,
+              "S10": 0.6376811594202898,
+              "S11": 0.9285714285714286,
+              "S13": 0.927536231884058,
+              "S14": 0.8115942028985508,
+              "S15": 0.9710144927536232,
+              "S16": 0.9552238805970149,
+              "S17": 0.855072463768116
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 648,
+              "true_nonstress_pred_stress": 65,
+              "true_stress_pred_nonstress": 58,
+              "true_stress_pred_stress": 244
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9103448275862069,
+            "balanced_accuracy": 0.8980104585605082,
+            "f1_stress": 0.8520325203252033,
+            "per_subject_mean": 0.911014114462601,
+            "per_subject_sd": 0.10678844694358461,
+            "per_subject_min": 0.6376811594202898,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9230769230769231,
+              "S3": 0.8208955223880597,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 1.0,
+              "S7": 0.9701492537313433,
+              "S8": 0.9705882352941176,
+              "S9": 0.8484848484848485,
+              "S10": 1.0,
+              "S11": 0.7714285714285715,
+              "S13": 1.0,
+              "S14": 0.6376811594202898,
+              "S15": 0.9855072463768116,
+              "S16": 0.9850746268656716,
+              "S17": 0.7971014492753623
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 662,
+              "true_nonstress_pred_stress": 51,
+              "true_stress_pred_nonstress": 40,
+              "true_stress_pred_stress": 262
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9123152709359605,
+            "balanced_accuracy": 0.880325645765026,
+            "f1_stress": 0.8446771378708552,
+            "per_subject_mean": 0.913271932776838,
+            "per_subject_sd": 0.11629258602285225,
+            "per_subject_min": 0.6521739130434783,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9230769230769231,
+              "S3": 0.8059701492537313,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 1.0,
+              "S7": 0.9701492537313433,
+              "S8": 0.9852941176470589,
+              "S9": 1.0,
+              "S10": 0.9855072463768116,
+              "S11": 0.8142857142857143,
+              "S13": 1.0,
+              "S14": 0.6521739130434783,
+              "S15": 0.9855072463768116,
+              "S16": 0.9552238805970149,
+              "S17": 0.6666666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 684,
+              "true_nonstress_pred_stress": 29,
+              "true_stress_pred_nonstress": 60,
+              "true_stress_pred_stress": 242
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8975369458128079,
+            "balanced_accuracy": 0.8659892442157473,
+            "f1_stress": 0.8206896551724138,
+            "per_subject_mean": 0.8985053614087474,
+            "per_subject_sd": 0.1221476913229049,
+            "per_subject_min": 0.5797101449275363,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9230769230769231,
+              "S3": 0.8208955223880597,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 1.0,
+              "S7": 0.9552238805970149,
+              "S8": 0.9705882352941176,
+              "S9": 0.9848484848484849,
+              "S10": 1.0,
+              "S11": 0.8285714285714286,
+              "S13": 1.0,
+              "S14": 0.5797101449275363,
+              "S15": 0.927536231884058,
+              "S16": 0.8507462686567164,
+              "S17": 0.6811594202898551
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 673,
+              "true_nonstress_pred_stress": 40,
+              "true_stress_pred_nonstress": 64,
+              "true_stress_pred_stress": 238
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9536945812807882,
+            "balanced_accuracy": 0.9479533358721195,
+            "f1_stress": 0.9230769230769231,
+            "per_subject_mean": 0.9531910270132204,
+            "per_subject_sd": 0.06881317600815294,
+            "per_subject_min": 0.7761194029850746,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9692307692307692,
+              "S3": 0.7761194029850746,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 0.9552238805970149,
+              "S7": 0.9701492537313433,
+              "S8": 1.0,
+              "S9": 0.7878787878787878,
+              "S10": 1.0,
+              "S11": 0.9714285714285714,
+              "S13": 1.0,
+              "S14": 0.9710144927536232,
+              "S15": 0.9855072463768116,
+              "S16": 0.9850746268656716,
+              "S17": 0.9710144927536232
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 686,
+              "true_nonstress_pred_stress": 27,
+              "true_stress_pred_nonstress": 20,
+              "true_stress_pred_stress": 282
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9458128078817734,
+            "balanced_accuracy": 0.9318452021585875,
+            "f1_stress": 0.9078726968174204,
+            "per_subject_mean": 0.9453438795684089,
+            "per_subject_sd": 0.06852764206020101,
+            "per_subject_min": 0.7878787878787878,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.8208955223880597,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 0.9104477611940298,
+              "S7": 0.9701492537313433,
+              "S8": 1.0,
+              "S9": 0.7878787878787878,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 0.855072463768116,
+              "S15": 1.0,
+              "S16": 0.9850746268656716,
+              "S17": 0.9420289855072463
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 689,
+              "true_nonstress_pred_stress": 24,
+              "true_stress_pred_nonstress": 31,
+              "true_stress_pred_stress": 271
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9231527093596059,
+            "balanced_accuracy": 0.8928113650929288,
+            "f1_stress": 0.8636363636363636,
+            "per_subject_mean": 0.9227331411108181,
+            "per_subject_sd": 0.10761971983363289,
+            "per_subject_min": 0.6666666666666666,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8769230769230769,
+              "S3": 0.8059701492537313,
+              "S4": 1.0,
+              "S5": 0.9850746268656716,
+              "S6": 0.9850746268656716,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.6666666666666666,
+              "S10": 1.0,
+              "S11": 0.9714285714285714,
+              "S13": 1.0,
+              "S14": 0.8840579710144928,
+              "S15": 0.9855072463768116,
+              "S16": 0.9850746268656716,
+              "S17": 0.7101449275362319
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 690,
+              "true_nonstress_pred_stress": 23,
+              "true_stress_pred_nonstress": 55,
+              "true_stress_pred_stress": 247
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8551724137931035,
+            "balanced_accuracy": 0.8587397713234817,
+            "f1_stress": 0.7809239940387481,
+            "per_subject_mean": 0.8556367056744963,
+            "per_subject_sd": 0.13982348071029163,
+            "per_subject_min": 0.5072463768115942,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8153846153846154,
+              "S3": 0.7611940298507462,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9701492537313433,
+              "S7": 0.8656716417910447,
+              "S8": 0.9411764705882353,
+              "S9": 0.8484848484848485,
+              "S10": 0.855072463768116,
+              "S11": 1.0,
+              "S13": 0.5797101449275363,
+              "S14": 0.8985507246376812,
+              "S15": 0.5072463768115942,
+              "S16": 0.8805970149253731,
+              "S17": 0.9710144927536232
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 606,
+              "true_nonstress_pred_stress": 107,
+              "true_stress_pred_nonstress": 40,
+              "true_stress_pred_stress": 262
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8679802955665025,
+            "balanced_accuracy": 0.8430426423190882,
+            "f1_stress": 0.7788778877887789,
+            "per_subject_mean": 0.868259833671522,
+            "per_subject_sd": 0.12364783561331784,
+            "per_subject_min": 0.5652173913043478,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7384615384615385,
+              "S3": 0.7164179104477612,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9850746268656716,
+              "S7": 0.9104477611940298,
+              "S8": 0.8970588235294118,
+              "S9": 0.8939393939393939,
+              "S10": 0.5652173913043478,
+              "S11": 0.9285714285714286,
+              "S13": 0.9710144927536232,
+              "S14": 0.7101449275362319,
+              "S15": 0.9565217391304348,
+              "S16": 0.9701492537313433,
+              "S17": 0.8405797101449275
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 645,
+              "true_nonstress_pred_stress": 68,
+              "true_stress_pred_nonstress": 66,
+              "true_stress_pred_stress": 236
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8630541871921182,
+            "balanced_accuracy": 0.8404906978256226,
+            "f1_stress": 0.7732463295269169,
+            "per_subject_mean": 0.863397509295131,
+            "per_subject_sd": 0.13413273073171264,
+            "per_subject_min": 0.5072463768115942,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7384615384615385,
+              "S3": 0.7164179104477612,
+              "S4": 1.0,
+              "S5": 0.9402985074626866,
+              "S6": 0.9701492537313433,
+              "S7": 0.9253731343283582,
+              "S8": 0.9411764705882353,
+              "S9": 0.8636363636363636,
+              "S10": 0.5072463768115942,
+              "S11": 0.9142857142857143,
+              "S13": 0.9420289855072463,
+              "S14": 0.6956521739130435,
+              "S15": 0.9710144927536232,
+              "S16": 0.9701492537313433,
+              "S17": 0.855072463768116
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 639,
+              "true_nonstress_pred_stress": 74,
+              "true_stress_pred_nonstress": 65,
+              "true_stress_pred_stress": 237
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9054187192118227,
+            "balanced_accuracy": 0.8916410465991103,
+            "f1_stress": 0.8436482084690554,
+            "per_subject_mean": 0.9062250104151849,
+            "per_subject_sd": 0.1128765215738296,
+            "per_subject_min": 0.6231884057971014,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9230769230769231,
+              "S3": 0.835820895522388,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 1.0,
+              "S7": 0.9402985074626866,
+              "S8": 0.9852941176470589,
+              "S9": 0.8484848484848485,
+              "S10": 0.9855072463768116,
+              "S11": 0.7428571428571429,
+              "S13": 1.0,
+              "S14": 0.6231884057971014,
+              "S15": 0.9855072463768116,
+              "S16": 0.9850746268656716,
+              "S17": 0.7681159420289855
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 660,
+              "true_nonstress_pred_stress": 53,
+              "true_stress_pred_nonstress": 43,
+              "true_stress_pred_stress": 259
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8975369458128079,
+            "balanced_accuracy": 0.8650348773487642,
+            "f1_stress": 0.8200692041522492,
+            "per_subject_mean": 0.8984278771281102,
+            "per_subject_sd": 0.12567585445947513,
+            "per_subject_min": 0.5797101449275363,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9230769230769231,
+              "S3": 0.8059701492537313,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 1.0,
+              "S7": 0.9701492537313433,
+              "S8": 0.9852941176470589,
+              "S9": 0.8939393939393939,
+              "S10": 0.9855072463768116,
+              "S11": 0.8,
+              "S13": 1.0,
+              "S14": 0.5797101449275363,
+              "S15": 0.9855072463768116,
+              "S16": 0.9253731343283582,
+              "S17": 0.6666666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 674,
+              "true_nonstress_pred_stress": 39,
+              "true_stress_pred_nonstress": 65,
+              "true_stress_pred_stress": 237
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8857142857142857,
+            "balanced_accuracy": 0.8585284638176532,
+            "f1_stress": 0.8047138047138047,
+            "per_subject_mean": 0.8869504083223212,
+            "per_subject_sd": 0.1399791505245279,
+            "per_subject_min": 0.5072463768115942,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.8059701492537313,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 1.0,
+              "S7": 0.9701492537313433,
+              "S8": 0.9705882352941176,
+              "S9": 0.8939393939393939,
+              "S10": 1.0,
+              "S11": 0.7857142857142857,
+              "S13": 1.0,
+              "S14": 0.5072463768115942,
+              "S15": 0.8695652173913043,
+              "S16": 0.9402985074626866,
+              "S17": 0.6521739130434783
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 660,
+              "true_nonstress_pred_stress": 53,
+              "true_stress_pred_nonstress": 63,
+              "true_stress_pred_stress": 239
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.954679802955665,
+            "balanced_accuracy": 0.9534264324791246,
+            "f1_stress": 0.9258064516129032,
+            "per_subject_mean": 0.9543196539562537,
+            "per_subject_sd": 0.06338331703025449,
+            "per_subject_min": 0.7611940298507462,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9846153846153847,
+              "S3": 0.7611940298507462,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 0.9104477611940298,
+              "S7": 0.9701492537313433,
+              "S8": 1.0,
+              "S9": 0.8636363636363636,
+              "S10": 1.0,
+              "S11": 0.9428571428571428,
+              "S13": 1.0,
+              "S14": 0.9855072463768116,
+              "S15": 0.9855072463768116,
+              "S16": 0.9701492537313433,
+              "S17": 0.9855072463768116
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 682,
+              "true_nonstress_pred_stress": 31,
+              "true_stress_pred_nonstress": 15,
+              "true_stress_pred_stress": 287
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9339901477832512,
+            "balanced_accuracy": 0.9119776524897133,
+            "f1_stress": 0.8854700854700854,
+            "per_subject_mean": 0.9337497720476688,
+            "per_subject_sd": 0.08731785695843419,
+            "per_subject_min": 0.7246376811594203,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9538461538461539,
+              "S3": 0.8059701492537313,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 0.9104477611940298,
+              "S7": 0.9701492537313433,
+              "S8": 0.9852941176470589,
+              "S9": 0.7727272727272727,
+              "S10": 1.0,
+              "S11": 0.9714285714285714,
+              "S13": 1.0,
+              "S14": 0.7246376811594203,
+              "S15": 1.0,
+              "S16": 0.9850746268656716,
+              "S17": 0.9565217391304348
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 689,
+              "true_nonstress_pred_stress": 24,
+              "true_stress_pred_nonstress": 43,
+              "true_stress_pred_stress": 259
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.896551724137931,
+            "balanced_accuracy": 0.848109378337962,
+            "f1_stress": 0.8073394495412844,
+            "per_subject_mean": 0.8967175862568465,
+            "per_subject_sd": 0.12253966866379608,
+            "per_subject_min": 0.696969696969697,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9076923076923077,
+              "S3": 0.7014925373134329,
+              "S4": 1.0,
+              "S5": 0.9850746268656716,
+              "S6": 0.9701492537313433,
+              "S7": 0.9701492537313433,
+              "S8": 1.0,
+              "S9": 0.696969696969697,
+              "S10": 1.0,
+              "S11": 0.8428571428571429,
+              "S13": 1.0,
+              "S14": 0.7101449275362319,
+              "S15": 0.9710144927536232,
+              "S16": 0.9850746268656716,
+              "S17": 0.7101449275362319
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 690,
+              "true_nonstress_pred_stress": 23,
+              "true_stress_pred_nonstress": 82,
+              "true_stress_pred_stress": 220
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8,
+            "balanced_accuracy": 0.7841575100080808,
+            "f1_stress": 0.6891271056661562,
+            "per_subject_mean": 0.8009920940947396,
+            "per_subject_sd": 0.15723567875154212,
+            "per_subject_min": 0.391304347826087,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8307692307692308,
+              "S3": 0.7761194029850746,
+              "S4": 1.0,
+              "S5": 0.9104477611940298,
+              "S6": 1.0,
+              "S7": 0.8059701492537313,
+              "S8": 0.9558823529411765,
+              "S9": 0.7878787878787878,
+              "S10": 0.8840579710144928,
+              "S11": 0.9142857142857143,
+              "S13": 0.6086956521739131,
+              "S14": 0.7101449275362319,
+              "S15": 0.391304347826087,
+              "S16": 0.6567164179104478,
+              "S17": 0.782608695652174
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 587,
+              "true_nonstress_pred_stress": 126,
+              "true_stress_pred_nonstress": 77,
+              "true_stress_pred_stress": 225
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8551724137931035,
+            "balanced_accuracy": 0.8196107297771751,
+            "f1_stress": 0.7504244482173175,
+            "per_subject_mean": 0.8554544212218756,
+            "per_subject_sd": 0.11877240902970848,
+            "per_subject_min": 0.5797101449275363,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8461538461538461,
+              "S3": 0.6567164179104478,
+              "S4": 1.0,
+              "S5": 0.8955223880597015,
+              "S6": 0.8507462686567164,
+              "S7": 0.8059701492537313,
+              "S8": 0.8382352941176471,
+              "S9": 0.9090909090909091,
+              "S10": 0.8985507246376812,
+              "S11": 0.9428571428571428,
+              "S13": 0.9565217391304348,
+              "S14": 0.7101449275362319,
+              "S15": 0.9565217391304348,
+              "S16": 0.9850746268656716,
+              "S17": 0.5797101449275363
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 647,
+              "true_nonstress_pred_stress": 66,
+              "true_stress_pred_nonstress": 81,
+              "true_stress_pred_stress": 221
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8305418719211822,
+            "balanced_accuracy": 0.7953986049060494,
+            "f1_stress": 0.7133333333333334,
+            "per_subject_mean": 0.8299120777175517,
+            "per_subject_sd": 0.11479774693336846,
+            "per_subject_min": 0.6231884057971014,
+            "per_subject_max": 0.9857142857142858,
+            "per_subject": {
+              "S2": 0.8307692307692308,
+              "S3": 0.6865671641791045,
+              "S4": 0.6818181818181818,
+              "S5": 0.8059701492537313,
+              "S6": 0.7313432835820896,
+              "S7": 0.8955223880597015,
+              "S8": 0.9411764705882353,
+              "S9": 0.8484848484848485,
+              "S10": 0.855072463768116,
+              "S11": 0.9857142857142858,
+              "S13": 0.9855072463768116,
+              "S14": 0.7101449275362319,
+              "S15": 0.9420289855072463,
+              "S16": 0.9253731343283582,
+              "S17": 0.6231884057971014
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 629,
+              "true_nonstress_pred_stress": 84,
+              "true_stress_pred_nonstress": 88,
+              "true_stress_pred_stress": 214
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8935960591133005,
+            "balanced_accuracy": 0.8765453312651514,
+            "f1_stress": 0.8235294117647058,
+            "per_subject_mean": 0.8946804957966542,
+            "per_subject_sd": 0.1642857445157764,
+            "per_subject_min": 0.4927536231884058,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8923076923076924,
+              "S3": 0.746268656716418,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 1.0,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.9696969696969697,
+              "S10": 1.0,
+              "S11": 0.8571428571428571,
+              "S13": 0.9855072463768116,
+              "S14": 0.5362318840579711,
+              "S15": 1.0,
+              "S16": 0.9850746268656716,
+              "S17": 0.4927536231884058
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 655,
+              "true_nonstress_pred_stress": 58,
+              "true_stress_pred_nonstress": 50,
+              "true_stress_pred_stress": 252
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8935960591133005,
+            "balanced_accuracy": 0.8622298282604052,
+            "f1_stress": 0.8144329896907216,
+            "per_subject_mean": 0.8949178798959309,
+            "per_subject_sd": 0.154612972994316,
+            "per_subject_min": 0.5072463768115942,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.7910447761194029,
+              "S4": 1.0,
+              "S5": 0.9552238805970149,
+              "S6": 1.0,
+              "S7": 0.9701492537313433,
+              "S8": 0.9558823529411765,
+              "S9": 1.0,
+              "S10": 0.9710144927536232,
+              "S11": 0.8428571428571429,
+              "S13": 1.0,
+              "S14": 0.5507246376811594,
+              "S15": 0.9710144927536232,
+              "S16": 0.9701492537313433,
+              "S17": 0.5072463768115942
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 670,
+              "true_nonstress_pred_stress": 43,
+              "true_stress_pred_nonstress": 65,
+              "true_stress_pred_stress": 237
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8561576354679803,
+            "balanced_accuracy": 0.8231750926502142,
+            "f1_stress": 0.7542087542087542,
+            "per_subject_mean": 0.8579140476273737,
+            "per_subject_sd": 0.19742747467414987,
+            "per_subject_min": 0.36231884057971014,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.7611940298507462,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 1.0,
+              "S7": 0.9552238805970149,
+              "S8": 0.9411764705882353,
+              "S9": 0.9848484848484849,
+              "S10": 0.9855072463768116,
+              "S11": 0.8428571428571429,
+              "S13": 0.9855072463768116,
+              "S14": 0.4057971014492754,
+              "S15": 0.855072463768116,
+              "S16": 0.8805970149253731,
+              "S17": 0.36231884057971014
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 645,
+              "true_nonstress_pred_stress": 68,
+              "true_stress_pred_nonstress": 78,
+              "true_stress_pred_stress": 224
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8985221674876848,
+            "balanced_accuracy": 0.8724167076897356,
+            "f1_stress": 0.8257191201353637,
+            "per_subject_mean": 0.8993719298307611,
+            "per_subject_sd": 0.11113320158439657,
+            "per_subject_min": 0.6956521739130435,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9692307692307692,
+              "S3": 0.746268656716418,
+              "S4": 1.0,
+              "S5": 0.9253731343283582,
+              "S6": 0.8208955223880597,
+              "S7": 0.9701492537313433,
+              "S8": 0.9852941176470589,
+              "S9": 0.9545454545454546,
+              "S10": 1.0,
+              "S11": 0.7714285714285715,
+              "S13": 0.9565217391304348,
+              "S14": 0.7101449275362319,
+              "S15": 1.0,
+              "S16": 0.9850746268656716,
+              "S17": 0.6956521739130435
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 668,
+              "true_nonstress_pred_stress": 45,
+              "true_stress_pred_nonstress": 58,
+              "true_stress_pred_stress": 244
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9192118226600985,
+            "balanced_accuracy": 0.8890519491375868,
+            "f1_stress": 0.8571428571428571,
+            "per_subject_mean": 0.9189521229365486,
+            "per_subject_sd": 0.10403048517692748,
+            "per_subject_min": 0.7101449275362319,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.7313432835820896,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 0.8955223880597015,
+              "S7": 0.9701492537313433,
+              "S8": 1.0,
+              "S9": 0.7424242424242424,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 0.7101449275362319,
+              "S15": 0.9710144927536232,
+              "S16": 1.0,
+              "S17": 0.855072463768116
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 687,
+              "true_nonstress_pred_stress": 26,
+              "true_stress_pred_nonstress": 56,
+              "true_stress_pred_stress": 246
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8975369458128079,
+            "balanced_accuracy": 0.8602630430138487,
+            "f1_stress": 0.8169014084507042,
+            "per_subject_mean": 0.8973984887417724,
+            "per_subject_sd": 0.12256930399029503,
+            "per_subject_min": 0.6818181818181818,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8923076923076924,
+              "S3": 0.7014925373134329,
+              "S4": 1.0,
+              "S5": 0.9701492537313433,
+              "S6": 0.9552238805970149,
+              "S7": 0.9552238805970149,
+              "S8": 1.0,
+              "S9": 0.6818181818181818,
+              "S10": 1.0,
+              "S11": 0.9714285714285714,
+              "S13": 1.0,
+              "S14": 0.7101449275362319,
+              "S15": 0.9130434782608695,
+              "S16": 1.0,
+              "S17": 0.7101449275362319
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 679,
+              "true_nonstress_pred_stress": 34,
+              "true_stress_pred_nonstress": 70,
+              "true_stress_pred_stress": 232
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8295566502463054,
+            "balanced_accuracy": 0.8061497450377567,
+            "f1_stress": 0.7232,
+            "per_subject_mean": 0.8299688210319199,
+            "per_subject_sd": 0.20012480925297824,
+            "per_subject_min": 0.2898550724637681,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7076923076923077,
+              "S3": 0.9104477611940298,
+              "S4": 0.8484848484848485,
+              "S5": 0.9104477611940298,
+              "S6": 0.9850746268656716,
+              "S7": 0.9402985074626866,
+              "S8": 0.9411764705882353,
+              "S9": 0.7121212121212122,
+              "S10": 0.463768115942029,
+              "S11": 0.9285714285714286,
+              "S13": 0.2898550724637681,
+              "S14": 1.0,
+              "S15": 0.855072463768116,
+              "S16": 1.0,
+              "S17": 0.9565217391304348
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 616,
+              "true_nonstress_pred_stress": 97,
+              "true_stress_pred_nonstress": 76,
+              "true_stress_pred_stress": 226
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.812807881773399,
+            "balanced_accuracy": 0.8133156237518925,
+            "f1_stress": 0.7214076246334311,
+            "per_subject_mean": 0.8146261482406842,
+            "per_subject_sd": 0.20295526806936964,
+            "per_subject_min": 0.2898550724637681,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7538461538461538,
+              "S3": 0.9402985074626866,
+              "S4": 0.8787878787878788,
+              "S5": 0.8059701492537313,
+              "S6": 0.9402985074626866,
+              "S7": 0.8507462686567164,
+              "S8": 1.0,
+              "S9": 0.9848484848484849,
+              "S10": 0.5072463768115942,
+              "S11": 0.5428571428571428,
+              "S13": 0.2898550724637681,
+              "S14": 0.9855072463768116,
+              "S15": 0.8840579710144928,
+              "S16": 1.0,
+              "S17": 0.855072463768116
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 579,
+              "true_nonstress_pred_stress": 134,
+              "true_stress_pred_nonstress": 56,
+              "true_stress_pred_stress": 246
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8049261083743843,
+            "balanced_accuracy": 0.7991162237723266,
+            "f1_stress": 0.7053571428571429,
+            "per_subject_mean": 0.8064945639118254,
+            "per_subject_sd": 0.20260329014457656,
+            "per_subject_min": 0.2898550724637681,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7692307692307693,
+              "S3": 0.8805970149253731,
+              "S4": 0.8333333333333334,
+              "S5": 0.7910447761194029,
+              "S6": 0.9701492537313433,
+              "S7": 0.746268656716418,
+              "S8": 1.0,
+              "S9": 0.9848484848484849,
+              "S10": 0.4782608695652174,
+              "S11": 0.5857142857142857,
+              "S13": 0.2898550724637681,
+              "S14": 0.9855072463768116,
+              "S15": 0.9130434782608695,
+              "S16": 1.0,
+              "S17": 0.8695652173913043
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 580,
+              "true_nonstress_pred_stress": 133,
+              "true_stress_pred_nonstress": 65,
+              "true_stress_pred_stress": 237
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9448275862068966,
+            "balanced_accuracy": 0.9416419754233116,
+            "f1_stress": 0.9096774193548387,
+            "per_subject_mean": 0.9449495777853987,
+            "per_subject_sd": 0.08175105616677929,
+            "per_subject_min": 0.7246376811594203,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9384615384615385,
+              "S3": 0.9402985074626866,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9701492537313433,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.7878787878787878,
+              "S10": 1.0,
+              "S11": 0.8857142857142857,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9420289855072463,
+              "S16": 1.0,
+              "S17": 0.7246376811594203
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 677,
+              "true_nonstress_pred_stress": 36,
+              "true_stress_pred_nonstress": 20,
+              "true_stress_pred_stress": 282
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9458128078817734,
+            "balanced_accuracy": 0.9337539358925535,
+            "f1_stress": 0.908485856905158,
+            "per_subject_mean": 0.9459500856775355,
+            "per_subject_sd": 0.1037210555244652,
+            "per_subject_min": 0.6086956521739131,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9538461538461539,
+              "S3": 0.9552238805970149,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9850746268656716,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.7878787878787878,
+              "S10": 0.9710144927536232,
+              "S11": 0.9714285714285714,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9710144927536232,
+              "S16": 1.0,
+              "S17": 0.6086956521739131
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 687,
+              "true_nonstress_pred_stress": 26,
+              "true_stress_pred_nonstress": 29,
+              "true_stress_pred_stress": 273
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9408866995073891,
+            "balanced_accuracy": 0.9235670564632232,
+            "f1_stress": 0.8986486486486487,
+            "per_subject_mean": 0.9411321982509524,
+            "per_subject_sd": 0.10375459460493426,
+            "per_subject_min": 0.6231884057971014,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9692307692307692,
+              "S3": 0.9552238805970149,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9850746268656716,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.7575757575757576,
+              "S10": 0.9710144927536232,
+              "S11": 0.9285714285714286,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9420289855072463,
+              "S16": 1.0,
+              "S17": 0.6231884057971014
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 689,
+              "true_nonstress_pred_stress": 24,
+              "true_stress_pred_nonstress": 36,
+              "true_stress_pred_stress": 266
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9448275862068966,
+            "balanced_accuracy": 0.9320983067534807,
+            "f1_stress": 0.9066666666666666,
+            "per_subject_mean": 0.9442666771544126,
+            "per_subject_sd": 0.07050728432809152,
+            "per_subject_min": 0.7971014492753623,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8,
+              "S3": 0.9552238805970149,
+              "S4": 1.0,
+              "S5": 0.9104477611940298,
+              "S6": 0.9701492537313433,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.9242424242424242,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9710144927536232,
+              "S16": 0.8507462686567164,
+              "S17": 0.7971014492753623
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 687,
+              "true_nonstress_pred_stress": 26,
+              "true_stress_pred_nonstress": 30,
+              "true_stress_pred_stress": 272
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9635467980295567,
+            "balanced_accuracy": 0.9587834260609494,
+            "f1_stress": 0.9392446633825944,
+            "per_subject_mean": 0.9629325148857919,
+            "per_subject_sd": 0.054940858860150425,
+            "per_subject_min": 0.8307692307692308,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8307692307692308,
+              "S3": 0.9850746268656716,
+              "S4": 1.0,
+              "S5": 0.8805970149253731,
+              "S6": 0.9850746268656716,
+              "S7": 0.9850746268656716,
+              "S8": 1.0,
+              "S9": 0.9696969696969697,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 1.0,
+              "S16": 0.8656716417910447,
+              "S17": 0.9420289855072463
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 692,
+              "true_nonstress_pred_stress": 21,
+              "true_stress_pred_nonstress": 16,
+              "true_stress_pred_stress": 286
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9566502463054187,
+            "balanced_accuracy": 0.9471940220874395,
+            "f1_stress": 0.9269102990033222,
+            "per_subject_mean": 0.9560077289584485,
+            "per_subject_sd": 0.059244897994190006,
+            "per_subject_min": 0.8153846153846154,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8153846153846154,
+              "S3": 1.0,
+              "S4": 1.0,
+              "S5": 0.8805970149253731,
+              "S6": 0.9701492537313433,
+              "S7": 0.9850746268656716,
+              "S8": 0.9852941176470589,
+              "S9": 0.9393939393939394,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 1.0,
+              "S16": 0.8656716417910447,
+              "S17": 0.8985507246376812
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 692,
+              "true_nonstress_pred_stress": 21,
+              "true_stress_pred_nonstress": 23,
+              "true_stress_pred_stress": 279
+            }
+          }
+        }
+      ]
+    },
+    "30": {
+      "n_windows": 2121,
+      "n_subjects": 15,
+      "n_stress": 637,
+      "n_nonstress": 1484,
+      "majority_class_accuracy": 0.6996699669966997,
+      "sensor_quality": {
+        "baseline": {
+          "windows": 1143,
+          "wrist_clean_beat_share": 0.7277936294248222,
+          "ecg_clean_beat_share": 0.9893156091286686,
+          "wrist_hr": 72.44824172792327,
+          "ecg_hr": 72.40359426694067,
+          "wrist_rmssd": 89.71405807180376,
+          "ecg_rmssd": 47.74540781068411,
+          "wrist_heart_features_missing": 0.20909886264216973
+        },
+        "stress": {
+          "windows": 637,
+          "wrist_clean_beat_share": 0.5278439727164386,
+          "ecg_clean_beat_share": 0.9735870424728548,
+          "wrist_hr": 91.75156701353977,
+          "ecg_hr": 98.0190331694161,
+          "wrist_rmssd": 92.52897356604106,
+          "ecg_rmssd": 28.59971784672161,
+          "wrist_heart_features_missing": 0.5494505494505495
+        },
+        "amusement": {
+          "windows": 341,
+          "wrist_clean_beat_share": 0.6517280438376017,
+          "ecg_clean_beat_share": 0.9851381929801835,
+          "wrist_hr": 72.01124916019347,
+          "ecg_hr": 72.70102513331285,
+          "wrist_rmssd": 86.43843603159696,
+          "ecg_rmssd": 46.941757009364245,
+          "wrist_heart_features_missing": 0.3812316715542522
+        },
+        "wrist_vs_ecg_hr_mean_abs_error_bpm": 3.5931762438900683
+      },
+      "runs": [
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8071664309288071,
+            "balanced_accuracy": 0.8048524925209561,
+            "f1_stress": 0.713384723195515,
+            "per_subject_mean": 0.8075409928147942,
+            "per_subject_sd": 0.1318567268990751,
+            "per_subject_min": 0.5314685314685315,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7185185185185186,
+              "S3": 0.8188405797101449,
+              "S4": 1.0,
+              "S5": 0.8450704225352113,
+              "S6": 0.9929078014184397,
+              "S7": 0.8156028368794326,
+              "S8": 0.9507042253521126,
+              "S9": 0.7714285714285715,
+              "S10": 0.773972602739726,
+              "S11": 0.8601398601398601,
+              "S13": 0.5314685314685315,
+              "S14": 0.8041958041958042,
+              "S15": 0.5384615384615384,
+              "S16": 0.8098591549295775,
+              "S17": 0.8819444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1203,
+              "true_nonstress_pred_stress": 281,
+              "true_stress_pred_nonstress": 128,
+              "true_stress_pred_stress": 509
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.892975011786893,
+            "balanced_accuracy": 0.865725245105299,
+            "f1_stress": 0.8173773129525342,
+            "per_subject_mean": 0.8928720468856806,
+            "per_subject_sd": 0.06558328442369143,
+            "per_subject_min": 0.7608695652173914,
+            "per_subject_max": 0.9927536231884058,
+            "per_subject": {
+              "S2": 0.8444444444444444,
+              "S3": 0.7608695652173914,
+              "S4": 0.9927536231884058,
+              "S5": 0.9014084507042254,
+              "S6": 0.851063829787234,
+              "S7": 0.9078014184397163,
+              "S8": 0.8873239436619719,
+              "S9": 0.9142857142857143,
+              "S10": 0.8082191780821918,
+              "S11": 0.951048951048951,
+              "S13": 0.9440559440559441,
+              "S14": 0.7972027972027972,
+              "S15": 0.9370629370629371,
+              "S16": 0.9788732394366197,
+              "S17": 0.9166666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1386,
+              "true_nonstress_pred_stress": 98,
+              "true_stress_pred_nonstress": 129,
+              "true_stress_pred_stress": 508
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.876001885902876,
+            "balanced_accuracy": 0.8540438671840289,
+            "f1_stress": 0.7946916471506635,
+            "per_subject_mean": 0.8763905012588644,
+            "per_subject_sd": 0.07170686677760861,
+            "per_subject_min": 0.684931506849315,
+            "per_subject_max": 0.9855072463768116,
+            "per_subject": {
+              "S2": 0.8888888888888888,
+              "S3": 0.7753623188405797,
+              "S4": 0.9855072463768116,
+              "S5": 0.9154929577464789,
+              "S6": 0.8652482269503546,
+              "S7": 0.8723404255319149,
+              "S8": 0.9014084507042254,
+              "S9": 0.8928571428571429,
+              "S10": 0.684931506849315,
+              "S11": 0.951048951048951,
+              "S13": 0.9300699300699301,
+              "S14": 0.8041958041958042,
+              "S15": 0.916083916083916,
+              "S16": 0.8943661971830986,
+              "S17": 0.8680555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1349,
+              "true_nonstress_pred_stress": 135,
+              "true_stress_pred_nonstress": 128,
+              "true_stress_pred_stress": 509
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8896746817538896,
+            "balanced_accuracy": 0.8759108142531322,
+            "f1_stress": 0.8208269525267994,
+            "per_subject_mean": 0.8900671569318815,
+            "per_subject_sd": 0.1295296056148908,
+            "per_subject_min": 0.5763888888888888,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9185185185185185,
+              "S3": 0.8260869565217391,
+              "S4": 1.0,
+              "S5": 0.9577464788732394,
+              "S6": 0.9574468085106383,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.8214285714285714,
+              "S10": 0.9726027397260274,
+              "S11": 0.8041958041958042,
+              "S13": 0.993006993006993,
+              "S14": 0.6293706293706294,
+              "S15": 0.986013986013986,
+              "S16": 0.9436619718309859,
+              "S17": 0.5763888888888888
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1351,
+              "true_nonstress_pred_stress": 133,
+              "true_stress_pred_nonstress": 101,
+              "true_stress_pred_stress": 536
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8986327204148986,
+            "balanced_accuracy": 0.8626003376677231,
+            "f1_stress": 0.8206839032527106,
+            "per_subject_mean": 0.8990829693981824,
+            "per_subject_sd": 0.11518493074683463,
+            "per_subject_min": 0.6293706293706294,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9259259259259259,
+              "S3": 0.7971014492753623,
+              "S4": 1.0,
+              "S5": 0.9577464788732394,
+              "S6": 0.9929078014184397,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.9285714285714286,
+              "S10": 0.9246575342465754,
+              "S11": 0.8461538461538461,
+              "S13": 0.993006993006993,
+              "S14": 0.6293706293706294,
+              "S15": 0.965034965034965,
+              "S16": 0.9084507042253521,
+              "S17": 0.6527777777777778
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1414,
+              "true_nonstress_pred_stress": 70,
+              "true_stress_pred_nonstress": 145,
+              "true_stress_pred_stress": 492
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8943894389438944,
+            "balanced_accuracy": 0.8604639969195225,
+            "f1_stress": 0.8151815181518152,
+            "per_subject_mean": 0.8948892488158011,
+            "per_subject_sd": 0.13437851931140296,
+            "per_subject_min": 0.5524475524475524,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9111111111111111,
+              "S3": 0.8260869565217391,
+              "S4": 1.0,
+              "S5": 0.9577464788732394,
+              "S6": 0.9929078014184397,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.9642857142857143,
+              "S10": 0.9863013698630136,
+              "S11": 0.8111888111888111,
+              "S13": 0.993006993006993,
+              "S14": 0.5524475524475524,
+              "S15": 0.916083916083916,
+              "S16": 0.9295774647887324,
+              "S17": 0.6180555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1403,
+              "true_nonstress_pred_stress": 81,
+              "true_stress_pred_nonstress": 143,
+              "true_stress_pred_stress": 494
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9174917491749175,
+            "balanced_accuracy": 0.9038535588400818,
+            "f1_stress": 0.8636009353078722,
+            "per_subject_mean": 0.9173586756716509,
+            "per_subject_sd": 0.07479011630484023,
+            "per_subject_min": 0.7714285714285715,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9481481481481482,
+              "S3": 0.8260869565217391,
+              "S4": 0.9782608695652174,
+              "S5": 0.9225352112676056,
+              "S6": 0.9219858156028369,
+              "S7": 0.9574468085106383,
+              "S8": 0.9929577464788732,
+              "S9": 0.7714285714285715,
+              "S10": 1.0,
+              "S11": 0.8391608391608392,
+              "S13": 0.972027972027972,
+              "S14": 0.8041958041958042,
+              "S15": 0.9790209790209791,
+              "S16": 0.9929577464788732,
+              "S17": 0.8541666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1392,
+              "true_nonstress_pred_stress": 92,
+              "true_stress_pred_nonstress": 83,
+              "true_stress_pred_stress": 554
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9368222536539368,
+            "balanced_accuracy": 0.918563579277865,
+            "f1_stress": 0.8924558587479936,
+            "per_subject_mean": 0.9362217806698553,
+            "per_subject_sd": 0.07752460847454012,
+            "per_subject_min": 0.7214285714285714,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8814814814814815,
+              "S3": 0.8333333333333334,
+              "S4": 0.9927536231884058,
+              "S5": 0.9577464788732394,
+              "S6": 0.9290780141843972,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.7214285714285714,
+              "S10": 1.0,
+              "S11": 0.993006993006993,
+              "S13": 1.0,
+              "S14": 0.8881118881118881,
+              "S15": 0.986013986013986,
+              "S16": 1.0,
+              "S17": 0.8958333333333334
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1431,
+              "true_nonstress_pred_stress": 53,
+              "true_stress_pred_nonstress": 81,
+              "true_stress_pred_stress": 556
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_all",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9075907590759076,
+            "balanced_accuracy": 0.8663139421225674,
+            "f1_stress": 0.8321917808219178,
+            "per_subject_mean": 0.9067684632038626,
+            "per_subject_sd": 0.1289956531465021,
+            "per_subject_min": 0.5571428571428572,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8296296296296296,
+              "S3": 0.7246376811594203,
+              "S4": 0.9927536231884058,
+              "S5": 1.0,
+              "S6": 0.9787234042553191,
+              "S7": 0.9716312056737588,
+              "S8": 1.0,
+              "S9": 0.5571428571428572,
+              "S10": 1.0,
+              "S11": 0.965034965034965,
+              "S13": 1.0,
+              "S14": 0.8391608391608392,
+              "S15": 0.965034965034965,
+              "S16": 1.0,
+              "S17": 0.7777777777777778
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1439,
+              "true_nonstress_pred_stress": 45,
+              "true_stress_pred_nonstress": 151,
+              "true_stress_pred_stress": 486
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8147100424328148,
+            "balanced_accuracy": 0.81561935369213,
+            "f1_stress": 0.7261324041811846,
+            "per_subject_mean": 0.815199733426343,
+            "per_subject_sd": 0.14228896429589924,
+            "per_subject_min": 0.46853146853146854,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7555555555555555,
+              "S3": 0.7971014492753623,
+              "S4": 1.0,
+              "S5": 0.8802816901408451,
+              "S6": 1.0,
+              "S7": 0.8014184397163121,
+              "S8": 0.9436619718309859,
+              "S9": 0.8285714285714286,
+              "S10": 0.7602739726027398,
+              "S11": 0.916083916083916,
+              "S13": 0.5454545454545454,
+              "S14": 0.8531468531468531,
+              "S15": 0.46853146853146854,
+              "S16": 0.8098591549295775,
+              "S17": 0.8680555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1207,
+              "true_nonstress_pred_stress": 277,
+              "true_stress_pred_nonstress": 116,
+              "true_stress_pred_stress": 521
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.860914662894861,
+            "balanced_accuracy": 0.8365421640354255,
+            "f1_stress": 0.7700701480904131,
+            "per_subject_mean": 0.8613283247015279,
+            "per_subject_sd": 0.09519463396673482,
+            "per_subject_min": 0.6506849315068494,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.837037037037037,
+              "S3": 0.7463768115942029,
+              "S4": 1.0,
+              "S5": 0.8943661971830986,
+              "S6": 0.8581560283687943,
+              "S7": 0.9148936170212766,
+              "S8": 0.8873239436619719,
+              "S9": 0.8642857142857143,
+              "S10": 0.6506849315068494,
+              "S11": 0.8881118881118881,
+              "S13": 0.951048951048951,
+              "S14": 0.6993006993006993,
+              "S15": 0.9230769230769231,
+              "S16": 0.9788732394366197,
+              "S17": 0.8263888888888888
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1332,
+              "true_nonstress_pred_stress": 152,
+              "true_stress_pred_nonstress": 143,
+              "true_stress_pred_stress": 494
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8637435172088638,
+            "balanced_accuracy": 0.8394597316430201,
+            "f1_stress": 0.7743950039032006,
+            "per_subject_mean": 0.8641266308279402,
+            "per_subject_sd": 0.0940711161836899,
+            "per_subject_min": 0.6438356164383562,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8444444444444444,
+              "S3": 0.7608695652173914,
+              "S4": 1.0,
+              "S5": 0.8873239436619719,
+              "S6": 0.8581560283687943,
+              "S7": 0.9361702127659575,
+              "S8": 0.9507042253521126,
+              "S9": 0.8071428571428572,
+              "S10": 0.6438356164383562,
+              "S11": 0.9090909090909091,
+              "S13": 0.965034965034965,
+              "S14": 0.7272727272727273,
+              "S15": 0.9300699300699301,
+              "S16": 0.9084507042253521,
+              "S17": 0.8333333333333334
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1336,
+              "true_nonstress_pred_stress": 148,
+              "true_stress_pred_nonstress": 141,
+              "true_stress_pred_stress": 496
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8877887788778878,
+            "balanced_accuracy": 0.8741151032256154,
+            "f1_stress": 0.8180428134556575,
+            "per_subject_mean": 0.8881376153172109,
+            "per_subject_sd": 0.14133823669086024,
+            "per_subject_min": 0.5763888888888888,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8888888888888888,
+              "S3": 0.8188405797101449,
+              "S4": 1.0,
+              "S5": 0.9577464788732394,
+              "S6": 1.0,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.8214285714285714,
+              "S10": 0.9726027397260274,
+              "S11": 0.7622377622377622,
+              "S13": 0.986013986013986,
+              "S14": 0.5874125874125874,
+              "S15": 0.993006993006993,
+              "S16": 0.9929577464788732,
+              "S17": 0.5763888888888888
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1348,
+              "true_nonstress_pred_stress": 136,
+              "true_stress_pred_nonstress": 102,
+              "true_stress_pred_stress": 535
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8854314002828855,
+            "balanced_accuracy": 0.8495823583424662,
+            "f1_stress": 0.7993393889347646,
+            "per_subject_mean": 0.8860187782607432,
+            "per_subject_sd": 0.1310159689642354,
+            "per_subject_min": 0.5664335664335665,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9333333333333333,
+              "S3": 0.7898550724637681,
+              "S4": 1.0,
+              "S5": 0.9647887323943662,
+              "S6": 1.0,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.8785714285714286,
+              "S10": 0.910958904109589,
+              "S11": 0.7832167832167832,
+              "S13": 0.993006993006993,
+              "S14": 0.5664335664335665,
+              "S15": 0.9440559440559441,
+              "S16": 0.9295774647887324,
+              "S17": 0.6319444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1394,
+              "true_nonstress_pred_stress": 90,
+              "true_stress_pred_nonstress": 153,
+              "true_stress_pred_stress": 484
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8863743517208864,
+            "balanced_accuracy": 0.8498082106572673,
+            "f1_stress": 0.8003314001657,
+            "per_subject_mean": 0.8869564328227058,
+            "per_subject_sd": 0.13337137138153943,
+            "per_subject_min": 0.5664335664335665,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9629629629629629,
+              "S3": 0.8043478260869565,
+              "S4": 1.0,
+              "S5": 0.9647887323943662,
+              "S6": 1.0,
+              "S7": 0.950354609929078,
+              "S8": 1.0,
+              "S9": 0.8571428571428571,
+              "S10": 0.9794520547945206,
+              "S11": 0.7762237762237763,
+              "S13": 0.993006993006993,
+              "S14": 0.5664335664335665,
+              "S15": 0.9020979020979021,
+              "S16": 0.9225352112676056,
+              "S17": 0.625
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1397,
+              "true_nonstress_pred_stress": 87,
+              "true_stress_pred_nonstress": 154,
+              "true_stress_pred_stress": 483
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9198491277699199,
+            "balanced_accuracy": 0.9095702141524244,
+            "f1_stress": 0.8688271604938271,
+            "per_subject_mean": 0.9196731422680269,
+            "per_subject_sd": 0.0774111895391039,
+            "per_subject_min": 0.782608695652174,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9555555555555556,
+              "S3": 0.782608695652174,
+              "S4": 0.9927536231884058,
+              "S5": 0.9295774647887324,
+              "S6": 0.900709219858156,
+              "S7": 0.9716312056737588,
+              "S8": 1.0,
+              "S9": 0.7928571428571428,
+              "S10": 1.0,
+              "S11": 0.8251748251748252,
+              "S13": 0.986013986013986,
+              "S14": 0.8321678321678322,
+              "S15": 0.9790209790209791,
+              "S16": 0.9859154929577465,
+              "S17": 0.8611111111111112
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1388,
+              "true_nonstress_pred_stress": 96,
+              "true_stress_pred_nonstress": 74,
+              "true_stress_pred_stress": 563
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9278642149929278,
+            "balanced_accuracy": 0.9081299428334468,
+            "f1_stress": 0.8773055332798717,
+            "per_subject_mean": 0.9273471173806891,
+            "per_subject_sd": 0.08818760864082743,
+            "per_subject_min": 0.7142857142857143,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9259259259259259,
+              "S3": 0.7463768115942029,
+              "S4": 1.0,
+              "S5": 0.9507042253521126,
+              "S6": 0.9432624113475178,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.7142857142857143,
+              "S10": 1.0,
+              "S11": 0.9790209790209791,
+              "S13": 1.0,
+              "S14": 0.8531468531468531,
+              "S15": 0.9440559440559441,
+              "S16": 1.0,
+              "S17": 0.8888888888888888
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1421,
+              "true_nonstress_pred_stress": 63,
+              "true_stress_pred_nonstress": 90,
+              "true_stress_pred_stress": 547
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_no_motion",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9066478076379066,
+            "balanced_accuracy": 0.8732561239299783,
+            "f1_stress": 0.8355481727574751,
+            "per_subject_mean": 0.9061329937964443,
+            "per_subject_sd": 0.11745659133861462,
+            "per_subject_min": 0.6142857142857143,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9111111111111111,
+              "S3": 0.6956521739130435,
+              "S4": 1.0,
+              "S5": 0.971830985915493,
+              "S6": 0.9645390070921985,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.6142857142857143,
+              "S10": 1.0,
+              "S11": 0.951048951048951,
+              "S13": 1.0,
+              "S14": 0.8321678321678322,
+              "S15": 0.9020979020979021,
+              "S16": 1.0,
+              "S17": 0.7847222222222222
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1420,
+              "true_nonstress_pred_stress": 64,
+              "true_stress_pred_nonstress": 134,
+              "true_stress_pred_stress": 503
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.7826496935407826,
+            "balanced_accuracy": 0.7689641894493646,
+            "f1_stress": 0.6700071581961345,
+            "per_subject_mean": 0.7832423236921875,
+            "per_subject_sd": 0.15616681659124182,
+            "per_subject_min": 0.3986013986013986,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8074074074074075,
+              "S3": 0.7608695652173914,
+              "S4": 1.0,
+              "S5": 0.8873239436619719,
+              "S6": 0.9858156028368794,
+              "S7": 0.7375886524822695,
+              "S8": 0.9436619718309859,
+              "S9": 0.7857142857142857,
+              "S10": 0.8835616438356164,
+              "S11": 0.8671328671328671,
+              "S13": 0.6083916083916084,
+              "S14": 0.6923076923076923,
+              "S15": 0.3986013986013986,
+              "S16": 0.5985915492957746,
+              "S17": 0.7916666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1192,
+              "true_nonstress_pred_stress": 292,
+              "true_stress_pred_nonstress": 169,
+              "true_stress_pred_stress": 468
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.8264969354078265,
+            "balanced_accuracy": 0.7931303871330826,
+            "f1_stress": 0.710691823899371,
+            "per_subject_mean": 0.826338990002599,
+            "per_subject_sd": 0.1303543662223192,
+            "per_subject_min": 0.5217391304347826,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8222222222222222,
+              "S3": 0.5217391304347826,
+              "S4": 1.0,
+              "S5": 0.8732394366197183,
+              "S6": 0.75177304964539,
+              "S7": 0.8014184397163121,
+              "S8": 0.823943661971831,
+              "S9": 0.9071428571428571,
+              "S10": 0.863013698630137,
+              "S11": 0.8741258741258742,
+              "S13": 0.9440559440559441,
+              "S14": 0.6993006993006993,
+              "S15": 0.9300699300699301,
+              "S16": 0.9788732394366197,
+              "S17": 0.6041666666666666
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1301,
+              "true_nonstress_pred_stress": 183,
+              "true_stress_pred_nonstress": 185,
+              "true_stress_pred_stress": 452
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8312116925978312,
+            "balanced_accuracy": 0.799635674298747,
+            "f1_stress": 0.719435736677116,
+            "per_subject_mean": 0.8309035919396647,
+            "per_subject_sd": 0.12403114322620754,
+            "per_subject_min": 0.5144927536231884,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8222222222222222,
+              "S3": 0.5144927536231884,
+              "S4": 1.0,
+              "S5": 0.8450704225352113,
+              "S6": 0.7588652482269503,
+              "S7": 0.8085106382978723,
+              "S8": 0.9436619718309859,
+              "S9": 0.8285714285714286,
+              "S10": 0.8424657534246576,
+              "S11": 0.8741258741258742,
+              "S13": 0.951048951048951,
+              "S14": 0.6923076923076923,
+              "S15": 0.951048951048951,
+              "S16": 0.9436619718309859,
+              "S17": 0.6875
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1304,
+              "true_nonstress_pred_stress": 180,
+              "true_stress_pred_nonstress": 178,
+              "true_stress_pred_stress": 459
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8868458274398868,
+            "balanced_accuracy": 0.8707532359823464,
+            "f1_stress": 0.8151001540832049,
+            "per_subject_mean": 0.887420149376873,
+            "per_subject_sd": 0.17338511227692255,
+            "per_subject_min": 0.4652777777777778,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9185185185185185,
+              "S3": 0.7608695652173914,
+              "S4": 1.0,
+              "S5": 0.9507042253521126,
+              "S6": 1.0,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.9785714285714285,
+              "S10": 0.9931506849315068,
+              "S11": 0.8181818181818182,
+              "S13": 0.9790209790209791,
+              "S14": 0.4965034965034965,
+              "S15": 0.993006993006993,
+              "S16": 0.9929577464788732,
+              "S17": 0.4652777777777778
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1352,
+              "true_nonstress_pred_stress": 132,
+              "true_stress_pred_nonstress": 108,
+              "true_stress_pred_stress": 529
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.876001885902876,
+            "balanced_accuracy": 0.8406038032048814,
+            "f1_stress": 0.7846027846027847,
+            "per_subject_mean": 0.8769066151162502,
+            "per_subject_sd": 0.16396978708951512,
+            "per_subject_min": 0.4755244755244755,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9333333333333333,
+              "S3": 0.7971014492753623,
+              "S4": 1.0,
+              "S5": 0.9647887323943662,
+              "S6": 1.0,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.9928571428571429,
+              "S10": 0.9041095890410958,
+              "S11": 0.7762237762237763,
+              "S13": 1.0,
+              "S14": 0.4755244755244755,
+              "S15": 0.951048951048951,
+              "S16": 0.8732394366197183,
+              "S17": 0.5208333333333334
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1379,
+              "true_nonstress_pred_stress": 105,
+              "true_stress_pred_nonstress": 158,
+              "true_stress_pred_stress": 479
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8679867986798679,
+            "balanced_accuracy": 0.8353240425342852,
+            "f1_stress": 0.7741935483870968,
+            "per_subject_mean": 0.8688396334053504,
+            "per_subject_sd": 0.1773040477596171,
+            "per_subject_min": 0.4444444444444444,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9407407407407408,
+              "S3": 0.7753623188405797,
+              "S4": 1.0,
+              "S5": 0.9647887323943662,
+              "S6": 1.0,
+              "S7": 0.9574468085106383,
+              "S8": 1.0,
+              "S9": 0.9785714285714285,
+              "S10": 1.0,
+              "S11": 0.7482517482517482,
+              "S13": 0.993006993006993,
+              "S14": 0.4825174825174825,
+              "S15": 0.8601398601398601,
+              "S16": 0.8873239436619719,
+              "S17": 0.4444444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1361,
+              "true_nonstress_pred_stress": 123,
+              "true_stress_pred_nonstress": 157,
+              "true_stress_pred_stress": 480
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8981612446958982,
+            "balanced_accuracy": 0.8725674594946832,
+            "f1_stress": 0.826645264847512,
+            "per_subject_mean": 0.8984705330514026,
+            "per_subject_sd": 0.11033063995990024,
+            "per_subject_min": 0.6805555555555556,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9481481481481482,
+              "S3": 0.7681159420289855,
+              "S4": 1.0,
+              "S5": 0.9366197183098591,
+              "S6": 0.8865248226950354,
+              "S7": 0.9645390070921985,
+              "S8": 0.9929577464788732,
+              "S9": 0.95,
+              "S10": 0.9931506849315068,
+              "S11": 0.7552447552447552,
+              "S13": 0.951048951048951,
+              "S14": 0.6923076923076923,
+              "S15": 0.986013986013986,
+              "S16": 0.971830985915493,
+              "S17": 0.6805555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1390,
+              "true_nonstress_pred_stress": 94,
+              "true_stress_pred_nonstress": 122,
+              "true_stress_pred_stress": 515
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9038189533239038,
+            "balanced_accuracy": 0.8636185243328101,
+            "f1_stress": 0.826530612244898,
+            "per_subject_mean": 0.9032187474444144,
+            "per_subject_sd": 0.1215788970164633,
+            "per_subject_min": 0.6642857142857143,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8814814814814815,
+              "S3": 0.6811594202898551,
+              "S4": 1.0,
+              "S5": 0.9647887323943662,
+              "S6": 0.9361702127659575,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.6642857142857143,
+              "S10": 1.0,
+              "S11": 0.9790209790209791,
+              "S13": 1.0,
+              "S14": 0.6993006993006993,
+              "S15": 0.965034965034965,
+              "S16": 1.0,
+              "S17": 0.8125
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1431,
+              "true_nonstress_pred_stress": 53,
+              "true_stress_pred_nonstress": 151,
+              "true_stress_pred_stress": 486
+            }
+          }
+        },
+        {
+          "feature_set": "wrist_eda_temp",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.8939179632248939,
+            "balanced_accuracy": 0.8511670270430378,
+            "f1_stress": 0.8081841432225064,
+            "per_subject_mean": 0.8934943037078514,
+            "per_subject_sd": 0.13132202656733064,
+            "per_subject_min": 0.6428571428571429,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.8888888888888888,
+              "S3": 0.6739130434782609,
+              "S4": 1.0,
+              "S5": 0.9859154929577465,
+              "S6": 0.9716312056737588,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.6428571428571429,
+              "S10": 1.0,
+              "S11": 0.958041958041958,
+              "S13": 1.0,
+              "S14": 0.6993006993006993,
+              "S15": 0.8951048951048951,
+              "S16": 1.0,
+              "S17": 0.7222222222222222
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1422,
+              "true_nonstress_pred_stress": 62,
+              "true_stress_pred_nonstress": 163,
+              "true_stress_pred_stress": 474
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.8194247996228194,
+            "balanced_accuracy": 0.8001725363585201,
+            "f1_stress": 0.7143922445935869,
+            "per_subject_mean": 0.819881269899215,
+            "per_subject_sd": 0.1929056655444896,
+            "per_subject_min": 0.2937062937062937,
+            "per_subject_max": 0.993006993006993,
+            "per_subject": {
+              "S2": 0.6962962962962963,
+              "S3": 0.927536231884058,
+              "S4": 0.8188405797101449,
+              "S5": 0.9295774647887324,
+              "S6": 0.9858156028368794,
+              "S7": 0.8652482269503546,
+              "S8": 0.9295774647887324,
+              "S9": 0.7285714285714285,
+              "S10": 0.4794520547945205,
+              "S11": 0.8951048951048951,
+              "S13": 0.2937062937062937,
+              "S14": 0.993006993006993,
+              "S15": 0.8321678321678322,
+              "S16": 0.9788732394366197,
+              "S17": 0.9444444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1259,
+              "true_nonstress_pred_stress": 225,
+              "true_stress_pred_nonstress": 158,
+              "true_stress_pred_stress": 479
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.802923149457803,
+            "balanced_accuracy": 0.7951001155179053,
+            "f1_stress": 0.7027027027027027,
+            "per_subject_mean": 0.8039287939658019,
+            "per_subject_sd": 0.17968687671363504,
+            "per_subject_min": 0.3006993006993007,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7851851851851852,
+              "S3": 0.8768115942028986,
+              "S4": 0.8478260869565217,
+              "S5": 0.7887323943661971,
+              "S6": 0.8014184397163121,
+              "S7": 0.8652482269503546,
+              "S8": 0.971830985915493,
+              "S9": 0.9571428571428572,
+              "S10": 0.541095890410959,
+              "S11": 0.6433566433566433,
+              "S13": 0.3006993006993007,
+              "S14": 0.965034965034965,
+              "S15": 0.8951048951048951,
+              "S16": 1.0,
+              "S17": 0.8194444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1209,
+              "true_nonstress_pred_stress": 275,
+              "true_stress_pred_nonstress": 143,
+              "true_stress_pred_stress": 494
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "none",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.7883074021687884,
+            "balanced_accuracy": 0.7725593140013625,
+            "f1_stress": 0.6753434562545192,
+            "per_subject_mean": 0.7892995004608584,
+            "per_subject_sd": 0.1837752813982846,
+            "per_subject_min": 0.3146853146853147,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7851851851851852,
+              "S3": 0.8478260869565217,
+              "S4": 0.8405797101449275,
+              "S5": 0.7676056338028169,
+              "S6": 0.8297872340425532,
+              "S7": 0.723404255319149,
+              "S8": 0.9859154929577465,
+              "S9": 0.9642857142857143,
+              "S10": 0.541095890410959,
+              "S11": 0.5664335664335665,
+              "S13": 0.3146853146853147,
+              "S14": 0.965034965034965,
+              "S15": 0.9020979020979021,
+              "S16": 1.0,
+              "S17": 0.8055555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1205,
+              "true_nonstress_pred_stress": 279,
+              "true_stress_pred_nonstress": 170,
+              "true_stress_pred_stress": 467
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9377652050919377,
+            "balanced_accuracy": 0.9335735019697284,
+            "f1_stress": 0.8990825688073395,
+            "per_subject_mean": 0.9377951043549341,
+            "per_subject_sd": 0.08922637259489266,
+            "per_subject_min": 0.7013888888888888,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9259259259259259,
+              "S3": 0.9202898550724637,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9787234042553191,
+              "S7": 0.9858156028368794,
+              "S8": 1.0,
+              "S9": 0.7642857142857142,
+              "S10": 0.9863013698630136,
+              "S11": 0.8811188811188811,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9230769230769231,
+              "S16": 1.0,
+              "S17": 0.7013888888888888
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1401,
+              "true_nonstress_pred_stress": 83,
+              "true_stress_pred_nonstress": 49,
+              "true_stress_pred_stress": 588
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9344648750589345,
+            "balanced_accuracy": 0.9235989751488404,
+            "f1_stress": 0.8914910226385636,
+            "per_subject_mean": 0.9346104374047804,
+            "per_subject_sd": 0.10360311926847453,
+            "per_subject_min": 0.6111111111111112,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9333333333333333,
+              "S3": 0.9130434782608695,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9858156028368794,
+              "S7": 0.9645390070921985,
+              "S8": 1.0,
+              "S9": 0.7785714285714286,
+              "S10": 0.9726027397260274,
+              "S11": 0.951048951048951,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.9090909090909091,
+              "S16": 1.0,
+              "S17": 0.6111111111111112
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1411,
+              "true_nonstress_pred_stress": 73,
+              "true_stress_pred_nonstress": 66,
+              "true_stress_pred_stress": 571
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "subject",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9344648750589345,
+            "balanced_accuracy": 0.9191189538224578,
+            "f1_stress": 0.8897700237906423,
+            "per_subject_mean": 0.9346634316351919,
+            "per_subject_sd": 0.09442603974197482,
+            "per_subject_min": 0.6527777777777778,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.9185185185185185,
+              "S3": 0.9347826086956522,
+              "S4": 1.0,
+              "S5": 1.0,
+              "S6": 0.9929078014184397,
+              "S7": 0.9716312056737588,
+              "S8": 0.9929577464788732,
+              "S9": 0.7785714285714286,
+              "S10": 0.9246575342465754,
+              "S11": 0.951048951048951,
+              "S13": 1.0,
+              "S14": 0.993006993006993,
+              "S15": 0.9090909090909091,
+              "S16": 1.0,
+              "S17": 0.6527777777777778
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1421,
+              "true_nonstress_pred_stress": 63,
+              "true_stress_pred_nonstress": 76,
+              "true_stress_pred_stress": 561
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "logistic_regression",
+          "metrics": {
+            "accuracy": 0.9372937293729373,
+            "balanced_accuracy": 0.9220365214300524,
+            "f1_stress": 0.8943606036536934,
+            "per_subject_mean": 0.9367551676869798,
+            "per_subject_sd": 0.0868060752397443,
+            "per_subject_min": 0.7333333333333333,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7333333333333333,
+              "S3": 0.9637681159420289,
+              "S4": 1.0,
+              "S5": 0.9084507042253521,
+              "S6": 0.9645390070921985,
+              "S7": 0.9929078014184397,
+              "S8": 1.0,
+              "S9": 0.9142857142857143,
+              "S10": 1.0,
+              "S11": 1.0,
+              "S13": 1.0,
+              "S14": 0.9790209790209791,
+              "S15": 0.993006993006993,
+              "S16": 0.8450704225352113,
+              "S17": 0.7569444444444444
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1425,
+              "true_nonstress_pred_stress": 59,
+              "true_stress_pred_nonstress": 74,
+              "true_stress_pred_stress": 563
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "random_forest",
+          "metrics": {
+            "accuracy": 0.9556812824139557,
+            "balanced_accuracy": 0.9459287343384379,
+            "f1_stress": 0.9258675078864353,
+            "per_subject_mean": 0.9550234135561798,
+            "per_subject_sd": 0.0642020571080987,
+            "per_subject_min": 0.762962962962963,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.762962962962963,
+              "S3": 0.9782608695652174,
+              "S4": 1.0,
+              "S5": 0.9295774647887324,
+              "S6": 0.9645390070921985,
+              "S7": 0.9858156028368794,
+              "S8": 1.0,
+              "S9": 0.9214285714285714,
+              "S10": 1.0,
+              "S11": 0.986013986013986,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 1.0,
+              "S16": 0.8661971830985915,
+              "S17": 0.9305555555555556
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1440,
+              "true_nonstress_pred_stress": 44,
+              "true_stress_pred_nonstress": 50,
+              "true_stress_pred_stress": 587
+            }
+          }
+        },
+        {
+          "feature_set": "daily",
+          "normalisation": "baseline",
+          "model": "gradient_boosting",
+          "metrics": {
+            "accuracy": 0.9424799622819425,
+            "balanced_accuracy": 0.9194706910340333,
+            "f1_stress": 0.9,
+            "per_subject_mean": 0.9418124575125896,
+            "per_subject_sd": 0.07640690138498984,
+            "per_subject_min": 0.7407407407407407,
+            "per_subject_max": 1.0,
+            "per_subject": {
+              "S2": 0.7407407407407407,
+              "S3": 0.9782608695652174,
+              "S4": 1.0,
+              "S5": 0.9507042253521126,
+              "S6": 0.9645390070921985,
+              "S7": 0.9929078014184397,
+              "S8": 0.9436619718309859,
+              "S9": 0.8357142857142857,
+              "S10": 1.0,
+              "S11": 0.993006993006993,
+              "S13": 1.0,
+              "S14": 1.0,
+              "S15": 0.993006993006993,
+              "S16": 0.8943661971830986,
+              "S17": 0.8402777777777778
+            },
+            "confusion": {
+              "true_nonstress_pred_nonstress": 1450,
+              "true_nonstress_pred_stress": 34,
+              "true_stress_pred_nonstress": 88,
+              "true_stress_pred_stress": 549
+            }
+          }
+        }
+      ]
+    }
+  }
+}

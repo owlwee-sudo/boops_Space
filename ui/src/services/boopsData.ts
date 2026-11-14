@@ -71,6 +71,8 @@ export interface EngineDayOutput {
     status: DataQualityStatus;
     reasons: string[];
     suggested_step: string;
+    anomaly_score?: number;
+    anomaly_kind?: string;
   };
   flags: {
     infection_early_warning: boolean;
@@ -224,8 +226,28 @@ export function loadSharingSettings(): SharingSettings {
   }
 }
 
+/** Best-effort non-blocking sync to local SQLite server when running over HTTP. */
+function postLocalApi(path: string, payload: unknown): void {
+  try {
+    if (typeof window === "undefined") return;
+    if (!window.location.protocol.startsWith("http")) return;
+    void fetch(path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch(() => {
+      // Offline file:// mode or static preview without local API server stays in localStorage.
+    });
+  } catch {
+    // Ignore storage/network restrictions when running standalone.
+  }
+}
+
 /** Persists sharing preferences while locking emergency_events to true. */
-export function saveSharingSettings(next: SharingSettings): SharingSettings {
+export function saveSharingSettings(
+  next: SharingSettings,
+  astronautId = "A1"
+): SharingSettings {
   const normalized: SharingSettings = {
     daily_summary: Boolean(next.daily_summary),
     raw_data: Boolean(next.raw_data),
@@ -237,6 +259,11 @@ export function saveSharingSettings(next: SharingSettings): SharingSettings {
     },
   };
   safeStorageSet("sharing_settings", JSON.stringify(normalized));
+  postLocalApi("./api/sharing", {
+    astronaut_id: astronautId,
+    daily_summary: normalized.daily_summary,
+    raw_data: normalized.raw_data,
+  });
   return normalized;
 }
 
@@ -264,6 +291,11 @@ export function loadSelectedContext(): PersistedContext {
 /** Saves the active astronaut and mission day selection. */
 export function saveSelectedContext(ctx: PersistedContext): void {
   safeStorageSet("context", JSON.stringify(ctx));
+  try {
+    window.localStorage.setItem("ahm.current_astronaut", ctx.astronautId);
+  } catch {
+    // Ignore storage quota or private-browsing failures.
+  }
 }
 
 /** Loads emergency checklist timestamps keyed by `${protocolId}:${stepIdx}`. */
@@ -293,23 +325,70 @@ export function toggleChecklistTimestamp(
   return current;
 }
 
-/** Loads manual log submissions persisted in localStorage. */
-export function loadManualLogs(): ManualLogEntry[] {
-  const raw = safeStorageGet("manual_logs");
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as ManualLogEntry[]) : [];
-  } catch {
-    return [];
+/** Converts a stored H1 camera check entry from `ahm.log_entries` into a dashboard log row. */
+function mapCameraLogEntry(item: Record<string, unknown>, fallbackDay: number): ManualLogEntry | null {
+  if (item.entry_type !== "camera_check") return null;
+  const fields: Record<string, string> = {
+    "Resting HR": item.rhr_bpm != null ? `${String(item.rhr_bpm)} bpm` : "withheld",
+    "Signal quality": item.signal_quality != null ? Number(item.signal_quality).toFixed(2) : "—",
+    Source: String(item.source ?? "camera"),
+  };
+  if (item.hrv_rmssd_ms != null) {
+    fields["Rough HRV (low conf.)"] = `${String(item.hrv_rmssd_ms)} ms`;
   }
+  if (item.facial_change_level) {
+    fields["Facial change"] = String(item.facial_change_level);
+  }
+  return {
+    astronaut_id: String(item.astronaut_id ?? "A1"),
+    mission_day: typeof item.mission_day === "number" ? item.mission_day : fallbackDay,
+    screen: "Camera Check (rPPG)",
+    fields,
+    saved_at: String(item.timestamp ?? item.date ?? ""),
+  };
 }
 
-/** Appends a manual log entry to localStorage. */
+/** Loads manual and H1 camera check log submissions persisted in localStorage. */
+export function loadManualLogs(): ManualLogEntry[] {
+  const entries: ManualLogEntry[] = [];
+  const raw = safeStorageGet("manual_logs");
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) entries.push(...(parsed as ManualLogEntry[]));
+    } catch {
+      // Ignore corrupt localStorage manual log array.
+    }
+  }
+
+  try {
+    const camRaw = window.localStorage.getItem("ahm.log_entries");
+    if (camRaw) {
+      const camParsed = JSON.parse(camRaw);
+      if (Array.isArray(camParsed)) {
+        const fallbackDay = loadSelectedContext().missionDay;
+        for (const item of camParsed) {
+          if (item && typeof item === "object") {
+            const mapped = mapCameraLogEntry(item as Record<string, unknown>, fallbackDay);
+            if (mapped) entries.push(mapped);
+          }
+        }
+      }
+    }
+  } catch {
+    // Ignore restricted/corrupt camera storage.
+  }
+
+  entries.sort((a, b) => String(b.saved_at || "").localeCompare(String(a.saved_at || "")));
+  return entries.slice(0, 80);
+}
+
+/** Appends a manual log entry to localStorage and syncs opportunistically to local SQLite. */
 export function appendManualLog(entry: ManualLogEntry): ManualLogEntry[] {
   const current = loadManualLogs();
   const next = [entry, ...current].slice(0, 60);
   safeStorageSet("manual_logs", JSON.stringify(next));
+  postLocalApi("./api/log", entry);
   return next;
 }
 

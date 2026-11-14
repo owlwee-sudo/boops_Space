@@ -72,6 +72,11 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `barger14` — [Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436)
 - `sweat` — [Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103)
 - `barger2014` — [Barger et al. 2014 – Prevalence of sleep deficiency and use of hypnotic drugs in astronauts (Lancet Neurology)](https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436)
+- `wesad` — [Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)](https://doi.org/10.1145/3242969.3242985)
+- `wesad_data` — [WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)](https://ubi29.informatik.uni-siegen.de/usi/data_wesad.html)
+- `neurokit2` — [Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)](https://doi.org/10.3758/s13428-020-01516-y)
+- `sklearn` — [Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)](https://jmlr.org/papers/v12/pedregosa11a.html)
+- `numpy` — [Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling](https://doi.org/10.1038/s41586-020-2649-2)
 
 ## Symptoms
 
@@ -94,6 +99,11 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `fullbody` — [Full-body rPPG & pulse transit time (arXiv)](https://ar5iv.labs.arxiv.org/html/2303.09638)
 - `mayo` — [Mayo Clinic hands-free camera in space](https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs)
 - `intelomed` — [Intelomed NASA video-based vital signs project](https://us.inspiralia.com/our-work-list/intelomed-inc/)
+- `pos17` — [Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)](https://doi.org/10.1109/TBME.2016.2609282)
+- `chrom13` — [de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)](https://doi.org/10.1109/TBME.2013.2266196)
+- `rppgtoolbox` — [Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)](https://github.com/ubicomplab/rPPG-Toolbox)
+- `mediapipe` — [Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker)
+- `eqcookbook` — [Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)](https://www.w3.org/TR/audio-eq-cookbook/)
 
 ## Facial expression & stress
 
@@ -102,6 +112,7 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `jyu` — [Stress from rPPG + facial features in online meetings (JYU)](https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download)
 - `facebio` — [Facial videos + biosignals for stress estimation (arXiv 2026)](https://arxiv.org/html/2601.04376v2)
 - `euai` — [EU AI Act emotion-recognition prohibition explained (FPF)](https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/)
+- `stressid` — [Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)](https://project.inria.fr/stressid/)
 
 ## Early infection detection
 
@@ -109,6 +120,7 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `stanford` — [Stanford Medicine – Smartwatch can detect early signs of illness](https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html)
 - `laad` — [LAAD – deep learning on resting HR for early infection (medRxiv)](https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf)
 - `mishra2020` — [Mishra et al. 2020 – Pre-symptomatic detection of COVID-19 from smartwatch data (Stanford)](https://pmc.ncbi.nlm.nih.gov/articles/PMC7673274/)
+- `iforest` — [Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)](https://doi.org/10.1109/ICDM.2008.17)
 
 ## Big picture
 

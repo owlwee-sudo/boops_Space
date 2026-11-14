@@ -1,0 +1,5402 @@
+[
+  {
+    "astronaut_id": "A1",
+    "mission_day": 1,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 2,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 3,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 4,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 5,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 6,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 7,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 8,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 9,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 10,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 11,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 12,
+    "anomaly_score": 0.041,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 13,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 14,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 15,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 16,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 17,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 18,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 19,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 20,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 21,
+    "anomaly_score": 0.067,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 22,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 23,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 24,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 25,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 26,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 27,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 28,
+    "anomaly_score": 0.116,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 29,
+    "anomaly_score": 0.153,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 30,
+    "anomaly_score": 0.835,
+    "is_anomaly": true,
+    "point_vs_trend": "point",
+    "suggested_status": "check_device",
+    "reason": "Unusual reading with low signal quality: check the sensor and measure again.",
+    "top_factors": "rhr_bpm +110.8 SD;signal_quality -25.0 SD;hrv_rmssd_ms +2.2 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 31,
+    "anomaly_score": 0.193,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 32,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 33,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 34,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 35,
+    "anomaly_score": 0.06,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 36,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 37,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 38,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 39,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 40,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 41,
+    "anomaly_score": 0.767,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "",
+    "reason": "Unusual reading on an EVA day: expected after a spacewalk.",
+    "top_factors": "sleep_hours -4.7 SD;rhr_bpm +3.8 SD;hrv_rmssd_ms -2.8 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 42,
+    "anomaly_score": 0.298,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 43,
+    "anomaly_score": 0.1,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 44,
+    "anomaly_score": 0.164,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 45,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 46,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 47,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 48,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 49,
+    "anomaly_score": 0.028,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 50,
+    "anomaly_score": 0.1,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 51,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 52,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 53,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 54,
+    "anomaly_score": 0.026,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 55,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 56,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 57,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 58,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 59,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 60,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 61,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 62,
+    "anomaly_score": 0.188,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 63,
+    "anomaly_score": 0.294,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 64,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 65,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 66,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 67,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 68,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 69,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 70,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 71,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 72,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 73,
+    "anomaly_score": 0.037,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 74,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 75,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 76,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 77,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 78,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 79,
+    "anomaly_score": 0.5,
+    "is_anomaly": true,
+    "point_vs_trend": "point",
+    "suggested_status": "check_device",
+    "reason": "One-day spike with normal days around it: check the sensor and measure again.",
+    "top_factors": "spo2_pct -3.7 SD;sleep_hours -3.0 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 80,
+    "anomaly_score": 0.117,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 81,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 82,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 83,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 84,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 85,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 86,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 87,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 88,
+    "anomaly_score": 0.802,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "check_yourself",
+    "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
+    "top_factors": "sleep_hours -6.1 SD;hrv_rmssd_ms -2.2 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 89,
+    "anomaly_score": 0.325,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 90,
+    "anomaly_score": 0.296,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 91,
+    "anomaly_score": 0.36,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 92,
+    "anomaly_score": 0.286,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 93,
+    "anomaly_score": 0.386,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 94,
+    "anomaly_score": 0.515,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "check_yourself",
+    "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
+    "top_factors": "sleep_hours -6.6 SD;hrv_rmssd_ms -3.0 SD;temp_c -2.4 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 95,
+    "anomaly_score": 0.626,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "check_yourself",
+    "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
+    "top_factors": "sleep_hours -5.1 SD;rhr_bpm +4.4 SD;hrv_rmssd_ms -3.0 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 96,
+    "anomaly_score": 0.611,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "check_yourself",
+    "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
+    "top_factors": "sleep_hours -5.4 SD;rhr_bpm +5.2 SD;hrv_rmssd_ms -3.4 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 97,
+    "anomaly_score": 0.963,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "act_now",
+    "reason": "Unusual pattern together with logged symptoms: more likely the body than the device.",
+    "top_factors": "temp_c +6.8 SD;rhr_bpm +5.5 SD;sleep_hours -5.3 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 98,
+    "anomaly_score": 0.828,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "act_now",
+    "reason": "Unusual pattern together with logged symptoms: more likely the body than the device.",
+    "top_factors": "temp_c +8.2 SD;rhr_bpm +5.7 SD;sleep_hours -5.6 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 99,
+    "anomaly_score": 0.684,
+    "is_anomaly": true,
+    "point_vs_trend": "point",
+    "suggested_status": "check_device",
+    "reason": "One-day spike with normal days around it: check the sensor and measure again.",
+    "top_factors": "sleep_hours +2.2 SD;rhr_bpm -1.4 SD;spo2_pct +1.3 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 100,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 101,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 102,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 103,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 104,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 105,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 106,
+    "anomaly_score": 0.161,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 107,
+    "anomaly_score": 0.076,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 108,
+    "anomaly_score": 0.185,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 109,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 110,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 111,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 112,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 113,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 114,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 115,
+    "anomaly_score": 0.372,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 116,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 117,
+    "anomaly_score": 0.033,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 118,
+    "anomaly_score": 0.064,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 119,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 120,
+    "anomaly_score": 1.0,
+    "is_anomaly": true,
+    "point_vs_trend": "trend",
+    "suggested_status": "",
+    "reason": "Unusual reading on an EVA day: expected after a spacewalk.",
+    "top_factors": "sleep_hours -4.5 SD;rhr_bpm +3.8 SD;hrv_rmssd_ms -2.6 SD"
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 121,
+    "anomaly_score": 0.288,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 122,
+    "anomaly_score": 0.296,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 123,
+    "anomaly_score": 0.25,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 124,
+    "anomaly_score": 0.126,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 125,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 126,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 127,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 128,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 129,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 130,
+    "anomaly_score": 0.044,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 131,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 132,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 133,
+    "anomaly_score": 0.051,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 134,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 135,
+    "anomaly_score": 0.059,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 136,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 137,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 138,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 139,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 140,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 141,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 142,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 143,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 144,
+    "anomaly_score": 0.124,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 145,
+    "anomaly_score": 0.122,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 146,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 147,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 148,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 149,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 150,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 151,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 152,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 153,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 154,
+    "anomaly_score": 0.249,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 155,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 156,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 157,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 158,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 159,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 160,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 161,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 162,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 163,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 164,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 165,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 166,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 167,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 168,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 169,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 170,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 171,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 172,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 173,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 174,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 175,
+    "anomaly_score": 0.035,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 176,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 177,
+    "anomaly_score": 0.152,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 178,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 179,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A1",
+    "mission_day": 180,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 1,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 2,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 3,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 4,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 5,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 6,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 7,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 8,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 9,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 10,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 11,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 12,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 13,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 14,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 15,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 16,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 17,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 18,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 19,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 20,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 21,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 22,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 23,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 24,
+    "anomaly_score": 0.052,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 25,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 26,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 27,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 28,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 29,
+    "anomaly_score": 0.068,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 30,
+    "anomaly_score": 0.008,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 31,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 32,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 33,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 34,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 35,
+    "anomaly_score": 0.007,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 36,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 37,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 38,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 39,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 40,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 41,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 42,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 43,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 44,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 45,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 46,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 47,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 48,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 49,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 50,
+    "anomaly_score": 0.792,
+    "is_anomaly": true,
+    "point_vs_trend": "point",
+    "suggested_status": "check_device",
+    "reason": "Unusual reading with low signal quality: check the sensor and measure again.",
+    "top_factors": "temp_c -72.1 SD;signal_quality -21.8 SD"
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 51,
+    "anomaly_score": 0.133,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 52,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 53,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 54,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 55,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 56,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 57,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 58,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 59,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 60,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 61,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 62,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 63,
+    "anomaly_score": 0.043,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 64,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 65,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 66,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 67,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 68,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 69,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 70,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 71,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 72,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 73,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 74,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 75,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 76,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 77,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 78,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 79,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 80,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 81,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 82,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 83,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 84,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 85,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 86,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 87,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 88,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 89,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 90,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 91,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 92,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 93,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 94,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 95,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 96,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 97,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 98,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 99,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 100,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 101,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 102,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 103,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 104,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 105,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 106,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 107,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 108,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 109,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 110,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 111,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 112,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 113,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 114,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 115,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 116,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 117,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 118,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 119,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 120,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 121,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 122,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 123,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 124,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 125,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 126,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 127,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 128,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 129,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 130,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 131,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 132,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 133,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 134,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 135,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 136,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 137,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 138,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 139,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 140,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 141,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 142,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 143,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 144,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 145,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 146,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 147,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 148,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 149,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 150,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 151,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 152,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 153,
+    "anomaly_score": 0.148,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 154,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 155,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 156,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 157,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 158,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 159,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 160,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 161,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 162,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 163,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 164,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 165,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 166,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 167,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 168,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 169,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 170,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 171,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 172,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 173,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 174,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 175,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 176,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 177,
+    "anomaly_score": 0.087,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 178,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 179,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A2",
+    "mission_day": 180,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 1,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 2,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 3,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 4,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 5,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 6,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 7,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 8,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 9,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 10,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 11,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 12,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 13,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 14,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 15,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 16,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 17,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 18,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 19,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 20,
+    "anomaly_score": 0.121,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 21,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 22,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 23,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 24,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 25,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 26,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 27,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 28,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 29,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 30,
+    "anomaly_score": 0.016,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 31,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 32,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 33,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 34,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 35,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 36,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 37,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 38,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 39,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 40,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 41,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 42,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 43,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 44,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 45,
+    "anomaly_score": 0.047,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 46,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 47,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 48,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 49,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 50,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 51,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 52,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 53,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 54,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 55,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 56,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 57,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 58,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 59,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 60,
+    "anomaly_score": 0.041,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 61,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 62,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 63,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 64,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 65,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 66,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 67,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 68,
+    "anomaly_score": 0.269,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 69,
+    "anomaly_score": 0.153,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 70,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 71,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 72,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 73,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 74,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 75,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 76,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 77,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 78,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 79,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 80,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 81,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 82,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 83,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 84,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 85,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 86,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 87,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 88,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 89,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 90,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 91,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 92,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 93,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 94,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 95,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 96,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 97,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 98,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 99,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 100,
+    "anomaly_score": 0.144,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 101,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 102,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 103,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 104,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 105,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 106,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 107,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 108,
+    "anomaly_score": 0.042,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 109,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 110,
+    "anomaly_score": 0.704,
+    "is_anomaly": true,
+    "point_vs_trend": "point",
+    "suggested_status": "check_device",
+    "reason": "Unusual reading with low signal quality: check the sensor and measure again.",
+    "top_factors": "spo2_pct -81.3 SD;signal_quality -23.3 SD;sleep_hours +1.2 SD"
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 111,
+    "anomaly_score": 0.112,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 112,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 113,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 114,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 115,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 116,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 117,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 118,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 119,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 120,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 121,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 122,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 123,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 124,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 125,
+    "anomaly_score": 0.026,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 126,
+    "anomaly_score": 0.088,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 127,
+    "anomaly_score": 0.166,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 128,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 129,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 130,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 131,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 132,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 133,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 134,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 135,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 136,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 137,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 138,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 139,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 140,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 141,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 142,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 143,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 144,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 145,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 146,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 147,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 148,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 149,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 150,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 151,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 152,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 153,
+    "anomaly_score": 0.02,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 154,
+    "anomaly_score": 0.036,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 155,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 156,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 157,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 158,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 159,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 160,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 161,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 162,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 163,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 164,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 165,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 166,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 167,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 168,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 169,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 170,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 171,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 172,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 173,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 174,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 175,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 176,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 177,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 178,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 179,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  },
+  {
+    "astronaut_id": "A3",
+    "mission_day": 180,
+    "anomaly_score": 0.0,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
+  }
+]

@@ -726,5 +726,101 @@
     "url": "https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json",
     "layer": "core",
     "citation": "NOAA SWPC GOES Primary Integral Protons 1-Day Feed"
+  },
+  {
+    "id": "wesad",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)",
+    "url": "https://doi.org/10.1145/3242969.3242985",
+    "layer": "core",
+    "citation": "Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)"
+  },
+  {
+    "id": "wesad_data",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)",
+    "url": "https://ubi29.informatik.uni-siegen.de/usi/data_wesad.html",
+    "layer": "core",
+    "citation": "WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)"
+  },
+  {
+    "id": "neurokit2",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)",
+    "url": "https://doi.org/10.3758/s13428-020-01516-y",
+    "layer": "core",
+    "citation": "Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)"
+  },
+  {
+    "id": "sklearn",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)",
+    "url": "https://jmlr.org/papers/v12/pedregosa11a.html",
+    "layer": "core",
+    "citation": "Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)"
+  },
+  {
+    "id": "numpy",
+    "group": "Stress signals: HRV, sleep, sweat",
+    "title": "Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling",
+    "url": "https://doi.org/10.1038/s41586-020-2649-2",
+    "layer": "core",
+    "citation": "Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling"
+  },
+  {
+    "id": "pos17",
+    "group": "Camera / rPPG / NIR",
+    "title": "Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)",
+    "url": "https://doi.org/10.1109/TBME.2016.2609282",
+    "layer": "core",
+    "citation": "Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)"
+  },
+  {
+    "id": "chrom13",
+    "group": "Camera / rPPG / NIR",
+    "title": "de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)",
+    "url": "https://doi.org/10.1109/TBME.2013.2266196",
+    "layer": "core",
+    "citation": "de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)"
+  },
+  {
+    "id": "rppgtoolbox",
+    "group": "Camera / rPPG / NIR",
+    "title": "Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)",
+    "url": "https://github.com/ubicomplab/rPPG-Toolbox",
+    "layer": "core",
+    "citation": "Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)"
+  },
+  {
+    "id": "mediapipe",
+    "group": "Camera / rPPG / NIR",
+    "title": "Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor",
+    "url": "https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker",
+    "layer": "core",
+    "citation": "Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor"
+  },
+  {
+    "id": "eqcookbook",
+    "group": "Camera / rPPG / NIR",
+    "title": "Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)",
+    "url": "https://www.w3.org/TR/audio-eq-cookbook/",
+    "layer": "core",
+    "citation": "Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)"
+  },
+  {
+    "id": "stressid",
+    "group": "Facial expression & stress",
+    "title": "Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)",
+    "url": "https://project.inria.fr/stressid/",
+    "layer": "core",
+    "citation": "Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)"
+  },
+  {
+    "id": "iforest",
+    "group": "Early infection detection",
+    "title": "Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)",
+    "url": "https://doi.org/10.1109/ICDM.2008.17",
+    "layer": "core",
+    "citation": "Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)"
   }
 ]

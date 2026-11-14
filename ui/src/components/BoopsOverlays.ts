@@ -96,12 +96,31 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const { astronautId, missionDay } = cb.getContext();
     const engine = getEngineDay(bundle, astronautId, missionDay);
     if (!engine) return;
+    const anomalySuffix =
+      typeof engine.data_quality.anomaly_score === "number"
+        ? ` | Isolation Forest: ${engine.data_quality.anomaly_score.toFixed(2)}${engine.data_quality.anomaly_kind ? ` (${engine.data_quality.anomaly_kind})` : ""}`
+        : "";
     const msg =
       engine.data_quality.reasons.length > 0
-        ? `${engine.data_quality.status}: ${engine.data_quality.reasons.join("; ")} -> ${engine.data_quality.suggested_step}`
-        : `Sensor quality OK (${astronautId} Day ${missionDay})`;
+        ? `${engine.data_quality.status}: ${engine.data_quality.reasons.join("; ")} -> ${engine.data_quality.suggested_step}${anomalySuffix}`
+        : `Sensor quality OK (${astronautId} Day ${missionDay})${anomalySuffix}`;
     cb.onToast(msg);
   });
+
+  function launchCameraCheck(simulated: boolean) {
+    const { astronautId } = cb.getContext();
+    const qs = simulated ? `?sim=steady&astronaut=${encodeURIComponent(astronautId)}` : `?astronaut=${encodeURIComponent(astronautId)}`;
+    const relUrl = `./camera/${qs}`;
+    if (!window.location.protocol.startsWith("http")) {
+      cb.onToast(`Run "python engine/server.py" and open http://127.0.0.1:8000/camera/${qs} for the camera check.`);
+      return;
+    }
+    const opened = window.open(relUrl, "_blank", "noopener");
+    if (!opened) window.location.href = relUrl;
+  }
+
+  const cameraBtn = h("button", { type: "button", className: "boops-btn", title: "30s Camera Heart-Rate Check (H1 rPPG)" }, "📷 Camera Check");
+  cameraBtn.addEventListener("click", () => launchCameraCheck(false));
 
   const guidesBtn = h("button", { type: "button", className: "boops-btn" }, "ⓘ Tool Guides");
   guidesBtn.addEventListener("click", () => openDrawer(activeGuideId));
@@ -149,6 +168,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       h(
         "div",
         { className: "boops-topbar-group" },
+        cameraBtn,
         guidesBtn,
         exportBtn,
         emergencyBtn,
@@ -252,6 +272,32 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
         { className: "text-[11px] text-[#6b7280]" },
         `Linked CSV / log fields: ${guide.linked_log_fields.join(", ")} · Prototype · Not a medical device`,
       ),
+      ...(guide.id.includes("camera") || guide.id.includes("rppg")
+        ? [
+            h(
+              "div",
+              { className: "flex flex-wrap gap-2 pt-1" },
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "boops-btn boops-btn-dark text-[12px]",
+                  onClick: () => launchCameraCheck(false),
+                },
+                "Open Live Camera Check ↗",
+              ),
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "boops-btn text-[12px]",
+                  onClick: () => launchCameraCheck(true),
+                },
+                "Open Simulated Demo (?sim=steady) ↗",
+              ),
+            ),
+          ]
+        : []),
     );
   }
 
@@ -497,8 +543,12 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
             : status === "act_now"
               ? "🚨 Act now"
               : "✓ Sensor OK";
+      const anomalyMeta =
+        typeof engine.data_quality.anomaly_score === "number"
+          ? ` | Isolation Forest score: ${engine.data_quality.anomaly_score.toFixed(2)}${engine.data_quality.anomaly_kind ? ` (${engine.data_quality.anomaly_kind})` : ""}`
+          : "";
       dqBadge.title =
-        engine.data_quality.reasons.join("; ") || "Readings consistent across sensors";
+        (engine.data_quality.reasons.join("; ") || "Readings consistent across sensors") + anomalyMeta;
     }
 
     for (const { jump, btn } of demoButtons) {

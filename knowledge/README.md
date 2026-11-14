@@ -6,9 +6,9 @@ Research behind team boops boops' NASA Space Apps 2026 entry, *"Create Health Mo
 |---|---|---|
 | [../docs/astronaut-health-relationships.md](../docs/astronaut-health-relationships.md) | Original research notes (13 Nov 2026): stressors, hubs, evidence, signals, wearables, camera rPPG, open design questions, reading list | Yes |
 | [nervous-system.md](nervous-system.md) | Nervous-system extension (14 Nov 2026): brain, eyes (SANS), balance, autonomic nerves, cognition | Yes |
-| [nodes.json](nodes.json) | 40 concepts (stressors, hubs, body effects, outcomes, devices, signals) | **Source of truth** |
-| [links.json](links.json) | 77 links with type, evidence, stars, note and source ids | **Source of truth** |
-| [sources.json](sources.json) | 81 sources with id, group, title, URL | **Source of truth** |
+| [nodes.json](nodes.json) | 41 concepts (stressors, hubs, body effects, outcomes, devices, signals) | **Source of truth** |
+| [links.json](links.json) | 83 links with type, evidence, stars, note and source ids | **Source of truth** |
+| [sources.json](sources.json) | 103 sources with id, group, title, URL | **Source of truth** |
 | [relationships.md](relationships.md) | Readable list of every link, generated from the JSON | No, regenerate |
 | [sources.md](sources.md) | Reference list, generated from the JSON | No, regenerate |
 | [web/index.html](web/index.html) | Interactive relationship web (open in a browser; no install) | Yes, see note |
