@@ -26,10 +26,11 @@ const UI_CONFIG = {
 // ----------------------------------------------------------------------------
 // Plug-ins: other features can listen to the same camera check.
 // The facial-behaviour feature (H2) uses this. A plug-in is an object with any of:
-//   wantsBlendshapes: true            ask the face model for blendshapes
+//   wantsBlendshapes: true | () => bool   ask the face model for blendshapes
 //   onStart()                         a new check begins
-//   onFrame({tS, face, pose})         every frame that has a face
-//   onFinish(result) -> object|null   extra fields to store with the log entry
+//   onFrame({tS, face, pose, frameSize})   every frame that has a face
+//   onFinish(result, {simulated}) -> object|null   extra fields to store with the log entry
+//   onResult(lastResult)              the result card was just shown
 // ----------------------------------------------------------------------------
 const plugins = [];
 export function registerPlugin(plugin) {
@@ -77,6 +78,7 @@ const RING_LENGTH = 2 * Math.PI * 26;
 // One camera check = one of these.
 let session = null;
 let tracker = null; // face model, loaded once and reused
+let trackerBlendshapes = false; // was it loaded with blendshapes?
 let lastResult = null;
 
 // ----------------------------------------------------------------------------
@@ -189,9 +191,16 @@ async function startCheck() {
   try {
     setStatus(source.simulated ? "Starting simulated signal..." : "Starting camera...");
     await source.start();
+    // Blendshapes are only computed when a plug-in asks (facial-behaviour opt-in).
+    const needBlendshapes = plugins.some((p) => (typeof p.wantsBlendshapes === "function" ? p.wantsBlendshapes() : p.wantsBlendshapes));
+    if (tracker && trackerBlendshapes !== needBlendshapes) {
+      tracker.close();
+      tracker = null;
+    }
     if (!source.simulated && !tracker) {
       setStatus("Loading face model (stored on this device)...");
-      tracker = await createFaceTracker({ blendshapes: plugins.some((p) => p.wantsBlendshapes) });
+      tracker = await createFaceTracker({ blendshapes: needBlendshapes });
+      trackerBlendshapes = needBlendshapes;
     }
   } catch (err) {
     console.error(err);
@@ -268,7 +277,7 @@ function onFrame(s, nowMs) {
     s.trace.r.push(sample.r);
     s.trace.g.push(sample.g);
     s.trace.b.push(sample.b);
-    plugins.forEach((p) => p.onFrame && p.onFrame({ tS: elapsed, face, pose }));
+    plugins.forEach((p) => p.onFrame && p.onFrame({ tS: elapsed, face, pose, frameSize: { width, height } }));
   }
 
   setRing(elapsed / checkSeconds, String(Math.max(0, Math.ceil(checkSeconds - elapsed))));
@@ -325,12 +334,13 @@ function finishCheck(s) {
   const simulated = s.source.simulated;
   // Plug-ins may add fields to the log entry (H2 facial-behaviour).
   const extra = {};
-  for (const p of plugins) Object.assign(extra, (p.onFinish && p.onFinish(result)) || {});
+  for (const p of plugins) Object.assign(extra, (p.onFinish && p.onFinish(result, { simulated })) || {});
   endSession();
   // The colour trace is ~900 numbers per channel (no image data). It is kept
   // in memory only, so the result can be checked with hard/rppg_reference.py.
   lastResult = { result, simulated, extra, context, trace: s.trace };
   showResult(lastResult);
+  plugins.forEach((p) => p.onResult && p.onResult(lastResult));
 }
 
 function endSession() {

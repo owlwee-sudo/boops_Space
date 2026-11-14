@@ -29,6 +29,7 @@ No camera on this machine? Open <http://localhost:8000/camera/?sim=steady> for a
 | 7 | Rough HRV: each beat is timed where the wave crosses zero going up, giving beat-to-beat intervals and RMSSD. | `rppg-core.js` |
 | 8 | Signal quality 0–1. Under 0.5 the result is hidden and the user is asked to retry. | `rppg-core.js` |
 | 9 | "Save to log" stores the numbers only. | `log-store.js` |
+| + | Optional, opt-in: facial-behaviour change vs own baseline (H2). | `face-behaviour.js`, `face-behaviour-core.js` |
 
 `rppg-core.js` has no browser code in it, so the same file is unit-tested in Node (`node --test hard/rppg/test_rppg_core.mjs`) and cross-checked against a Python version (`pytest tests/test_rppg_reference.py`).
 
@@ -72,6 +73,30 @@ Saving appends one entry to the `localStorage` list `ahm.log_entries` (config in
 - `hrv_rmssd_ms` is `null` when the pulse was not clean enough. Do not use camera HRV for the personal baseline.
 - Optional Python side: set `LOG_CONFIG.API_URL` to a local endpoint that calls `db.insert_log_entry(...)`. It is `null` by default, so nothing breaks when the API does not exist.
 - Other features can listen to the same check with `registerPlugin(...)` in `camera-check.js` (the facial-behaviour feature, H2, uses this).
+
+## Facial-behaviour check (H2, opt-in)
+
+Off until the user agrees on the consent card on this page. It can be turned off again there (or from a Settings screen with `setFaceOptIn(false)` in `face-behaviour.js`), and the stored numbers can be deleted.
+
+During the same 30 seconds it measures five things (`face-behaviour-core.js`):
+
+| Feature | From |
+|---|---|
+| Blink rate (per minute) | MediaPipe eye-blink blendshapes, counted closed-then-open |
+| Eye openness | 1 − mean eye-blink blendshape |
+| Brow lowering | Mean of the two brow-down blendshapes |
+| Expressivity | How much brow, mouth and chin landmarks move, measured in face coordinates so head movement does not count |
+| Head motion | Movement of the face centre, in eye-widths per second |
+
+- **Baseline = the person's first 14 checks.** After that, each check gets `facial_change_z` = the mean |z| across the five features, shown as a chip: "Facial change vs your baseline: low / medium / high" (medium from 1.3, high from 2.0). Before that the chip shows "Facial baseline: n of 14 checks done".
+- **No emotion labels.** Facial movements are not reliable signs of emotion (Barrett et al. 2019), so the app never shows words like "angry" or "sad". Micro-expressions are not used. `facial_change_z` has no direction: it only says "different from your normal".
+- **Low quality is ignored.** If the camera check asks for a retry, or has fewer than 150 face frames, nothing is computed or stored.
+- **Stored:** the five numbers per check in `localStorage` (`ahm.face_sessions`), and `facial_change_z`, `facial_change_level`, `facial_features`, `facial_baseline_sessions` on the saved log entry. Blendshapes are only requested from the face model after opt-in.
+- **Stress-score hook:** `blend_face_into_stress()` in `hard/face/stress_hook.py` (and `blendFaceIntoStress()` in JS). Config key `FACE_WEIGHT`, default **0**. The weight is capped at 0.15, and the stress score is unchanged unless the user opted in, the weight is above 0, a baseline exists and signal quality is at least 0.5.
+- **Legal framing:** the EU AI Act restricts emotion inference at work except for medical or safety reasons. This feature does not infer emotions, is opt-in, and is for crew medical and safety use only.
+- **Not validated.** There is no evidence yet that this change score tracks stress in astronauts. StressID (Chaptoukaev et al. 2023) is the dataset we would use to test it. Until then it must stay a low-weight, optional input.
+
+Tests: `node --test hard/face/test_face_core.mjs` and `pytest tests/test_face_hook.py`.
 
 ## Privacy
 

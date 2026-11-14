@@ -96,6 +96,7 @@
                 </div>
               </div>
               <p id="result-rmssd-note" class="note"></p>
+              <p id="face-chip" class="chip face-chip" hidden></p>
               <ul id="result-reasons" class="reasons"></ul>
               <div class="actions">
                 <button id="retry-btn" class="btn btn-ghost" type="button">Measure again</button>
@@ -116,6 +117,35 @@
                 <li>Less reliable with movement, dim or flickering light, and on darker skin in poor light. Not validated in microgravity.</li>
               </ul>
             </section>
+
+            <!-- H2: opt-in facial-behaviour check. Off until the user agrees. -->
+            <section id="face-card" class="card face-card" aria-label="Facial-behaviour check">
+              <div class="card-head">
+                <h2>Facial-behaviour check <span class="tag">optional</span></h2>
+                <span id="face-state" class="badge" data-level="fair">Off</span>
+              </div>
+              <div id="face-consent">
+                <p>
+                  During the same 30 seconds, the app can also measure how your face behaves and compare it with
+                  <strong>your own</strong> earlier checks. It is one small extra input for the stress indicator.
+                </p>
+                <ul>
+                  <li><strong>What is measured:</strong> blink rate, eye openness, brow lowering, how much your face and head move.</li>
+                  <li><strong>What is not:</strong> emotions. The app never labels how you feel.</li>
+                  <li>Processed on this device. No video or image is stored, only the numbers.</li>
+                  <li>For medical and safety use only. Not shared unless you choose to share your daily summary.</li>
+                  <li>You can turn it off here or in Settings at any time, and delete the stored numbers.</li>
+                </ul>
+                <div class="actions"><button id="face-on-btn" class="btn" type="button">I agree, turn on</button></div>
+              </div>
+              <div id="face-settings" hidden>
+                <p id="face-progress"></p>
+                <div class="actions">
+                  <button id="face-delete-btn" class="btn btn-ghost" type="button">Delete my facial data</button>
+                  <button id="face-off-btn" class="btn btn-ghost" type="button">Turn off</button>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
@@ -123,5 +153,6 @@
       </main>
     </div>
     <script type="module" src="camera-check.js"></script>
+    <script type="module" src="face-behaviour.js"></script>
   </body>
 </html>

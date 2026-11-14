@@ -103,6 +103,7 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `jyu` — [Stress from rPPG + facial features in online meetings (JYU)](https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download)
 - `facebio` — [Facial videos + biosignals for stress estimation (arXiv 2026)](https://arxiv.org/html/2601.04376v2)
 - `euai` — [EU AI Act emotion-recognition prohibition explained (FPF)](https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/)
+- `stressid` — [Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)](https://project.inria.fr/stressid/)
 
 ## Early infection detection
 

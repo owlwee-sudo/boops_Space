@@ -162,7 +162,23 @@ export function createSimulatedSource(canvas, mode = "steady") {
       set(263, face.cx + face.eye / 2, face.cy);
       set(1, face.cx, face.cy + 55);
       set(152, face.cx, face.cy + 195);
-      return { landmarks: lm, blendshapes: null };
+      // Mouth and brow points, and simple blendshapes with a blink every 4 s,
+      // so the opt-in facial-behaviour check (H2) can run on the simulation too.
+      set(61, face.cx - 34, face.cy + 110);
+      set(291, face.cx + 34, face.cy + 110);
+      set(13, face.cx, face.cy + 106);
+      set(14, face.cx, face.cy + 114);
+      set(105, face.cx - 50, face.cy - 28);
+      set(334, face.cx + 50, face.cy - 28);
+      const t = performance.now() / 1000;
+      const blink = t % 4 < 0.2 ? 0.9 : 0.05;
+      const blendshapes = [
+        { categoryName: "eyeBlinkLeft", score: blink },
+        { categoryName: "eyeBlinkRight", score: blink },
+        { categoryName: "browDownLeft", score: 0.1 },
+        { categoryName: "browDownRight", score: 0.1 },
+      ];
+      return { landmarks: lm, blendshapes };
     },
   };
 }

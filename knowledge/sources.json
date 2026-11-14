@@ -448,6 +448,13 @@
     "layer": "core"
   },
   {
+    "id": "stressid",
+    "group": "Facial expression & stress",
+    "title": "Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)",
+    "url": "https://project.inria.fr/stressid/",
+    "layer": "core"
+  },
+  {
     "id": "mishra20",
     "group": "Early infection detection",
     "title": "Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data",
