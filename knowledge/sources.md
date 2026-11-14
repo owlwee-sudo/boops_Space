@@ -85,6 +85,11 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `fullbody` — [Full-body rPPG & pulse transit time (arXiv)](https://ar5iv.labs.arxiv.org/html/2303.09638)
 - `mayo` — [Mayo Clinic hands-free camera in space](https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs)
 - `intelomed` — [Intelomed NASA video-based vital signs project](https://us.inspiralia.com/our-work-list/intelomed-inc/)
+- `pos17` — [Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)](https://doi.org/10.1109/TBME.2016.2609282)
+- `chrom13` — [de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)](https://doi.org/10.1109/TBME.2013.2266196)
+- `rppgtoolbox` — [Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)](https://github.com/ubicomplab/rPPG-Toolbox)
+- `mediapipe` — [Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker)
+- `eqcookbook` — [Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)](https://www.w3.org/TR/audio-eq-cookbook/)
 
 ## Facial expression & stress
 

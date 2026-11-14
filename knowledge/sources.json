@@ -343,6 +343,41 @@
     "layer": "core"
   },
   {
+    "id": "pos17",
+    "group": "Camera / rPPG / NIR",
+    "title": "Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)",
+    "url": "https://doi.org/10.1109/TBME.2016.2609282",
+    "layer": "core"
+  },
+  {
+    "id": "chrom13",
+    "group": "Camera / rPPG / NIR",
+    "title": "de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)",
+    "url": "https://doi.org/10.1109/TBME.2013.2266196",
+    "layer": "core"
+  },
+  {
+    "id": "rppgtoolbox",
+    "group": "Camera / rPPG / NIR",
+    "title": "Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)",
+    "url": "https://github.com/ubicomplab/rPPG-Toolbox",
+    "layer": "core"
+  },
+  {
+    "id": "mediapipe",
+    "group": "Camera / rPPG / NIR",
+    "title": "Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor",
+    "url": "https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker",
+    "layer": "core"
+  },
+  {
+    "id": "eqcookbook",
+    "group": "Camera / rPPG / NIR",
+    "title": "Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)",
+    "url": "https://www.w3.org/TR/audio-eq-cookbook/",
+    "layer": "core"
+  },
+  {
     "id": "barrett19",
     "group": "Facial expression & stress",
     "title": "Barrett et al. 2019 – Emotional Expressions Reconsidered",

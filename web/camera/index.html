@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Camera check · Astronaut Health Monitor</title>
+    <link rel="stylesheet" href="camera.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar: same shape as the Figma lo-fi (260 px, Health | Log) -->
+      <aside class="sidebar">
+        <div class="brand">Astronaut Health Monitor</div>
+        <nav class="nav" aria-label="Main">
+          <a class="nav-item" href="../index.html">Health</a>
+          <a class="nav-item" href="../index.html#log">Log</a>
+          <a class="nav-item nav-sub is-active" href="./index.html" aria-current="page">Camera check</a>
+        </nav>
+        <div class="sidebar-foot">
+          <div class="crew">Crew member <strong id="astronaut-id">A1</strong></div>
+          <div>Prototype · Not a medical device</div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="page-head">
+          <div>
+            <h1>Camera check</h1>
+            <p class="lede">A 30-second heart-rate check using only the camera. No extra equipment, no internet.</p>
+          </div>
+          <span class="chip chip-privacy">Processed on device · No video saved</span>
+        </header>
+
+        <p id="sim-banner" class="banner" hidden>
+          <strong>Simulated</strong> signal: a drawn face with a known 72 bpm pulse, for demos and testing without a camera.
+          Results are labelled Simulated and are never saved as a camera reading.
+        </p>
+
+        <div class="grid">
+          <!-- Left: camera view -->
+          <section class="card stage-card" aria-label="Camera view">
+            <div id="stage" class="stage">
+              <video id="video" class="mirror" playsinline muted hidden></video>
+              <canvas id="sim-canvas" hidden></canvas>
+              <canvas id="overlay" class="mirror"></canvas>
+              <div id="placeholder" class="placeholder">
+                <div class="face-guide" aria-hidden="true"></div>
+                <p>Sit still, face the light, look at the camera.</p>
+              </div>
+              <div id="ring" class="ring" role="timer" aria-label="Time left">
+                <svg viewBox="0 0 60 60" aria-hidden="true">
+                  <circle class="ring-track" cx="30" cy="30" r="26"></circle>
+                  <circle id="ring-arc" class="ring-arc" cx="30" cy="30" r="26"></circle>
+                </svg>
+                <span id="ring-text"></span>
+              </div>
+            </div>
+            <div class="stage-foot">
+              <p id="status" class="status" role="status" aria-live="polite">Ready when you are.</p>
+              <div class="actions">
+                <button id="stop-btn" class="btn btn-ghost" type="button" hidden>Stop</button>
+                <button id="start-btn" class="btn" type="button">Start camera check</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Right: live signal, result, help -->
+          <div class="side">
+            <section class="card" aria-label="Live signal">
+              <div class="card-head">
+                <h2>Live pulse</h2>
+                <div class="live-hr"><span id="live-hr">--</span><small>bpm</small></div>
+              </div>
+              <canvas id="wave" class="wave" width="520" height="110" aria-label="Live pulse waveform"></canvas>
+              <div class="meters">
+                <div class="meter-row"><span>Pulse signal</span><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Pulse signal"><i id="meter-snr"></i></div></div>
+                <div class="meter-row"><span>Stillness</span><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Stillness"><i id="meter-motion"></i></div></div>
+                <div class="meter-row"><span>Face in view</span><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Face in view"><i id="meter-face"></i></div></div>
+                <div class="meter-row"><span>Lighting</span><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Lighting"><i id="meter-light"></i></div></div>
+              </div>
+            </section>
+
+            <section id="result-card" class="card result-card" aria-label="Result" hidden>
+              <div class="card-head">
+                <h2 id="result-title">Result</h2>
+                <span id="quality-badge" class="badge">--</span>
+              </div>
+              <div class="result-grid">
+                <div class="stat">
+                  <span class="stat-label">Heart rate</span>
+                  <span class="stat-value"><span id="result-hr">--</span><small>bpm</small></span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">HRV (RMSSD) <em>estimate</em></span>
+                  <span class="stat-value stat-soft"><span id="result-rmssd">--</span><small>ms</small></span>
+                </div>
+              </div>
+              <p id="result-rmssd-note" class="note"></p>
+              <ul id="result-reasons" class="reasons"></ul>
+              <div class="actions">
+                <button id="retry-btn" class="btn btn-ghost" type="button">Measure again</button>
+                <button id="save-btn" class="btn" type="button">Save to log</button>
+              </div>
+              <p id="save-note" class="note" role="status" aria-live="polite"></p>
+            </section>
+
+            <section class="card help" aria-label="How it works">
+              <h2>How it works</h2>
+              <p>
+                Each heartbeat changes skin colour very slightly. The camera watches your forehead and cheeks and reads
+                your pulse from that change. This is a risk indicator, not a diagnosis.
+              </p>
+              <ul>
+                <li>Hold still for 30 seconds and face a steady light.</li>
+                <li>If signal quality is low, you will be asked to retry.</li>
+                <li>Less reliable with movement, dim or flickering light, and on darker skin in poor light. Not validated in microgravity.</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+
+        <footer class="page-foot">Processed on device · No video saved · Prototype · Not a medical device</footer>
+      </main>
+    </div>
+    <script type="module" src="camera-check.js"></script>
+  </body>
+</html>
