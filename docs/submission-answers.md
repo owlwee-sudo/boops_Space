@@ -1,0 +1,31 @@
+# BOOPS: Space Apps submission answers (final draft)
+
+Challenge: Create Health Monitoring Software for Astronauts on Space Missions. Written Nov 15, 2026. Text in *italics* is a note for the team, not for the form.
+
+## Summary
+
+BOOPS (Biobehavioral Observation & Offline Predictive System) is a health monitor that runs offline for astronauts on long missions. It takes data from wearables and a short daily crew log and compares each astronaut with their own baseline. It then gives stress and sleep scores plus early warnings for immune, bone and muscle, and heart risk. Each warning says why it matters, how to fix it, and when to ask for help. The app also has offline emergency steps and a guide for every tool. It gives risk indicators, not diagnoses, and the demo runs on simulated data.
+
+## 1. What does it do or how does it work?
+
+BOOPS collects daily signals from wearables and a short crew log: heart rate, heart-rate variability, sleep, skin conductance, blood oxygen, blood pressure, exercise and radiation. Everything is stored on the device, so the app still works when Earth is minutes away. For each astronaut it builds a personal baseline from their first 14 days in flight, then scores every new reading against it. The outputs are a stress score and a sleep score from 0 to 100, plus risk indicators for immune, bone and muscle, and heart health. Each risk lists its drivers, an evidence rating of 1 to 3 stars, and fixes ranked by cause. A check for odd readings tells the astronaut whether to look at the device or at themselves. Alerts are dampened during the first two weeks, because the fluid shift in space is normal then. The app also has offline emergency protocols, and each instrument comes with a guide on how to use it, why it matters and how to fix it. The astronaut sees every alert first and decides what goes to mission control. The core runs on transparent rules and statistics. Machine learning (an anomaly detector and a stress classifier trained on the public WESAD dataset) is optional and only gives a second opinion. An optional camera check estimates pulse from the face.
+
+## 2. What benefits does it have? What is the intended impact?
+
+Astronauts get an early warning before a problem hurts their performance or health. Crews average about 6 hours of sleep against 8.5 scheduled (Barger et al. 2014), and NASA lists sleep loss, stress and immune changes among the risks that grow on long missions. Mishra et al. (2020) showed that a rising resting heart rate can flag infection before symptoms appear, and we use the same idea. Because the app works offline and compares each person with their own baseline, it still helps when messages to Earth are delayed. Clear fixes and emergency steps let the crew act before Earth can answer. The astronaut controls what is shared, which protects privacy. The result is earlier self-care and better conversations with flight surgeons. The same approach could help people in remote places on Earth.
+
+## 3. What tools, coding languages, hardware, or software did you use?
+
+We wrote the analysis engine in Python (NumPy, pandas, SciPy, scikit-learn and NeuroKit2). The interface uses TypeScript, HTML, CSS and JavaScript with Vite, and the desktop app is built with Tauri and Rust. The phone apps are in Kotlin for Android and Swift for iOS, connected through Android Health Connect, Bluetooth Low Energy, Wi-Fi Direct, iOS HealthKit, CoreBluetooth and MultipeerConnectivity. Data is stored on the device in SQLite, with JSON and CSV exports. Our own script generates the simulated mission data. We used the public WESAD dataset to train and test the optional stress model, and NASA OSDR RadLab and NOAA SWPC GOES as radiation data sources. The camera pulse check uses MediaPipe Face Landmarker and the POS method. We designed the screens in Figma, kept the code on GitHub, tested with pytest, and used Claude as an AI assistant. For hardware, the system is designed for wrist wearables and optional chest or finger sensors. The demo uses simulated data and a laptop or phone camera. *(If you tested a real wearable, name it here.)*
+
+## 4. How is your project creative?
+
+Most health apps alert on one vital at a time. BOOPS looks at how body systems affect each other. For example, stress plus sleep loss plus spacewalks raises immune risk, and stress plus inactivity speeds up muscle loss. Each astronaut is compared with their own in-flight baseline, not a population average. Every warning shows its evidence chain, rated 1 to 3 stars, with sources. A "device or astronaut?" check stops sensor glitches from turning into false alarms. The whole app works offline, with emergency protocols, tool guides and crew-first privacy. An optional face scan tracks change against the person's own baseline. It never labels emotions, because research shows faces don't reliably reveal them (Barrett et al. 2019).
+
+## 5. What factors did your team consider?
+
+Accuracy came first. Wearables are less accurate than medical equipment. Heart rate is reliable, but sleep, stress and blood pressure estimates are less so. Cuffless blood pressure needs calibration and blood oxygen error varies with skin tone, so both are context only. Wrist HRV is unreliable during movement. The app gives risk indicators and early warnings, not diagnoses, and the footer says "Prototype · Not a medical device". The odd-reading checker never deletes data, and anything dangerous if real is escalated. The face feature is opt-in, runs on the device and reports only low, medium or high. Raw data is off by default for sharing. Real astronaut day-by-day data is not public, so the demo uses clearly labelled simulated data, and our weights and thresholds are starting values that are not clinically validated. Fluid shift in the first two weeks is normal, so early alerts are dampened. When astronauts have concerns and Earth-based doctors are delayed or out of reach, the app helps them understand changes in their own health.
+
+## References to list in the form
+
+Full list: `knowledge/sources.md` (107 sources). Minimum to cite: Barger et al. 2014 (astronaut sleep), Mishra et al. 2020 (smartwatch early detection), WESAD (Schmidt et al. 2018), POS (Wang et al. 2017), Barrett et al. 2019 (facial expressions and emotion), NASA OSDR RadLab, NOAA SWPC GOES.
