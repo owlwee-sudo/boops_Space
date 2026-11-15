@@ -78,6 +78,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       );
       host.renderActiveScreen();
     },
+    onOpenSettings: () => host.setScreen("SettingsProfile"),
     onToast: (msg) => host.showToast(msg),
   });
 

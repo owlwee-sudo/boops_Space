@@ -975,7 +975,7 @@
   letter-spacing: 0.02em;
 }
 
-/* Sidebar action rows (Tool Guides, Export / Summary, Demo / Debug).
+/* Sidebar action rows (Readings, Tool Guides, Export / Summary).
    Same shape as the Figma "Nav row": 44 px white pill, 18 px icon, 14 px medium label, grey badge. */
 .boops-side-actions {
   display: flex;
@@ -1053,9 +1053,29 @@
   border-radius: 8px;
 }
 
+.boops-side-crew p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .boops-side-crew:focus-within {
   outline: 2px solid var(--color-bg-strong, #111827);
   outline-offset: 4px;
+}
+
+.boops-side-settings-btn {
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.boops-side-settings-btn:hover {
+  background: var(--color-bg-surface, #f4f5f7);
+}
+
+.boops-side-settings-btn:focus-visible {
+  outline: 2px solid var(--color-bg-strong, #111827);
+  outline-offset: 2px;
 }
 
 .boops-side-crew-select {

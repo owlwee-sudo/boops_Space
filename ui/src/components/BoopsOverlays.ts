@@ -67,6 +67,7 @@ export interface OverlayCallbacks {
   getContext: () => { astronautId: "A1" | "A2" | "A3"; missionDay: number; sharing: SharingSettings };
   setContext: (astronautId: "A1" | "A2" | "A3", missionDay: number, jumpHome?: boolean) => void;
   onToggleSharing: (key: "daily_summary" | "raw_data", val: boolean) => void;
+  onOpenSettings?: () => void;
   onToast: (msg: string) => void;
 }
 
@@ -85,9 +86,13 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   ) as HTMLSelectElement;
 
   crewSelect.addEventListener("change", () => {
+    const wasFocused = document.activeElement === crewSelect;
     const { missionDay } = cb.getContext();
     const id = crewSelect.value as "A1" | "A2" | "A3";
     cb.setContext(id, missionDay, false);
+    if (wasFocused && crewSelect.isConnected) {
+      crewSelect.focus({ preventScroll: true });
+    }
   });
   // The Profile card itself opens Settings on click; keep the crew picker from triggering that.
   crewSelect.addEventListener("click", (ev) => ev.stopPropagation());
@@ -243,10 +248,26 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     if (!sidebar) return;
     sidebar.querySelector<HTMLElement>('[data-name="Brand"]')?.append(brandTags);
     // The Profile card already names the selected astronaut, so it doubles as the crew switcher.
-    const profileInfo = sidebar.querySelector<HTMLElement>('[data-name="Profile"] [data-name="Info"]');
+    const profileCard = sidebar.querySelector<HTMLElement>('[data-name="Profile"]');
+    const profileInfo = profileCard?.querySelector<HTMLElement>('[data-name="Info"]');
     if (profileInfo) {
       profileInfo.classList.add("boops-side-crew");
       profileInfo.append(crewChevron, crewSelect);
+    }
+    const settingsIcon = profileCard?.querySelector<HTMLElement>('[data-name="icon/settings"]');
+    if (settingsIcon && !settingsIcon.dataset.boopsSettingsBound) {
+      settingsIcon.dataset.boopsSettingsBound = "1";
+      settingsIcon.classList.add("boops-side-settings-btn");
+      settingsIcon.setAttribute("role", "button");
+      settingsIcon.setAttribute("tabindex", "0");
+      settingsIcon.setAttribute("aria-label", "Settings & profile");
+      settingsIcon.setAttribute("title", "Settings & profile");
+      settingsIcon.addEventListener("keydown", (ev) => {
+        if (ev.key !== "Enter" && ev.key !== " ") return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        cb.onOpenSettings?.();
+      });
     }
     const anchor = sidebar.querySelector<HTMLElement>('[data-name="Emergency button"]');
     if (anchor?.parentElement) anchor.parentElement.insertBefore(sideActions, anchor);
