@@ -417,6 +417,7 @@
 .bg-\[rgba\(13\,18\,26\,0\.4\)\] { background-color: rgba(13,18,26,0.4); }
 .bg-\[var\(--color-accent\,\#c6f432\)\] { background-color: var(--color-accent,#c6f432); }
 .bg-\[var\(--color-bg-active\,\#c6f432\)\] { background-color: var(--color-bg-active,#c6f432); }
+.bg-\[var\(--color-nav-selected\,\#5de2d2\)\] { background-color: var(--color-nav-selected,#5de2d2); }
 .bg-\[var\(--color-bg-card\,white\)\] { background-color: var(--color-bg-card,white); }
 .bg-\[var\(--color-bg-danger\,\#fee2e2\)\] { background-color: var(--color-bg-danger,#fee2e2); }
 .bg-\[var\(--color-bg-strong\,\#111827\)\] { background-color: var(--color-bg-strong,#111827); }

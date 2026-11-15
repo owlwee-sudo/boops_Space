@@ -368,8 +368,9 @@ function hydrateSidebar(
     [gravSub, screenId === "HealthEnvironmentGravity" || screenId === "LogEnvironmentGravity"],
   ] as Array<[HTMLElement | null, boolean]>) {
     if (!el) continue;
-    el.classList.toggle("bg-[var(--color-bg-active,#c6f432)]", isTarget);
-    el.style.backgroundColor = isTarget ? "#c6f432" : "";
+    el.classList.toggle("bg-[var(--color-nav-selected,#5de2d2)]", isTarget);
+    el.classList.remove("bg-[var(--color-bg-active,#c6f432)]");
+    el.style.backgroundColor = isTarget ? "var(--color-nav-selected, #5de2d2)" : "";
   }
 
   if (!engine || !record) return;

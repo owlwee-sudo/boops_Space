@@ -1470,7 +1470,7 @@ body {
 
   .boops-tab.is-active .boops-tab-icon,
   .boops-tab.is-open .boops-tab-icon {
-    background: #c6f432;
+    background: var(--color-nav-selected, #5de2d2);
   }
 
   .boops-tab.is-active .boops-tab-label,

@@ -47,7 +47,7 @@ export function renderLogEnvironmentGravity(): HTMLElement {
             "Radiation",
           ),
         ),
-        h("div", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[8px] h-[36px] items-center overflow-clip pl-[38px] pr-[10px] relative rounded-[18px] shrink-0 w-full", "data-node-id": "I85:736;77:3609", "data-name": "Nav sub-row/Gravity" },
+        h("div", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[8px] h-[36px] items-center overflow-clip pl-[38px] pr-[10px] relative rounded-[18px] shrink-0 w-full", "data-node-id": "I85:736;77:3609", "data-name": "Nav sub-row/Gravity" },
           h("div", { className: "relative shrink-0 size-[16px]", "data-node-id": "I85:736;77:3610", "data-name": "icon/gravity" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconGravity.svg" }),
           ),

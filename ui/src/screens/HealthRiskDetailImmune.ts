@@ -31,7 +31,7 @@ export function renderHealthRiskDetailImmune(): HTMLElement {
         ),
       ),
       h("div", { className: "content-stretch cursor-pointer flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full", "data-node-id": "I85:417;28:10", "data-name": "Nav list" },
-        h("a", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:417;28:11", "data-name": "Nav row/Home" },
+        h("a", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:417;28:11", "data-name": "Nav row/Home" },
           h("div", { className: "relative shrink-0 size-[18px]", "data-node-id": "I85:417;29:2", "data-name": "icon/home" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconHome.svg" }),
           ),

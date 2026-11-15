@@ -71,7 +71,7 @@ export function renderLogSleep(): HTMLElement {
             "Nutrition",
           ),
         ),
-        h("div", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:310;30:30", "data-name": "Nav row/Sleep" },
+        h("div", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:310;30:30", "data-name": "Nav row/Sleep" },
           h("div", { className: "relative shrink-0 size-[18px]", "data-node-id": "I85:310;30:31", "data-name": "icon/sleep" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconSleep.svg" }),
           ),
