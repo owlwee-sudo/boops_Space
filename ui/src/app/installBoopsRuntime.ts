@@ -78,9 +78,6 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       );
       host.renderActiveScreen();
     },
-    onOpenEmergency: () => {
-      host.setScreen("EmergencyHub");
-    },
     onToast: (msg) => host.showToast(msg),
   });
 
@@ -168,6 +165,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
   return {
     enhanceArtboard(artboard: HTMLElement, screenId: ScreenId) {
       applyBoopsBindings(artboard, screenId, bundle, getStateObj());
+      overlays.mountScreenControls(artboard, screenId);
       overlays.updateBar();
     },
   };
