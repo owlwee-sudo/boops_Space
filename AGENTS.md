@@ -158,6 +158,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | App header cleanup: no separate top bar (day stepper in page header, Sensors & Sync in sidebar) | Claude Code | claude/app-seamless-header | ✅ done (`ui` typecheck + offline `/web` build + APK built; Figma still to match) |
 | Web version PWA at `/app/` (plan steps 1–2: hosting, manifest, service worker, offline/update notices) | Claude Code | claude/app-check-web-plan-d7958e | ✅ done (checked offline with the server stopped: dashboard, Emergency, camera check; update flow checked). Steps 3–6 in `docs/web-version-plan.md` ⏳ todo |
 | Landing page (`site/` → `dist-site/`): clean redesign with real crew-app screens, 3D body-systems map, plain-language copy | Gemini → Claude Code | claude/landing-page-gemini-handover-daa8b6 | ✅ done (`node tools/build-site.mjs`; checked at 1440 / 390 px) |
+| Landing copy matches `docs/submission-answers.md` (107 sources, iOS, ML wording, when to ask for help) | Claude Code | claude/landing-match-submission | ✅ done (`node tools/build-site.mjs`; quick-guide scope not applied, submission answers win) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
@@ -183,6 +184,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-15: Web version = the same `/web` app hosted at `/app/` on the landing site as a static, offline-first PWA. No backend, no accounts: data stays in the browser. The service worker and manifest live in `/pwa` and are added only to `dist-site/app/`, so `web/` and the Android/iOS apps are unchanged. A new version waits until the user taps "Reload". MediaPipe (18 MB) is cached on first camera use, not on install.
 - 2026-11-15: Crew App view has no separate top bar. The mission-day stepper sits on the right of each page title (`.boops-page-tools`, or inside the Log header actions), Sensors & Sync joins the sidebar actions, and the crew switcher stays in the sidebar Profile card. The top bar now only shows in Demo / Debug mode (scrubber + story jumps).
 - 2026-11-15: First launch shows a welcome screen (`ui/src/components/Welcome.ts`) that asks: Try the demo (Simulated crew) or Start with my data. "My data" never shows simulated readings: health screens show an empty state with 14-day baseline progress until the engine can score personal readings; Log, Emergency and tool guides work as usual. Personal logs and context use separate storage keys (`*_mine`) so demo and real entries never mix. The landing page passes the choice as `/app/?data=demo|mine`; the APK cannot receive it, so the app asks on first open. Switch any time from **Data** in the sidebar. Mode helpers live in `ui/src/services/dataMode.ts`.
+- 2026-11-15: When `docs/quick-guide.md` (older stress-and-sleep plan) and `docs/submission-answers.md` disagree, the submission answers win, because they match the built app. The landing page follows them.
 
 ---
 

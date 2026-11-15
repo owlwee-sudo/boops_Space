@@ -121,7 +121,7 @@
           </div>
           <div class="phone-copy">
             <h3>Built for a phone on the wall of a module.</h3>
-            <p>The same app runs as an Android build, a desktop app and a local web page. Nothing needs a network.</p>
+            <p>The same app runs on Android, iOS, the desktop and as a web page. Nothing needs a network.</p>
             <ul class="ticks">
               <li>Risk for immune, bone and muscle, and heart, each Normal, Watch or Act.</li>
               <li>A one-tap SOS button with offline emergency checklists.</li>
@@ -158,7 +158,7 @@
           <div class="step">
             <span class="step-num">04</span>
             <h3>Explain and fix</h3>
-            <p>Each warning shows the chain of cause, how strong the evidence is, and what to fix first.</p>
+            <p>Each warning shows the chain of cause, how strong the evidence is, what to fix first, and when to ask for help.</p>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@
           </div>
           <div class="row">
             <h3>Built on cited evidence</h3>
-            <p>41 concepts, 83 links and 103 sources, each link graded by how strong the evidence is. Real day-by-day astronaut data isn't public, so all mission data is labeled Simulated.</p>
+            <p>41 concepts, 83 links and 107 sources, each link graded by how strong the evidence is. Real day-by-day astronaut data isn't public, so all mission data is labeled Simulated.</p>
           </div>
         </div>
       </div>
@@ -349,14 +349,14 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
             <p>
               <strong>No.</strong> BOOPS is a prototype built for NASA Space Apps Challenge 2026 (<em>Prototype · Not a medical device</em>).
               It gives <strong>risk indicators</strong> and <strong>early warnings</strong> based on how far a reading is from your own normal.
-              A doctor makes the call.
+              It supports a qualified healthcare professional and does not replace one.
             </p>
           </details>
           <details>
             <summary>Why rules instead of a neural network?</summary>
             <p>
               Day-by-day astronaut health data isn't public, so a deep model would have nothing real to learn from and would invent patterns.
-              Weighted rules can be checked line by line. The two models trained on real data (WESAD stress and an anomaly detector) are optional second opinions.
+              Weighted rules can be checked line by line. Machine learning is optional and only gives a second opinion: a stress classifier trained on the public WESAD dataset and an anomaly detector.
             </p>
           </details>
           <details>
