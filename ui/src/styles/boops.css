@@ -2404,3 +2404,201 @@ body {
     right: auto;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Mission-day calendar dropdown (components/DayCalendar.ts).
+   The day readout is a button; the popover is fixed to the viewport so page
+   headers never clip it on phone, tablet or desktop.
+   --------------------------------------------------------------------------- */
+.boops-day-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  font: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 28px;
+}
+
+.boops-date-stepper .boops-day-trigger {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+  padding: 0 8px;
+}
+
+.figma-artboard .boops-date-stepper .boops-day-trigger {
+  font-size: 13px;
+}
+
+.boops-day-trigger:hover,
+.boops-day-trigger[aria-expanded="true"] {
+  background: #f3f4f6;
+}
+
+.boops-day-trigger:focus-visible,
+.boops-cal button:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.boops-day-trigger-caret {
+  flex: none;
+  color: #4b5563;
+  transition: transform 0.15s ease;
+}
+
+.boops-day-trigger[aria-expanded="true"] .boops-day-trigger-caret {
+  transform: rotate(180deg);
+}
+
+.boops-cal {
+  position: fixed;
+  z-index: 1200;
+  box-sizing: border-box;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(17, 24, 39, 0.16);
+  color: #111827;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.boops-cal[hidden] {
+  display: none;
+}
+
+.boops-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.boops-cal-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.boops-cal-nav {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #111827;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.boops-cal-nav:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.boops-cal-nav:disabled {
+  color: #d1d5db;
+  cursor: default;
+}
+
+.boops-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.boops-cal-wd {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #4b5563;
+  padding-bottom: 4px;
+}
+
+.boops-cal-day {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 34px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #111827;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.boops-cal-day:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.boops-cal-day.is-out {
+  color: #d1d5db;
+  cursor: default;
+}
+
+.boops-cal-day.is-today {
+  box-shadow: inset 0 0 0 1.5px #9ca3af;
+}
+
+.boops-cal-day.is-selected,
+.boops-cal-day.is-selected:hover {
+  background: #111827;
+  color: #ffffff;
+}
+
+.boops-cal-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.boops-cal-day .boops-cal-dot {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+}
+
+.boops-cal-dot.is-watch {
+  background: #d97706;
+}
+
+.boops-cal-dot.is-act {
+  background: #dc2626;
+}
+
+.boops-cal-day.is-selected .boops-cal-dot {
+  box-shadow: 0 0 0 1.5px #111827, 0 0 0 2.5px #ffffff;
+}
+
+.boops-cal-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+  font-size: 11px;
+  color: #4b5563;
+}
+
+.boops-cal-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.boops-cal-legend .boops-cal-dot + * {
+  margin-left: 0;
+}
+
+.boops-cal-legend .boops-cal-dot:not(:first-child) {
+  margin-left: 6px;
+}

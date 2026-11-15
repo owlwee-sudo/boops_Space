@@ -16,6 +16,7 @@ import { Activity, Bluetooth, BookOpen, ChevronsUpDown, Database, FileDown, crea
 import { getDataMode, personalMissionDayToday } from "../services/dataMode";
 import { h } from "../lib/dom";
 import { type DeviceHubTab, createDeviceHubModal } from "./DeviceHubModal";
+import { createDayCalendar } from "./DayCalendar";
 import { printDocumentWithNativeBridge } from "../services/nativeBridge";
 import {
   CREW_PROFILES,
@@ -145,6 +146,16 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     "aria-label": "Mission Day Slider",
   }) as HTMLInputElement;
   const dayReadout = h("span", { className: "boops-day-readout" }, "Day 45 / 180");
+  // The readout in the page header opens a month calendar of mission days.
+  const dayCalendar = createDayCalendar({
+    getBundle: cb.getBundle,
+    getContext: cb.getContext,
+    getTodayDay: () => (getDataMode() === "mine" ? personalMissionDayToday() : uiMode === "debug" ? 96 : 45),
+    onPick: (missionDay) => {
+      const { astronautId } = cb.getContext();
+      cb.setContext(astronautId, missionDay, false);
+    },
+  });
 
   prevBtn.addEventListener("click", () => {
     const { astronautId, missionDay } = cb.getContext();
@@ -390,7 +401,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     "div",
     { className: "boops-date-stepper" },
     prevBtn,
-    dayReadout,
+    dayCalendar.trigger,
     nextBtn,
   );
   // One node, moved into each freshly rendered screen by mountDayControls().
@@ -800,6 +811,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const rec = getDailyRecord(bundle, astronautId, missionDay);
     const defaultDay = getDataMode() === "mine" ? personalMissionDayToday() : uiMode === "debug" ? 96 : 45;
     dayReadout.textContent = rec?.date ? `Day ${missionDay} / 180 · ${rec.date}` : `Day ${missionDay} / 180`;
+    dayCalendar.setLabel(dayReadout.textContent);
+    dayCalendar.refresh();
     todayBtn.textContent = "Today";
     todayBtn.title = `Jump to today (mission day ${defaultDay})`;
     todayBtn.classList.toggle("is-current-day", missionDay === defaultDay);
@@ -852,6 +865,10 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     closeExport,
     openDeviceHub: (tab) => deviceHub.open(tab),
     closeTopOverlay: () => {
+      if (dayCalendar.isOpen()) {
+        dayCalendar.close(true);
+        return true;
+      }
       if (deviceHub.isOpen()) {
         deviceHub.close();
         return true;
