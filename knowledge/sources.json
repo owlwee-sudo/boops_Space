@@ -822,5 +822,37 @@
     "url": "https://doi.org/10.1109/ICDM.2008.17",
     "layer": "core",
     "citation": "Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)"
+  },
+  {
+    "id": "health_connect",
+    "group": "Wearables",
+    "title": "Android Health Connect Jetpack SDK (androidx.health.connect:connect-client 1.1.0) – local on-device health store integration",
+    "url": "https://developer.android.com/health-and-fitness/health-connect",
+    "layer": "core",
+    "citation": "Android Health Connect Jetpack SDK (androidx.health.connect:connect-client 1.1.0) – local on-device health store integration"
+  },
+  {
+    "id": "apple_healthkit",
+    "group": "Wearables",
+    "title": "Apple HealthKit & CoreBluetooth Frameworks – on-device HealthKit queries (including HKHeartbeatSeriesQuery) and BLE GATT",
+    "url": "https://developer.apple.com/documentation/healthkit",
+    "layer": "core",
+    "citation": "Apple HealthKit & CoreBluetooth Frameworks – on-device HealthKit queries (including HKHeartbeatSeriesQuery) and BLE GATT"
+  },
+  {
+    "id": "bluetooth_gatt",
+    "group": "Wearables",
+    "title": "Bluetooth SIG GATT Specifications (0x180D Heart Rate, 0x1822 Pulse Oximeter, 0x1810 Blood Pressure, 0x1809 Thermometer, 0x180F Battery) & Web Bluetooth API",
+    "url": "https://www.bluetooth.com/specifications/specs/",
+    "layer": "core",
+    "citation": "Bluetooth SIG GATT Specifications (0x180D Heart Rate, 0x1822 Pulse Oximeter, 0x1810 Blood Pressure, 0x1809 Thermometer, 0x180F Battery) & Web Bluetooth API"
+  },
+  {
+    "id": "nearby_p2p",
+    "group": "Wearables",
+    "title": "Android Wi-Fi Direct (WifiP2pManager) & Apple MultipeerConnectivity – offline peer-to-peer crew summary transfer",
+    "url": "https://developer.apple.com/documentation/multipeerconnectivity",
+    "layer": "core",
+    "citation": "Android Wi-Fi Direct (WifiP2pManager) & Apple MultipeerConnectivity – offline peer-to-peer crew summary transfer"
   }
 ]

@@ -9,7 +9,16 @@ export interface NativeCapabilities {
     name: string;
     available: boolean;
     authorized: boolean;
-    status: "ready" | "needs_permission" | "install_required" | "unavailable";
+    status:
+      | "ready"
+      | "authorized"
+      | "available"
+      | "needs_permission"
+      | "install_required"
+      | "provider_update_required"
+      | "unknown"
+      | "error"
+      | "unavailable";
     detail: string;
   };
   bluetooth: {
@@ -184,6 +193,7 @@ type BridgeWindow = Window & {
     };
   };
   __boopsNativeEvent?: (eventType: string, payload: unknown) => void;
+  __boopsPendingNativeEvents?: Array<{ type: string; payload: unknown }>;
 };
 
 type WebBluetoothDevice = {
@@ -355,6 +365,69 @@ function notifyListeners(eventType?: NativeEventType, payload?: unknown): void {
   }
 }
 
+function inferBleKind(services: string[], rawKind?: unknown): BleDeviceInfo["kind"] {
+  const kind = String(rawKind ?? "").toLowerCase();
+  if (kind === "hr_strap" || kind === "heart_rate") return "hr_strap";
+  if (kind === "pulse_ox" || kind === "pulse_oximeter") return "pulse_ox";
+  if (kind === "bp_cuff" || kind === "blood_pressure") return "bp_cuff";
+  if (kind === "thermometer") return "thermometer";
+  const upper = services.map((s) => s.toUpperCase());
+  if (upper.some((s) => s.includes("180D"))) return "hr_strap";
+  if (upper.some((s) => s.includes("1822"))) return "pulse_ox";
+  if (upper.some((s) => s.includes("1810"))) return "bp_cuff";
+  if (upper.some((s) => s.includes("1809"))) return "thermometer";
+  return "wearable";
+}
+
+function normalizeBleDevice(raw: unknown): BleDeviceInfo | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+  const id = String(obj.id ?? obj.deviceId ?? "").trim();
+  if (!id) return null;
+  const services = Array.isArray(obj.services) ? obj.services.map(String) : [];
+  return {
+    id,
+    name: String(obj.name ?? obj.deviceName ?? "BLE Sensor"),
+    rssi: typeof obj.rssi === "number" ? obj.rssi : undefined,
+    services,
+    kind: inferBleKind(services, obj.kind),
+    connected: Boolean(obj.connected),
+    batteryPct: typeof obj.batteryPct === "number" ? obj.batteryPct : null,
+  };
+}
+
+function inferBleMetric(obj: Record<string, unknown>): BleReading["metric"] {
+  const m = String(obj.metric ?? "").toLowerCase();
+  if (m === "rhr_bpm" || m === "heart_rate") return "rhr_bpm";
+  if (m === "hrv_rmssd_ms") return "hrv_rmssd_ms";
+  if (m === "spo2_pct" || m === "pulse_oximeter") return "spo2_pct";
+  if (m === "blood_pressure") return "blood_pressure";
+  if (m === "temp_c" || m === "temperature") return "temp_c";
+  if (m === "battery") return "battery";
+  if (typeof obj.rhr_bpm === "number") return "rhr_bpm";
+  if (typeof obj.hrv_rmssd_ms === "number") return "hrv_rmssd_ms";
+  if (typeof obj.spo2_pct === "number") return "spo2_pct";
+  if (typeof obj.sbp_mmhg === "number") return "blood_pressure";
+  if (typeof obj.temp_c === "number") return "temp_c";
+  return "battery";
+}
+
+function normalizeNearbyPeer(raw: unknown): NearbyPeer | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+  const id = String(obj.id ?? obj.peerId ?? "").trim();
+  if (!id) return null;
+  const rawStatus = String(obj.status ?? obj.state ?? "discovered").toLowerCase();
+  const status: NearbyPeer["status"] =
+    rawStatus === "connected" ? "connected" : rawStatus === "connecting" || rawStatus === "invited" ? "connecting" : "discovered";
+  return {
+    id,
+    name: String(obj.name ?? obj.displayName ?? obj.astronautId ?? id),
+    transport: String(obj.transport ?? state.capabilities.nearby.transport ?? "wifi_p2p"),
+    status,
+  };
+}
+
 function handleNativeEvent(rawType: string, payload: unknown): void {
   const type = rawType as NativeEventType;
   const obj = (payload && typeof payload === "object" ? payload : {}) as Record<string, unknown>;
@@ -376,7 +449,29 @@ function handleNativeEvent(rawType: string, payload: unknown): void {
     state.healthSync = obj as unknown as HealthSyncResult;
     state.lastMessage = String(obj.message ?? "Health sync finished");
   } else if (type === "ble_status") {
-    state.bleStatus = obj as unknown as BleStatus;
+    const connectedIds = Array.isArray(obj.connectedDeviceIds) ? obj.connectedDeviceIds.map(String) : [];
+    const connectedId =
+      typeof obj.connectedDeviceId === "string" && obj.connectedDeviceId
+        ? obj.connectedDeviceId
+        : connectedIds[0] ?? null;
+    const matched = connectedId ? state.bleDevices.find((d) => d.id === connectedId) : undefined;
+    state.bleStatus = {
+      scanning: Boolean(obj.scanning),
+      poweredOn: Boolean(obj.poweredOn),
+      authorized: Boolean(obj.authorized),
+      connectedDeviceId: connectedId,
+      connectedDeviceName:
+        typeof obj.connectedDeviceName === "string" && obj.connectedDeviceName
+          ? obj.connectedDeviceName
+          : matched?.name ?? null,
+      error: obj.error != null ? String(obj.error) : null,
+      message: obj.message != null ? String(obj.message) : undefined,
+    };
+    if (connectedId) {
+      state.bleDevices = state.bleDevices.map((d) => ({ ...d, connected: d.id === connectedId || connectedIds.includes(d.id) }));
+    } else if (Array.isArray(obj.connectedDeviceIds)) {
+      state.bleDevices = state.bleDevices.map((d) => ({ ...d, connected: connectedIds.includes(d.id) }));
+    }
     state.capabilities = {
       ...state.capabilities,
       bluetooth: {
@@ -389,10 +484,30 @@ function handleNativeEvent(rawType: string, payload: unknown): void {
     if (obj.message || obj.error) {
       state.lastMessage = String(obj.error || obj.message);
     }
-  } else if (type === "ble_scan_result" && Array.isArray(obj.devices)) {
-    state.bleDevices = obj.devices as BleDeviceInfo[];
+  } else if (type === "ble_scan_result") {
+    if (Array.isArray(obj.devices)) {
+      state.bleDevices = obj.devices.map(normalizeBleDevice).filter((d): d is BleDeviceInfo => Boolean(d));
+    } else {
+      const single = normalizeBleDevice(obj);
+      if (single) {
+        const idx = state.bleDevices.findIndex((d) => d.id === single.id);
+        if (idx >= 0) {
+          const next = [...state.bleDevices];
+          next[idx] = { ...next[idx], ...single };
+          state.bleDevices = next;
+        } else {
+          state.bleDevices = [...state.bleDevices, single];
+        }
+      }
+    }
   } else if (type === "ble_reading") {
-    const reading = obj as unknown as BleReading;
+    const reading: BleReading = {
+      ...(obj as unknown as BleReading),
+      deviceId: String(obj.deviceId ?? "ble"),
+      deviceName: String(obj.deviceName ?? "BLE Sensor"),
+      metric: inferBleMetric(obj),
+      timestamp: String(obj.timestamp ?? new Date().toISOString()),
+    };
     state.latestBleReading = reading;
     state.bleReadingsHistory = [reading, ...state.bleReadingsHistory].slice(0, 20);
   } else if (type === "nearby_status") {
@@ -409,9 +524,15 @@ function handleNativeEvent(rawType: string, payload: unknown): void {
       state.lastMessage = String(obj.error || obj.message);
     }
   } else if (type === "nearby_peers" && Array.isArray(obj.peers)) {
-    state.nearbyPeers = obj.peers as NearbyPeer[];
+    state.nearbyPeers = obj.peers.map(normalizeNearbyPeer).filter((p): p is NearbyPeer => Boolean(p));
   } else if (type === "nearby_received") {
-    const pkt = obj as unknown as NearbyReceivedPacket;
+    const peerId = String(obj.peerId ?? "peer");
+    const pkt: NearbyReceivedPacket = {
+      peerId,
+      peerName: String(obj.peerName ?? obj.displayName ?? obj.astronautId ?? peerId),
+      payloadJson: String(obj.payloadJson ?? "{}"),
+      receivedAt: String(obj.receivedAt ?? obj.timestamp ?? new Date().toISOString()),
+    };
     state.nearbyReceived = [pkt, ...state.nearbyReceived].slice(0, 20);
     state.lastMessage = `Received crew packet from ${pkt.peerName || pkt.peerId}`;
   } else if (type === "nearby_sent") {
@@ -428,6 +549,14 @@ function ensureGlobalReceiver(): void {
   const win = getBridgeWindow();
   if (!win) return;
   win.__boopsNativeEvent = handleNativeEvent;
+  if (Array.isArray(win.__boopsPendingNativeEvents) && win.__boopsPendingNativeEvents.length > 0) {
+    const queued = win.__boopsPendingNativeEvents.splice(0, win.__boopsPendingNativeEvents.length);
+    for (const item of queued) {
+      if (item && typeof item.type === "string") {
+        handleNativeEvent(item.type, item.payload);
+      }
+    }
+  }
 }
 
 ensureGlobalReceiver();

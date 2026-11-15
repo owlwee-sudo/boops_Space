@@ -212,8 +212,9 @@ final class NearbyCrewManager: NSObject {
     return result.isEmpty ? "BOOPS-\(tag)" : result
   }
 
-  private func emitStatus(message: String) {
+  private func emitStatus(message: String, errorMessage: String? = nil) {
     let connectedCount = peers.values.filter { $0.state == "connected" }.count
+    let errorValue: Any = errorMessage.map { $0 as Any } ?? NSNull()
     emit(
       "nearby_status",
       [
@@ -225,6 +226,7 @@ final class NearbyCrewManager: NSObject {
         "localPeerName": localPeerID?.displayName ?? "",
         "connectedCount": connectedCount,
         "discoveredCount": peers.count,
+        "error": errorValue,
         "message": message,
       ]
     )
@@ -235,10 +237,11 @@ final class NearbyCrewManager: NSObject {
       .sorted { $0.key < $1.key }
       .map { peerId, record in
         [
-          "peerId": peerId,
-          "displayName": record.peerID.displayName,
+          "id": peerId,
+          "name": record.peerID.displayName,
+          "transport": "multipeer_connectivity",
+          "status": record.state,
           "astronautId": record.astronautId,
-          "state": record.state,
         ]
       }
     emit("nearby_peers", ["peers": list])
@@ -281,7 +284,10 @@ extension NearbyCrewManager: MCNearbyServiceAdvertiserDelegate {
       if nsErr.code == -72008 {
         self.localNetworkDenied = true
       }
-      self.emitStatus(message: "Nearby advertiser error: \(error.localizedDescription)")
+      self.emitStatus(
+        message: "Nearby advertiser error: \(error.localizedDescription)",
+        errorMessage: error.localizedDescription
+      )
     }
   }
 }
@@ -338,7 +344,10 @@ extension NearbyCrewManager: MCNearbyServiceBrowserDelegate {
       if nsErr.code == -72008 {
         self.localNetworkDenied = true
       }
-      self.emitStatus(message: "Nearby browser error: \(error.localizedDescription)")
+      self.emitStatus(
+        message: "Nearby browser error: \(error.localizedDescription)",
+        errorMessage: error.localizedDescription
+      )
     }
   }
 }
@@ -377,12 +386,14 @@ extension NearbyCrewManager: MCSessionDelegate {
       let astroId = self.peers[peerKey]?.astronautId ?? String(peerKey.split(separator: "·").first ?? "")
       let rawText = String(data: data, encoding: .utf8) ?? ""
 
+      let timestamp = self.isoFormatter.string(from: Date())
       var payload: [String: Any] = [
         "peerId": peerKey,
-        "displayName": peerID.displayName,
+        "peerName": peerID.displayName,
         "astronautId": astroId,
         "payloadJson": rawText,
-        "timestamp": self.isoFormatter.string(from: Date()),
+        "receivedAt": timestamp,
+        "timestamp": timestamp,
       ]
       if let parsed = try? JSONSerialization.jsonObject(with: data, options: []),
          JSONSerialization.isValidJSONObject(parsed) {

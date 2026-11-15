@@ -196,7 +196,7 @@ final class HealthKitManager {
     for id in quantityIds {
       types.insert(HKQuantityType(id))
     }
-    types.insert(HKSeriesType.heartbeatSeries())
+    types.insert(HKSeriesType.heartbeat())
     types.insert(HKCategoryType(.sleepAnalysis))
     types.insert(HKObjectType.workoutType())
     return types
@@ -226,11 +226,34 @@ final class HealthKitManager {
       return
     }
 
-    store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { [weak self] status, error in
-      guard let self else { return }
-      let requestedBefore = UserDefaults.standard.bool(forKey: self.permissionRequestedDefaultsKey)
+    let requestedBefore = UserDefaults.standard.bool(forKey: self.permissionRequestedDefaultsKey)
+    let lock = NSLock()
+    var didComplete = false
+    let finishOnce: (Capabilities) -> Void = { caps in
+      lock.lock()
+      let shouldDeliver = !didComplete
+      didComplete = true
+      lock.unlock()
+      if shouldDeliver {
+        completion(caps)
+      }
+    }
+
+    // Unsigned simulator runs (CODE_SIGNING_ALLOWED=NO) omit HealthKit entitlements and can stall XPC callbacks.
+    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 1.0) {
+      finishOnce(
+        Capabilities(
+          available: true,
+          authorized: requestedBefore,
+          status: requestedBefore ? "ready" : "needs_permission",
+          detail: "Apple HealthKit available on-device (authorization status fallback)."
+        )
+      )
+    }
+
+    store.getRequestStatusForAuthorization(toShare: [], read: readTypes) { status, error in
       if let error {
-        completion(
+        finishOnce(
           Capabilities(
             available: true,
             authorized: requestedBefore,
@@ -243,7 +266,7 @@ final class HealthKitManager {
 
       switch status {
       case .unnecessary:
-        completion(
+        finishOnce(
           Capabilities(
             available: true,
             authorized: true,
@@ -252,7 +275,7 @@ final class HealthKitManager {
           )
         )
       case .shouldRequest:
-        completion(
+        finishOnce(
           Capabilities(
             available: true,
             authorized: false,
@@ -261,7 +284,7 @@ final class HealthKitManager {
           )
         )
       case .unknown:
-        completion(
+        finishOnce(
           Capabilities(
             available: true,
             authorized: requestedBefore,
@@ -270,7 +293,7 @@ final class HealthKitManager {
           )
         )
       @unknown default:
-        completion(
+        finishOnce(
           Capabilities(
             available: true,
             authorized: requestedBefore,
@@ -430,13 +453,16 @@ final class HealthKitManager {
           "source": "wearable",
         ]
         var hasMetric = false
+        var samplesCount = 0
 
         if let rhrValues = rhrByDate[dateKey], !rhrValues.isEmpty {
           let meanRhr = rhrValues.reduce(0.0, +) / Double(rhrValues.count)
           row["rhr_bpm"] = HealthMetricsMath.round(meanRhr, decimals: 1)
+          samplesCount += rhrValues.count
           hasMetric = true
         } else if let hrValues = hrByDate[dateKey], let fallbackRhr = HealthMetricsMath.quietHeartRateFallback(hrValues) {
           row["rhr_bpm"] = HealthMetricsMath.round(fallbackRhr, decimals: 1)
+          samplesCount += hrValues.count
           hasMetric = true
         }
 
@@ -445,11 +471,13 @@ final class HealthKitManager {
           let meanRmssd = rmssdValues.reduce(0.0, +) / Double(rmssdValues.count)
           row["hrv_rmssd_ms"] = HealthMetricsMath.round(meanRmssd, decimals: 1)
           row["hrv_metric"] = "rmssd"
+          samplesCount += rmssdValues.count
           hasMetric = true
         } else if let sdnnValues = sdnnByDate[dateKey], !sdnnValues.isEmpty {
           let meanSdnn = sdnnValues.reduce(0.0, +) / Double(sdnnValues.count)
           row["hrv_rmssd_ms"] = HealthMetricsMath.round(meanSdnn, decimals: 1)
           row["hrv_metric"] = "sdnn"
+          samplesCount += sdnnValues.count
           hasMetric = true
         }
 
@@ -457,6 +485,7 @@ final class HealthKitManager {
           let hours = HealthMetricsMath.mergedSleepHours(from: sleepIntervals)
           if hours > 0 {
             row["sleep_hours"] = HealthMetricsMath.round(hours, decimals: 2)
+            samplesCount += sleepIntervals.count
             hasMetric = true
           }
         }
@@ -465,30 +494,36 @@ final class HealthKitManager {
           let meanPct = (spo2Values.reduce(0.0, +) / Double(spo2Values.count)) * 100.0
           let clampedPct = max(0.0, min(100.0, meanPct))
           row["spo2_pct"] = HealthMetricsMath.round(clampedPct, decimals: 1)
+          samplesCount += spo2Values.count
           hasMetric = true
         }
 
         if let sbpValues = sbpByDate[dateKey], !sbpValues.isEmpty {
           row["sbp_mmhg"] = HealthMetricsMath.round(sbpValues.reduce(0.0, +) / Double(sbpValues.count), decimals: 1)
+          samplesCount += sbpValues.count
           hasMetric = true
         }
 
         if let dbpValues = dbpByDate[dateKey], !dbpValues.isEmpty {
           row["dbp_mmhg"] = HealthMetricsMath.round(dbpValues.reduce(0.0, +) / Double(dbpValues.count), decimals: 1)
+          samplesCount += dbpValues.count
           hasMetric = true
         }
 
         if let tempValues = tempByDate[dateKey], !tempValues.isEmpty {
           row["temp_c"] = HealthMetricsMath.round(tempValues.reduce(0.0, +) / Double(tempValues.count), decimals: 2)
+          samplesCount += tempValues.count
           hasMetric = true
         }
 
-        if let exerciseMin = workoutsByDate[dateKey], exerciseMin > 0 {
-          row["exercise_min"] = HealthMetricsMath.round(exerciseMin, decimals: 1)
+        if let workoutSummary = workoutsByDate[dateKey], workoutSummary.minutes > 0 {
+          row["exercise_min"] = HealthMetricsMath.round(workoutSummary.minutes, decimals: 1)
+          samplesCount += workoutSummary.count
           hasMetric = true
         }
 
         if hasMetric {
+          row["samples_count"] = samplesCount
           records.append(row)
         }
       }
@@ -580,7 +615,7 @@ final class HealthKitManager {
   private func queryWorkouts(
     store: HKHealthStore,
     predicate: NSPredicate
-  ) async -> [String: Double] {
+  ) async -> [String: (minutes: Double, count: Int)] {
     let type = HKObjectType.workoutType()
     let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
 
@@ -595,12 +630,13 @@ final class HealthKitManager {
           continuation.resume(returning: [:])
           return
         }
-        var minutesByDate: [String: Double] = [:]
+        var summaryByDate: [String: (minutes: Double, count: Int)] = [:]
         for workout in workouts {
           let key = self.dateKey(for: workout.startDate)
-          minutesByDate[key, default: 0.0] += workout.duration / 60.0
+          let prev = summaryByDate[key] ?? (0.0, 0)
+          summaryByDate[key] = (prev.minutes + (workout.duration / 60.0), prev.count + 1)
         }
-        continuation.resume(returning: minutesByDate)
+        continuation.resume(returning: summaryByDate)
       }
       store.execute(query)
     }
@@ -610,7 +646,7 @@ final class HealthKitManager {
     store: HKHealthStore,
     predicate: NSPredicate
   ) async -> [String: [Double]] {
-    let seriesType = HKSeriesType.heartbeatSeries()
+    let seriesType = HKSeriesType.heartbeat()
     let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
 
     let seriesSamples: [HKHeartbeatSeriesSample] = await withCheckedContinuation { continuation in

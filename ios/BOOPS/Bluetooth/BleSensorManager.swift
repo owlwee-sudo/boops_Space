@@ -187,7 +187,7 @@ final class BleSensorManager: NSObject {
     )
   }
 
-  private func emitStatus(customMessage: String? = nil) {
+  private func emitStatus(customMessage: String? = nil, errorMessage: String? = nil) {
     let snap: StatusSnapshot
     if let central = centralManager {
       snap = buildSnapshot(for: central, customMessage: customMessage)
@@ -204,11 +204,26 @@ final class BleSensorManager: NSObject {
       )
     }
 
+    let primaryConnected = connectedPeripherals.values.sorted { $0.identifier.uuidString < $1.identifier.uuidString }.first
+    let resolvedError: Any
+    if let errorMessage {
+      resolvedError = errorMessage
+    } else if !snap.available {
+      resolvedError = snap.message
+    } else {
+      resolvedError = NSNull()
+    }
+    let connectedDeviceIdValue: Any = primaryConnected.map { $0.identifier.uuidString as Any } ?? NSNull()
+    let connectedDeviceNameValue: Any = primaryConnected.map { ($0.name ?? "BLE Sensor") as Any } ?? NSNull()
+
     let payload: [String: Any] = [
       "available": snap.available,
       "authorized": snap.authorized,
       "poweredOn": snap.poweredOn,
       "scanning": snap.scanning,
+      "connectedDeviceId": connectedDeviceIdValue,
+      "connectedDeviceName": connectedDeviceNameValue,
+      "error": resolvedError,
       "mode": "native_ble",
       "state": snap.state,
       "connectedDeviceIds": snap.connectedDeviceIds,
@@ -217,16 +232,24 @@ final class BleSensorManager: NSObject {
     emit("ble_status", payload)
   }
 
-  private func emitScanResult(for peripheral: CBPeripheral) {
-    let id = peripheral.identifier
-    let payload: [String: Any] = [
-      "deviceId": id.uuidString,
-      "name": peripheral.name ?? "BLE Sensor",
-      "rssi": rssiByDevice[id] ?? 0,
-      "services": serviceUUIDsByDevice[id] ?? [],
-      "connected": connectedPeripherals[id] != nil,
-    ]
-    emit("ble_scan_result", payload)
+  private func emitScanResult(for peripheral: CBPeripheral? = nil) {
+    let devices: [[String: Any]] = discoveredPeripherals.values
+      .sorted { ($0.name ?? $0.identifier.uuidString) < ($1.name ?? $1.identifier.uuidString) }
+      .map { device in
+        let id = device.identifier
+        let services = (serviceUUIDsByDevice[id] ?? []).map(BleGattParsers.shortUuid)
+        let batteryValue: Any = batteryByDevice[id].map { $0 as Any } ?? NSNull()
+        return [
+          "id": id.uuidString,
+          "name": device.name ?? "BLE Sensor",
+          "rssi": rssiByDevice[id] ?? 0,
+          "services": services,
+          "kind": BleGattParsers.classifyDeviceKind(services),
+          "connected": connectedPeripherals[id] != nil,
+          "batteryPct": batteryValue,
+        ]
+      }
+    emit("ble_scan_result", ["devices": devices])
   }
 
   private func emit(_ type: String, _ payload: [String: Any]) {
@@ -300,6 +323,7 @@ extension BleSensorManager: CBPeripheralDelegate {
     guard error == nil, let services = peripheral.services else { return }
     let id = peripheral.identifier
     serviceUUIDsByDevice[id] = services.map { $0.uuid.uuidString }
+    emitScanResult(for: peripheral)
     for service in services {
       peripheral.discoverCharacteristics(nil, for: service)
     }
@@ -345,6 +369,7 @@ extension BleSensorManager: CBPeripheralDelegate {
     switch characteristic.uuid {
     case BleGattParsers.heartRateMeasurementUUID:
       if let hr = BleGattParsers.parseHeartRateMeasurement(data) {
+        reading["metric"] = "rhr_bpm"
         reading["rhr_bpm"] = hr.bpm
         if !hr.rrIntervalsMs.isEmpty {
           var buffer = rrBuffersByDevice[deviceId] ?? []
@@ -362,6 +387,7 @@ extension BleSensorManager: CBPeripheralDelegate {
 
     case BleGattParsers.plxSpotCheckMeasurementUUID, BleGattParsers.plxContinuousMeasurementUUID:
       if let plx = BleGattParsers.parsePulseOximeterMeasurement(data) {
+        reading["metric"] = "spo2_pct"
         reading["spo2_pct"] = HealthMetricsMath.round(plx.spo2Pct, decimals: 1)
         if let pr = plx.pulseRateBpm {
           reading["rhr_bpm"] = Int(pr.rounded())
@@ -371,6 +397,7 @@ extension BleSensorManager: CBPeripheralDelegate {
 
     case BleGattParsers.bloodPressureMeasurementUUID:
       if let bp = BleGattParsers.parseBloodPressureMeasurement(data) {
+        reading["metric"] = "blood_pressure"
         reading["sbp_mmhg"] = HealthMetricsMath.round(bp.sbpMmHg, decimals: 1)
         reading["dbp_mmhg"] = HealthMetricsMath.round(bp.dbpMmHg, decimals: 1)
         if let pr = bp.pulseRateBpm {
@@ -381,6 +408,7 @@ extension BleSensorManager: CBPeripheralDelegate {
 
     case BleGattParsers.temperatureMeasurementUUID:
       if let tempC = BleGattParsers.parseTemperatureMeasurement(data) {
+        reading["metric"] = "temp_c"
         reading["temp_c"] = HealthMetricsMath.round(tempC, decimals: 2)
         parsedAny = true
       }
@@ -388,7 +416,9 @@ extension BleSensorManager: CBPeripheralDelegate {
     case BleGattParsers.batteryLevelUUID:
       if let battery = BleGattParsers.parseBatteryLevel(data) {
         batteryByDevice[deviceId] = battery
+        reading["metric"] = "battery"
         reading["batteryPct"] = battery
+        emitScanResult()
         parsedAny = true
       }
 

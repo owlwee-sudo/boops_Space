@@ -151,6 +151,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | H4 Isolation Forest anomalies | Fable 5.2 | feat/hard-anomaly | ✅ integrated (optional `anomaly_score`/`anomaly_kind` wired in `data_quality.py` & `run_all.py`) |
 | H5 LSTM autoencoder (optional) | — | feat/hard-lstm | 💤 optional |
 | Figma: risk detail, emergency, tool guides, settings | Design | — | 🛠 in progress |
+| Android Health Connect + BLE GATT + Wi-Fi Direct + iOS HealthKit + CoreBluetooth + MultipeerConnectivity + Bridge UI | Coordinator + `android-native-engineer` + `ios-native-engineer` | main | ✅ done (Android 19 JVM tests + APK built; iOS 16 XCTests + device build succeeded; UI typecheck + `/web` + `dist-site` built) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
@@ -170,6 +171,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-14: WESAD wrist HRV is motion noise during the stress task (checked against chest ECG). The app-facing "daily" model takes heart rate and RMSSD from ECG. Do not trust wrist HRV during activity.
 - 2026-11-14: Camera HRV (RMSSD) is saved with `hrv_confidence: "low"` and must not feed the personal baseline or stress score: in simulation camera noise inflates it (`hard/VALIDATION.md`).
 - 2026-11-15: Merged `feat/hard-face` (`H1`–`H4`) into `main`, wired optional integration hooks cleanly with safe defaults, and reconciled `/knowledge` (`41` concepts, `83` edges, `103` sources).
+- 2026-11-15: Added native OS health, BLE GATT, and offline P2P crew sync across Android (`Health Connect`, `BluetoothGatt`, `WifiP2pManager` via `BoopsAndroid`) and Apple iOS (`HealthKit` incl. `HKHeartbeatSeriesQuery` RMSSD, `CoreBluetooth`, `MultipeerConnectivity` via `window.webkit.messageHandlers.boopsNative` / `BoopsApple`), plus desktop Chromium Web Bluetooth fallback and `DeviceHubModal` in `ui/` -> `/web`. Kept all external HTTP blocked (`403 Offline Mode` on Android, `boops-app://app` scheme on iOS) and cited all SDKs/specs in `/knowledge` (`41` concepts, `83` edges, `107` sources).
 
 ---
 

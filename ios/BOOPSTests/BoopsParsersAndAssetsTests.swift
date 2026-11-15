@@ -1,5 +1,6 @@
 import CoreBluetooth
 import HealthKit
+import WebKit
 import XCTest
 @testable import BOOPS
 
@@ -192,11 +193,30 @@ final class BoopsParsersAndAssetsTests: XCTestCase {
     XCTAssertEqual(BoopsSchemeHandler.candidateAssetPaths(for: "/camera/"), ["camera/index.html"])
     XCTAssertEqual(BoopsSchemeHandler.candidateAssetPaths(for: "/camera"), ["camera", "camera/index.html"])
 
-    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "../secret.txt").isEmpty())
-    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "web/../../etc/passwd").isEmpty())
-    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/%2e%2e/Info.plist").isEmpty())
-    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/./index.html").isEmpty())
-    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/camera\\..\\secret").isEmpty())
+    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "../secret.txt").isEmpty)
+    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "web/../../etc/passwd").isEmpty)
+    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/%2e%2e/Info.plist").isEmpty)
+    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/./index.html").isEmpty)
+    XCTAssertTrue(BoopsSchemeHandler.candidateAssetPaths(for: "/camera\\..\\secret").isEmpty)
+  }
+
+  func testQuietHeartRateFallbackAndSymlinkEscapeRejection() throws {
+    // 10 samples from 55 to 165 -> quietest 20% (2 samples: 55, 61) -> mean 58.0
+    let fallback = HealthMetricsMath.quietHeartRateFallback([165, 120, 88, 72, 61, 55, 95, 110, 140, 80])
+    XCTAssertEqual(fallback ?? -1, 58.0, accuracy: 0.001)
+
+    let fm = FileManager.default
+    let tempBase = fm.temporaryDirectory.appendingPathComponent("boops-scheme-test-\(UUID().uuidString)", isDirectory: true)
+    let webDir = tempBase.appendingPathComponent("web", isDirectory: true)
+    let secretFile = tempBase.appendingPathComponent("secret.txt", isDirectory: false)
+    let linkInWeb = webDir.appendingPathComponent("escape.txt", isDirectory: false)
+    try fm.createDirectory(at: webDir, withIntermediateDirectories: true)
+    defer { try? fm.removeItem(at: tempBase) }
+    try Data("secret".utf8).write(to: secretFile)
+    try fm.createSymbolicLink(at: linkInWeb, withDestinationURL: secretFile)
+
+    let scopedHandler = BoopsSchemeHandler(webRootURL: webDir)
+    XCTAssertNil(scopedHandler.resolveAssetURL(forRequestPath: "/escape.txt"))
   }
 
   func testSchemeHandlerMapsCriticalMimeTypesAndCharsets() {
@@ -228,5 +248,105 @@ final class BoopsParsersAndAssetsTests: XCTestCase {
     XCTAssertNotNil(handler.resolveAssetURL(forRequestPath: "/vendor/mediapipe/wasm/vision_wasm_internal.wasm"))
     XCTAssertNotNil(handler.resolveAssetURL(forRequestPath: "/vendor/mediapipe/face_landmarker.task"))
     XCTAssertNil(handler.resolveAssetURL(forRequestPath: "/../Info.plist"))
+  }
+
+  func testGattUuidNormalizationAndDeviceClassification() {
+    XCTAssertEqual(BleGattParsers.shortUuid("0000180D-0000-1000-8000-00805F9B34FB"), "180D")
+    XCTAssertEqual(BleGattParsers.shortUuid("1822"), "1822")
+    XCTAssertEqual(BleGattParsers.classifyDeviceKind(["180D", "180F"]), "hr_strap")
+    XCTAssertEqual(BleGattParsers.classifyDeviceKind(["1822"]), "pulse_ox")
+    XCTAssertEqual(BleGattParsers.classifyDeviceKind(["1810"]), "bp_cuff")
+    XCTAssertEqual(BleGattParsers.classifyDeviceKind(["1809"]), "thermometer")
+    XCTAssertEqual(BleGattParsers.classifyDeviceKind(["180D", "1822"]), "wearable")
+  }
+
+  func testOfflineNavigationPolicyAndLiveWebViewBridgeInjection() {
+    XCTAssertTrue(BoopsWebViewController.isAllowedNavigationURL(URL(string: "boops-app://app/index.html")!))
+    XCTAssertTrue(BoopsWebViewController.isAllowedNavigationURL(URL(string: "boops-app://app/camera/?sim=steady")!))
+    XCTAssertTrue(BoopsWebViewController.isAllowedNavigationURL(URL(string: "about:blank")!))
+    XCTAssertFalse(BoopsWebViewController.isAllowedNavigationURL(URL(string: "https://example.com")!))
+    XCTAssertFalse(BoopsWebViewController.isAllowedNavigationURL(URL(string: "http://localhost:8000")!))
+    XCTAssertFalse(BoopsWebViewController.isAllowedNavigationURL(URL(string: "file:///etc/passwd")!))
+
+    let vc = BoopsWebViewController()
+    vc.loadViewIfNeeded()
+    vc.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+    vc.view.layoutIfNeeded()
+
+    guard let webView = vc.view.subviews.compactMap({ $0 as? WKWebView }).first else {
+      XCTFail("Expected WKWebView subview in BoopsWebViewController")
+      return
+    }
+
+    let loadedExpectation = expectation(description: "Offline BOOPS web bundle loads and exposes BoopsApple")
+    let deadline = Date().addingTimeInterval(10.0)
+    var lastLoadState = "not polled"
+
+    func pollWebView() {
+      webView.evaluateJavaScript("({ href: String(location.href), ready: document.readyState, platform: window.BoopsApple && window.BoopsApple.platform, hasRoot: Boolean(document.querySelector('#root') && document.querySelector('#root').children.length > 0), hasData: Boolean(window.BOOPS_DATA) })") { result, error in
+        if let error {
+          lastLoadState = "jsError=\(error.localizedDescription)"
+        } else if let dict = result as? [String: Any] {
+          lastLoadState = "\(dict)"
+          if dict["platform"] as? String == "ios",
+             dict["hasRoot"] as? Bool == true,
+             dict["hasData"] as? Bool == true {
+            loadedExpectation.fulfill()
+            return
+          }
+        }
+        if Date() < deadline {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            pollWebView()
+          }
+        }
+      }
+    }
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+      pollWebView()
+    }
+    wait(for: [loadedExpectation], timeout: 12.0)
+    if lastLoadState == "not polled" {
+      XCTFail("WebView did not respond to JS: url=\(String(describing: webView.url))")
+    }
+
+    // Verify BoopsApple.getCapabilities() triggers window.__boopsNativeEvent / boops:native("capabilities", ...)
+    let eventExpectation = expectation(description: "Capabilities native event delivered to JS")
+    let capDeadline = Date().addingTimeInterval(5.0)
+    webView.evaluateJavaScript("""
+      window.__boopsTestCap = null;
+      window.addEventListener('boops:native', function(e) {
+        if (e.detail && e.detail.type === 'capabilities') {
+          window.__boopsTestCap = e.detail.payload;
+        }
+      });
+      Boolean(window.BoopsApple && window.BoopsApple.getCapabilities());
+    """) { result, error in
+      XCTAssertNil(error)
+      XCTAssertEqual(result as? Bool, true)
+    }
+
+    func pollCap() {
+      webView.evaluateJavaScript("window.__boopsTestCap") { result, _ in
+        if let cap = result as? [String: Any],
+           cap["platform"] as? String == "ios",
+           let health = cap["healthApi"] as? [String: Any],
+           health["name"] as? String == "Apple HealthKit",
+           let nearby = cap["nearby"] as? [String: Any],
+           nearby["transport"] as? String == "multipeer_connectivity" {
+          eventExpectation.fulfill()
+        } else if Date() < capDeadline {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            pollCap()
+          }
+        }
+      }
+    }
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+      pollCap()
+    }
+    wait(for: [eventExpectation], timeout: 6.0)
   }
 }

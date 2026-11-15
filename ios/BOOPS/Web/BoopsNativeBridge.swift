@@ -106,9 +106,18 @@ final class BoopsNativeBridge: NSObject, WKScriptMessageHandler {
 
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     guard message.name == Self.handlerName else { return }
-    guard message.frameInfo.isMainFrame,
-          message.frameInfo.securityOrigin.protocol == BoopsSchemeHandler.scheme,
-          message.frameInfo.securityOrigin.host == BoopsSchemeHandler.host else {
+    guard message.frameInfo.isMainFrame else { return }
+
+    let frameURL = message.frameInfo.request.url
+    let urlAllowed = frameURL?.scheme?.lowercased() == BoopsSchemeHandler.scheme
+      && frameURL?.host?.lowercased() == BoopsSchemeHandler.host
+
+    let originProtocol = message.frameInfo.securityOrigin.protocol.lowercased()
+    let originHost = message.frameInfo.securityOrigin.host.lowercased()
+    let originMatches = originProtocol == BoopsSchemeHandler.scheme
+      && (originHost.isEmpty || originHost == BoopsSchemeHandler.host)
+
+    guard urlAllowed && (originMatches || originProtocol.isEmpty || originProtocol == "null") else {
       return
     }
     guard let body = message.body as? [String: Any],
@@ -208,6 +217,10 @@ final class BoopsNativeBridge: NSObject, WKScriptMessageHandler {
     }
   }
 
+  func notifyPageLoaded() {
+    emitCapabilities()
+  }
+
   private func emitCapabilities() {
     healthKitManager.fetchCapabilities { [weak self] hk in
       guard let self else { return }
@@ -251,11 +264,14 @@ final class BoopsNativeBridge: NSObject, WKScriptMessageHandler {
       return
     }
     let typeLiteral = String(typeArrayJson.dropFirst().dropLast())
+    let safePayloadJson = payloadJson
+      .replacingOccurrences(of: "\u{2028}", with: "\\u2028")
+      .replacingOccurrences(of: "\u{2029}", with: "\\u2029")
 
     let script = """
     (function () {
       var t = \(typeLiteral);
-      var p = \(payloadJson);
+      var p = \(safePayloadJson);
       if (typeof window.__boopsNativeEvent === "function") {
         window.__boopsNativeEvent(t, p);
       } else {

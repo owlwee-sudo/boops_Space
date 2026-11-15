@@ -27,6 +27,32 @@ enum BleGattParsers {
   static let temperatureMeasurementUUID = CBUUID(string: "2A1C")
   static let batteryLevelUUID = CBUUID(string: "2A19")
 
+  /// Normalizes a 128-bit Bluetooth SIG base UUID string to its 4-character short hex form.
+  static func shortUuid(_ uuid: String) -> String {
+    let upper = uuid.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+    let prefix = "0000"
+    let suffix = "-0000-1000-8000-00805F9B34FB"
+    if upper.count == 36, upper.hasPrefix(prefix), upper.hasSuffix(suffix) {
+      let start = upper.index(upper.startIndex, offsetBy: 4)
+      let end = upper.index(upper.startIndex, offsetBy: 8)
+      return String(upper[start..<end])
+    }
+    return upper
+  }
+
+  /// Maps advertised GATT service UUIDs into `BleDeviceInfo.kind` values expected by the web UI.
+  static func classifyDeviceKind(_ serviceUuids: [String]) -> String {
+    let normalized = Set(serviceUuids.map(shortUuid))
+    let vitalServices: Set<String> = ["180D", "1822", "1810", "1809"]
+    let matches = normalized.intersection(vitalServices)
+    if matches.count > 1 { return "wearable" }
+    if normalized.contains("180D") { return "hr_strap" }
+    if normalized.contains("1822") { return "pulse_ox" }
+    if normalized.contains("1810") { return "bp_cuff" }
+    if normalized.contains("1809") { return "thermometer" }
+    return "wearable"
+  }
+
   struct HeartRateReading: Equatable {
     let bpm: Int
     let rrIntervalsMs: [Double]

@@ -90,6 +90,10 @@ Every resource used must be cited (Space Apps rule). `id` is how the data files 
 - `astroskin` — [CSA Bio-Monitor / Astroskin](https://www.asc-csa.gc.ca/eng/sciences/astroskin.asp)
 - `trialx` — [Wearables used in space missions (TrialX)](https://trialx.com/space-health-research-wearable-devices/)
 - `archer` — [Artemis II ARCHeR wristbands](https://www.newsbytesapp.com/news/science/nasa-s-artemis-ii-astronauts-to-wear-special-wristband-monitors/story)
+- `health_connect` — [Android Health Connect Jetpack SDK (androidx.health.connect:connect-client 1.1.0) – local on-device health store integration](https://developer.android.com/health-and-fitness/health-connect)
+- `apple_healthkit` — [Apple HealthKit & CoreBluetooth Frameworks – on-device HealthKit queries (including HKHeartbeatSeriesQuery) and BLE GATT](https://developer.apple.com/documentation/healthkit)
+- `bluetooth_gatt` — [Bluetooth SIG GATT Specifications (0x180D Heart Rate, 0x1822 Pulse Oximeter, 0x1810 Blood Pressure, 0x1809 Thermometer, 0x180F Battery) & Web Bluetooth API](https://www.bluetooth.com/specifications/specs/)
+- `nearby_p2p` — [Android Wi-Fi Direct (WifiP2pManager) & Apple MultipeerConnectivity – offline peer-to-peer crew summary transfer](https://developer.apple.com/documentation/multipeerconnectivity)
 
 ## Camera / rPPG / NIR
 

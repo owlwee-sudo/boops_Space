@@ -73,6 +73,12 @@ final class BoopsWebViewController: UIViewController {
 
 extension BoopsWebViewController: WKNavigationDelegate {
 
+  /// Strictly offline navigation policy: only `boops-app://` and `about:` URLs are allowed.
+  static func isAllowedNavigationURL(_ url: URL) -> Bool {
+    let scheme = url.scheme?.lowercased() ?? ""
+    return scheme == BoopsSchemeHandler.scheme || scheme == "about"
+  }
+
   func webView(
     _ webView: WKWebView,
     decidePolicyFor navigationAction: WKNavigationAction,
@@ -82,13 +88,11 @@ extension BoopsWebViewController: WKNavigationDelegate {
       decisionHandler(.cancel)
       return
     }
-    let scheme = url.scheme?.lowercased() ?? ""
-    if scheme == BoopsSchemeHandler.scheme || scheme == "about" {
-      decisionHandler(.allow)
-      return
-    }
-    // Strictly offline: cancel external http://, https://, and non-local requests.
-    decisionHandler(.cancel)
+    decisionHandler(Self.isAllowedNavigationURL(url) ? .allow : .cancel)
+  }
+
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    nativeBridge.notifyPageLoaded()
   }
 }
 

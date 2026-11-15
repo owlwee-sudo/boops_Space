@@ -87,36 +87,50 @@ export function createDeviceHubModal(opts: DeviceHubOptions): DeviceHubControlle
     const { astronautId, missionDay } = opts.getContext();
     const profile = getCrewProfile(astronautId);
 
-    const statusBadgeClass =
-      hApi.status === "ready"
-        ? "boops-hub-badge boops-hub-badge-ok"
-        : hApi.status === "needs_permission" || hApi.status === "install_required"
-          ? "boops-hub-badge boops-hub-badge-warn"
-          : "boops-hub-badge";
+    const isAuthorized = hApi.authorized || hApi.status === "ready" || hApi.status === "authorized";
+    const needsInstallOrUpdate =
+      hApi.status === "install_required" || hApi.status === "provider_update_required";
+    const needsPermission =
+      hApi.status === "needs_permission" ||
+      hApi.status === "available" ||
+      hApi.status === "unknown" ||
+      hApi.status === "error" ||
+      (hApi.available && !isAuthorized);
 
-    const statusLabel =
-      hApi.status === "ready"
-        ? "Authorized"
-        : hApi.status === "needs_permission"
+    const statusBadgeClass = isAuthorized
+      ? "boops-hub-badge boops-hub-badge-ok"
+      : needsInstallOrUpdate || needsPermission
+        ? "boops-hub-badge boops-hub-badge-warn"
+        : "boops-hub-badge";
+
+    const statusLabel = isAuthorized
+      ? "Authorized"
+      : needsInstallOrUpdate
+        ? "Install / Update Health Connect"
+        : needsPermission
           ? "Needs permission"
-          : hApi.status === "install_required"
-            ? "Install Health Connect"
-            : "Native mobile only";
+          : capabilities.platform === "web"
+            ? "Native mobile only"
+            : "Unavailable";
 
     const authBtn = h(
       "button",
       {
         type: "button",
         className: "boops-btn",
-        disabled: !hApi.available && hApi.status !== "install_required",
+        disabled: !hApi.available && !needsInstallOrUpdate,
         onClick: () => {
           const ok = requestHealthPermissions();
           if (!ok) {
-            opts.onToast(`${hApi.name} is only available inside the BOOPS Android or iOS app.`);
+            opts.onToast(
+              capabilities.platform === "web"
+                ? `${hApi.name} is only available inside the BOOPS Android or iOS app.`
+                : hApi.detail || `${hApi.name} permission flow could not open.`,
+            );
           }
         },
       },
-      hApi.status === "install_required" ? "Open Health Connect Setup" : "Grant Health Access",
+      needsInstallOrUpdate ? "Open Health Connect Setup" : "Grant Health Access",
     );
 
     const syncBtn = h(
@@ -128,7 +142,11 @@ export function createDeviceHubModal(opts: DeviceHubOptions): DeviceHubControlle
         onClick: () => {
           const ok = syncHealthData(7);
           if (!ok) {
-            opts.onToast(`Cannot sync ${hApi.name} from desktop browser.`);
+            opts.onToast(
+              capabilities.platform === "web"
+                ? `Cannot sync ${hApi.name} from desktop browser.`
+                : hApi.detail || `${hApi.name} sync could not start.`,
+            );
           } else {
             opts.onToast(`Reading local ${hApi.name} records…`);
           }

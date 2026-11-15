@@ -1,0 +1,511 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		236FF0959318A776FE51F0B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C0412551D9B06D60ABD346 /* AppDelegate.swift */; };
+		56E37FA8ADE6CDE7E45E7F34 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F21BCC6A04A27001D996EBF5 /* SceneDelegate.swift */; };
+		50E58D3D1E7E2F8DDB986CEF /* BoopsSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD284E143BC4A28EA2F0D01 /* BoopsSchemeHandler.swift */; };
+		6408E46333F585103F0A6EFE /* BoopsNativeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBAFA4BAB1ABE963A29DC91 /* BoopsNativeBridge.swift */; };
+		D9767E0245EC18277BCD7EF6 /* BoopsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FEE179F54633C5EF8BCCAD /* BoopsWebViewController.swift */; };
+		1E1225B94843564D862EC959 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC390434247A4362790EC1CB /* HealthKitManager.swift */; };
+		CF492BA2EDDF8B297DD977E6 /* BleGattParsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA543E74D4B87225162FE6C /* BleGattParsers.swift */; };
+		0E14EB3069EE8EEA08F147C5 /* BleSensorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45737E3A6559F0F4DBF23D81 /* BleSensorManager.swift */; };
+		2DE8A79DD3C3BA9F47A3A64A /* NearbyCrewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8714420B4B7432A47A166310 /* NearbyCrewManager.swift */; };
+		3C046C8753563DDF59F6BF64 /* BoopsParsersAndAssetsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD4CE02E42F59CFE6815144 /* BoopsParsersAndAssetsTests.swift */; };
+		F42FD1C3C9B4FD3E02CA2C40 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26E516BF6D17EB2B2E2E2E20 /* WebKit.framework */; };
+		94525FC6F63593F17FD2E3A3 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA6A6226B390CD18DC1BE574 /* HealthKit.framework */; };
+		0DC0129B6225BF8BBF1B2468 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1619072517D78F6E86789D /* CoreBluetooth.framework */; };
+		A2BE12E2E37414E69A23998B /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39EAFB290344AFC736CFAE8E /* MultipeerConnectivity.framework */; };
+		87A0E28B644D4C21E0B19B9B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C7C3B4A689F0C669B6198F /* AVFoundation.framework */; };
+		5D9E3A9154363439B5FD6A3E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E23C3C4EA9B324C388F6DE7 /* UIKit.framework */; };
+		B4E528D240F4E65C2AB8A743 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A1CCDA213FD18F9B6A7A5A3 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C28EDE175F62A7132116A558 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D4AB737BE9CDDBB7075E7D84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2711E7F511A815D89CCA7D8E;
+			remoteInfo = BOOPS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B0FA1FBDA99EE98927B6344F /* BOOPS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BOOPS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C627BA74CFCC0B73A9B35ADA /* BOOPSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BOOPSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A1CCDA213FD18F9B6A7A5A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BOOPS/Assets.xcassets; sourceTree = "<group>"; };
+		3D32163EDD58769235F56AEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = BOOPS/Info.plist; sourceTree = "<group>"; };
+		3A2EEE56284B06843DCA5A90 /* BOOPS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = BOOPS.entitlements; path = BOOPS/BOOPS.entitlements; sourceTree = "<group>"; };
+		B3C0412551D9B06D60ABD346 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = BOOPS/App/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		F21BCC6A04A27001D996EBF5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = BOOPS/App/SceneDelegate.swift; sourceTree = SOURCE_ROOT; };
+		CCD284E143BC4A28EA2F0D01 /* BoopsSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoopsSchemeHandler.swift; path = BOOPS/Web/BoopsSchemeHandler.swift; sourceTree = SOURCE_ROOT; };
+		2EBAFA4BAB1ABE963A29DC91 /* BoopsNativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoopsNativeBridge.swift; path = BOOPS/Web/BoopsNativeBridge.swift; sourceTree = SOURCE_ROOT; };
+		77FEE179F54633C5EF8BCCAD /* BoopsWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoopsWebViewController.swift; path = BOOPS/Web/BoopsWebViewController.swift; sourceTree = SOURCE_ROOT; };
+		BC390434247A4362790EC1CB /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HealthKitManager.swift; path = BOOPS/Health/HealthKitManager.swift; sourceTree = SOURCE_ROOT; };
+		4BA543E74D4B87225162FE6C /* BleGattParsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BleGattParsers.swift; path = BOOPS/Bluetooth/BleGattParsers.swift; sourceTree = SOURCE_ROOT; };
+		45737E3A6559F0F4DBF23D81 /* BleSensorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BleSensorManager.swift; path = BOOPS/Bluetooth/BleSensorManager.swift; sourceTree = SOURCE_ROOT; };
+		8714420B4B7432A47A166310 /* NearbyCrewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NearbyCrewManager.swift; path = BOOPS/Nearby/NearbyCrewManager.swift; sourceTree = SOURCE_ROOT; };
+		FFD4CE02E42F59CFE6815144 /* BoopsParsersAndAssetsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoopsParsersAndAssetsTests.swift; path = BOOPSTests/BoopsParsersAndAssetsTests.swift; sourceTree = SOURCE_ROOT; };
+		26E516BF6D17EB2B2E2E2E20 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		EA6A6226B390CD18DC1BE574 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		DA1619072517D78F6E86789D /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		39EAFB290344AFC736CFAE8E /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
+		F1C7C3B4A689F0C669B6198F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4E23C3C4EA9B324C388F6DE7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		199F5223C156CA1A61876AC2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F42FD1C3C9B4FD3E02CA2C40 /* WebKit.framework in Frameworks */,
+				94525FC6F63593F17FD2E3A3 /* HealthKit.framework in Frameworks */,
+				0DC0129B6225BF8BBF1B2468 /* CoreBluetooth.framework in Frameworks */,
+				A2BE12E2E37414E69A23998B /* MultipeerConnectivity.framework in Frameworks */,
+				87A0E28B644D4C21E0B19B9B /* AVFoundation.framework in Frameworks */,
+				5D9E3A9154363439B5FD6A3E /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0F5E827CAEDB1AE89BCA70E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D1F827E25813725B3A6494F7 = {
+			isa = PBXGroup;
+			children = (
+				8797437E6CD3C2E496FA067B /* BOOPS */,
+				0F5F26D28C274207C0A1C297 /* BOOPSTests */,
+				54080D337AD0906C890275DB /* Frameworks */,
+				BE3097885D90845CB83274A7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BE3097885D90845CB83274A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B0FA1FBDA99EE98927B6344F /* BOOPS.app */,
+				C627BA74CFCC0B73A9B35ADA /* BOOPSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		54080D337AD0906C890275DB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				26E516BF6D17EB2B2E2E2E20 /* WebKit.framework */,
+				EA6A6226B390CD18DC1BE574 /* HealthKit.framework */,
+				DA1619072517D78F6E86789D /* CoreBluetooth.framework */,
+				39EAFB290344AFC736CFAE8E /* MultipeerConnectivity.framework */,
+				F1C7C3B4A689F0C669B6198F /* AVFoundation.framework */,
+				4E23C3C4EA9B324C388F6DE7 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8797437E6CD3C2E496FA067B /* BOOPS */ = {
+			isa = PBXGroup;
+			children = (
+				C8CB2F9BE5CE3192374BF183 /* App */,
+				A34855492BC2C5CD29B27A6D /* Web */,
+				551CC23C32E9D6A8ED1E5D7E /* Health */,
+				B772D93A5D6D70116D7C9E69 /* Bluetooth */,
+				6A0DDEDE550EFD3604246E04 /* Nearby */,
+				1A1CCDA213FD18F9B6A7A5A3 /* Assets.xcassets */,
+				3D32163EDD58769235F56AEE /* Info.plist */,
+				3A2EEE56284B06843DCA5A90 /* BOOPS.entitlements */,
+			);
+			name = BOOPS;
+			sourceTree = "<group>";
+		};
+		C8CB2F9BE5CE3192374BF183 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B3C0412551D9B06D60ABD346 /* AppDelegate.swift */,
+				F21BCC6A04A27001D996EBF5 /* SceneDelegate.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		A34855492BC2C5CD29B27A6D /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				CCD284E143BC4A28EA2F0D01 /* BoopsSchemeHandler.swift */,
+				2EBAFA4BAB1ABE963A29DC91 /* BoopsNativeBridge.swift */,
+				77FEE179F54633C5EF8BCCAD /* BoopsWebViewController.swift */,
+			);
+			name = Web;
+			sourceTree = "<group>";
+		};
+		551CC23C32E9D6A8ED1E5D7E /* Health */ = {
+			isa = PBXGroup;
+			children = (
+				BC390434247A4362790EC1CB /* HealthKitManager.swift */,
+			);
+			name = Health;
+			sourceTree = "<group>";
+		};
+		B772D93A5D6D70116D7C9E69 /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				4BA543E74D4B87225162FE6C /* BleGattParsers.swift */,
+				45737E3A6559F0F4DBF23D81 /* BleSensorManager.swift */,
+			);
+			name = Bluetooth;
+			sourceTree = "<group>";
+		};
+		6A0DDEDE550EFD3604246E04 /* Nearby */ = {
+			isa = PBXGroup;
+			children = (
+				8714420B4B7432A47A166310 /* NearbyCrewManager.swift */,
+			);
+			name = Nearby;
+			sourceTree = "<group>";
+		};
+		0F5F26D28C274207C0A1C297 /* BOOPSTests */ = {
+			isa = PBXGroup;
+			children = (
+				FFD4CE02E42F59CFE6815144 /* BoopsParsersAndAssetsTests.swift */,
+			);
+			name = BOOPSTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2711E7F511A815D89CCA7D8E /* BOOPS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A32CE087990547788B4ED571 /* Build configuration list for PBXNativeTarget "BOOPS" */;
+			buildPhases = (
+				7F85C60C84737D4170856049 /* Sources */,
+				199F5223C156CA1A61876AC2 /* Frameworks */,
+				6B834CBD12584511D4A12AC9 /* Resources */,
+				7B48E604F844977BFFC9AA02 /* Copy Offline Web Bundle */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BOOPS;
+			productName = BOOPS;
+			productReference = B0FA1FBDA99EE98927B6344F /* BOOPS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3A52D9725BBE47A9D85EF16C /* BOOPSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 312963DC672B8E429813927B /* Build configuration list for PBXNativeTarget "BOOPSTests" */;
+			buildPhases = (
+				9791F0BEA2F0683BD4D4E4BC /* Sources */,
+				0F5E827CAEDB1AE89BCA70E6 /* Frameworks */,
+				C07ECA37378CA8F7F7E8ABC2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				072C3027ADE3A212A8424E37 /* PBXTargetDependency */,
+			);
+			name = BOOPSTests;
+			productName = BOOPSTests;
+			productReference = C627BA74CFCC0B73A9B35ADA /* BOOPSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D4AB737BE9CDDBB7075E7D84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					2711E7F511A815D89CCA7D8E = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					3A52D9725BBE47A9D85EF16C = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 2711E7F511A815D89CCA7D8E;
+					};
+				};
+			};
+			buildConfigurationList = 98C106BB32FB7D072B726F09 /* Build configuration list for PBXProject "BOOPS" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D1F827E25813725B3A6494F7;
+			productRefGroup = BE3097885D90845CB83274A7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2711E7F511A815D89CCA7D8E /* BOOPS */,
+				3A52D9725BBE47A9D85EF16C /* BOOPSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6B834CBD12584511D4A12AC9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4E528D240F4E65C2AB8A743 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C07ECA37378CA8F7F7E8ABC2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7B48E604F844977BFFC9AA02 /* Copy Offline Web Bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(PROJECT_DIR)/../web/index.html",
+				"$(PROJECT_DIR)/../web/camera/index.html",
+			);
+			name = "Copy Offline Web Bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/web/index.html",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\nSRC_WEB=\"${PROJECT_DIR}/../web\"\nDST_WEB=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/web\"\nif [ ! -d \"${SRC_WEB}\" ]; then\n  echo \"error: Missing offline web directory at ${SRC_WEB}\" >&2\n  exit 1\nfi\nmkdir -p \"${DST_WEB}\"\nrsync -a --delete --exclude='.DS_Store' \"${SRC_WEB}/\" \"${DST_WEB}/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7F85C60C84737D4170856049 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				236FF0959318A776FE51F0B2 /* AppDelegate.swift in Sources */,
+				56E37FA8ADE6CDE7E45E7F34 /* SceneDelegate.swift in Sources */,
+				50E58D3D1E7E2F8DDB986CEF /* BoopsSchemeHandler.swift in Sources */,
+				6408E46333F585103F0A6EFE /* BoopsNativeBridge.swift in Sources */,
+				D9767E0245EC18277BCD7EF6 /* BoopsWebViewController.swift in Sources */,
+				1E1225B94843564D862EC959 /* HealthKitManager.swift in Sources */,
+				CF492BA2EDDF8B297DD977E6 /* BleGattParsers.swift in Sources */,
+				0E14EB3069EE8EEA08F147C5 /* BleSensorManager.swift in Sources */,
+				2DE8A79DD3C3BA9F47A3A64A /* NearbyCrewManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9791F0BEA2F0683BD4D4E4BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C046C8753563DDF59F6BF64 /* BoopsParsersAndAssetsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		072C3027ADE3A212A8424E37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2711E7F511A815D89CCA7D8E /* BOOPS */;
+			targetProxy = C28EDE175F62A7132116A558 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		6BBA0D7B5C65A98315022621 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B5281DA41B4F8C3F37E5AF7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CB36CC7C05DA68538E15D44F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BOOPS/BOOPS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = BOOPS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = space.boops.crewhealth;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61C41B234DE8EC5DA0A03E4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = BOOPS/BOOPS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = BOOPS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = space.boops.crewhealth;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		97819B8C39445F6F2C92B80D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = space.boops.crewhealthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BOOPS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BOOPS";
+			};
+			name = Debug;
+		};
+		496E9D025806430363A8394A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = space.boops.crewhealthTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BOOPS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BOOPS";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		98C106BB32FB7D072B726F09 /* Build configuration list for PBXProject "BOOPS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6BBA0D7B5C65A98315022621 /* Debug */,
+				B5281DA41B4F8C3F37E5AF7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A32CE087990547788B4ED571 /* Build configuration list for PBXNativeTarget "BOOPS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB36CC7C05DA68538E15D44F /* Debug */,
+				61C41B234DE8EC5DA0A03E4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		312963DC672B8E429813927B /* Build configuration list for PBXNativeTarget "BOOPSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				97819B8C39445F6F2C92B80D /* Debug */,
+				496E9D025806430363A8394A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D4AB737BE9CDDBB7075E7D84 /* Project object */;
+}

@@ -210,7 +210,11 @@
       "wang25",
       "astroskin",
       "trialx",
-      "archer"
+      "archer",
+      "health_connect",
+      "apple_healthkit",
+      "bluetooth_gatt",
+      "nearby_p2p"
     ]
   },
   {
