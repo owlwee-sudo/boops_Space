@@ -706,3 +706,51 @@ object BoopsBridgePayloads {
     return "window.__boopsNativeEvent && window.__boopsNativeEvent(${JSONObject.quote(type)}, $safeJson);"
   }
 }
+
+/** Envelope exchanged between BOOPS peers over local Wi-Fi Direct TCP sockets. */
+data class NearbyEnvelope(
+  val senderId: String,
+  val senderName: String,
+  val payloadJson: String,
+)
+
+/** Pure length-prefixed UTF-8 framing for local Wi-Fi Direct peer-to-peer JSON exchange. */
+object NearbyWireProtocol {
+  const val MAX_FRAME_BYTES = 2 * 1024 * 1024 // 2 MiB safety ceiling per summary frame
+
+  /** Encodes [senderId], [senderName], and [payloadJson] into a 4-byte length-prefixed UTF-8 frame. */
+  fun encodeFrame(senderId: String, senderName: String, payloadJson: String): ByteArray? {
+    val json = JSONObject().apply {
+      put("senderId", senderId)
+      put("senderName", senderName)
+      put("payloadJson", payloadJson)
+    }.toString()
+    val body = json.toByteArray(Charsets.UTF_8)
+    if (body.isEmpty() || body.size > MAX_FRAME_BYTES) return null
+    val out = ByteArray(4 + body.size)
+    val len = body.size
+    out[0] = ((len ushr 24) and 0xFF).toByte()
+    out[1] = ((len ushr 16) and 0xFF).toByte()
+    out[2] = ((len ushr 8) and 0xFF).toByte()
+    out[3] = (len and 0xFF).toByte()
+    System.arraycopy(body, 0, out, 4, body.size)
+    return out
+  }
+
+  /** Decodes a UTF-8 JSON envelope body (without the 4-byte length prefix). */
+  fun decodeEnvelope(body: ByteArray): NearbyEnvelope? {
+    if (body.isEmpty() || body.size > MAX_FRAME_BYTES) return null
+    return try {
+      val obj = JSONObject(String(body, Charsets.UTF_8))
+      val payloadJson = obj.optString("payloadJson", "")
+      if (payloadJson.isEmpty()) return null
+      NearbyEnvelope(
+        senderId = obj.optString("senderId", "unknown"),
+        senderName = obj.optString("senderName", "BOOPS Peer"),
+        payloadJson = payloadJson,
+      )
+    } catch (_: Exception) {
+      null
+    }
+  }
+}

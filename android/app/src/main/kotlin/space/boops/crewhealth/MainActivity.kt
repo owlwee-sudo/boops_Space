@@ -38,8 +38,13 @@ import java.io.ByteArrayInputStream
 class MainActivity : ComponentActivity() {
 
   private lateinit var webView: WebView
+  private var webViewAttached: Boolean = false
   private var pendingWebPermissionRequest: PermissionRequest? = null
   private var pendingExportContent: String? = null
+
+  private lateinit var healthConnectManager: HealthConnectManager
+  private lateinit var bleSensorManager: BleSensorManager
+  private lateinit var nearbyCrewManager: NearbyCrewManager
 
   private val cameraPermissionLauncher =
     registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -106,6 +111,23 @@ class MainActivity : ComponentActivity() {
     }
     container.addView(webView)
     setContentView(container)
+    webViewAttached = true
+
+    healthConnectManager = HealthConnectManager(
+      activity = this,
+      emitEvent = ::emitNativeEvent,
+      onCapabilitiesChanged = ::emitCapabilities,
+    )
+    bleSensorManager = BleSensorManager(
+      activity = this,
+      emitEvent = ::emitNativeEvent,
+      onCapabilitiesChanged = ::emitCapabilities,
+    ).apply { register() }
+    nearbyCrewManager = NearbyCrewManager(
+      activity = this,
+      emitEvent = ::emitNativeEvent,
+      onCapabilitiesChanged = ::emitCapabilities,
+    )
 
     ViewCompat.setOnApplyWindowInsetsListener(container) { view, windowInsets ->
       val insets = windowInsets.getInsets(
@@ -193,6 +215,14 @@ class MainActivity : ComponentActivity() {
           emptyMap(),
           ByteArrayInputStream(ByteArray(0)),
         )
+      }
+
+      override fun onPageFinished(view: WebView, url: String) {
+        super.onPageFinished(view, url)
+        if (url.startsWith(BoopsAssetsPathHandler.APP_ORIGIN)) {
+          healthConnectManager.refreshAuthorization()
+          emitCapabilities()
+        }
       }
 
       override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
@@ -291,6 +321,107 @@ class MainActivity : ComponentActivity() {
       }
       return true
     }
+
+    @JavascriptInterface
+    fun getCapabilitiesJson(): String = buildCapabilitiesJson()
+
+    @JavascriptInterface
+    fun requestHealthPermissions(): Boolean {
+      val available = healthConnectManager.getCapabilities().available
+      runOnUiThread { healthConnectManager.requestPermissions() }
+      return available
+    }
+
+    @JavascriptInterface
+    fun syncHealthData(daysBack: Int): Boolean {
+      val caps = healthConnectManager.getCapabilities()
+      runOnUiThread { healthConnectManager.syncData(daysBack) }
+      return caps.available
+    }
+
+    @JavascriptInterface
+    fun startBleScan(): Boolean {
+      val caps = bleSensorManager.getCapabilities()
+      if (!caps.available || (caps.authorized && !caps.poweredOn)) {
+        runOnUiThread { bleSensorManager.startScan() }
+        return false
+      }
+      runOnUiThread { bleSensorManager.startScan() }
+      return true
+    }
+
+    @JavascriptInterface
+    fun stopBleScan(): Boolean {
+      runOnUiThread { bleSensorManager.stopScan() }
+      return true
+    }
+
+    @JavascriptInterface
+    fun connectBleDevice(deviceId: String): Boolean {
+      val cleanId = deviceId.trim()
+      val caps = bleSensorManager.getCapabilities()
+      if (cleanId.isEmpty() || !caps.available || (caps.authorized && !caps.poweredOn)) {
+        runOnUiThread { bleSensorManager.connectDevice(cleanId) }
+        return false
+      }
+      runOnUiThread { bleSensorManager.connectDevice(cleanId) }
+      return true
+    }
+
+    @JavascriptInterface
+    fun disconnectBleDevice(deviceId: String): Boolean {
+      runOnUiThread { bleSensorManager.disconnectDevice(deviceId) }
+      return true
+    }
+
+    @JavascriptInterface
+    fun startNearbyDiscovery(astronautId: String): Boolean {
+      val caps = nearbyCrewManager.getCapabilities()
+      runOnUiThread { nearbyCrewManager.startDiscovery(astronautId) }
+      return caps.available
+    }
+
+    @JavascriptInterface
+    fun stopNearbyDiscovery(): Boolean {
+      runOnUiThread { nearbyCrewManager.stopDiscovery() }
+      return true
+    }
+
+    @JavascriptInterface
+    fun sendNearbySummary(peerId: String, payloadJson: String): Boolean {
+      val caps = nearbyCrewManager.getCapabilities()
+      if (!caps.available || payloadJson.isBlank()) {
+        runOnUiThread { nearbyCrewManager.sendSummary(peerId, payloadJson) }
+        return false
+      }
+      runOnUiThread { nearbyCrewManager.sendSummary(peerId, payloadJson) }
+      return true
+    }
+  }
+
+  private fun buildCapabilitiesJson(): String = BoopsBridgePayloads.capabilitiesJson(
+    health = healthConnectManager.getCapabilities(),
+    bluetooth = bleSensorManager.getCapabilities(),
+    nearby = nearbyCrewManager.getCapabilities(),
+  )
+
+  private fun emitCapabilities() {
+    if (!::healthConnectManager.isInitialized ||
+      !::bleSensorManager.isInitialized ||
+      !::nearbyCrewManager.isInitialized
+    ) {
+      return
+    }
+    emitNativeEvent("capabilities", buildCapabilitiesJson())
+  }
+
+  private fun emitNativeEvent(type: String, jsonString: String) {
+    val script = BoopsBridgePayloads.buildNativeEventScript(type, jsonString)
+    runOnUiThread {
+      if (!isDestroyed && !isFinishing && webViewAttached && ::webView.isInitialized) {
+        webView.evaluateJavascript(script, null)
+      }
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -306,9 +437,19 @@ class MainActivity : ComponentActivity() {
   override fun onResume() {
     super.onResume()
     webView.onResume()
+    if (::healthConnectManager.isInitialized) {
+      healthConnectManager.refreshAuthorization()
+    }
   }
 
   override fun onDestroy() {
+    webViewAttached = false
+    if (::bleSensorManager.isInitialized) {
+      bleSensorManager.destroy()
+    }
+    if (::nearbyCrewManager.isInitialized) {
+      nearbyCrewManager.destroy()
+    }
     pendingWebPermissionRequest?.deny()
     pendingWebPermissionRequest = null
     webView.destroy()
