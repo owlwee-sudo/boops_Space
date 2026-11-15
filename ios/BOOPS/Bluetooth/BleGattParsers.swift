@@ -130,6 +130,13 @@ enum BleGattParsers {
   // MARK: - Characteristic Parsers
 
   /// Parses GATT `0x2A37` Heart Rate Measurement (8/16-bit HR, optional Energy Expended, 1/1024s RR intervals).
+  // Physiological ranges: outside them the sensor is mis-reading, not the body.
+  static let hrRangeBpm = 25...240
+  static let spo2RangePct = 50.0...100.0
+  static let sbpRangeMmHg = 50.0...260.0
+  static let dbpRangeMmHg = 30.0...180.0
+  static let tempRangeC = 30.0...43.0
+
   static func parseHeartRateMeasurement(_ data: Data) -> HeartRateReading? {
     guard data.count >= 2 else { return nil }
     let base = data.startIndex
@@ -149,6 +156,8 @@ enum BleGattParsers {
       bpm = Int(data[base + offset])
       offset += 1
     }
+
+    guard hrRangeBpm.contains(bpm) else { return nil }
 
     if hasEnergyExpended {
       guard offset + 2 <= data.count else { return nil }
@@ -171,7 +180,7 @@ enum BleGattParsers {
   /// Parses GATT `0x2A5E` (PLX Spot-Check) and `0x2A5F` (PLX Continuous) Pulse Oximeter Measurement.
   static func parsePulseOximeterMeasurement(_ data: Data) -> PulseOximeterReading? {
     guard data.count >= 5 else { return nil }
-    guard let spo2 = decodeSFloat(data, at: 1), spo2.isFinite, spo2 >= 0.0, spo2 <= 100.0 else {
+    guard let spo2 = decodeSFloat(data, at: 1), spo2.isFinite, spo2RangePct.contains(spo2) else {
       return nil
     }
     let pulseRate: Double?
@@ -208,6 +217,11 @@ enum BleGattParsers {
       offset += 7
     }
 
+    guard sbp.isFinite, dbp.isFinite,
+          sbpRangeMmHg.contains(sbp), dbpRangeMmHg.contains(dbp), sbp > dbp else {
+      return nil
+    }
+
     var pulseRate: Double?
     if hasPulseRate, let pr = decodeSFloat(data, at: offset), pr.isFinite, pr >= 20.0, pr <= 250.0 {
       pulseRate = pr
@@ -225,7 +239,8 @@ enum BleGattParsers {
     guard let rawTemp = decodeFloat(data, at: 1), rawTemp.isFinite else {
       return nil
     }
-    return isFahrenheit ? (rawTemp - 32.0) * (5.0 / 9.0) : rawTemp
+    let celsius = isFahrenheit ? (rawTemp - 32.0) * (5.0 / 9.0) : rawTemp
+    return tempRangeC.contains(celsius) ? celsius : nil
   }
 
   /// Parses GATT `0x2A19` Battery Level percentage (`0...100`).

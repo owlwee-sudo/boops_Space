@@ -7,6 +7,9 @@ enum HealthMetricsMath {
   /// Computes RMSSD (`sqrt(mean((dt_i+1 - dt_i)^2))` in ms) from heartbeat series timestamps.
   /// Excludes any gap (`precededByGap == true`) or beat-to-beat interval `<= 0` or `> maxGapMs` (default 2000ms)
   /// by breaking into contiguous beat runs so gaps never fabricate artificial differences.
+  /// Shortest believable beat-to-beat interval (240 bpm).
+  static let minIntervalMs = 250.0
+
   static func computeRMSSD(
     fromHeartbeatSeries beats: [(timeSinceStart: TimeInterval, precededByGap: Bool)],
     maxGapMs: Double = 2000.0
@@ -39,7 +42,9 @@ enum HealthMetricsMath {
       let dtMs = (beat.timeSinceStart - (lastTime ?? beat.timeSinceStart)) * 1000.0
       lastTime = beat.timeSinceStart
 
-      if dtMs > 0.0 && dtMs <= maxGapMs {
+      // Unsorted / duplicate beats give dt <= 0 and too-short dt is a double-count:
+      // both end the segment so no fake successive difference is formed.
+      if dtMs >= minIntervalMs && dtMs <= maxGapMs {
         currentSegment.append(dtMs)
       } else if !currentSegment.isEmpty {
         segments.append(currentSegment)
@@ -66,7 +71,7 @@ enum HealthMetricsMath {
     var currentSegment: [Double] = []
 
     for rr in intervals {
-      if rr.isFinite && rr > 0.0 && rr <= maxValidIntervalMs {
+      if rr.isFinite && rr >= minIntervalMs && rr <= maxValidIntervalMs {
         currentSegment.append(rr)
       } else if !currentSegment.isEmpty {
         segments.append(currentSegment)

@@ -25,9 +25,12 @@ function safeStorage() {
 }
 
 export function currentAstronautId() {
-  const fromUrl = new URLSearchParams(window.location.search).get("astronaut");
-  if (fromUrl) return fromUrl;
   const store = safeStorage();
+  // "My data" mode has one person only: a ?astronaut= link must not file
+  // a personal camera check under a demo crew member (or anyone else).
+  const personal = store && store.getItem("boops.data_mode") === "mine";
+  const fromUrl = new URLSearchParams(window.location.search).get("astronaut");
+  if (fromUrl && !personal && /^A[1-3]$/.test(fromUrl)) return fromUrl;
   return (store && store.getItem(LOG_CONFIG.ASTRONAUT_KEY)) || LOG_CONFIG.DEFAULT_ASTRONAUT;
 }
 

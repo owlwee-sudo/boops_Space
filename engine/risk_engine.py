@@ -29,6 +29,8 @@ RISK_THRESHOLDS: dict[str, int] = {
 
 ADAPTATION_DAYS = 14
 ADAPTATION_DAMPEN_FACTOR = 0.45
+MAX_DRIVERS = 4
+RAD_SHELTER_MSV = 1.5   # daily dose (mSv) that triggers the shelter / defer-EVA action
 
 IMMUNE_WEIGHTS: dict[str, float] = {
     "stress": 0.30,
@@ -81,6 +83,36 @@ def _sanitized_z(z: dict[str, float], data_quality: dict[str, Any] | None) -> di
     return clean
 
 
+def _finish_risk(level: str, score: int, drivers: list[dict[str, Any]], cur_day: int) -> dict[str, Any]:
+    """Keep the top drivers, but never drop the adaptation-phase note on days 1-14.
+
+    The adaptation driver has contribution 0, so a plain "sort and take 4" used
+    to cut it whenever 4 other drivers were active.
+    """
+    adaptation = [d for d in drivers if d["factor"] == "adaptation_phase"]
+    active = sorted(
+        (d for d in drivers if d["factor"] != "adaptation_phase" and d["contribution"] > 0),
+        key=lambda d: d["contribution"],
+        reverse=True,
+    )
+    kept = active[: MAX_DRIVERS - len(adaptation)] + adaptation
+    return {
+        "level": level,
+        "score": score,
+        "drivers": kept,
+        "adaptation_phase": cur_day <= ADAPTATION_DAYS,
+    }
+
+
+def _window_mean(window: pd.DataFrame, column: str, fallback: float) -> float:
+    """Mean of a 7-day column, or ``fallback`` when every value is missing."""
+    if window.empty or column not in window.columns:
+        return fallback
+    values = pd.to_numeric(window[column], errors="coerce")
+    values = values[np.isfinite(values)]
+    return float(values.mean()) if not values.empty else fallback
+
+
 def _recent_window(history_df: pd.DataFrame | None, cur_day: int, lookback_days: int) -> pd.DataFrame:
     if history_df is None or history_df.empty:
         return pd.DataFrame()
@@ -91,7 +123,8 @@ def _has_symptoms(row: pd.Series | dict[str, Any]) -> bool:
     raw = row.get("symptoms")
     if raw is None or (isinstance(raw, float) and np.isnan(raw)):
         return False
-    return bool(str(raw).strip())
+    text = str(raw).strip().lower()
+    return bool(text) and text not in ("nan", "none", "null")
 
 
 def compute_immune_risk(
@@ -246,8 +279,7 @@ def compute_immune_risk(
             }
         )
 
-    drivers.sort(key=lambda d: d["contribution"], reverse=True)
-    return {"level": level, "score": score, "drivers": [d for d in drivers if d["contribution"] > 0 or d["factor"] == "adaptation_phase"][:4]}
+    return _finish_risk(level, score, drivers, cur_day)
 
 
 def compute_musculoskeletal_risk(
@@ -267,7 +299,7 @@ def compute_musculoskeletal_risk(
         res_min = res_mean
 
     recent7 = _recent_window(history_df, cur_day, 6)
-    avg_res = float(recent7["resistance_min"].mean()) if not recent7.empty else res_min
+    avg_res = _window_mean(recent7, "resistance_min", res_min)
     eff_res = avg_res
 
     inactivity_norm = float(np.clip((res_mean - eff_res) / max(res_mean * 0.85, 1.0), 0.0, 1.0))
@@ -341,8 +373,7 @@ def compute_musculoskeletal_risk(
             }
         )
 
-    drivers.sort(key=lambda d: d["contribution"], reverse=True)
-    return {"level": level, "score": score, "drivers": [d for d in drivers if d["contribution"] > 0 or d["factor"] == "adaptation_phase"][:4]}
+    return _finish_risk(level, score, drivers, cur_day)
 
 
 def compute_cardio_risk(
@@ -362,7 +393,7 @@ def compute_cardio_risk(
         ex_min = ex_mean
 
     recent7 = _recent_window(history_df, cur_day, 6)
-    avg_ex = float(recent7["exercise_min"].mean()) if not recent7.empty else ex_min
+    avg_ex = _window_mean(recent7, "exercise_min", ex_min)
     ex_deficit = float(np.clip((ex_mean - avg_ex) / max(ex_mean * 0.75, 1.0), 0.0, 1.0))
     ex_contrib = round(CARDIO_WEIGHTS["exercise"] * ex_deficit, 3)
 
@@ -434,8 +465,7 @@ def compute_cardio_risk(
             }
         )
 
-    drivers.sort(key=lambda d: d["contribution"], reverse=True)
-    return {"level": level, "score": score, "drivers": [d for d in drivers if d["contribution"] > 0 or d["factor"] == "adaptation_phase"][:4]}
+    return _finish_risk(level, score, drivers, cur_day)
 
 
 def evaluate_risks(
@@ -553,10 +583,11 @@ def recommend_actions(
 
     # Radiation shelter / EVA deferral
     rad_val = _to_float(row.get("radiation_msv")) if row is not None else None
-    if (rad_val is not None and rad_val >= 2.0) or immune_drivers.get("radiation", 0.0) >= 0.08:
+    # Trigger on the physical dose, not on a z-score against a tiny baseline SD.
+    if rad_val is not None and rad_val >= RAD_SHELTER_MSV:
         candidates.append(
             (
-                0.98 if (rad_val is not None and rad_val >= 2.0) else 0.12,
+                0.98,
                 {
                     "text": "Move to shielded crew quarters and defer EVAs per solar particle event protocol",
                     "targets": "radiation",

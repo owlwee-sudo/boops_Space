@@ -20,7 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-from engine.db import DEFAULT_DB_PATH, _connect
+from engine.db import DEFAULT_DB_PATH, _connect, csv_safe, dumps_safe
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SOURCES_PATH = ROOT_DIR / "knowledge" / "sources.json"
@@ -143,33 +143,16 @@ def export_astronaut_range(
         payload["raw_records"] = data["raw_records"]
 
     if fmt.lower() == "csv":
-        buf = io.StringIO()
-        if sharing["raw_data"] and data["raw_records"]:
-            fieldnames = list(data["raw_records"][0].keys())
-            writer = csv.DictWriter(buf, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(data["raw_records"])
-        elif sharing["daily_summary"] and data["daily_summary"]:
-            fieldnames = [
-                "astronaut_id",
-                "mission_day",
-                "stress_score",
-                "sleep_score",
-                "immune_level",
-                "immune_score",
-                "musculoskeletal_level",
-                "musculoskeletal_score",
-                "cardio_level",
-                "cardio_score",
-                "data_quality_status",
-                "infection_early_warning",
-                "label",
-            ]
-            writer = csv.DictWriter(buf, fieldnames=fieldnames)
-            writer.writeheader()
+        # One CSV with a "section" column, so every enabled section is kept
+        # (raw records, daily summary and emergency events can all be on at once).
+        rows: list[dict[str, Any]] = []
+        if sharing["raw_data"]:
+            rows += [{"section": "raw_records", **r} for r in data["raw_records"]]
+        if sharing["daily_summary"]:
             for s in data["daily_summary"]:
-                writer.writerow(
+                rows.append(
                     {
+                        "section": "daily_summary",
                         "astronaut_id": s["astronaut_id"],
                         "mission_day": s["mission_day"],
                         "stress_score": s["stress_score"],
@@ -185,12 +168,21 @@ def export_astronaut_range(
                         "label": "Simulated · Not a medical device",
                     }
                 )
-        else:
-            fieldnames = ["astronaut_id", "mission_day", "protocol_id", "severity", "summary", "created_utc"]
-            writer = csv.DictWriter(buf, fieldnames=fieldnames)
-            writer.writeheader()
-            for e in data["emergency_events"]:
-                writer.writerow({k: e.get(k, "") for k in fieldnames})
+        emergency_fields = ["astronaut_id", "mission_day", "protocol_id", "severity", "summary", "created_utc"]
+        rows += [
+            {"section": "emergency_events", **{k: e.get(k, "") for k in emergency_fields}}
+            for e in data["emergency_events"]
+        ]
+        fieldnames: list[str] = ["section"]
+        for r in rows:
+            fieldnames += [k for k in r if k not in fieldnames]
+        if len(fieldnames) == 1:
+            fieldnames += emergency_fields
+        buf = io.StringIO()
+        writer = csv.DictWriter(buf, fieldnames=fieldnames, restval="")
+        writer.writeheader()
+        for r in rows:
+            writer.writerow({k: csv_safe(v) for k, v in r.items()})
 
         csv_text = buf.getvalue()
         if output_path is not None:
@@ -202,7 +194,7 @@ def export_astronaut_range(
     if output_path is not None:
         out = Path(output_path)
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        out.write_text(dumps_safe(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return payload
 
 

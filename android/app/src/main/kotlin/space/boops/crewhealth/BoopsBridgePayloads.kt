@@ -175,6 +175,9 @@ object BoopsGattDecoders {
       v
     }
 
+    // Physiological range: outside it the strap is mis-reading, not the heart.
+    if (bpm !in HR_RANGE_BPM) return null
+
     if (hasEnergyExpended) {
       if (offset + 2 > bytes.size) return DecodedHeartRate(bpm, emptyList(), sensorContactDetected)
       offset += 2
@@ -236,10 +239,14 @@ object BoopsGattDecoders {
       null
     }
 
-    if (systolic == null && diastolic == null) return null
+    val sbpOk = systolic?.takeIf { it in SBP_RANGE_MMHG }
+    val dbpOk = diastolic?.takeIf { it in DBP_RANGE_MMHG }
+    // Systolic must be above diastolic; otherwise neither value can be trusted.
+    if (sbpOk != null && dbpOk != null && sbpOk <= dbpOk) return null
+    if (sbpOk == null && dbpOk == null) return null
     return DecodedBloodPressure(
-      systolicMmHg = systolic,
-      diastolicMmHg = diastolic,
+      systolicMmHg = sbpOk,
+      diastolicMmHg = dbpOk,
       mapMmHg = map,
       pulseRateBpm = pulseRate,
     )
@@ -255,7 +262,7 @@ object BoopsGattDecoders {
     val isFahrenheit = (flags and 0x01) != 0
     val rawTemp = decodeFloat32(bytes, 1) ?: return null
     val celsius = if (isFahrenheit) (rawTemp - 32.0) * 5.0 / 9.0 else rawTemp
-    if (!celsius.isFinite() || celsius !in 25.0..45.0) return null
+    if (!celsius.isFinite() || celsius !in TEMP_RANGE_C) return null
     return DecodedTemperature(tempC = round2(celsius))
   }
 
@@ -271,16 +278,30 @@ object BoopsGattDecoders {
    * RR intervals in ms. Requires at least 2 valid physiological RR intervals (250..2500 ms).
    */
   fun computeRmssdMs(rrIntervalsMs: List<Double>): Double? {
-    val valid = rrIntervalsMs.filter { it.isFinite() && it in 250.0..2500.0 }
-    if (valid.size < 2) return null
+    fun ok(v: Double) = v.isFinite() && v in RR_RANGE_MS
+    // Only difference beats that were next to each other in the raw series:
+    // when an outlier is dropped, its neighbours are NOT successive beats.
     var sumSquaredDiffs = 0.0
-    for (i in 1 until valid.size) {
-      val diff = valid[i] - valid[i - 1]
-      sumSquaredDiffs += diff * diff
+    var pairs = 0
+    for (i in 1 until rrIntervalsMs.size) {
+      val a = rrIntervalsMs[i - 1]
+      val b = rrIntervalsMs[i]
+      if (ok(a) && ok(b)) {
+        val diff = b - a
+        sumSquaredDiffs += diff * diff
+        pairs += 1
+      }
     }
-    val rmssd = sqrt(sumSquaredDiffs / (valid.size - 1))
+    if (pairs < 1) return null
+    val rmssd = sqrt(sumSquaredDiffs / pairs)
     return if (rmssd.isFinite()) round1(rmssd) else null
   }
+
+  val HR_RANGE_BPM = 25..240
+  val SBP_RANGE_MMHG = 50.0..260.0
+  val DBP_RANGE_MMHG = 30.0..180.0
+  val TEMP_RANGE_C = 30.0..43.0
+  val RR_RANGE_MS = 250.0..2500.0
 
   internal fun round1(value: Double): Double = (value * 10.0).roundToLong() / 10.0
   internal fun round2(value: Double): Double = (value * 100.0).roundToLong() / 100.0
@@ -340,7 +361,7 @@ object HealthDailyAggregator {
    * of physiologically valid samples (30..220 bpm), reducing skew from workout peaks.
    */
   fun estimateRestingHeartRate(bpmSamples: List<Double>): Double? {
-    val valid = bpmSamples.filter { it.isFinite() && it in 30.0..220.0 }.sorted()
+    val valid = bpmSamples.filter { it.isFinite() && it in 25.0..240.0 }.sorted()
     if (valid.isEmpty()) return null
     val takeCount = max(1, (valid.size * 0.20).roundToInt())
     val avg = valid.take(takeCount).average()
@@ -414,7 +435,7 @@ object HealthDailyAggregator {
 
       val rhrBpm = estimateRestingHeartRate(hrs.map { it.bpm })
 
-      val validHrv = hrvs.map { it.rmssdMs }.filter { it.isFinite() && it in 1.0..500.0 }
+      val validHrv = hrvs.map { it.rmssdMs }.filter { it.isFinite() && it in 2.0..300.0 }
       val hrvRmssdMs = if (validHrv.isNotEmpty()) BoopsGattDecoders.round1(validHrv.average()) else null
 
       val sleepHours = if (sleeps.isNotEmpty()) {
@@ -431,12 +452,13 @@ object HealthDailyAggregator {
 
       val validBp = bps.filter {
         it.sbpMmHg.isFinite() && it.dbpMmHg.isFinite() &&
-          it.sbpMmHg in 50.0..260.0 && it.dbpMmHg in 30.0..180.0
+          it.sbpMmHg in BoopsGattDecoders.SBP_RANGE_MMHG && it.dbpMmHg in BoopsGattDecoders.DBP_RANGE_MMHG &&
+          it.sbpMmHg > it.dbpMmHg
       }
       val sbpMmHg = if (validBp.isNotEmpty()) BoopsGattDecoders.round1(validBp.map { it.sbpMmHg }.average()) else null
       val dbpMmHg = if (validBp.isNotEmpty()) BoopsGattDecoders.round1(validBp.map { it.dbpMmHg }.average()) else null
 
-      val validTemp = temps.map { it.tempC }.filter { it.isFinite() && it in 25.0..45.0 }
+      val validTemp = temps.map { it.tempC }.filter { it.isFinite() && it in BoopsGattDecoders.TEMP_RANGE_C }
       val tempC = if (validTemp.isNotEmpty()) BoopsGattDecoders.round2(validTemp.average()) else null
 
       val exerciseMin = if (exercises.isNotEmpty()) {

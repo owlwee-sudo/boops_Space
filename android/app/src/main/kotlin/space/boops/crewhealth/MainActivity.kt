@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.print.PrintAttributes
 import android.print.PrintManager
@@ -193,7 +194,7 @@ class MainActivity : ComponentActivity() {
         request: WebResourceRequest,
       ): WebResourceResponse? {
         val url = request.url
-        if (url.host == ASSET_HOST) {
+        if (isAppUrl(url)) {
           if (url.path == "/favicon.ico") {
             return WebResourceResponse(
               "image/x-icon",
@@ -227,11 +228,16 @@ class MainActivity : ComponentActivity() {
 
       override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
         val uri = request.url
-        if (uri.host == ASSET_HOST) {
+        if (isAppUrl(uri)) {
           return false
         }
+        // Only hand plain https:// links to other apps (no intent:, file:, content: …).
+        if (!uri.scheme.equals("https", ignoreCase = true)) {
+          Toast.makeText(this@MainActivity, "Link blocked", Toast.LENGTH_SHORT).show()
+          return true
+        }
         try {
-          startActivity(Intent(Intent.ACTION_VIEW, uri))
+          startActivity(Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE))
         } catch (_: Exception) {
           Toast.makeText(
             this@MainActivity,
@@ -285,12 +291,21 @@ class MainActivity : ComponentActivity() {
     }
   }
 
+  /** The bundled app is only ever served from https://ASSET_HOST. */
+  private fun isAppUrl(url: Uri): Boolean =
+    url.scheme.equals("https", ignoreCase = true) && url.host == ASSET_HOST
+
   private inner class BoopsJsBridge {
     @JavascriptInterface
     fun saveFile(filename: String, content: String, mimeType: String): Boolean {
       val safeName = filename.replace(Regex("[^A-Za-z0-9._-]"), "_").ifBlank { "boops_export.txt" }
       val cleanMime = mimeType.substringBefore(';').trim().ifBlank { "text/plain" }
       runOnUiThread {
+        if (pendingExportContent != null) {
+          // One file picker at a time: a second export must not replace the first one's content.
+          Toast.makeText(this@MainActivity, "Finish the open export first", Toast.LENGTH_SHORT).show()
+          return@runOnUiThread
+        }
         pendingExportContent = content
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
           addCategory(Intent.CATEGORY_OPENABLE)

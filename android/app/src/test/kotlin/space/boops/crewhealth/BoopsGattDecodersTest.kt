@@ -45,14 +45,14 @@ class BoopsGattDecodersTest {
   @Test
   fun decodesHeartRate16BitWithEnergyAndRrIntervals() {
     // flags = 0x19 = 0x01 (UINT16 HR) | 0x08 (Energy Expended) | 0x10 (RR present)
-    // HR = 260 (0x04, 0x01)
+    // HR = 180 (0xB4, 0x00) as UINT16
     // Energy = 500 (0xF4, 0x01)
     // RR1 = 1024 -> 1000.0 ms (0x00, 0x04)
     // RR2 = 768  -> 750.0 ms  (0x00, 0x03)
     val frame = byteArrayOf(
       0x19,
-      0x04,
-      0x01,
+      0xB4.toByte(),
+      0x00,
       0xF4.toByte(),
       0x01,
       0x00,
@@ -61,7 +61,7 @@ class BoopsGattDecodersTest {
       0x03,
     )
     val decoded = BoopsGattDecoders.decodeHeartRateMeasurement(frame)!!
-    assertEquals(260, decoded.bpm)
+    assertEquals(180, decoded.bpm)
     assertNull(decoded.sensorContactDetected)
     assertEquals(listOf(1000.0, 750.0), decoded.rrIntervalsMs)
   }
@@ -75,6 +75,21 @@ class BoopsGattDecodersTest {
     // Needs at least 2 valid physiological RR intervals
     assertNull(BoopsGattDecoders.computeRmssdMs(listOf(800.0)))
     assertNull(BoopsGattDecoders.computeRmssdMs(listOf(50.0, 800.0, 5000.0)))
+
+    // An outlier in the middle must not join its neighbours into a fake pair:
+    // 800 -> [1] -> 1000 has no valid successive pair, so only 1000 -> 1010 counts.
+    assertEquals(10.0, BoopsGattDecoders.computeRmssdMs(listOf(800.0, 1.0, 1000.0, 1010.0))!!, 0.05)
+  }
+
+  @Test
+  fun rejectsImplausibleVitals() {
+    // HR 260 bpm (UINT16) is outside 25..240
+    assertNull(BoopsGattDecoders.decodeHeartRateMeasurement(byteArrayOf(0x01, 0x04, 0x01)))
+    // Systolic below diastolic
+    val bad = byteArrayOf(0x00) + sfloatBytes(70, 0) + sfloatBytes(90, 0) + sfloatBytes(80, 0)
+    assertNull(BoopsGattDecoders.decodeBloodPressureMeasurement(bad))
+    // 50 C is not a body temperature
+    assertNull(BoopsGattDecoders.decodeTemperatureMeasurement(byteArrayOf(0x00) + float32Bytes(50, 0)))
   }
 
   @Test
