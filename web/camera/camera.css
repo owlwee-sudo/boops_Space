@@ -56,18 +56,24 @@ h2 { font-size: 16px; font-weight: 600; }
 .stage video, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .mirror { transform: scaleX(-1); } /* selfie view: moves the way a mirror does */
 .placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: #e6e6e6; text-align: center; padding: 24px; }
-/* Face guide: a plain circle with a ring of small tick marks around it. */
-.face-guide { position: relative; height: 50%; aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.7); margin: 16px; }
-.face-guide::before {
-  content: "";
-  position: absolute;
-  inset: -16px;
-  border-radius: 50%;
+/* Face guide: a plain circle with a ring of small tick marks around it.
+   The ticks light up clockwise as --progress goes from 0 to 1. */
+.face-guide { position: relative; height: 50%; aspect-ratio: 1; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.7); margin: 16px; --progress: 0; }
+.ticks, .ticks-fill { position: absolute; inset: -16px; border-radius: 50%; }
+.ticks, .ticks-fill::before {
   /* one tick every 6 degrees, cut down to a thin outer band */
-  background: repeating-conic-gradient(rgba(255, 255, 255, 0.55) 0deg 1.2deg, transparent 1.2deg 6deg);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
   mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
 }
+.ticks { background: repeating-conic-gradient(rgba(255, 255, 255, 0.35) 0deg 1.2deg, transparent 1.2deg 6deg); }
+.ticks-fill::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(#ffffff 0deg 1.6deg, transparent 1.6deg 6deg); }
+/* Only the first --progress share of the bright ticks is visible. */
+.ticks-fill {
+  -webkit-mask: conic-gradient(#000 calc(var(--progress) * 1turn), transparent 0);
+  mask: conic-gradient(#000 calc(var(--progress) * 1turn), transparent 0);
+}
+.live-guide { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.live-guide .face-guide { height: 66%; margin: 0; border-color: rgba(255, 255, 255, 0.85); }
 .ring { position: absolute; top: 14px; right: 14px; width: 68px; height: 68px; display: grid; place-items: center; background: rgba(17, 17, 17, 0.6); border-radius: 50%; color: #fff; font-weight: 700; font-size: 20px; font-variant-numeric: tabular-nums; }
 .ring svg { position: absolute; inset: 4px; transform: rotate(-90deg); }
 .ring-track { fill: none; stroke: rgba(255, 255, 255, 0.25); stroke-width: 4; }

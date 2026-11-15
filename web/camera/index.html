@@ -43,8 +43,10 @@
               <video id="video" class="mirror" playsinline muted hidden></video>
               <canvas id="sim-canvas" hidden></canvas>
               <canvas id="overlay" class="mirror"></canvas>
+              <!-- Shown over the live video: the tick ring fills in as the check runs. -->
+              <div id="live-guide" class="live-guide" hidden><div class="face-guide" aria-hidden="true"><span class="ticks"></span><span class="ticks-fill"></span></div></div>
               <div id="placeholder" class="placeholder">
-                <div class="face-guide" aria-hidden="true"></div>
+                <div class="face-guide" aria-hidden="true"><span class="ticks"></span><span class="ticks-fill"></span></div>
                 <p>Sit still, face the light, look at the camera.</p>
               </div>
               <div id="ring" class="ring" role="timer" aria-label="Time left">

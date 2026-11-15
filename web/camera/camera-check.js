@@ -47,6 +47,7 @@ const el = {
   simCanvas: $("sim-canvas"),
   overlay: $("overlay"),
   placeholder: $("placeholder"),
+  liveGuide: $("live-guide"),
   ring: $("ring"),
   ringArc: $("ring-arc"),
   ringText: $("ring-text"),
@@ -92,6 +93,8 @@ function setStatus(text, tone = "") {
 function setRing(fraction, label) {
   el.ringArc.style.strokeDashoffset = String(RING_LENGTH * (1 - Math.min(1, Math.max(0, fraction))));
   el.ringText.textContent = label;
+  // The tick ring around the face fills in with the same progress.
+  el.liveGuide.firstElementChild.style.setProperty("--progress", String(Math.min(1, Math.max(0, fraction))));
 }
 
 function setMeter(node, score) {
@@ -223,6 +226,7 @@ async function startCheck() {
   el.overlay.width = s.sampler.width = source.width;
   el.overlay.height = s.sampler.height = source.height;
   s.samplerCtx = s.sampler.getContext("2d", { willReadFrequently: true });
+  show(el.liveGuide, true);
   s.phase = "settling";
   plugins.forEach((p) => p.onStart && p.onStart());
   source.onFrame((now) => onFrame(s, now));
@@ -347,6 +351,7 @@ function endSession() {
   if (session) session.source.stop();
   session = null;
   drawOverlay(null);
+  show(el.liveGuide, false);
   el.startBtn.disabled = false;
   show(el.stopBtn, false);
 }
