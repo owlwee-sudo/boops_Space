@@ -5,11 +5,22 @@
 
 import type { ScreenId } from "../screens";
 import { createBoopsOverlays } from "../components/BoopsOverlays";
+import { showWelcome } from "../components/Welcome";
+import {
+  type DataMode,
+  getDataMode,
+  getRequestedDataMode,
+  getStoredDataMode,
+  hasCompletedWelcome,
+  loadPersonalProfile,
+  setDataMode,
+} from "../services/dataMode";
 import {
   type BoopsBundle,
   type SharingSettings,
   loadBoopsBundle,
   loadSelectedContext,
+  loadManualLogs,
   loadSharingSettings,
   saveSelectedContext,
   saveSharingSettings,
@@ -31,9 +42,50 @@ export interface BoopsRuntimeInstance {
 
 /** Installs BOOPS controls onto the Figma app host and returns per-screen binding hooks. */
 export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance {
+  // ---- Demo vs My data ----
+  // The landing page may pass ?data=demo|mine. Apply it, then drop it from the URL.
+  const requestedMode = getRequestedDataMode();
+  const needsProfile = requestedMode === "mine" && !loadPersonalProfile();
+  if (requestedMode && requestedMode !== getStoredDataMode() && !needsProfile) {
+    setDataMode(requestedMode);
+  }
+  if (requestedMode) {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("data");
+      window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    } catch {
+      // Ignore history errors in restricted WebViews.
+    }
+  }
+  const renderedMode: DataMode = getDataMode();
+  document.documentElement.dataset.boopsData = renderedMode;
+
+  /** Reloads when the data mode changed, because the bundle and context depend on it. */
+  const applyModeChoice = (mode: DataMode) => {
+    if (mode === renderedMode) return;
+    window.location.replace(window.location.pathname + window.location.hash.replace(/screen=[^&]*/, "screen=HealthHome"));
+  };
+  const openDataChoice = () =>
+    showWelcome({ startAtChoice: true, dismissible: true, preselected: getDataMode(), onDone: applyModeChoice });
+
+  if (!hasCompletedWelcome()) {
+    showWelcome({ preselected: requestedMode, onDone: applyModeChoice });
+  } else if (needsProfile) {
+    showWelcome({ startAtChoice: true, dismissible: true, preselected: "mine", onDone: applyModeChoice });
+  }
+
+  /** "My data" keeps protocols, tool guides and sources but never the simulated crew readings. */
+  const forMode = (data: BoopsBundle | null): BoopsBundle | null =>
+    data && renderedMode === "mine" ? { ...data, engineOutput: [], dailyRecords: [], events: [] } : data;
+
+  const countLoggedDays = (astronautId: string) =>
+    new Set(loadManualLogs().filter((e) => e.astronaut_id === astronautId).map((e) => e.mission_day)).size;
+
   const win = window as unknown as { BOOPS_DATA?: BoopsBundle };
-  let bundle: BoopsBundle | null =
-    win.BOOPS_DATA && Array.isArray(win.BOOPS_DATA.engineOutput) ? win.BOOPS_DATA : null;
+  let bundle: BoopsBundle | null = forMode(
+    win.BOOPS_DATA && Array.isArray(win.BOOPS_DATA.engineOutput) ? win.BOOPS_DATA : null,
+  );
 
   let context = loadSelectedContext();
   let sharing: SharingSettings = loadSharingSettings();
@@ -80,6 +132,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       host.renderActiveScreen();
     },
     onOpenSettings: () => host.setScreen("SettingsProfile"),
+    onSwitchData: openDataChoice,
     onDataIngested: () => {
       overlays.updateBar();
       host.renderActiveScreen();
@@ -109,7 +162,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
 
   void loadBoopsBundle().then((loaded) => {
     if (!loaded) return;
-    bundle = loaded;
+    bundle = forMode(loaded);
     overlays.updateBar();
     host.renderActiveScreen();
   });
@@ -178,6 +231,9 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
     navigateScreen: (targetScreen) => host.setScreen(targetScreen),
     reRenderScreen: () => host.renderActiveScreen(),
     showToast: (msg) => host.showToast(msg),
+    dataMode: renderedMode,
+    loggedDays: renderedMode === "mine" ? countLoggedDays(context.astronautId) : 0,
+    onTryDemo: openDataChoice,
   });
 
   return {
