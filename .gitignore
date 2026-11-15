@@ -27,3 +27,4 @@ android/**/*.iml
 # Cloudflare static site build & deploy artifacts
 dist-site/
 .cloudflare/
+.wrangler/
