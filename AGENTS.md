@@ -152,7 +152,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | H5 LSTM autoencoder (optional) | — | feat/hard-lstm | 💤 optional |
 | Figma: risk detail, emergency, tool guides, settings | Design | — | 🛠 in progress |
 | Android Health Connect + BLE GATT + Wi-Fi Direct + iOS HealthKit + CoreBluetooth + MultipeerConnectivity + Bridge UI | Coordinator + `android-native-engineer` + `ios-native-engineer` | main | ✅ done (Android 19 JVM tests + APK built; iOS 16 XCTests + device build succeeded; UI typecheck + `/web` + `dist-site` built) |
-| Landing page (`site/` → `dist-site/`): Gemini handoff finish, 3D body-systems map, plain-language copy | Gemini → Claude Code | claude/landing-page-gemini-handover-daa8b6 | ✅ done (`node tools/build-site.mjs`; checked at 1440 / 1150 / 390 px) |
+| Landing page (`site/` → `dist-site/`): clean redesign with real crew-app screens, 3D body-systems map, plain-language copy | Gemini → Claude Code | claude/landing-page-gemini-handover-daa8b6 | ✅ done (`node tools/build-site.mjs`; checked at 1440 / 390 px) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
@@ -174,6 +174,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-15: Merged `feat/hard-face` (`H1`–`H4`) into `main`, wired optional integration hooks cleanly with safe defaults, and reconciled `/knowledge` (`41` concepts, `83` edges, `103` sources).
 - 2026-11-15: Added native OS health, BLE GATT, and offline P2P crew sync across Android (`Health Connect`, `BluetoothGatt`, `WifiP2pManager` via `BoopsAndroid`) and Apple iOS (`HealthKit` incl. `HKHeartbeatSeriesQuery` RMSSD, `CoreBluetooth`, `MultipeerConnectivity` via `window.webkit.messageHandlers.boopsNative` / `BoopsApple`), plus desktop Chromium Web Bluetooth fallback and `DeviceHubModal` in `ui/` -> `/web`. Kept all external HTTP blocked (`403 Offline Mode` on Android, `boops-app://app` scheme on iOS) and cited all SDKs/specs in `/knowledge` (`41` concepts, `83` edges, `107` sources).
 - 2026-11-15: Landing page uses flat colours only (no gradients), no emoji or arrow glyphs, plain-language copy. The isometric laptop was replaced by a dependency-free canvas 3D body-systems map (`site/systems3d.js`); immune line weights match section 5, heart and bone line weights are illustrative.
+- 2026-11-15: Landing page redesigned (`site/index.html` + `site/home.css`; `legal.html` keeps `styles.css`). It shows real crew-app screens captured from `/web` (`site/assets/app/*.webp`, simulated data) instead of a live demo, and self-hosts Inter (OFL, credited on the Legal page).
 
 ---
 
