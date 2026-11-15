@@ -48,6 +48,7 @@ CLAUDE.md      imports this file for Claude Code
 ```
 Run everything: `python engine/run_all.py`, then open `/web`.
 Hosted web version (PWA): `node tools/build-site.mjs` (needs the Android APK built), then `python3 -m http.server 8020 --directory dist-site` and open `http://localhost:8020/app/`. Plan: `docs/web-version-plan.md`.
+Deploy to Cloudflare (`boops.owlwee.co`, Worker `boops`, config in `wrangler.jsonc`): `node tools/build-site.mjs`, then `npx wrangler login` (once) and `npx wrangler deploy`.
 Camera check: `python3 -m http.server 8000 --directory web`, then open `http://localhost:8000/camera/` (add `?sim=steady` for a Simulated signal with no camera).
 Tests for the hard features: `node --test hard/rppg/test_rppg_core.mjs hard/face/test_face_core.mjs` and `pytest tests/`. Python packages: `pip install -r hard/requirements.txt`.
 WESAD stress model (needs the dataset, see `hard/wesad/README.md`): `python hard/wesad/train.py`.
@@ -159,6 +160,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | Web version PWA at `/app/` (plan steps 1–2: hosting, manifest, service worker, offline/update notices) | Claude Code | claude/app-check-web-plan-d7958e | ✅ done (checked offline with the server stopped: dashboard, Emergency, camera check; update flow checked). Steps 3–6 in `docs/web-version-plan.md` ⏳ todo |
 | Landing page (`site/` → `dist-site/`): clean redesign with real crew-app screens, 3D body-systems map, plain-language copy | Gemini → Claude Code | claude/landing-page-gemini-handover-daa8b6 | ✅ done (`node tools/build-site.mjs`; checked at 1440 / 390 px) |
 | Landing copy matches `docs/submission-answers.md` (107 sources, iOS, ML wording, when to ask for help) | Claude Code | claude/landing-match-submission | ✅ done (`node tools/build-site.mjs`; quick-guide scope not applied, submission answers win) |
+| Cloudflare deploy config (`wrangler.jsonc`: Worker `boops`, static `dist-site/`, custom domain `boops.owlwee.co`) | Claude Code | claude/cloudflare-deploy | ✅ done (`wrangler deploy --dry-run` passes; first real deploy still to run) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
@@ -185,6 +187,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-15: Crew App view has no separate top bar. The mission-day stepper sits on the right of each page title (`.boops-page-tools`, or inside the Log header actions), Sensors & Sync joins the sidebar actions, and the crew switcher stays in the sidebar Profile card. The top bar now only shows in Demo / Debug mode (scrubber + story jumps).
 - 2026-11-15: First launch shows a welcome screen (`ui/src/components/Welcome.ts`) that asks: Try the demo (Simulated crew) or Start with my data. "My data" never shows simulated readings: health screens show an empty state with 14-day baseline progress until the engine can score personal readings; Log, Emergency and tool guides work as usual. Personal logs and context use separate storage keys (`*_mine`) so demo and real entries never mix. The landing page passes the choice as `/app/?data=demo|mine`; the APK cannot receive it, so the app asks on first open. Switch any time from **Data** in the sidebar. Mode helpers live in `ui/src/services/dataMode.ts`.
 - 2026-11-15: When `docs/quick-guide.md` (older stress-and-sleep plan) and `docs/submission-answers.md` disagree, the submission answers win, because they match the built app. The landing page follows them.
+- 2026-11-15: The landing site deploys as its own static-assets Worker `boops` on the custom domain `boops.owlwee.co`, separate from the `owlwee-co` portfolio Worker. No Worker script: everything in `dist-site/` is served as files.
 
 ---
 

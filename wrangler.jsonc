@@ -1,0 +1,15 @@
+// Cloudflare Worker for the BOOPS landing site + web app (/app/).
+// Static files only, no Worker script. Build first, then deploy:
+//   node tools/build-site.mjs   (needs the Android APK built)
+//   npx wrangler deploy
+// boops.owlwee.co must not be attached to any other Worker, or the deploy fails.
+{
+  "name": "boops",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist-site"
+  },
+  "routes": [
+    { "pattern": "boops.owlwee.co", "custom_domain": true }
+  ]
+}
