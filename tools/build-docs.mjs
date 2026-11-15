@@ -62,4 +62,37 @@ for (const g of [...new Set(sources.map((x) => x.group))]) {
   s += `\n## ${g}\n\n` + sources.filter((x) => x.group === g).map((x) => `- \`${x.id}\` — [${x.title}](${x.url})`).join("\n") + "\n";
 }
 writeFileSync(join(root, "sources.md"), s);
-console.log(`OK: ${nodes.length} nodes, ${edges.length} edges, ${sources.length} sources`);
+// ---- knowledge/web/index.html: the interactive map reads the same JSON (no hand copy to drift)
+const missingPos = nodes.filter((n) => !n.web || !Number.isFinite(n.web.x) || !Number.isFinite(n.web.y));
+if (missingPos.length) {
+  console.error(`nodes without a map position (add "web": {"x", "y"} in nodes.json): ${missingPos.map((n) => n.id).join(", ")}`);
+  process.exit(1);
+}
+const js = (v) => JSON.stringify(v);
+const webSources = sources.map((x) => ({ id: x.id, g: x.group, t: x.title, u: x.url }));
+const webNodes = nodes.map((n) => ({
+  id: n.id, cat: n.category, label: n.label, layer: n.layer, x: n.web.x, y: n.web.y,
+  ...(n.signal_verdict ? { verdict: n.signal_verdict } : {}),
+  src: n.sources, varies: n.varies_day_to_day ?? "", desc: n.description,
+}));
+const webEdges = edges.map((e) => ({
+  s: e.from, t: e.to, type: e.type, label: e.label, ev: e.evidence ?? "", stars: e.stars ?? 0,
+  sec: e.notes_section ?? "", src: e.sources, note: e.note ?? "",
+  ...(e.web_bend !== undefined ? { bend: e.web_bend } : {}),
+}));
+const block =
+  "/* BEGIN GENERATED DATA (tools/build-docs.mjs from knowledge/*.json; do not edit by hand) */\n" +
+  `const SOURCES = [\n${webSources.map((x) => "  " + js(x)).join(",\n")}\n];\n` +
+  `const ALL_NODES = [\n${webNodes.map((x) => "  " + js(x)).join(",\n")}\n];\n` +
+  `const ALL_EDGES = [\n${webEdges.map((x) => "  " + js(x)).join(",\n")}\n];\n` +
+  "/* END GENERATED DATA */";
+const webPath = join(root, "web", "index.html");
+const html = readFileSync(webPath, "utf8");
+const re = /\/\* BEGIN GENERATED DATA[\s\S]*?\/\* END GENERATED DATA \*\//;
+if (!re.test(html)) {
+  console.error("knowledge/web/index.html: GENERATED DATA markers not found");
+  process.exit(1);
+}
+writeFileSync(webPath, html.replace(re, () => block));
+
+console.log(`OK: ${nodes.length} nodes, ${edges.length} edges, ${sources.length} sources (docs + web map)`);

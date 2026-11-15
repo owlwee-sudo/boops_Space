@@ -33,6 +33,11 @@ import {
   loadChecklistTimestamps,
   loadManualLogs,
   loadUserSettings,
+  doseUnit,
+  fmtDose,
+  fmtMass,
+  fmtTemp,
+  massUnit,
   saveUserSettings,
   toggleChecklistTimestamp,
   updateManualLog,
@@ -601,7 +606,7 @@ function hydrateAlertBanner(
     bg = "#fee2e2";
     border = "1.5px solid #ef4444";
     iconPath = "./assets/figma/imgIconAlertDanger.svg";
-    title = `Solar Particle Event (SPE) · Dose ${record.radiation_msv.toFixed(2)} mSv`;
+    title = `Solar Particle Event (SPE) · Dose ${fmtDose(record.radiation_msv)} ${doseUnit()}`;
     body = "Move to shielded storm shelter now · NOAA SWPC GOES / OSDR RadLab model";
     actionText = "Shelter protocol";
     onActivate = () => state.openEmergencyProtocol("solar_radiation_storm");
@@ -805,7 +810,7 @@ function hydrateHealthHome(
       const st = engine.stress_score >= 70 ? "Act" : engine.stress_score >= 45 ? "Watch" : "Normal";
       hydrateMetricCard(
         card,
-        String(Math.round(record.hrv_rmssd_ms)),
+        fmtHrv(record.hrv_rmssd_ms),
         "ms",
         `HRV RMSSD · Stress ${engine.stress_score}/100`,
         st,
@@ -1243,9 +1248,9 @@ function getDetailMetricSpec(
       const baseMean = (engine.baseline.hrv_rmssd_ms?.mean ?? 50).toFixed(0);
       return {
         title: "HRV (RMSSD)",
-        bigText: String(Math.round(record.hrv_rmssd_ms)),
-        subText: `ms · ${formatRiskLevel(lvl)}`,
-        todayStat: `${Math.round(record.hrv_rmssd_ms)} ms`,
+        bigText: fmtHrv(record.hrv_rmssd_ms),
+        subText: hasHrv(record.hrv_rmssd_ms) ? `ms · ${formatRiskLevel(lvl)}` : "Signal unavailable",
+        todayStat: hasHrv(record.hrv_rmssd_ms) ? `${fmtHrv(record.hrv_rmssd_ms)} ms` : "Signal unavailable",
         baselineStat: `${baseMean} ms (Days 1–14)`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
@@ -1390,10 +1395,10 @@ function getDetailMetricSpec(
       const lvl = record.radiation_msv >= 1.5 ? "act" : record.radiation_msv >= 0.8 ? "watch" : "normal";
       return {
         title: "Radiation dose",
-        bigText: record.radiation_msv.toFixed(2),
-        subText: `mSv/day · ${formatRiskLevel(lvl)}`,
-        todayStat: `${record.radiation_msv.toFixed(2)} mSv/day`,
-        baselineStat: `${(engine.baseline.radiation_msv?.mean ?? 0.5).toFixed(2)} mSv/day`,
+        bigText: fmtDose(record.radiation_msv),
+        subText: `${doseUnit()}/day · ${formatRiskLevel(lvl)}`,
+        todayStat: `${fmtDose(record.radiation_msv)} ${doseUnit()}/day`,
+        baselineStat: `${fmtDose(engine.baseline.radiation_msv?.mean ?? 0.5)} ${doseUnit()}/day`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => s.record?.radiation_msv ?? 0.5),
@@ -1404,10 +1409,10 @@ function getDetailMetricSpec(
       let running = 0;
       return {
         title: "Mission & career dose",
-        bigText: cumDose.toFixed(1),
-        subText: `mSv mission · ${formatRiskLevel(lvl)}`,
-        todayStat: `${cumDose.toFixed(1)} / 600 mSv`,
-        baselineStat: "NASA 600 mSv career cap",
+        bigText: fmtDose(cumDose, 1),
+        subText: `${doseUnit()} mission · ${formatRiskLevel(lvl)}`,
+        todayStat: `${fmtDose(cumDose, 1)} / ${fmtDose(600, 0)} ${doseUnit()}`,
+        baselineStat: `NASA ${fmtDose(600, 0)} ${doseUnit()} career cap`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => {
@@ -1422,8 +1427,8 @@ function getDetailMetricSpec(
         title: "Space weather",
         bigText: record.radiation_msv >= 1.5 ? "SPE" : record.radiation_msv >= 0.8 ? "Elevated" : "Quiet",
         subText: `${formatRiskLevel(lvl)} · GOES/RadLab`,
-        todayStat: `${record.radiation_msv.toFixed(2)} mSv/day`,
-        baselineStat: "< 0.80 mSv/day quiet",
+        todayStat: `${fmtDose(record.radiation_msv)} ${doseUnit()}/day`,
+        baselineStat: `< ${fmtDose(0.8)} ${doseUnit()}/day quiet`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => s.record?.radiation_msv ?? 0.5),
@@ -1543,9 +1548,9 @@ function getDetailMetricSpec(
       const kg = calcBodyMass(astro, state.missionDay);
       return {
         title: "Body mass",
-        bigText: kg.toFixed(1),
-        subText: "kg · Normal",
-        todayStat: `${kg.toFixed(1)} kg`,
+        bigText: fmtMass(kg),
+        subText: `${massUnit()} · Normal`,
+        todayStat: `${fmtMass(kg)} ${massUnit()}`,
         baselineStat: "Maintain ±2% pre-flight",
         statusLabel: "Normal",
         statusLevel: "normal",
@@ -1636,8 +1641,8 @@ function hydrateHealthSubAndDetailScreens(
       hydrateScoreCard(
         scoreCard,
         "Mission dose",
-        cumDose.toFixed(1),
-        `mSv cumulative (${record.radiation_msv.toFixed(2)} mSv today)`,
+        fmtDose(cumDose, 1),
+        `${doseUnit()} cumulative (${fmtDose(record.radiation_msv)} ${doseUnit()} today)`,
         series.map((s) => s.record?.radiation_msv ?? 0.5),
         srcLabel,
       );
@@ -1732,7 +1737,7 @@ function hydrateHealthSubAndDetailScreens(
       const lvl = engine.stress_score >= 70 ? "Act" : engine.stress_score >= 45 ? "Watch" : "Normal";
       hydrateMetricCard(
         card,
-        String(Math.round(record.hrv_rmssd_ms)),
+        fmtHrv(record.hrv_rmssd_ms),
         "ms",
         "HRV (RMSSD)",
         lvl,
@@ -1793,8 +1798,8 @@ function hydrateHealthSubAndDetailScreens(
       const rLvl = record.radiation_msv >= 1.5 ? "Act" : record.radiation_msv >= 0.8 ? "Watch" : "Normal";
       hydrateMetricCard(
         card,
-        record.radiation_msv.toFixed(2),
-        "mSv/day",
+        fmtDose(record.radiation_msv),
+        `${doseUnit()}/day`,
         "Daily dose (7-day avg)",
         rLvl,
         dotForLevel(rLvl.toLowerCase()),
@@ -1894,8 +1899,8 @@ function hydrateHealthSubAndDetailScreens(
       const kg = calcBodyMass(state.astronautId, state.missionDay);
       hydrateMetricCard(
         card,
-        kg.toFixed(1),
-        "kg",
+        fmtMass(kg),
+        massUnit(),
         "Body mass",
         "Normal",
         "./assets/figma/imgDotNormal.svg",
@@ -1922,7 +1927,7 @@ function hydrateHealthSubAndDetailScreens(
     const title = (card.querySelector("p")?.textContent ?? "").toLowerCase();
     if (title.includes("career dose")) {
       const pct = (cumDose / 600) * 100;
-      hydrateProgressCard(card, cumDose.toFixed(1), "/ 600 mSv", pct, `${pct.toFixed(1)}% used`);
+      hydrateProgressCard(card, fmtDose(cumDose, 1), `/ ${fmtDose(600, 0)} ${doseUnit()}`, pct, `${pct.toFixed(1)}% used`);
     } else if (title.includes("shielded")) {
       const hrs = record.radiation_msv >= 1.5 ? 6.5 : 0.5;
       hydrateProgressCard(card, hrs.toFixed(1), "/ 8 h", (hrs / 8) * 100, record.radiation_msv >= 1.5 ? "SPE shelter active" : "Routine check");
@@ -2446,12 +2451,23 @@ function hydrateLogScreen(
   const fieldToGuide: Array<[RegExp, string]> = [
     [/blood pressure/i, "blood_pressure_cuff"],
     [/heart rate|hrv|wearable|ecg/i, "wearable_hrv_fit"],
-    [/temperature/i, "thermometer"],
+    [/body temp|oral temp|^temperature/i, "thermometer"],
     [/saliva|cortisol|symptom/i, "saliva_sample_kit"],
     [/radiation|dosimeter/i, "personal_dosimeter"],
     [/oxygen|spo2|pulse ox/i, "pulse_oximeter"],
-    [/exercise|ared|eva|resistance/i, "exercise_device_log"],
+    [/exercise|ared|eva|resistance|duration|treadmill|cycle/i, "exercise_device_log"],
   ];
+  // When a field label names no instrument, use the guide for this screen's own
+  // device (a cabin temperature is not an oral thermometer reading). null = no guide.
+  const screenDefaultGuide: Partial<Record<string, string | null>> = {
+    LogEnvironmentGravity: "exercise_device_log",
+    LogEnvironmentRadiation: "personal_dosimeter",
+    LogEnvironment: "personal_dosimeter",
+    LogSleep: "wearable_hrv_fit",
+    LogMindfulness: "wearable_hrv_fit",
+    LogNutrition: null,
+  };
+  const isCabinField = (label: string) => /cabin|co₂|co2|humidity|noise/i.test(label);
 
   // Replace hardcoded Figma "Day 43" in Form header with active missionDay + crew
   const profile = getCrewProfile(state.astronautId);
@@ -2468,9 +2484,16 @@ function hydrateLogScreen(
   // Attach tool-guide drawer hooks to every "ⓘ How to measure" text element
   artboard.querySelectorAll('[data-name="Input field"]').forEach((fieldEl) => {
     const labelText = fieldEl.querySelector("p")?.textContent ?? "";
-    const matched = fieldToGuide.find(([re]) => re.test(labelText))?.[1] ?? "wearable_hrv_fit";
+    const fallback = screenId in screenDefaultGuide ? screenDefaultGuide[screenId] : "wearable_hrv_fit";
+    const matched = isCabinField(labelText)
+      ? null
+      : (fieldToGuide.find(([re]) => re.test(labelText))?.[1] ?? fallback ?? null);
     fieldEl.querySelectorAll("p, a").forEach((el) => {
-      if (el.textContent?.includes("How to measure")) {
+      if (el.textContent?.includes("How to measure") && !matched) {
+        (el as HTMLElement).style.display = "none"; // no instrument guide for this field
+        return;
+      }
+      if (el.textContent?.includes("How to measure") && matched) {
         (el as HTMLElement).style.cursor = "pointer";
         (el as HTMLElement).style.textDecoration = "underline";
         el.addEventListener("click", (ev) => {
@@ -2595,10 +2618,13 @@ function hydrateLogScreen(
       }
     });
 
-    const ratingMatch = /([1-5])\s*\/\s*5/.exec(entry.fields["Rating"] ?? "");
-    if (ratingMatch) {
-      const targetNum = ratingMatch[1];
-      artboard.querySelectorAll<HTMLElement>('[data-name="Options"] > div').forEach((opt) => {
+    const scaleValues = readRatingScales(artboard).map((sc) => {
+      const key = screenId === "LogMindfulness" && /stress/i.test(sc.label) ? "Stress right now" : "Rating";
+      return { sc, num: /([1-5])\s*\/\s*5/.exec(entry.fields[key] ?? "")?.[1] ?? null };
+    });
+    for (const { sc, num: targetNum } of scaleValues) {
+      if (!targetNum) continue;
+      sc.group.querySelectorAll<HTMLElement>(':scope > div').forEach((opt) => {
         const isMatch = (opt.textContent ?? "").trim() === targetNum;
         opt.className = isMatch
           ? "bg-[var(--color-bg-strong,#111827)] content-stretch flex items-center justify-center overflow-clip relative rounded-[var(--radius-full,999px)] shrink-0 size-[40px]"
@@ -2715,11 +2741,21 @@ function hydrateLogScreen(
           fields["Tags"] = activeChips.join(", ");
         }
 
-        const activeRating = Array.from(artboard.querySelectorAll<HTMLElement>('[data-name="Options"] > div')).find(
-          (o) => o.className.includes("var(--color-bg-strong"),
-        );
-        if (activeRating) {
-          fields["Rating"] = `${(activeRating.textContent ?? "").trim()}/5`;
+        // Each 1-5 scale is read on its own. LogMindfulness has two (stress, mood):
+        // "Rating" stays the mood (what the engine reads), stress gets its own field.
+        const scales = readRatingScales(artboard);
+        if (screenId === "LogMindfulness") {
+          const stress = scales.find((sc) => /stress/i.test(sc.label));
+          const mood = scales.find((sc) => /mood/i.test(sc.label));
+          if (stress?.value) fields["Stress right now"] = `${stress.value}/5`;
+          if (mood?.value) fields["Rating"] = `${mood.value}/5`;
+          if (!stress?.value && !mood?.value && Object.keys(fields).length === 0) {
+            state.showToast("Pick your stress or mood (1–5) before saving");
+            return;
+          }
+        } else {
+          const first = scales.find((sc) => sc.value);
+          if (first) fields["Rating"] = `${first.value}/5`;
         }
 
         if (Object.keys(fields).length === 0) {
@@ -2929,7 +2965,7 @@ function hydrateSettingsScreen(
       const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
       if (subP && personal) subP.textContent = "Not synced yet · tap for the guide";
       if (subP && record) {
-        subP.textContent = `${record.radiation_msv.toFixed(2)} mSv today · synced Day ${state.missionDay}`;
+        subP.textContent = `${fmtDose(record.radiation_msv)} ${doseUnit()} today · synced Day ${state.missionDay}`;
       }
       const cloneRow = row.cloneNode(true) as HTMLElement;
       cloneRow.style.cursor = "pointer";
@@ -3026,6 +3062,7 @@ function hydrateSettingsScreen(
         const ps = cloneRow.querySelectorAll("p");
         if (ps[ps.length - 1]) ps[ps.length - 1].textContent = fmt(nextUnits);
         state.showToast(`Display units: ${fmt(nextUnits)}`);
+        state.reRenderScreen();
       });
       row.replaceWith(cloneRow);
     } else if (title === "Language") {
@@ -3294,9 +3331,19 @@ function hydrateEmergencyScreens(
   }
 
   // Protocol detail view (SolarRadiationStorm or Fainting acting as dynamic host for all 6 protocols)
+  // The solar-storm screen always shows the SPE protocol. The Fainting screen hosts
+  // the other 5: take "&id=" from the URL, then the last opened one, then fainting.
+  const known = (id: string | null | undefined): id is string =>
+    Boolean(id) && id !== "solar_radiation_storm" && bundle.emergencyProtocols.some((p) => p.id === id);
+  const hashId = new URLSearchParams(window.location.hash.replace(/^#/, "")).get("id");
   const protoId =
-    state.activeEmergencyId ||
-    (screenId === "EmergencySolarRadiationStorm" ? "solar_radiation_storm" : "fainting_dizziness");
+    screenId === "EmergencySolarRadiationStorm"
+      ? "solar_radiation_storm"
+      : known(hashId)
+        ? hashId
+        : known(state.activeEmergencyId)
+          ? state.activeEmergencyId
+          : "fainting_dizziness";
   const protocol: EmergencyProtocol | undefined =
     bundle.emergencyProtocols.find((p) => p.id === protoId) ?? bundle.emergencyProtocols[0];
   if (!protocol) return;
@@ -3417,8 +3464,8 @@ function hydrateEmergencyScreens(
           `RHR: ${patientRecord.rhr_bpm.toFixed(0)} bpm`,
           `BP: ${patientRecord.sbp_mmhg.toFixed(0)}/${patientRecord.dbp_mmhg.toFixed(0)} mmHg`,
           `SpO₂: ${patientRecord.spo2_pct.toFixed(1)}%`,
-          `Temp: ${patientRecord.temp_c.toFixed(1)} °C`,
-          `Today Dose: ${patientRecord.radiation_msv.toFixed(2)} mSv (Cum: ${cumDose.toFixed(1)} / 600 mSv)`,
+          `Temp: ${fmtTemp(patientRecord.temp_c)}`,
+          `Today Dose: ${fmtDose(patientRecord.radiation_msv)} ${doseUnit()} (Cum: ${fmtDose(cumDose, 1)} / ${fmtDose(600, 0)} ${doseUnit()})`,
         ]
       : [debugMode ? "Simulated patient vitals loaded offline." : "Patient telemetry loaded offline."];
 
@@ -3555,7 +3602,7 @@ function hydrateLinkRowsAndDemoCleanup(
         } else if (titleText.includes("Gravity")) {
           subP.textContent = `ARED ${Math.round(record.resistance_min)} min · Day ${record.mission_day}`;
         } else if (titleText.includes("Radiation")) {
-          subP.textContent = `Dosimeter: ${record.radiation_msv.toFixed(2)} mSv · Day ${record.mission_day}`;
+          subP.textContent = `Dosimeter: ${fmtDose(record.radiation_msv)} ${doseUnit()} · Day ${record.mission_day}`;
         } else {
           subP.textContent = sText.replace(/Day 42/g, `Day ${record.mission_day}`);
         }
@@ -3645,6 +3692,25 @@ export function applyBoopsBindings(
   }
 
   hydrateLinkRowsAndDemoCleanup(artboard, screenId, record, state);
+}
+
+/** Every 1-5 rating scale on a Log screen with its label and selected value. */
+function readRatingScales(artboard: HTMLElement): Array<{ label: string; value: string | null; group: HTMLElement }> {
+  return Array.from(artboard.querySelectorAll<HTMLElement>('[data-name="Options"]')).map((group) => {
+    const scale = group.closest('[data-name="Rating scale"]');
+    const label = (scale?.querySelector('[data-name="Header"]')?.textContent ?? "").trim();
+    const active = Array.from(group.children).find((o) => (o as HTMLElement).className.includes("var(--color-bg-strong"));
+    return { label, value: active ? (active.textContent ?? "").trim() || null : null, group };
+  });
+}
+
+/** HRV can be missing (null) on a bad-signal day: show "—", never "0 ms". */
+function hasHrv(v: unknown): v is number {
+  return typeof v === "number" && Number.isFinite(v);
+}
+
+function fmtHrv(v: unknown): string {
+  return hasHrv(v) ? String(Math.round(v)) : "—";
 }
 
 const PERSONAL_TITLES: Partial<Record<string, string>> = {

@@ -483,7 +483,27 @@ export function loadManualLogs(): ManualLogEntry[] {
   }
 
   entries.sort((a, b) => String(b.saved_at || "").localeCompare(String(a.saved_at || "")));
-  return entries.slice(0, 80);
+  return capLogs(entries);
+}
+
+const MAX_CREW_LOGS = 120;  // entries typed by the crew member
+const MAX_DEVICE_LOGS = 60; // automatic BLE / wearable sync packets
+
+function isDeviceLog(entry: ManualLogEntry): boolean {
+  return entry.screen === "BLE Sensor" || entry.screen === "Wearable Sync";
+}
+
+/**
+ * Newest-first list with separate caps, so a burst of Bluetooth packets can
+ * never push a crew member's own sleep or vitals entry out of storage.
+ */
+function capLogs(entries: ManualLogEntry[]): ManualLogEntry[] {
+  let crew = 0;
+  let device = 0;
+  return entries.filter((e) => {
+    if (isDeviceLog(e)) return ++device <= MAX_DEVICE_LOGS;
+    return ++crew <= MAX_CREW_LOGS;
+  });
 }
 
 /** Appends a manual log entry to localStorage and syncs opportunistically to local SQLite. */
@@ -493,7 +513,7 @@ export function appendManualLog(entry: ManualLogEntry): ManualLogEntry[] {
     id: entry.id || `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
   };
   const current = readStoredManualLogs();
-  const next = [withId, ...current].slice(0, 60);
+  const next = capLogs([withId, ...current]);
   safeStorageSet(modeKey("manual_logs"), JSON.stringify(next));
   postLocalApi("./api/log", {
     astronaut_id: withId.astronaut_id,
@@ -520,7 +540,7 @@ export function updateManualLog(entry: ManualLogEntry): ManualLogEntry[] {
   const next =
     idx >= 0
       ? current.map((item, i) => (i === idx ? updated : item))
-      : [updated, ...current].slice(0, 60);
+      : capLogs([updated, ...current]);
   safeStorageSet(modeKey("manual_logs"), JSON.stringify(next));
   postLocalApi("./api/log", {
     astronaut_id: updated.astronaut_id,
@@ -533,6 +553,34 @@ export function updateManualLog(entry: ManualLogEntry): ManualLogEntry[] {
 }
 
 /** Loads persisted notification, baseline calibration, and display preferences. */
+/** Display-only unit helpers. Stored values and engine thresholds stay metric. */
+export function isImperial(): boolean {
+  return loadUserSettings().units === "imperial";
+}
+
+/** Radiation dose value (no unit). 1 mSv = 0.1 rem, so rem gets one more decimal. */
+export function fmtDose(msv: number, digits = 2): string {
+  return isImperial() ? (msv / 10).toFixed(digits + 1) : msv.toFixed(digits);
+}
+
+export function doseUnit(): "mSv" | "rem" {
+  return isImperial() ? "rem" : "mSv";
+}
+
+/** Body temperature with unit, e.g. "36.8 °C" or "98.2 °F". */
+export function fmtTemp(celsius: number, digits = 1): string {
+  return isImperial() ? `${((celsius * 9) / 5 + 32).toFixed(digits)} °F` : `${celsius.toFixed(digits)} °C`;
+}
+
+/** Body mass value (no unit). */
+export function fmtMass(kg: number, digits = 1): string {
+  return isImperial() ? (kg * 2.20462).toFixed(digits) : kg.toFixed(digits);
+}
+
+export function massUnit(): "kg" | "lb" {
+  return isImperial() ? "lb" : "kg";
+}
+
 export function loadUserSettings(): UserSettings {
   const defaults: UserSettings = {
     watch_alerts: true,

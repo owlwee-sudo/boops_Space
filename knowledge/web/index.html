@@ -4,15 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Astronaut Health Relationship Web</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: a left-to-right causal map (stressors → hubs → body → illness) with a monitoring column on the right; a side panel explains whatever you click. */
 :root{
   --bg:#eef1f5; --panel:#ffffff; --ink:#152033; --muted:#5a6678; --line:#d5dbe4; --accent:#2f5bd3;
-  --font-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-body:system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:ui-monospace, "SFMono-Regular", Menlo, monospace;
   --c-stressor:#d4532b; --c-hub:#7448d4; --c-body:#b07c0c; --c-outcome:#c2366b; --c-signal:#0f8584; --c-counter:#2c8a45; --c-device:#3d6fb8;
   --e-causal:#6d7889; --e-confound:#cf3434;
   --v-good:#2c8a45; --v-caution:#c98a00; --v-weak:#cf3434; --v-early:#3d6fb8;
@@ -148,6 +145,7 @@ textarea.copybox{width:100%;height:120px;font:12px var(--font-mono);margin-top:8
     <button class="tog" data-layer="protects" aria-pressed="true" style="color:var(--c-counter)"><span class="sw"></span><span style="color:var(--ink)">Protects</span></button>
     <button class="tog" data-layer="measures" aria-pressed="true" style="color:var(--c-signal)"><span class="sw"></span><span style="color:var(--ink)">Measures</span></button>
     <button class="tog" data-layer="confounds" aria-pressed="true" style="color:var(--e-confound)"><span class="sw"></span><span style="color:var(--ink)">Confounds</span></button>
+    <a class="tog" id="layerToggle" href="?layer=all"><span style="color:var(--ink)">Show nervous system</span></a>
     <button class="tog" id="strong" aria-pressed="false" style="color:var(--c-body)"><span style="color:var(--ink)">Strongest evidence only ⭐⭐⭐</span></button>
   </div>
 </header>
@@ -169,214 +167,257 @@ textarea.copybox{width:100%;height:120px;font:12px var(--font-mono);margin-top:8
 
 <script>
 /* ---------------- DATA ---------------- */
+/* BEGIN GENERATED DATA (tools/build-docs.mjs from knowledge/*.json; do not edit by hand) */
 const SOURCES = [
-  // Read first
-  {id:'hazards',g:'Read first',t:'NASA – 5 Hazards of Human Spaceflight',u:'https://www.nasa.gov/hrp/hazards'},
-  {id:'immrisk',g:'Read first',t:'NASA Immune Risk page (incl. Immune Risk DAG)',u:'https://www.nasa.gov/directorates/esdmd/hhp/immune-risk/'},
-  {id:'crucian18',g:'Read first',t:'Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)',u:'https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full'},
-  // Stress → immune
-  {id:'mehta17',g:'Stress → immune',t:'Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581'},
-  {id:'salivary',g:'Stress → immune',t:'Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226'},
-  {id:'evrep',g:'Stress → immune',t:'NASA Evidence Report: Risk of Crew Adverse Health Event Due to Altered Immune Response (Crucian & Sams)',u:'https://ntrs.nasa.gov/citations/20140002769'},
-  // Isolation
-  {id:'klos25',g:'Isolation',t:'Klos et al. 2025 – Effects of ICE environments on the immune system: systematic review',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11975566/'},
-  {id:'ponomarev21',g:'Isolation',t:'Ponomarev et al. 2021 – Immunological Aspects of Isolation and Confinement',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC8264770'},
-  {id:'mars500',g:'Isolation',t:'Mars-500 CoSI study (isolation → chronic cortisol)',u:'https://iafastro.directory/iac/paper/id/20164/abstract-pdf/IAC-13,A5,2,8,x20164.brief.pdf'},
-  // Radiation + microgravity
-  {id:'wadhwa24',g:'Radiation + microgravity',t:'Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)',u:'https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w'},
-  {id:'continuum',g:'Radiation + microgravity',t:'NASA poster – Immune dysregulation: spaceflight vs ground analogs ("continuum" figure)',u:'https://ntrs.nasa.gov/api/citations/20200001675/downloads/20200001675.pdf'},
-  {id:'proton',g:'Radiation + microgravity',t:'Proton radiation + simulated microgravity on immune cells',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3743739/'},
-  {id:'hls_spe',g:'Radiation + microgravity',t:'Hindlimb suspension + SPE-like radiation impairs bacterial clearance',u:'https://www.pubmed.gov/24454913/'},
-  {id:'radiso',g:'Radiation + microgravity',t:'Space radiation + social isolation in rats (Life 2025)',u:'https://doaj.org/article/3ced14d5fd544cd29d2035dc98753f8c'},
-  {id:'zhang17',g:'Radiation + microgravity',t:'Zhang et al. 2017 – Microgravity + radiation on osteoclast fusion',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5713410'},
-  {id:'willey',g:'Radiation + microgravity',t:'Willey et al. – Ionizing radiation and bone loss',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC3401480'},
-  // Microgravity → immune cells
-  {id:'chang',g:'Microgravity → immune cells',t:'Chang et al. – Spaceflight impairs T-cell tolerance; microgravity directly disrupts T-cell activation',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6137544'},
-  // Bone / muscle
-  {id:'receptors',g:'Bone / muscle / osteoimmunology',t:'Receptors implicated in microgravity-induced bone loss (MDPI)',u:'https://mdpi.com/2813-2564/3/2/14'},
-  {id:'osteoclast',g:'Bone / muscle / osteoimmunology',t:'Osteoclast-mediated bone disease & microgravity (Encyclopedia)',u:'https://encyclopedia.pub/entry/2143'},
-  {id:'il6',g:'Bone / muscle / osteoimmunology',t:'IL-6 and spaceflight (npj Microgravity)',u:'https://www.nature.com/articles/s41526-018-0057-9'},
-  {id:'twinsland',g:'Bone / muscle / osteoimmunology',t:'Twins Study landing re-analysis (muscle regeneration vs inflammation)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC9444344'},
-  {id:'inact',g:'Bone / muscle / osteoimmunology',t:'Inactivity amplifies muscle’s catabolic response to cortisol (NTRS)',u:'https://ntrs.nasa.gov/citations/20040141797'},
-  {id:'bedrest28',g:'Bone / muscle / osteoimmunology',t:'28-day bed rest with hypercortisolemia → insulin resistance',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC2856785'},
-  {id:'muscgen',g:'Bone / muscle / osteoimmunology',t:'Muscle loss genetics in simulated microgravity (The Scientist)',u:'https://www.the-scientist.com/zero-gravity-zero-gain-the-genetics-behind-muscle-loss-in-space-71612'},
-  // Cardiovascular
-  {id:'cvmeta',g:'Cardiovascular',t:'Effects of weightlessness on the cardiovascular system: meta-analysis (Frontiers 2024)',u:'https://www.frontiersin.org/articles/10.3389/fphys.2024.1438089/full'},
-  {id:'norsk15',g:'Cardiovascular',t:'Norsk et al. 2015 – Fluid shifts & BP reduction in long spaceflight',u:'https://www.physoc.org/?p=70744'},
-  {id:'perhonen01',g:'Cardiovascular',t:'Perhonen et al. 2001 – Cardiac atrophy after bed rest and spaceflight',u:'https://pubmed.ncbi.nlm.nih.gov/11457776/'},
-  {id:'jacc23',g:'Cardiovascular',t:'Cardiac effects of long-duration spaceflight (JACC 2023)',u:'https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight'},
-  {id:'delp16',g:'Cardiovascular',t:'Delp et al. 2016 – Apollo astronauts’ CVD mortality & deep-space radiation',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4964660/'},
-  {id:'arterial20',g:'Cardiovascular',t:'Arterial structure & function during and after long spaceflight (2020)',u:'https://pesquisa.bvsalud.org/portal/resource/e/mdl-32525433'},
-  {id:'arteries25',g:'Cardiovascular',t:'Arteries normal 5 years after spaceflight (APS 2025)',u:'https://www.physiology.org/detail/news/2025/07/24/good-news-for-astronauts--arteries-remain-normal-years-after-long-duration-spaceflight'},
-  {id:'vascular',g:'Cardiovascular',t:'CSA Vascular Series (stiffness + insulin resistance)',u:'https://revibiomedica.sld.cu/index.php/ibi/article/download/250/386'},
-  // Stress signals
-  {id:'mentalhrv',g:'Stress signals: HRV, sleep, sweat',t:'Mental stress & autonomic cardiac modulation in weightlessness',u:'https://bvbvf1.bib-bvb.de/vufind/PrimoRecord/cdi_proquest_miscellaneous_734199460'},
-  {id:'autonomic',g:'Stress signals: HRV, sleep, sweat',t:'Autonomic function in spaceflight review',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4465859'},
-  {id:'barger14',g:'Stress signals: HRV, sleep, sweat',t:'Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436'},
-  {id:'sweat',g:'Stress signals: HRV, sleep, sweat',t:'Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103'},
-  // Symptoms
-  {id:'crucian16',g:'Symptoms',t:'Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC5098747'},
-  {id:'hsv1',g:'Symptoms',t:'HSV-1 dermatitis during long-duration spaceflight',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC9028032'},
-  {id:'shingles',g:'Symptoms',t:'Shingles in an ISS astronaut',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10992860/'},
-  // Wearables
-  {id:'wang25',g:'Wearables',t:'Wang et al. 2025 – Flexible wearables for astronaut health: status & challenges',u:'https://doi.org/10.1016/j.wees.2024.12.007'},
-  {id:'astroskin',g:'Wearables',t:'CSA Bio-Monitor / Astroskin',u:'https://www.asc-csa.gc.ca/eng/sciences/astroskin.asp'},
-  {id:'trialx',g:'Wearables',t:'Wearables used in space missions (TrialX)',u:'https://trialx.com/space-health-research-wearable-devices/'},
-  {id:'archer',g:'Wearables',t:'Artemis II ARCHeR wristbands',u:'https://www.newsbytesapp.com/news/science/nasa-s-artemis-ii-astronauts-to-wear-special-wristband-monitors/story'},
-  // Camera
-  {id:'nowara',g:'Camera / rPPG / NIR',t:'Nowara et al. – Near-infrared imaging PPG during driving (MERL)',u:'https://shadow.merl.com/publications/docs/TR2020-161.pdf'},
-  {id:'rgbnir',g:'Camera / rPPG / NIR',t:'RGB-NIR dual-modality heart-rate estimation (Sensors 2023)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC10346879'},
-  {id:'repss',g:'Camera / rPPG / NIR',t:'RePSS RGB+NIR fusion challenge',u:'https://ceur-ws.org/Vol-4095/paper1.pdf'},
-  {id:'fullbody',g:'Camera / rPPG / NIR',t:'Full-body rPPG & pulse transit time (arXiv)',u:'https://ar5iv.labs.arxiv.org/html/2303.09638'},
-  {id:'mayo',g:'Camera / rPPG / NIR',t:'Mayo Clinic hands-free camera in space',u:'https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs'},
-  {id:'intelomed',g:'Camera / rPPG / NIR',t:'Intelomed NASA video-based vital signs project',u:'https://us.inspiralia.com/our-work-list/intelomed-inc/'},
-  // Face
-  {id:'barrett19',g:'Facial expression & stress',t:'Barrett et al. 2019 – Emotional Expressions Reconsidered',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC6640856'},
-  {id:'microexp',g:'Facial expression & stress',t:'Micro-expressions training tool fails (phys.org)',u:'https://phys.org/news/2019-09-flaws-tool.pdf'},
-  {id:'jyu',g:'Facial expression & stress',t:'Stress from rPPG + facial features in online meetings (JYU)',u:'https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download'},
-  {id:'facebio',g:'Facial expression & stress',t:'Facial videos + biosignals for stress estimation (arXiv 2026)',u:'https://arxiv.org/html/2601.04376v2'},
-  {id:'euai',g:'Facial expression & stress',t:'EU AI Act emotion-recognition prohibition explained (FPF)',u:'https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/'},
-  // Early infection
-  {id:'mishra20',g:'Early infection detection',t:'Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data',u:'https://bohrium.dp.tech/paper/arxiv/565ddbdf6dd250a4a1a24832b221d0cbf76f9e38e192400ab71d148581f79a7d'},
-  {id:'stanford',g:'Early infection detection',t:'Stanford Medicine – Smartwatch can detect early signs of illness',u:'https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html'},
-  {id:'laad',g:'Early infection detection',t:'LAAD – deep learning on resting HR for early infection (medRxiv)',u:'https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf'},
-  // Big picture
-  {id:'twins19',g:'Big picture',t:'NASA Twins Study (Science 2019)',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC7580864'},
-  {id:'astroimm',g:'Big picture',t:'Astroimmunology review (Nat Rev Immunol 2025)',u:'https://vivo.weill.cornell.edu/display/pubid41102553'},
-  {id:'insp4',g:'Big picture',t:'Inspiration4 crew multi-omics & immune profiles',u:'https://pmc.ncbi.nlm.nih.gov/articles/PMC11166952'}
+  {"id":"hazards","g":"Read first","t":"NASA – 5 Hazards of Human Spaceflight","u":"https://www.nasa.gov/hrp/hazards"},
+  {"id":"immrisk","g":"Read first","t":"NASA Immune Risk page (incl. Immune Risk DAG)","u":"https://www.nasa.gov/directorates/esdmd/hhp/immune-risk/"},
+  {"id":"crucian18","g":"Read first","t":"Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)","u":"https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full"},
+  {"id":"mehta17","g":"Stress → immune","t":"Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581"},
+  {"id":"salivary","g":"Stress → immune","t":"Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226"},
+  {"id":"evrep","g":"Stress → immune","t":"NASA Evidence Report: Risk of Crew Adverse Health Event Due to Altered Immune Response (Crucian & Sams)","u":"https://ntrs.nasa.gov/citations/20140002769"},
+  {"id":"klos25","g":"Isolation","t":"Klos et al. 2025 – Effects of ICE environments on the immune system: systematic review","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11975566/"},
+  {"id":"ponomarev21","g":"Isolation","t":"Ponomarev et al. 2021 – Immunological Aspects of Isolation and Confinement","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC8264770"},
+  {"id":"mars500","g":"Isolation","t":"Mars-500 CoSI study (isolation → chronic cortisol)","u":"https://iafastro.directory/iac/paper/id/20164/abstract-pdf/IAC-13,A5,2,8,x20164.brief.pdf"},
+  {"id":"wadhwa24","g":"Radiation + microgravity","t":"Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)","u":"https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w"},
+  {"id":"continuum","g":"Radiation + microgravity","t":"NASA poster – Immune dysregulation: spaceflight vs ground analogs (\"continuum\" figure)","u":"https://ntrs.nasa.gov/api/citations/20200001675/downloads/20200001675.pdf"},
+  {"id":"proton","g":"Radiation + microgravity","t":"Proton radiation + simulated microgravity on immune cells","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3743739/"},
+  {"id":"hls_spe","g":"Radiation + microgravity","t":"Hindlimb suspension + SPE-like radiation impairs bacterial clearance","u":"https://www.pubmed.gov/24454913/"},
+  {"id":"radiso","g":"Radiation + microgravity","t":"Space radiation + social isolation in rats (Life 2025)","u":"https://doaj.org/article/3ced14d5fd544cd29d2035dc98753f8c"},
+  {"id":"zhang17","g":"Radiation + microgravity","t":"Zhang et al. 2017 – Microgravity + radiation on osteoclast fusion","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5713410"},
+  {"id":"willey","g":"Radiation + microgravity","t":"Willey et al. – Ionizing radiation and bone loss","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3401480"},
+  {"id":"chang","g":"Microgravity → immune cells","t":"Chang et al. – Spaceflight impairs T-cell tolerance; microgravity directly disrupts T-cell activation","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6137544"},
+  {"id":"receptors","g":"Bone / muscle / osteoimmunology","t":"Receptors implicated in microgravity-induced bone loss (MDPI)","u":"https://mdpi.com/2813-2564/3/2/14"},
+  {"id":"osteoclast","g":"Bone / muscle / osteoimmunology","t":"Osteoclast-mediated bone disease & microgravity (Encyclopedia)","u":"https://encyclopedia.pub/entry/2143"},
+  {"id":"il6","g":"Bone / muscle / osteoimmunology","t":"IL-6 and spaceflight (npj Microgravity)","u":"https://www.nature.com/articles/s41526-018-0057-9"},
+  {"id":"twinsland","g":"Bone / muscle / osteoimmunology","t":"Twins Study landing re-analysis (muscle regeneration vs inflammation)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC9444344"},
+  {"id":"inact","g":"Bone / muscle / osteoimmunology","t":"Inactivity amplifies muscle’s catabolic response to cortisol (NTRS)","u":"https://ntrs.nasa.gov/citations/20040141797"},
+  {"id":"bedrest28","g":"Bone / muscle / osteoimmunology","t":"28-day bed rest with hypercortisolemia → insulin resistance","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC2856785"},
+  {"id":"muscgen","g":"Bone / muscle / osteoimmunology","t":"Muscle loss genetics in simulated microgravity (The Scientist)","u":"https://www.the-scientist.com/zero-gravity-zero-gain-the-genetics-behind-muscle-loss-in-space-71612"},
+  {"id":"cvmeta","g":"Cardiovascular","t":"Effects of weightlessness on the cardiovascular system: meta-analysis (Frontiers 2024)","u":"https://www.frontiersin.org/articles/10.3389/fphys.2024.1438089/full"},
+  {"id":"norsk15","g":"Cardiovascular","t":"Norsk et al. 2015 – Fluid shifts & BP reduction in long spaceflight","u":"https://www.physoc.org/?p=70744"},
+  {"id":"perhonen01","g":"Cardiovascular","t":"Perhonen et al. 2001 – Cardiac atrophy after bed rest and spaceflight","u":"https://pubmed.ncbi.nlm.nih.gov/11457776/"},
+  {"id":"jacc23","g":"Cardiovascular","t":"Cardiac effects of long-duration spaceflight (JACC 2023)","u":"https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight"},
+  {"id":"delp16","g":"Cardiovascular","t":"Delp et al. 2016 – Apollo astronauts’ CVD mortality & deep-space radiation","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4964660/"},
+  {"id":"arterial20","g":"Cardiovascular","t":"Arterial structure & function during and after long spaceflight (2020)","u":"https://pesquisa.bvsalud.org/portal/resource/e/mdl-32525433"},
+  {"id":"arteries25","g":"Cardiovascular","t":"Arteries normal 5 years after spaceflight (APS 2025)","u":"https://www.physiology.org/detail/news/2025/07/24/good-news-for-astronauts--arteries-remain-normal-years-after-long-duration-spaceflight"},
+  {"id":"vascular","g":"Cardiovascular","t":"CSA Vascular Series (stiffness + insulin resistance)","u":"https://revibiomedica.sld.cu/index.php/ibi/article/download/250/386"},
+  {"id":"mentalhrv","g":"Stress signals: HRV, sleep, sweat","t":"Mental stress & autonomic cardiac modulation in weightlessness","u":"https://bvbvf1.bib-bvb.de/vufind/PrimoRecord/cdi_proquest_miscellaneous_734199460"},
+  {"id":"autonomic","g":"Stress signals: HRV, sleep, sweat","t":"Autonomic function in spaceflight review","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4465859"},
+  {"id":"barger14","g":"Stress signals: HRV, sleep, sweat","t":"Barger et al. 2014 – Sleep deficiency & hypnotic use in astronauts (Lancet Neurology)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436"},
+  {"id":"sweat","g":"Stress signals: HRV, sleep, sweat","t":"Wearable molecularly imprinted sweat-cortisol sensor (Biosensors 2025)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11940103"},
+  {"id":"crucian16","g":"Symptoms","t":"Crucian et al. 2016 – Incidence of clinical symptoms during long-duration ISS flight","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5098747"},
+  {"id":"hsv1","g":"Symptoms","t":"HSV-1 dermatitis during long-duration spaceflight","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC9028032"},
+  {"id":"shingles","g":"Symptoms","t":"Shingles in an ISS astronaut","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC10992860/"},
+  {"id":"wang25","g":"Wearables","t":"Wang et al. 2025 – Flexible wearables for astronaut health: status & challenges","u":"https://doi.org/10.1016/j.wees.2024.12.007"},
+  {"id":"astroskin","g":"Wearables","t":"CSA Bio-Monitor / Astroskin","u":"https://www.asc-csa.gc.ca/eng/sciences/astroskin.asp"},
+  {"id":"trialx","g":"Wearables","t":"Wearables used in space missions (TrialX)","u":"https://trialx.com/space-health-research-wearable-devices/"},
+  {"id":"archer","g":"Wearables","t":"Artemis II ARCHeR wristbands","u":"https://www.newsbytesapp.com/news/science/nasa-s-artemis-ii-astronauts-to-wear-special-wristband-monitors/story"},
+  {"id":"nowara","g":"Camera / rPPG / NIR","t":"Nowara et al. – Near-infrared imaging PPG during driving (MERL)","u":"https://shadow.merl.com/publications/docs/TR2020-161.pdf"},
+  {"id":"rgbnir","g":"Camera / rPPG / NIR","t":"RGB-NIR dual-modality heart-rate estimation (Sensors 2023)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC10346879"},
+  {"id":"repss","g":"Camera / rPPG / NIR","t":"RePSS RGB+NIR fusion challenge","u":"https://ceur-ws.org/Vol-4095/paper1.pdf"},
+  {"id":"fullbody","g":"Camera / rPPG / NIR","t":"Full-body rPPG & pulse transit time (arXiv)","u":"https://ar5iv.labs.arxiv.org/html/2303.09638"},
+  {"id":"mayo","g":"Camera / rPPG / NIR","t":"Mayo Clinic hands-free camera in space","u":"https://newsnetwork.mayoclinic.org/discussion/mayo-clinic-researchers-to-study-if-hands-free-camera-in-space-can-monitor-vital-signs"},
+  {"id":"intelomed","g":"Camera / rPPG / NIR","t":"Intelomed NASA video-based vital signs project","u":"https://us.inspiralia.com/our-work-list/intelomed-inc/"},
+  {"id":"barrett19","g":"Facial expression & stress","t":"Barrett et al. 2019 – Emotional Expressions Reconsidered","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6640856"},
+  {"id":"microexp","g":"Facial expression & stress","t":"Micro-expressions training tool fails (phys.org)","u":"https://phys.org/news/2019-09-flaws-tool.pdf"},
+  {"id":"jyu","g":"Facial expression & stress","t":"Stress from rPPG + facial features in online meetings (JYU)","u":"https://jyx.jyu.fi/bitstreams/804b9777-c9ad-4832-aa67-cbc789d034f4/download"},
+  {"id":"facebio","g":"Facial expression & stress","t":"Facial videos + biosignals for stress estimation (arXiv 2026)","u":"https://arxiv.org/html/2601.04376v2"},
+  {"id":"euai","g":"Facial expression & stress","t":"EU AI Act emotion-recognition prohibition explained (FPF)","u":"https://fpf.org/blog/red-lines-under-eu-ai-act-unpacking-the-prohibition-of-emotion-recognition-in-the-workplace-and-education-institutions/"},
+  {"id":"mishra20","g":"Early infection detection","t":"Mishra et al. 2020 – Pre-symptomatic COVID-19 detection from smartwatch data","u":"https://bohrium.dp.tech/paper/arxiv/565ddbdf6dd250a4a1a24832b221d0cbf76f9e38e192400ab71d148581f79a7d"},
+  {"id":"stanford","g":"Early infection detection","t":"Stanford Medicine – Smartwatch can detect early signs of illness","u":"https://med.stanford.edu/news/all-news/2020/12/smartwatch-can-detect-early-signs-of-illness.html"},
+  {"id":"laad","g":"Early infection detection","t":"LAAD – deep learning on resting HR for early infection (medRxiv)","u":"https://www.medrxiv.org/content/10.1101/2021.01.08.21249474.full.pdf"},
+  {"id":"twins19","g":"Big picture","t":"NASA Twins Study (Science 2019)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7580864"},
+  {"id":"astroimm","g":"Big picture","t":"Astroimmunology review (Nat Rev Immunol 2025)","u":"https://vivo.weill.cornell.edu/display/pubid41102553"},
+  {"id":"insp4","g":"Big picture","t":"Inspiration4 crew multi-omics & immune profiles","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11166952"},
+  {"id":"mcgregor23","g":"Nervous system: brain structure","t":"McGregor et al. 2023 – Impacts of spaceflight experience on human brain structure (Scientific Reports)","u":"https://www.nature.com/articles/s41598-023-33331-8"},
+  {"id":"vanombergen19","g":"Nervous system: brain structure","t":"Van Ombergen et al. 2019 – Brain ventricular volume changes induced by long-duration spaceflight (PNAS)","u":"https://www.pnas.org/content/early/2019/05/01/1820354116"},
+  {"id":"hupfeld22","g":"Nervous system: brain structure","t":"Hupfeld et al. – The impact of 6 and 12 months in space on human brain structure and intracranial fluid shifts","u":"https://lmi.bwh.harvard.edu/publications/impact-6-and-12-months-space-human-brain-structure-and-intracranial-fluid-shifts"},
+  {"id":"pvs","g":"Nervous system: brain structure","t":"Jillings et al. – Perivascular space enlargement after 6-month ISS flights, linked to SANS (author publication list)","u":"https://scite.ai/authors/steven-jillings-OjzMba"},
+  {"id":"sansreview26","g":"Nervous system: eyes (SANS)","t":"SANS review: consensus knowledge and prevalence (Eye, 2026)","u":"https://link.springer.com/10.1038/s41433-026-04651-6"},
+  {"id":"sans_nasa23","g":"Nervous system: eyes (SANS)","t":"NASA – SANS: 2023 clinical update (NTRS)","u":"https://ntrs.nasa.gov/citations/20220014606"},
+  {"id":"sans_wjg","g":"Nervous system: eyes (SANS)","t":"Ocular adaptations to spaceflight and SANS: review (World Journal of Clinical Cases)","u":"https://www.wjgnet.com/2307-8960/full/v14/i3/117257.htm"},
+  {"id":"sans_sr20","g":"Nervous system: eyes (SANS)","t":"Paez et al. 2020 – SANS: a systematic review and future directions (Eye and Brain)","u":"https://www.dovepress.com/spaceflight-associated-neuro-ocular-syndrome-sans-a-systematic-review--peer-reviewed-article-EB"},
+  {"id":"eyebrain23","g":"Nervous system: eyes (SANS)","t":"Eye-brain axis in microgravity and its implications for SANS (npj Microgravity 2023)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC10359255"},
+  {"id":"vestib15","g":"Nervous system: balance (vestibular)","t":"Cullen et al. 2015 – Rapid adaptation of multisensory integration in vestibular pathways (Front. Syst. Neurosci.)","u":"https://www.frontiersin.org/articles/10.3389/fnsys.2015.00059/full"},
+  {"id":"neurovest17","g":"Nervous system: balance (vestibular)","t":"Neurovestibular symptoms in astronauts immediately after Shuttle and ISS missions (OTO Open 2017)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6239149"},
+  {"id":"reentry25","g":"Nervous system: balance (vestibular)","t":"Vestibular adaptation, motion sickness and parastronauts (Front. Neurol. 2025)","u":"https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2025.1556553/pdf"},
+  {"id":"gcr18","g":"Nervous system: radiation & brain","t":"Cekanaviciute et al. 2018 – CNS responses to simulated galactic cosmic rays (IJMS)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6275046/"},
+  {"id":"gcr23","g":"Nervous system: radiation & brain","t":"Kokhan & Dobynde 2023 – Effects of galactic cosmic rays on the CNS: negative to unexpectedly positive (Biology)","u":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10044754/"},
+  {"id":"cucinotta","g":"Nervous system: radiation & brain","t":"Critical review of rodent cognitive detriments from heavy ions at low dose","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6606350"},
+  {"id":"mcat","g":"Nervous system: radiation & brain","t":"Simulated microgravity + isolation drive neuroimmune oxidative stress in MCAT mice (summary)","u":"https://astrobiology.com/?p=15717"},
+  {"id":"cog24","g":"Nervous system: cognition","t":"Dev, Bell et al. 2024 – Cognitive performance in ISS astronauts on 6-month missions (Front. Physiol.)","u":"https://frontiersin.org/articles/10.3389/fphys.2024.1451269/full"},
+  {"id":"winscat","g":"Nervous system: cognition","t":"NASA – Cognitive assessment during long-duration spaceflight (WinSCAT, NTRS)","u":"https://ntrs.nasa.gov/citations/20100036584"},
+  {"id":"stowe03","g":"Nervous system: neuro-immune","t":"Stowe, Sams & Pierson 2003 – Effects of mission duration on neuroimmune responses in astronauts","u":"https://insight.jci.org/references/scholar/146/B27"},
+  {"id":"capri25","g":"Nervous system: neuro-immune","t":"Capri et al. 2025 – Spaceflight exposome effects on the psychoimmunoneuroendocrine system (npj Microgravity)","u":"https://cris.unibo.it/handle/11585/1038058"},
+  {"id":"thymus24","g":"Nervous system: neuro-immune","t":"Spaceflight stressors and thymus homeostasis: mini review (Front. Immunol. 2024)","u":"https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2024.1534444/full"},
+  {"id":"mehta2017","g":"Stress → immune","t":"Mehta et al. 2017 – Latent virus reactivation in astronauts on the ISS (npj Microgravity)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5445581"},
+  {"id":"crucian2018","g":"Read first","t":"Crucian et al. 2018 – Immune System Dysregulation During Spaceflight (Front. Immunol.)","u":"https://frontiersin.org/journals/immunology/articles/10.3389/fimmu.2018.01437/full"},
+  {"id":"barger2014","g":"Stress signals: HRV, sleep, sweat","t":"Barger et al. 2014 – Prevalence of sleep deficiency and use of hypnotic drugs in astronauts (Lancet Neurology)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4188436"},
+  {"id":"iss_saliva2020","g":"Stress → immune","t":"Salivary antimicrobial proteins & stress biomarkers on a 6-month ISS mission","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7864226"},
+  {"id":"mishra2020","g":"Early infection detection","t":"Mishra et al. 2020 – Pre-symptomatic detection of COVID-19 from smartwatch data (Stanford)","u":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7673274/"},
+  {"id":"wadhwa2024","g":"Radiation + microgravity","t":"Wadhwa et al. 2024 – Synergistic interplay between radiation and microgravity (Immunity & Ageing)","u":"https://immunityageing.biomedcentral.com/articles/10.1186/s12979-024-00449-w"},
+  {"id":"jacc2023","g":"Cardiovascular","t":"Cardiac effects of long-duration spaceflight (JACC 2023)","u":"https://utsouthwestern.elsevierpure.com/en/publications/cardiac-effects-of-long-duration-space-flight"},
+  {"id":"ferrando2004","g":"Bone / muscle / osteoimmunology","t":"Ferrando et al. 2004 – Inactivity amplifies muscle catabolic response to cortisol (NTRS)","u":"https://ntrs.nasa.gov/citations/20040141797"},
+  {"id":"nasa_radlab","g":"Radiation + microgravity","t":"NASA OSDR RadLab Portal – Spaceflight Radiation Dosimetry","u":"https://visualization.osdr.nasa.gov/radlab/"},
+  {"id":"noaa_swpc","g":"Radiation + microgravity","t":"NOAA SWPC GOES Primary Integral Protons 1-Day Feed","u":"https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json"},
+  {"id":"wesad","g":"Stress signals: HRV, sleep, sweat","t":"Schmidt et al. 2018 – Introducing WESAD, a Multimodal Dataset for Wearable Stress and Affect Detection (ICMI; dataset used to train the stress classifier)","u":"https://doi.org/10.1145/3242969.3242985"},
+  {"id":"wesad_data","g":"Stress signals: HRV, sleep, sweat","t":"WESAD dataset download page (University of Siegen; also listed at UCI ML Repository, dataset 465)","u":"https://ubi29.informatik.uni-siegen.de/usi/data_wesad.html"},
+  {"id":"neurokit2","g":"Stress signals: HRV, sleep, sweat","t":"Makowski et al. 2021 – NeuroKit2: A Python toolbox for neurophysiological signal processing (Behavior Research Methods)","u":"https://doi.org/10.3758/s13428-020-01516-y"},
+  {"id":"sklearn","g":"Stress signals: HRV, sleep, sweat","t":"Pedregosa et al. 2011 – Scikit-learn: Machine Learning in Python (JMLR)","u":"https://jmlr.org/papers/v12/pedregosa11a.html"},
+  {"id":"numpy","g":"Stress signals: HRV, sleep, sweat","t":"Harris et al. 2020 – Array programming with NumPy (Nature); also SciPy and pandas for data handling","u":"https://doi.org/10.1038/s41586-020-2649-2"},
+  {"id":"pos17","g":"Camera / rPPG / NIR","t":"Wang, den Brinker, Stuijk & de Haan 2017 – Algorithmic Principles of Remote PPG (POS method, IEEE TBME)","u":"https://doi.org/10.1109/TBME.2016.2609282"},
+  {"id":"chrom13","g":"Camera / rPPG / NIR","t":"de Haan & Jeanne 2013 – Robust Pulse Rate From Chrominance-Based rPPG (CHROM method, IEEE TBME)","u":"https://doi.org/10.1109/TBME.2013.2266196"},
+  {"id":"rppgtoolbox","g":"Camera / rPPG / NIR","t":"Liu et al. 2023 – rPPG-Toolbox: Deep Remote PPG Toolbox (reference implementations and test datasets)","u":"https://github.com/ubicomplab/rPPG-Toolbox"},
+  {"id":"mediapipe","g":"Camera / rPPG / NIR","t":"Google MediaPipe Face Landmarker – @mediapipe/tasks-vision 1.2.3 and face_landmarker.task model (Apache-2.0), vendored in /web/vendor","u":"https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker"},
+  {"id":"eqcookbook","g":"Camera / rPPG / NIR","t":"Bristow-Johnson – Audio EQ Cookbook (biquad filter formulas used for the 0.7–3.0 Hz band-pass)","u":"https://www.w3.org/TR/audio-eq-cookbook/"},
+  {"id":"stressid","g":"Facial expression & stress","t":"Chaptoukaev et al. 2023 – StressID: a Multimodal Dataset for Stress Identification (NeurIPS; candidate dataset for validating the facial-change input, not used for training)","u":"https://project.inria.fr/stressid/"},
+  {"id":"iforest","g":"Early infection detection","t":"Liu, Ting & Zhou 2008 – Isolation Forest (IEEE ICDM; unsupervised anomaly detector used for odd readings)","u":"https://doi.org/10.1109/ICDM.2008.17"},
+  {"id":"health_connect","g":"Wearables","t":"Android Health Connect Jetpack SDK (androidx.health.connect:connect-client 1.1.0) – local on-device health store integration","u":"https://developer.android.com/health-and-fitness/health-connect"},
+  {"id":"apple_healthkit","g":"Wearables","t":"Apple HealthKit & CoreBluetooth Frameworks – on-device HealthKit queries (including HKHeartbeatSeriesQuery) and BLE GATT","u":"https://developer.apple.com/documentation/healthkit"},
+  {"id":"bluetooth_gatt","g":"Wearables","t":"Bluetooth SIG GATT Specifications (0x180D Heart Rate, 0x1822 Pulse Oximeter, 0x1810 Blood Pressure, 0x1809 Thermometer, 0x180F Battery) & Web Bluetooth API","u":"https://www.bluetooth.com/specifications/specs/"},
+  {"id":"nearby_p2p","g":"Wearables","t":"Android Wi-Fi Direct (WifiP2pManager) & Apple MultipeerConnectivity – offline peer-to-peer crew summary transfer","u":"https://developer.apple.com/documentation/multipeerconnectivity"}
 ];
+const ALL_NODES = [
+  {"id":"isolation","cat":"stressor","label":"Isolation & confinement","layer":"core","x":120,"y":130,"src":["hazards","klos25","ponomarev21"],"varies":"Slowly, grows with mission days","desc":"Always on, and grows with mission length. Acts mostly upstream through stress, plus a direct immune effect from meeting fewer new microbes."},
+  {"id":"stress","cat":"stressor","label":"Psychological stress","layer":"core","x":120,"y":280,"src":["hazards"],"varies":"Yes: EVA, sleep loss, conflict","desc":"The most useful factor to monitor: it varies day to day and reaches immune, muscle, bone, vessels and glucose through cortisol. Trackable with HRV, sleep and saliva cortisol."},
+  {"id":"radiation","cat":"stressor","label":"Space radiation","layer":"core","x":120,"y":450,"src":["hazards","wadhwa24","continuum"],"varies":"Yes: spikes with solar particle events","desc":"Varies with solar events and is already tracked by dosimeters. Hits lymphocytes, bone and, in deep space, blood vessels."},
+  {"id":"microgravity","cat":"stressor","label":"Microgravity","layer":"core","x":120,"y":620,"src":["hazards","continuum"],"varies":"No: always ~100%","desc":"The biggest cause in the map (muscle, bone, heart, direct immune effect, and it amplifies stress). Because it never changes, track its variable version: exercise and loading logs."},
+  {"id":"cortisol","cat":"hub","label":"Cortisol / HPA axis","layer":"core","x":370,"y":200,"src":["mehta17","salivary"],"varies":"","desc":"Stress hormone hub (with DHEA). Connects stress to immune suppression, muscle breakdown, bone resorption and insulin resistance."},
+  {"id":"inflam","cat":"hub","label":"Inflammation / oxidative stress","layer":"core","x":370,"y":360,"src":["wadhwa24","il6"],"varies":"","desc":"The main hub. Shared signalling molecules (IL-6, RANKL, TNF-α) link the immune system, bone, muscle and blood vessels. Radiation and unloading both raise oxidative stress."},
+  {"id":"fluidshift","cat":"hub","label":"Fluid shift","layer":"core","x":370,"y":500,"src":["cvmeta","norsk15"],"varies":"","desc":"Blood moves toward the head: puffy face, headache, stuffy head, flu-like feeling. Changes HR, HRV and BP baselines and can look like illness, so it confounds several signals."},
+  {"id":"unloading","cat":"hub","label":"Unloading / inactivity","layer":"core","x":370,"y":620,"src":["receptors"],"varies":"","desc":"No weight-bearing, so muscle, bone and heart shrink together. Inactivity also makes muscle about 3× more sensitive to cortisol."},
+  {"id":"exercise","cat":"counter","label":"Exercise & loading","layer":"core","x":370,"y":730,"src":["jacc23","il6"],"varies":"","desc":"The one countermeasure that protects muscle, bone and heart together. Fully offsets cardiac atrophy; only slows muscle and bone loss."},
+  {"id":"immune","cat":"body","label":"Immune dysregulation","layer":"core","x":630,"y":110,"src":["immrisk","crucian18","evrep","continuum","twins19","astroimm","insp4"],"varies":"","desc":"About 50% of astronauts. White-cell counts look normal, but T-cell and NK-cell function drops and plasma cytokines rise. Lasts the whole 6-month mission. NASA: still unclear whether it causes more disease."},
+  {"id":"glucose","cat":"body","label":"Insulin resistance (glucose)","layer":"core","x":630,"y":230,"src":["vascular","bedrest28"],"varies":"","desc":"Fasting insulin was elevated in flight in all astronauts (CSA Vascular). Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min. CGMs already used in space research."},
+  {"id":"bone","cat":"body","label":"Bone loss","layer":"core","x":630,"y":360,"src":["receptors","osteoclast"],"varies":"","desc":"Osteoclasts dominate: resorption up, formation down. Hit from four directions: unloading, radiation, cortisol and inflammation (RANKL)."},
+  {"id":"muscle","cat":"body","label":"Muscle loss","layer":"core","x":630,"y":480,"src":["receptors","muscgen","il6"],"varies":"","desc":"Atrophy continues despite exercise programmes. Muscle also signals back to immunity through myokines such as IL-6."},
+  {"id":"heart","cat":"body","label":"Heart & blood pressure","layer":"core","x":630,"y":600,"src":["cvmeta","perhonen01","jacc23"],"varies":"","desc":"HR up, BP down ~10 mmHg, HRV down. Left-ventricle mass −12% after a short flight. A smaller heart can still be healthy (normal adaptation vs a problem). Fainting on standing after landing."},
+  {"id":"vessels","cat":"body","label":"Blood vessels","layer":"core","x":630,"y":720,"src":["delp16","arterial20","arteries25","vascular"],"varies":"","desc":"Real risk for deep space (Apollo data, mouse radiation studies), but in low Earth orbit arteries showed no thickening or stiffening over 5 years."},
+  {"id":"viral","cat":"outcome","label":"Latent virus reactivation","layer":"core","x":860,"y":160,"src":["mehta17","crucian18"],"varies":"","desc":"EBV, VZV, CMV and HSV-1 shed by 53% of shuttle and 61% of ISS astronauts. Rises with mission length. Mostly without symptoms."},
+  {"id":"symptoms","cat":"outcome","label":"Illness & symptoms","layer":"core","x":860,"y":330,"src":["crucian16","hsv1","shingles"],"varies":"","desc":"ISS records: skin rashes 1.12 per flight-year, upper respiratory 0.97. 46% of crew had a notable event. In one shingles case vital signs stayed normal, so symptom logging matters."},
+  {"id":"wearables","cat":"device","label":"Wearables (Astroskin, ARCHeR)","layer":"core","x":860,"y":575,"src":["wang25","astroskin","trialx","archer","health_connect","apple_healthkit","bluetooth_gatt","nearby_p2p"],"varies":"","desc":"Already flown: Astroskin smart shirt on ISS since 2018 (ECG, BP, SpO₂, breathing, skin temp, activity), Garmin on Polaris Dawn, ARCHeR wristbands on Artemis II. Hardware is mostly solved; the software that fuses signals is the gap."},
+  {"id":"rppg","cat":"device","label":"Camera rPPG (RGB + NIR)","layer":"core","x":860,"y":690,"src":["nowara","rgbnir","repss","mayo","intelomed","fullbody","pos17","chrom13","rppgtoolbox","mediapipe","eqcookbook"],"varies":"","desc":"Contact-free HR, HRV and breathing from facial colour changes. RGB+NIR fusion is most robust. Not yet validated on astronauts in orbit: an opportunity. Hackathon-friendly with a webcam and rPPG-Toolbox."},
+  {"id":"missionday","cat":"signal","label":"Mission day count","layer":"core","x":1110,"y":60,"verdict":"good","src":[],"varies":"","desc":"Free proxy for isolation load and for viral reactivation risk, which grows with mission length."},
+  {"id":"saliva","cat":"signal","label":"Saliva cortisol + viral DNA","layer":"core","x":1110,"y":115,"verdict":"good","src":["mehta17","salivary","archer"],"varies":"","desc":"Reads the stress → virus chain directly. Needs a lab, but saliva is easy to collect; used on ISS and Artemis II."},
+  {"id":"sweat","cat":"signal","label":"Sweat cortisol","layer":"core","x":1110,"y":170,"verdict":"early","src":["sweat"],"varies":"","desc":"Direct hormone reading, but only prototypes; some need visible sweat; not tested in space."},
+  {"id":"cgm","cat":"signal","label":"CGM (glucose)","layer":"core","x":1110,"y":225,"verdict":"good","src":[],"varies":"","desc":"Continuous glucose monitors are already used in space health research."},
+  {"id":"symptomlog","cat":"signal","label":"Symptom log","layer":"core","x":1110,"y":280,"verdict":"good","src":["crucian16","shingles"],"varies":"","desc":"Rash, sore throat, fatigue. Open question: how to collect it without annoying a busy crew."},
+  {"id":"face","cat":"signal","label":"Facial behaviour change","layer":"core","x":1110,"y":335,"verdict":"caution","src":["barrett19","microexp","jyu","facebio","euai","stressid","mediapipe"],"varies":"","desc":"Faces are not reliable emotion readers; drop micro-expressions. Useful only as one input in fusion, as change from the person’s own baseline. Frame as medical/safety under the EU AI Act; crew own their data."},
+  {"id":"bp","cat":"signal","label":"Blood pressure","layer":"core","x":1110,"y":390,"verdict":"weak","src":["mentalhrv","norsk15"],"varies":"","desc":"Stress raises it ~7 mmHg, but spaceflight lowers it ~10 mmHg. Weak stress signal."},
+  {"id":"hrv","cat":"signal","label":"HRV (ECG / PPG)","layer":"core","x":1110,"y":445,"verdict":"good","src":["mentalhrv","autonomic","wesad","wesad_data","neurokit2","sklearn","numpy"],"varies":"","desc":"Stress shifts it toward sympathetic, and that response is unchanged in space. Baseline is lowered by microgravity, so compare to the astronaut’s own in-flight baseline."},
+  {"id":"restHR","cat":"signal","label":"Resting HR vs own baseline","layer":"core","x":1110,"y":500,"verdict":"good","src":["mishra20","stanford","laad","iforest"],"varies":"","desc":"Smartwatch study: 63% of COVID cases flaggable before symptoms; LSTM autoencoder (LAAD) flagged 92%. Catches symptomatic infection, not silent viral shedding."},
+  {"id":"sleep","cat":"signal","label":"Sleep (actigraphy)","layer":"core","x":1110,"y":555,"verdict":"good","src":["barger14"],"varies":"","desc":"Astronauts average ~6 h vs 8.5 h scheduled; ~75% used sleep meds. Both a cause and a symptom of stress."},
+  {"id":"scans","cat":"signal","label":"Scans & strength tests","layer":"core","x":1110,"y":610,"verdict":"weak","src":[],"varies":"","desc":"Only way to see muscle and bone change, and it is slow. No daily reading."},
+  {"id":"exerciselog","cat":"signal","label":"Exercise / loading log","layer":"core","x":1110,"y":665,"verdict":"good","src":[],"varies":"","desc":"The variable version of microgravity: how much loading each astronaut actually got."},
+  {"id":"dosimeter","cat":"signal","label":"Radiation dosimeter","layer":"core","x":1110,"y":720,"verdict":"good","src":["nasa_radlab","noaa_swpc"],"varies":"","desc":"Already exists on every mission; captures dose spikes from solar events."},
+  {"id":"sns","cat":"hub","label":"Sympathetic / autonomic nervous system","layer":"nervous","x":370,"y":820,"src":["capri25","stowe03"],"varies":"","desc":"The stress system lives in the brain: amygdala → hypothalamus → both the HPA axis (cortisol) and the sympathetic nervous system. Sympathetic responses dominate after short flights; cortisol-driven changes dominate after longer ones. HRV is a direct read-out of this system."},
+  {"id":"brain","cat":"body","label":"Brain structure & CSF","layer":"nervous","x":630,"y":800,"src":["mcgregor23","vanombergen19","hupfeld22"],"varies":"","desc":"Brain shifts upward in the skull; ventricles enlarge ~11–25%. Growth slows after ~6 months and recovers only partly 6–12 months after landing. Crews with <3 years between missions showed little further enlargement. Medical meaning still unclear."},
+  {"id":"sans","cat":"body","label":"Eyes (SANS)","layer":"nervous","x":630,"y":850,"src":["sansreview26","sans_nasa23","sans_wjg","sans_sr20","eyebrain23"],"varies":"","desc":"Spaceflight-associated neuro-ocular syndrome: optic disc edema, globe flattening, choroidal folds, hyperopic shift. ~81% of NASA long-duration astronauts had at least one finding; ~66% show the earliest sign. So far vision effects have been correctable with glasses."},
+  {"id":"vestibular","cat":"body","label":"Balance & motion sickness (vestibular)","layer":"nervous","x":630,"y":900,"src":["vestib15","neurovest17","reentry25"],"varies":"","desc":"Sensory mismatch in microgravity: ~70% of astronauts have space motion sickness or impaired motor performance, mostly resolving within 1 h to 4 days. Re-entry motion sickness is worse after long missions and does not reliably improve with repeat flights."},
+  {"id":"cognition","cat":"outcome","label":"Cognition & performance","layer":"nervous","x":860,"y":830,"src":["cog24","winscat"],"varies":"","desc":"25 ISS astronauts: no systematic decline on 6-month missions. Early flight: slower processing speed, visual working memory, sustained attention. Late flight: slower emotion recognition. Processing speed recovered only after return."},
+  {"id":"cogtest","cat":"signal","label":"Cognition test battery","layer":"nervous","x":1110,"y":790,"verdict":"good","src":["cog24","winscat"],"varies":"","desc":"Computerised tests (Cognition battery, WinSCAT). WinSCAT is a medical requirement for US long-duration crew."},
+  {"id":"oct","cat":"signal","label":"Eye imaging (OCT)","layer":"nervous","x":1110,"y":845,"verdict":"early","src":["sans_nasa23","sans_wjg"],"varies":"","desc":"Optical coherence tomography detects optic disc edema and globe changes; in-flight imaging and AI detection are improving."},
+  {"id":"mri","cat":"signal","label":"Brain MRI","layer":"nervous","x":1110,"y":900,"verdict":"weak","src":["mcgregor23"],"varies":"","desc":"Only pre- and post-flight; not available in orbit."},
+  {"id":"eva","cat":"stressor","label":"EVA (spacewalk)","layer":"core","x":120,"y":365,"src":["iss_saliva2020","mehta2017"],"varies":"Yes: discrete EVA days (e.g. days 41, 120)","desc":"Extravehicular activity causes acute physical load, sleep disruption, and elevated stress hormones linked to latent viral reactivation."}
+];
+const ALL_EDGES = [
+  {"s":"isolation","t":"stress","type":"causal","label":"chronic high cortisol","ev":"H","stars":3,"sec":"3.1","src":["mars500","klos25"],"note":"Mars-500 (520 days, no microgravity or radiation) produced long-lasting high cortisol from isolation and confinement alone."},
+  {"s":"isolation","t":"immune","type":"causal","label":"fewer microbes → \"immune amnesia\"","ev":"H","stars":2,"sec":"3.2","src":["klos25","ponomarev21","mars500"],"note":"Mars-500 immune system was dysregulated rather than simply weak. A review of 140 ICE studies found dysregulation in every setting, mostly reversing afterwards. Antarctic crews had lower salivary immunoglobulins."},
+  {"s":"stress","t":"cortisol","type":"causal","label":"activates HPA axis","ev":"H","stars":3,"sec":"3.3","src":["mehta17","salivary"],"note":"Raises cortisol and DHEA. Long-duration flight also changed the daily salivary cortisol rhythm."},
+  {"s":"stress","t":"inflam","type":"causal","label":"adds inflammatory load","ev":"H","stars":1,"sec":"3.14","src":["arterial20"],"note":"Psychological stress is one of several sources of oxidative and inflammatory damage (with radiation, low activity, poor nutrition and high oxygen during EVA)."},
+  {"s":"cortisol","t":"immune","type":"causal","label":"weakens cellular immunity","ev":"H","stars":3,"sec":"3.3","src":["mehta17","salivary","evrep","crucian18"],"note":"On the ISS, crew who shed a latent virus had higher salivary cortisol. Reactivation was distinct to crew who did spacewalks (EVA)."},
+  {"s":"cortisol","t":"muscle","type":"causal","label":"muscle protein loss","ev":"H","stars":3,"sec":"3.4","src":["inact"],"note":"After 14 days of bed rest, high cortisol tripled amino-acid loss from muscle."},
+  {"s":"cortisol","t":"bone","type":"causal","label":"osteoclast activity ↑","ev":"H","stars":1,"sec":"3.5","src":["osteoclast","receptors"],"note":"Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid."},
+  {"s":"cortisol","t":"glucose","type":"causal","label":"insulin resistance","ev":"H","stars":2,"sec":"3.15","src":["bedrest28"],"note":"Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min."},
+  {"s":"radiation","t":"inflam","type":"causal","label":"reactive oxygen species","ev":"AC","stars":2,"sec":"3.7","src":["willey","zhang17","wadhwa24"],"note":"Radiation and unloading share a mechanism: both raise oxidative stress."},
+  {"s":"radiation","t":"immune","type":"causal","label":"lymphocytes most radio-sensitive","ev":"ACH","stars":2,"sec":"3.6","src":["proton","hls_spe","wadhwa24","radiso","wadhwa2024"],"note":"Dose-dependent lymphocyte drop after proton radiation (animals). Human lymphocytes show more chromosomal aberrations after long missions. A strong solar particle event plus simulated microgravity impaired bacterial clearance in mice."},
+  {"s":"radiation","t":"bone","type":"causal","label":"resorption ↑ then formation ↓","ev":"A","stars":2,"sec":"3.7","src":["willey","zhang17","wadhwa2024"],"note":"Mouse tibia osteoclasts: radiation +46%, hindlimb unloading +47%, both combined +64%."},
+  {"s":"radiation","t":"vessels","type":"causal","label":"endothelial damage (deep space)","ev":"AH","stars":1,"sec":"3.13","src":["delp16"],"note":"Apollo lunar astronauts: 43% cardiovascular deaths vs 9–11% for others, but only 3 of 7 people. In mice, deep-space-type radiation caused lasting damage to the vessel lining.","bend":-0.08},
+  {"s":"microgravity","t":"immune","type":"causal","label":"directly disrupts T-cell activation","ev":"CA","stars":2,"sec":"3.8","src":["chang"],"note":"Independent of stress hormones: a second route to weak T cells and viral reactivation.","bend":-0.06},
+  {"s":"microgravity","t":"fluidshift","type":"causal","label":"blood moves headward","ev":"H","stars":3,"sec":"3.12","src":["cvmeta","norsk15"],"note":""},
+  {"s":"microgravity","t":"unloading","type":"causal","label":"no weight-bearing","ev":"H","stars":3,"sec":"3.9","src":["receptors"],"note":"","bend":0},
+  {"s":"microgravity","t":"inflam","type":"causal","label":"oxidative stress","ev":"AC","stars":2,"sec":"3.7 · 3.10","src":["wadhwa24","zhang17"],"note":"Inflammation from microgravity plus radiation can trigger bone loss."},
+  {"s":"microgravity","t":"stress","type":"amplifies","label":"amplifies stress effects","ev":"H","stars":3,"sec":"3.4","src":["inact"],"note":"Stress and microgravity multiply rather than add: inactivity makes muscle ~3× more responsive to cortisol.","bend":0.25},
+  {"s":"unloading","t":"muscle","type":"causal","label":"atrophy","ev":"H","stars":3,"sec":"3.9","src":["receptors","muscgen"],"note":"Strongest link in the map. Happens despite exercise programmes."},
+  {"s":"unloading","t":"bone","type":"causal","label":"resorption ↑, formation ↓","ev":"H","stars":3,"sec":"3.9","src":["receptors","osteoclast","zhang17"],"note":"Microgravity impairs osteocytes and osteoblasts, so osteoclasts dominate."},
+  {"s":"unloading","t":"heart","type":"causal","label":"cardiac atrophy","ev":"H","stars":3,"sec":"3.12","src":["perhonen01","jacc23"],"note":"Left-ventricle mass fell ~12% after a short flight. Scott Kelly’s heart shrank ~0.74 g/week but still worked well."},
+  {"s":"unloading","t":"glucose","type":"causal","label":"inactivity → insulin resistance","ev":"H","stars":2,"sec":"3.15","src":["bedrest28","vascular"],"note":""},
+  {"s":"fluidshift","t":"heart","type":"causal","label":"HR ↑ · BP ↓ · HRV ↓","ev":"H","stars":3,"sec":"3.12","src":["cvmeta","norsk15","autonomic","crucian2018"],"note":"BP about 10 mmHg lower on long missions. After landing: orthostatic intolerance (fainting on standing)."},
+  {"s":"inflam","t":"immune","type":"causal","label":"plasma cytokines ↑","ev":"H","stars":2,"sec":"2 · 3.10","src":["crucian18","wadhwa24"],"note":""},
+  {"s":"inflam","t":"bone","type":"causal","label":"RANKL → osteoclasts","ev":"AC","stars":2,"sec":"3.10","src":["receptors","osteoclast","wadhwa24"],"note":"RANKL binding RANK is required to make osteoclasts."},
+  {"s":"inflam","t":"vessels","type":"causal","label":"oxidative damage","ev":"H","stars":1,"sec":"3.14","src":["arterial20","arteries25"],"note":"In LEO, biomarkers rose in flight but returned to baseline within a week, and arteries showed no thickening or stiffening over 5 years. Real deep-space risk; mostly theoretical for ISS-length missions."},
+  {"s":"immune","t":"bone","type":"causal","label":"T/B cells make RANKL (two-way)","ev":"AC","stars":2,"sec":"3.10","src":["receptors","osteoclast"],"note":"Osteoimmunology: bone and immune cells share RANKL, so effects run both ways.","bend":0.18},
+  {"s":"muscle","t":"immune","type":"causal","label":"myokines (IL-6)","ev":"A","stars":1,"sec":"3.11","src":["il6","muscgen"],"note":"Partly hypothesis. Post-exercise IL-6 scales with body weight; less IL-6 in space may explain why exercise does not fully stop loss.","bend":0.22},
+  {"s":"immune","t":"viral","type":"causal","label":"T/NK ↓ → herpes reactivation","ev":"H","stars":3,"sec":"2","src":["mehta17","crucian18","immrisk","evrep","thymus24"],"note":"Frequency and viral load rise with mission length. Resembles shingles patients, but milder. HSV-1 and VZV hide in cranial nerve ganglia, so reactivation is also a nervous-system event."},
+  {"s":"viral","t":"symptoms","type":"causal","label":"rash, cold sores, shingles","ev":"H","stars":2,"sec":"6","src":["crucian16","hsv1","shingles"],"note":"Most reactivation is asymptomatic. Cases include an HSV-1 rash lasting ~200 days and shingles with normal vital signs."},
+  {"s":"glucose","t":"vessels","type":"causal","label":"stiffer arteries","ev":"H","stars":2,"sec":"3.15","src":["vascular"],"note":"CSA Vascular: carotid stiffness and insulin resistance rose together.","bend":-0.3},
+  {"s":"exercise","t":"heart","type":"protects","label":"offsets cardiac atrophy","ev":"H","stars":3,"sec":"3.12","src":["jacc23","jacc2023"],"note":"13-astronaut ISS study."},
+  {"s":"exercise","t":"muscle","type":"protects","label":"slows loss (partial)","ev":"H","stars":2,"sec":"3.9 · 3.11","src":["il6"],"note":"Loss continues despite exercise programmes."},
+  {"s":"exercise","t":"bone","type":"protects","label":"slows loss (partial)","ev":"H","stars":2,"sec":"3.11","src":["il6"],"note":""},
+  {"s":"fluidshift","t":"symptoms","type":"confounds","label":"puffy face & headache look like illness","ev":"H","stars":0,"sec":"6","src":["cvmeta"],"note":"Do not flag fluid-shift symptoms as infection."},
+  {"s":"fluidshift","t":"restHR","type":"confounds","label":"raises HR → set baseline in flight","ev":"H","stars":0,"sec":"7","src":["cvmeta"],"note":"Other HR confounders: stress, intense exercise, medications, vaccination.","bend":0.2},
+  {"s":"fluidshift","t":"hrv","type":"confounds","label":"lowers HRV baseline","ev":"H","stars":0,"sec":"5","src":["autonomic"],"note":"","bend":0.2},
+  {"s":"fluidshift","t":"bp","type":"confounds","label":"lowers BP ~10 mmHg","ev":"H","stars":0,"sec":"5","src":["norsk15"],"note":"","bend":0.2},
+  {"s":"fluidshift","t":"face","type":"confounds","label":"puffy face changes geometry","ev":"","stars":0,"sec":"10","src":["norsk15","facebio"],"note":"Set the facial baseline in flight. Astronauts are also trained to stay composed.","bend":0.2},
+  {"s":"fluidshift","t":"rppg","type":"confounds","label":"may shift rPPG baseline (untested)","ev":"","stars":0,"sec":"9","src":["norsk15","rgbnir"],"note":""},
+  {"s":"muscle","t":"inflam","type":"confounds","label":"landing cytokine spike may be regeneration","ev":"H","stars":0,"sec":"3.11","src":["twinsland"],"note":"Twins Study re-analysis: inflammatory markers spiking at landing may reflect muscle repair, not illness. High cytokines are not always \"sick\"."},
+  {"s":"missionday","t":"isolation","type":"measures","label":"days confined","ev":"","stars":0,"sec":"4","src":["mars500","klos25"],"note":""},
+  {"s":"saliva","t":"cortisol","type":"measures","label":"direct hormone","ev":"","stars":0,"sec":"5","src":["mehta17","salivary"],"note":""},
+  {"s":"saliva","t":"viral","type":"measures","label":"viral DNA shedding","ev":"","stars":0,"sec":"5","src":["mehta17","archer"],"note":""},
+  {"s":"sweat","t":"cortisol","type":"measures","label":"hormone (prototype)","ev":"","stars":0,"sec":"5","src":["sweat"],"note":""},
+  {"s":"cgm","t":"glucose","type":"measures","label":"continuous glucose","ev":"","stars":0,"sec":"3.15","src":["bedrest28"],"note":""},
+  {"s":"symptomlog","t":"symptoms","type":"measures","label":"daily check-in","ev":"","stars":0,"sec":"6","src":["crucian16","shingles"],"note":""},
+  {"s":"face","t":"stress","type":"measures","label":"change vs own baseline (fusion only)","ev":"","stars":0,"sec":"10","src":["barrett19","microexp","jyu","facebio","euai"],"note":"Video-meeting study: rPPG alone 78.75%, face alone 73.75%, combined 82.50%."},
+  {"s":"bp","t":"stress","type":"measures","label":"+~7 mmHg (weak)","ev":"","stars":0,"sec":"5","src":["mentalhrv"],"note":""},
+  {"s":"hrv","t":"stress","type":"measures","label":"sympathetic shift","ev":"","stars":0,"sec":"5","src":["mentalhrv","autonomic"],"note":""},
+  {"s":"restHR","t":"symptoms","type":"measures","label":"pre-symptom flag (63%)","ev":"","stars":0,"sec":"7","src":["mishra20","stanford","laad"],"note":"81% of COVID cases changed HR, steps or sleep. Limit: catches symptomatic infection, not silent viral shedding."},
+  {"s":"sleep","t":"stress","type":"measures","label":"cause and symptom","ev":"","stars":0,"sec":"5","src":["barger14"],"note":""},
+  {"s":"scans","t":"muscle","type":"measures","label":"slow, not daily","ev":"","stars":0,"sec":"4","src":["ferrando2004"],"note":""},
+  {"s":"scans","t":"bone","type":"measures","label":"slow, not daily","ev":"","stars":0,"sec":"4","src":["willey","receptors"],"note":""},
+  {"s":"exerciselog","t":"unloading","type":"measures","label":"loading actually received","ev":"","stars":0,"sec":"4","src":["ferrando2004"],"note":""},
+  {"s":"dosimeter","t":"radiation","type":"measures","label":"dose & solar spikes","ev":"","stars":0,"sec":"4","src":["nasa_radlab","noaa_swpc"],"note":""},
+  {"s":"wearables","t":"hrv","type":"measures","label":"chest ECG","ev":"","stars":0,"sec":"8","src":["astroskin","wang25"],"note":"Wrist PPG is noisier than chest ECG."},
+  {"s":"wearables","t":"restHR","type":"measures","label":"HR, 48 h continuous","ev":"","stars":0,"sec":"8","src":["astroskin","trialx"],"note":""},
+  {"s":"wearables","t":"sleep","type":"measures","label":"wristband actigraphy","ev":"","stars":0,"sec":"8","src":["archer","trialx"],"note":""},
+  {"s":"rppg","t":"hrv","type":"measures","label":"contact-free HRV","ev":"","stars":0,"sec":"9","src":["nowara","rgbnir","repss"],"note":""},
+  {"s":"rppg","t":"restHR","type":"measures","label":"contact-free HR","ev":"","stars":0,"sec":"9","src":["mayo","intelomed"],"note":""},
+  {"s":"rppg","t":"vessels","type":"measures","label":"pulse transit time (partial proxy)","ev":"","stars":0,"sec":"9","src":["fullbody"],"note":"Reads the pulse, not vessel walls; stiffness needs ultrasound."},
+  {"s":"stress","t":"sns","type":"causal","label":"amygdala → hypothalamus → sympathetic activation","ev":"H","stars":2,"sec":"nervous","src":["capri25"],"note":"The same brain stress system drives the HPA axis (cortisol hub)."},
+  {"s":"sns","t":"immune","type":"causal","label":"adrenergic immune modulation","ev":"H","stars":2,"sec":"nervous","src":["stowe03","capri25"],"note":"Short flights (9 d): sympathetic responses dominate. Longer flights (16 d): cortisol-mediated changes at landing."},
+  {"s":"sns","t":"heart","type":"causal","label":"HR ↑, HRV ↓","ev":"H","stars":2,"sec":"nervous","src":["capri25","autonomic"],"note":""},
+  {"s":"fluidshift","t":"brain","type":"causal","label":"brain shifts up, ventricles enlarge","ev":"H","stars":3,"sec":"nervous","src":["mcgregor23","vanombergen19","hupfeld22"],"note":"Likely reduced CSF resorption in microgravity."},
+  {"s":"fluidshift","t":"sans","type":"causal","label":"venous congestion, altered CSF flow","ev":"H","stars":3,"sec":"nervous","src":["sans_wjg","sansreview26","sans_nasa23","sans_sr20"],"note":"Not simply raised intracranial pressure."},
+  {"s":"brain","t":"sans","type":"causal","label":"eye–brain axis (perivascular spaces)","ev":"H","stars":2,"sec":"nervous","src":["eyebrain23","pvs"],"note":"Astronauts who developed SANS had larger white-matter perivascular spaces before and after flight."},
+  {"s":"microgravity","t":"vestibular","type":"causal","label":"sensory mismatch","ev":"H","stars":3,"sec":"nervous","src":["vestib15","neurovest17","reentry25"],"note":""},
+  {"s":"microgravity","t":"cognition","type":"causal","label":"early-flight slowing (mild, reversible)","ev":"H","stars":2,"sec":"nervous","src":["cog24"],"note":"Head-down bed rest (fluid shift analog) also gives mild early slowing."},
+  {"s":"radiation","t":"cognition","type":"causal","label":"deep-space CNS risk (rodents)","ev":"A","stars":1,"sec":"nervous","src":["gcr18","gcr23","cucinotta"],"note":"Rodent deficits at ≥0.1 Gy heavy ions, but missions give <0.04 Gy/yr; some studies even show pro-cognitive effects. Uncertain."},
+  {"s":"isolation","t":"inflam","type":"causal","label":"neuroinflammation (with microgravity)","ev":"A","stars":1,"sec":"nervous","src":["mcat"],"note":"Mitochondrial ROS drove the brain immune response in mice."},
+  {"s":"sleep","t":"cognition","type":"causal","label":"sleep loss → worse attention","ev":"H","stars":2,"sec":"nervous","src":["cog24"],"note":"Analog studies with sleep restriction; in ISS data no clear link was found."},
+  {"s":"vestibular","t":"symptoms","type":"confounds","label":"motion sickness looks like illness","ev":"H","stars":0,"sec":"nervous","src":["reentry25"],"note":"Malaise, appetite loss, headache."},
+  {"s":"hrv","t":"sns","type":"measures","label":"autonomic balance","ev":"","stars":0,"sec":"nervous","src":["autonomic","mentalhrv"],"note":""},
+  {"s":"cogtest","t":"cognition","type":"measures","label":"10-domain test battery","ev":"","stars":0,"sec":"nervous","src":["cog24","winscat"],"note":""},
+  {"s":"oct","t":"sans","type":"measures","label":"optic disc & retina","ev":"","stars":0,"sec":"nervous","src":["sans_nasa23","sans_wjg"],"note":""},
+  {"s":"mri","t":"brain","type":"measures","label":"pre/post flight only","ev":"","stars":0,"sec":"nervous","src":["mcgregor23"],"note":""},
+  {"s":"stress","t":"immune","type":"causal","label":"HRV ↓ → stress ↑ → cortisol ↑ → latent virus reactivation","ev":"H","stars":3,"sec":"3.3","src":["mehta2017","crucian2018"],"note":"Chronic and acute psychological stress activates the HPA axis and suppresses cellular immunity, driving latent herpesvirus reactivation."},
+  {"s":"sleep","t":"immune","type":"causal","label":"Sleep ↓ → cortisol ↑ → T cells ↓ → virus reactivation","ev":"H","stars":3,"sec":"3.5","src":["barger2014","mehta2017"],"note":"ISS astronauts average ~6 h of sleep; cumulative sleep deficiency raises cortisol and impairs T-cell immune surveillance."},
+  {"s":"eva","t":"immune","type":"causal","label":"EVA → stress hormones ↑ → reactivation in EVA crew","ev":"H","stars":3,"sec":"3.3","src":["iss_saliva2020","mehta2017"],"note":"Extravehicular activity increases stress hormones and salivary viral shedding over the following 48–72 hours."},
+  {"s":"exercise","t":"muscle","type":"protects","label":"Low resistance exercise → unloading → muscle & bone loss","ev":"H","stars":3,"sec":"3.4","src":["ferrando2004"],"note":"Daily ARED resistive exercise provides the mechanical loading needed to limit microgravity muscle atrophy and bone mineral loss."},
+  {"s":"cortisol","t":"muscle","type":"amplifies","label":"Stress × inactivity → muscle loss amplified","ev":"H","stars":3,"sec":"3.4","src":["ferrando2004"],"note":"Inactivity amplifies skeletal muscle catabolic response to hypercortisolemia multiplicatively rather than additively."},
+  {"s":"restHR","t":"immune","type":"measures","label":"Resting HR jump / symptoms → early infection / reactivation signal","ev":"H","stars":3,"sec":"3.6","src":["mishra2020","crucian16"],"note":"Sustained resting HR ≥ 2 SD above personal baseline detects pre-symptomatic infection ~63% of the time prior to symptom onset."}
+];
+/* END GENERATED DATA */
+
+// "Core" shows the main web; "?layer=all" adds the nervous-system extension.
+const LAYER = new URLSearchParams(location.search).get('layer') === 'all' ? 'all' : 'core';
+const NODES = ALL_NODES.filter(n => LAYER === 'all' || n.layer === 'core');
+const NODE_IDS = new Set(NODES.map(n => n.id));
+const EDGES = ALL_EDGES.filter(e => NODE_IDS.has(e.s) && NODE_IDS.has(e.t));
+const VIEW_H = LAYER === 'all' ? 940 : 760;
 
 const COLS = [
   {x:120,t:'STRESSORS'},{x:370,t:'MECHANISM HUBS'},{x:630,t:'BODY EFFECTS'},{x:860,t:'ILLNESS'},{x:1110,t:'WHAT YOU CAN MEASURE'}
 ];
 
-const NODES = [
-  // stressors
-  {id:'isolation',cat:'stressor',label:'Isolation & confinement',x:120,y:130,varies:'Slowly, grows with mission days',src:['hazards','klos25','ponomarev21'],
-   desc:'Always on, and grows with mission length. Acts mostly upstream through stress, plus a direct immune effect from meeting fewer new microbes.'},
-  {id:'stress',cat:'stressor',label:'Psychological stress',x:120,y:280,varies:'Yes: EVA, sleep loss, conflict',src:['hazards'],
-   desc:'The most useful factor to monitor: it varies day to day and reaches immune, muscle, bone, vessels and glucose through cortisol. Trackable with HRV, sleep and saliva cortisol.'},
-  {id:'radiation',cat:'stressor',label:'Space radiation',x:120,y:450,varies:'Yes: spikes with solar particle events',src:['hazards','wadhwa24','continuum'],
-   desc:'Varies with solar events and is already tracked by dosimeters. Hits lymphocytes, bone and, in deep space, blood vessels.'},
-  {id:'microgravity',cat:'stressor',label:'Microgravity',x:120,y:620,varies:'No: always ~100%',src:['hazards','continuum'],
-   desc:'The biggest cause in the map (muscle, bone, heart, direct immune effect, and it amplifies stress). Because it never changes, track its variable version: exercise and loading logs.'},
-  // hubs
-  {id:'cortisol',cat:'hub',label:'Cortisol / HPA axis',x:370,y:200,src:['mehta17','salivary'],
-   desc:'Stress hormone hub (with DHEA). Connects stress to immune suppression, muscle breakdown, bone resorption and insulin resistance.'},
-  {id:'inflam',cat:'hub',label:'Inflammation / oxidative stress',x:370,y:360,src:['wadhwa24','il6'],
-   desc:'The main hub. Shared signalling molecules (IL-6, RANKL, TNF-α) link the immune system, bone, muscle and blood vessels. Radiation and unloading both raise oxidative stress.'},
-  {id:'fluidshift',cat:'hub',label:'Fluid shift',x:370,y:500,src:['cvmeta','norsk15'],
-   desc:'Blood moves toward the head: puffy face, headache, stuffy head, flu-like feeling. Changes HR, HRV and BP baselines and can look like illness, so it confounds several signals.'},
-  {id:'unloading',cat:'hub',label:'Unloading / inactivity',x:370,y:620,src:['receptors'],
-   desc:'No weight-bearing, so muscle, bone and heart shrink together. Inactivity also makes muscle about 3× more sensitive to cortisol.'},
-  {id:'exercise',cat:'counter',label:'Exercise & loading',x:370,y:730,src:['jacc23','il6'],
-   desc:'The one countermeasure that protects muscle, bone and heart together. Fully offsets cardiac atrophy; only slows muscle and bone loss.'},
-  // body
-  {id:'immune',cat:'body',label:'Immune dysregulation',x:630,y:110,src:['immrisk','crucian18','evrep','continuum','twins19','astroimm','insp4'],
-   desc:'About 50% of astronauts. White-cell counts look normal, but T-cell and NK-cell function drops and plasma cytokines rise. Lasts the whole 6-month mission. NASA: still unclear whether it causes more disease.'},
-  {id:'glucose',cat:'body',label:'Insulin resistance (glucose)',x:630,y:230,src:['vascular','bedrest28'],
-   desc:'Fasting insulin was elevated in flight in all astronauts (CSA Vascular). Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min. CGMs already used in space research.'},
-  {id:'bone',cat:'body',label:'Bone loss',x:630,y:360,src:['receptors','osteoclast'],
-   desc:'Osteoclasts dominate: resorption up, formation down. Hit from four directions: unloading, radiation, cortisol and inflammation (RANKL).'},
-  {id:'muscle',cat:'body',label:'Muscle loss',x:630,y:480,src:['receptors','muscgen','il6'],
-   desc:'Atrophy continues despite exercise programmes. Muscle also signals back to immunity through myokines such as IL-6.'},
-  {id:'heart',cat:'body',label:'Heart & blood pressure',x:630,y:600,src:['cvmeta','perhonen01','jacc23'],
-   desc:'HR up, BP down ~10 mmHg, HRV down. Left-ventricle mass −12% after a short flight. A smaller heart can still be healthy (normal adaptation vs a problem). Fainting on standing after landing.'},
-  {id:'vessels',cat:'body',label:'Blood vessels',x:630,y:720,src:['delp16','arterial20','arteries25','vascular'],
-   desc:'Real risk for deep space (Apollo data, mouse radiation studies), but in low Earth orbit arteries showed no thickening or stiffening over 5 years.'},
-  // outcomes
-  {id:'viral',cat:'outcome',label:'Latent virus reactivation',x:860,y:160,src:['mehta17','crucian18'],
-   desc:'EBV, VZV, CMV and HSV-1 shed by 53% of shuttle and 61% of ISS astronauts. Rises with mission length. Mostly without symptoms.'},
-  {id:'symptoms',cat:'outcome',label:'Illness & symptoms',x:860,y:330,src:['crucian16','hsv1','shingles'],
-   desc:'ISS records: skin rashes 1.12 per flight-year, upper respiratory 0.97. 46% of crew had a notable event. In one shingles case vital signs stayed normal, so symptom logging matters.'},
-  // devices
-  {id:'wearables',cat:'device',label:'Wearables (Astroskin, ARCHeR)',x:860,y:575,src:['wang25','astroskin','trialx','archer'],
-   desc:'Already flown: Astroskin smart shirt on ISS since 2018 (ECG, BP, SpO₂, breathing, skin temp, activity), Garmin on Polaris Dawn, ARCHeR wristbands on Artemis II. Hardware is mostly solved; the software that fuses signals is the gap.'},
-  {id:'rppg',cat:'device',label:'Camera rPPG (RGB + NIR)',x:860,y:690,src:['nowara','rgbnir','repss','mayo','intelomed','fullbody'],
-   desc:'Contact-free HR, HRV and breathing from facial colour changes. RGB+NIR fusion is most robust. Not yet validated on astronauts in orbit: an opportunity. Hackathon-friendly with a webcam and rPPG-Toolbox.'},
-  // signals
-  {id:'missionday',cat:'signal',label:'Mission day count',x:1110,y:60,verdict:'good',src:[],desc:'Free proxy for isolation load and for viral reactivation risk, which grows with mission length.'},
-  {id:'saliva',cat:'signal',label:'Saliva cortisol + viral DNA',x:1110,y:115,verdict:'good',src:['mehta17','salivary','archer'],desc:'Reads the stress → virus chain directly. Needs a lab, but saliva is easy to collect; used on ISS and Artemis II.'},
-  {id:'sweat',cat:'signal',label:'Sweat cortisol',x:1110,y:170,verdict:'early',src:['sweat'],desc:'Direct hormone reading, but only prototypes; some need visible sweat; not tested in space.'},
-  {id:'cgm',cat:'signal',label:'CGM (glucose)',x:1110,y:225,verdict:'good',src:[],desc:'Continuous glucose monitors are already used in space health research.'},
-  {id:'symptomlog',cat:'signal',label:'Symptom log',x:1110,y:280,verdict:'good',src:['crucian16','shingles'],desc:'Rash, sore throat, fatigue. Open question: how to collect it without annoying a busy crew.'},
-  {id:'face',cat:'signal',label:'Facial behaviour change',x:1110,y:335,verdict:'caution',src:['barrett19','microexp','jyu','facebio','euai'],desc:'Faces are not reliable emotion readers; drop micro-expressions. Useful only as one input in fusion, as change from the person’s own baseline. Frame as medical/safety under the EU AI Act; crew own their data.'},
-  {id:'bp',cat:'signal',label:'Blood pressure',x:1110,y:390,verdict:'weak',src:['mentalhrv','norsk15'],desc:'Stress raises it ~7 mmHg, but spaceflight lowers it ~10 mmHg. Weak stress signal.'},
-  {id:'hrv',cat:'signal',label:'HRV (ECG / PPG)',x:1110,y:445,verdict:'good',src:['mentalhrv','autonomic'],desc:'Stress shifts it toward sympathetic, and that response is unchanged in space. Baseline is lowered by microgravity, so compare to the astronaut’s own in-flight baseline.'},
-  {id:'restHR',cat:'signal',label:'Resting HR vs own baseline',x:1110,y:500,verdict:'good',src:['mishra20','stanford','laad'],desc:'Smartwatch study: 63% of COVID cases flaggable before symptoms; LSTM autoencoder (LAAD) flagged 92%. Catches symptomatic infection, not silent viral shedding.'},
-  {id:'sleep',cat:'signal',label:'Sleep (actigraphy)',x:1110,y:555,verdict:'good',src:['barger14'],desc:'Astronauts average ~6 h vs 8.5 h scheduled; ~75% used sleep meds. Both a cause and a symptom of stress.'},
-  {id:'scans',cat:'signal',label:'Scans & strength tests',x:1110,y:610,verdict:'weak',src:[],desc:'Only way to see muscle and bone change, and it is slow. No daily reading.'},
-  {id:'exerciselog',cat:'signal',label:'Exercise / loading log',x:1110,y:665,verdict:'good',src:[],desc:'The variable version of microgravity: how much loading each astronaut actually got.'},
-  {id:'dosimeter',cat:'signal',label:'Radiation dosimeter',x:1110,y:720,verdict:'good',src:[],desc:'Already exists on every mission; captures dose spikes from solar events.'}
-];
-
-const EDGES = [
-  // ----- causal
-  {s:'isolation',t:'stress',type:'causal',label:'chronic high cortisol',ev:'H',stars:3,sec:'3.1',src:['mars500','klos25'],note:'Mars-500 (520 days, no microgravity or radiation) produced long-lasting high cortisol from isolation and confinement alone.'},
-  {s:'isolation',t:'immune',type:'causal',label:'fewer microbes → "immune amnesia"',ev:'H',stars:2,sec:'3.2',src:['klos25','ponomarev21','mars500'],note:'Mars-500 immune system was dysregulated rather than simply weak. A review of 140 ICE studies found dysregulation in every setting, mostly reversing afterwards. Antarctic crews had lower salivary immunoglobulins.'},
-  {s:'stress',t:'cortisol',type:'causal',label:'activates HPA axis',ev:'H',stars:3,sec:'3.3',src:['mehta17','salivary'],note:'Raises cortisol and DHEA. Long-duration flight also changed the daily salivary cortisol rhythm.'},
-  {s:'stress',t:'inflam',type:'causal',label:'adds inflammatory load',ev:'H',stars:1,sec:'3.14',src:['arterial20'],note:'Psychological stress is one of several sources of oxidative and inflammatory damage (with radiation, low activity, poor nutrition and high oxygen during EVA).'},
-  {s:'cortisol',t:'immune',type:'causal',label:'weakens cellular immunity',ev:'H',stars:3,sec:'3.3',src:['mehta17','salivary','evrep','crucian18'],note:'On the ISS, crew who shed a latent virus had higher salivary cortisol. Reactivation was distinct to crew who did spacewalks (EVA).'},
-  {s:'cortisol',t:'muscle',type:'causal',label:'muscle protein loss',ev:'H',stars:3,sec:'3.4',src:['inact'],note:'After 14 days of bed rest, high cortisol tripled amino-acid loss from muscle.'},
-  {s:'cortisol',t:'bone',type:'causal',label:'osteoclast activity ↑',ev:'H',stars:1,sec:'3.5',src:[],note:'Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid.'},
-  {s:'cortisol',t:'glucose',type:'causal',label:'insulin resistance',ev:'H',stars:2,sec:'3.15',src:['bedrest28'],note:'Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min.'},
-  {s:'radiation',t:'inflam',type:'causal',label:'reactive oxygen species',ev:'AC',stars:2,sec:'3.7',src:['willey','zhang17','wadhwa24'],note:'Radiation and unloading share a mechanism: both raise oxidative stress.'},
-  {s:'radiation',t:'immune',type:'causal',label:'lymphocytes most radio-sensitive',ev:'ACH',stars:2,sec:'3.6',src:['proton','hls_spe','wadhwa24','radiso'],note:'Dose-dependent lymphocyte drop after proton radiation (animals). Human lymphocytes show more chromosomal aberrations after long missions. A strong solar particle event plus simulated microgravity impaired bacterial clearance in mice.'},
-  {s:'radiation',t:'bone',type:'causal',label:'resorption ↑ then formation ↓',ev:'A',stars:2,sec:'3.7',src:['willey','zhang17'],note:'Mouse tibia osteoclasts: radiation +46%, hindlimb unloading +47%, both combined +64%.'},
-  {s:'radiation',t:'vessels',type:'causal',label:'endothelial damage (deep space)',ev:'AH',stars:1,sec:'3.13',src:['delp16'],note:'Apollo lunar astronauts: 43% cardiovascular deaths vs 9–11% for others, but only 3 of 7 people. In mice, deep-space-type radiation caused lasting damage to the vessel lining.',bend:-.08},
-  {s:'microgravity',t:'immune',type:'causal',label:'directly disrupts T-cell activation',ev:'CA',stars:2,sec:'3.8',src:['chang'],note:'Independent of stress hormones: a second route to weak T cells and viral reactivation.',bend:-.06},
-  {s:'microgravity',t:'fluidshift',type:'causal',label:'blood moves headward',ev:'H',stars:3,sec:'3.12',src:['cvmeta','norsk15'],note:''},
-  {s:'microgravity',t:'unloading',type:'causal',label:'no weight-bearing',ev:'H',stars:3,sec:'3.9',src:['receptors'],note:'',bend:0},
-  {s:'microgravity',t:'inflam',type:'causal',label:'oxidative stress',ev:'AC',stars:2,sec:'3.7 · 3.10',src:['wadhwa24','zhang17'],note:'Inflammation from microgravity plus radiation can trigger bone loss.'},
-  {s:'microgravity',t:'stress',type:'amplifies',label:'amplifies stress effects',ev:'H',stars:3,sec:'3.4',src:['inact'],note:'Stress and microgravity multiply rather than add: inactivity makes muscle ~3× more responsive to cortisol.',bend:.25},
-  {s:'unloading',t:'muscle',type:'causal',label:'atrophy',ev:'H',stars:3,sec:'3.9',src:['receptors','muscgen'],note:'Strongest link in the map. Happens despite exercise programmes.'},
-  {s:'unloading',t:'bone',type:'causal',label:'resorption ↑, formation ↓',ev:'H',stars:3,sec:'3.9',src:['receptors','osteoclast','zhang17'],note:'Microgravity impairs osteocytes and osteoblasts, so osteoclasts dominate.'},
-  {s:'unloading',t:'heart',type:'causal',label:'cardiac atrophy',ev:'H',stars:3,sec:'3.12',src:['perhonen01','jacc23'],note:'Left-ventricle mass fell ~12% after a short flight. Scott Kelly’s heart shrank ~0.74 g/week but still worked well.'},
-  {s:'unloading',t:'glucose',type:'causal',label:'inactivity → insulin resistance',ev:'H',stars:2,sec:'3.15',src:['bedrest28','vascular'],note:''},
-  {s:'fluidshift',t:'heart',type:'causal',label:'HR ↑ · BP ↓ · HRV ↓',ev:'H',stars:3,sec:'3.12',src:['cvmeta','norsk15','autonomic'],note:'BP about 10 mmHg lower on long missions. After landing: orthostatic intolerance (fainting on standing).'},
-  {s:'inflam',t:'immune',type:'causal',label:'plasma cytokines ↑',ev:'H',stars:2,sec:'2 · 3.10',src:['crucian18','wadhwa24'],note:''},
-  {s:'inflam',t:'bone',type:'causal',label:'RANKL → osteoclasts',ev:'AC',stars:2,sec:'3.10',src:['receptors','osteoclast','wadhwa24'],note:'RANKL binding RANK is required to make osteoclasts.'},
-  {s:'inflam',t:'vessels',type:'causal',label:'oxidative damage',ev:'H',stars:1,sec:'3.14',src:['arterial20','arteries25'],note:'In LEO, biomarkers rose in flight but returned to baseline within a week, and arteries showed no thickening or stiffening over 5 years. Real deep-space risk; mostly theoretical for ISS-length missions.'},
-  {s:'immune',t:'bone',type:'causal',label:'T/B cells make RANKL (two-way)',ev:'AC',stars:2,sec:'3.10',src:['receptors','osteoclast'],note:'Osteoimmunology: bone and immune cells share RANKL, so effects run both ways.',bend:.18},
-  {s:'muscle',t:'immune',type:'causal',label:'myokines (IL-6)',ev:'A',stars:1,sec:'3.11',src:['il6','muscgen'],note:'Partly hypothesis. Post-exercise IL-6 scales with body weight; less IL-6 in space may explain why exercise does not fully stop loss.',bend:.22},
-  {s:'immune',t:'viral',type:'causal',label:'T/NK ↓ → herpes reactivation',ev:'H',stars:3,sec:'2',src:['mehta17','crucian18','immrisk','evrep'],note:'Frequency and viral load rise with mission length. Resembles shingles patients, but milder.'},
-  {s:'viral',t:'symptoms',type:'causal',label:'rash, cold sores, shingles',ev:'H',stars:2,sec:'6',src:['crucian16','hsv1','shingles'],note:'Most reactivation is asymptomatic. Cases include an HSV-1 rash lasting ~200 days and shingles with normal vital signs.'},
-  {s:'glucose',t:'vessels',type:'causal',label:'stiffer arteries',ev:'H',stars:2,sec:'3.15',src:['vascular'],note:'CSA Vascular: carotid stiffness and insulin resistance rose together.',bend:-.3},
-  // ----- protects
-  {s:'exercise',t:'heart',type:'protects',label:'offsets cardiac atrophy',ev:'H',stars:3,sec:'3.12',src:['jacc23'],note:'13-astronaut ISS study.'},
-  {s:'exercise',t:'muscle',type:'protects',label:'slows loss (partial)',ev:'H',stars:2,sec:'3.9 · 3.11',src:['il6'],note:'Loss continues despite exercise programmes.'},
-  {s:'exercise',t:'bone',type:'protects',label:'slows loss (partial)',ev:'H',stars:2,sec:'3.11',src:['il6'],note:''},
-  // ----- confounds
-  {s:'fluidshift',t:'symptoms',type:'confounds',label:'puffy face & headache look like illness',ev:'H',sec:'6',src:['cvmeta'],note:'Do not flag fluid-shift symptoms as infection.'},
-  {s:'fluidshift',t:'restHR',type:'confounds',label:'raises HR → set baseline in flight',ev:'H',sec:'7',src:['cvmeta'],note:'Other HR confounders: stress, intense exercise, medications, vaccination.',bend:.2},
-  {s:'fluidshift',t:'hrv',type:'confounds',label:'lowers HRV baseline',ev:'H',sec:'5',src:['autonomic'],note:'',bend:.2},
-  {s:'fluidshift',t:'bp',type:'confounds',label:'lowers BP ~10 mmHg',ev:'H',sec:'5',src:['norsk15'],note:'',bend:.2},
-  {s:'fluidshift',t:'face',type:'confounds',label:'puffy face changes geometry',ev:'',sec:'10',src:[],note:'Set the facial baseline in flight. Astronauts are also trained to stay composed.',bend:.2},
-  {s:'fluidshift',t:'rppg',type:'confounds',label:'may shift rPPG baseline (untested)',ev:'',sec:'9',src:[],note:''},
-  {s:'muscle',t:'inflam',type:'confounds',label:'landing cytokine spike may be regeneration',ev:'H',sec:'3.11',src:['twinsland'],note:'Twins Study re-analysis: inflammatory markers spiking at landing may reflect muscle repair, not illness. High cytokines are not always "sick".'},
-  // ----- measures
-  {s:'missionday',t:'isolation',type:'measures',label:'days confined',sec:'4',src:[],note:''},
-  {s:'saliva',t:'cortisol',type:'measures',label:'direct hormone',sec:'5',src:['mehta17','salivary'],note:''},
-  {s:'saliva',t:'viral',type:'measures',label:'viral DNA shedding',sec:'5',src:['mehta17','archer'],note:''},
-  {s:'sweat',t:'cortisol',type:'measures',label:'hormone (prototype)',sec:'5',src:['sweat'],note:''},
-  {s:'cgm',t:'glucose',type:'measures',label:'continuous glucose',sec:'3.15',src:[],note:''},
-  {s:'symptomlog',t:'symptoms',type:'measures',label:'daily check-in',sec:'6',src:['crucian16','shingles'],note:''},
-  {s:'face',t:'stress',type:'measures',label:'change vs own baseline (fusion only)',sec:'10',src:['barrett19','microexp','jyu','facebio','euai'],note:'Video-meeting study: rPPG alone 78.75%, face alone 73.75%, combined 82.50%.'},
-  {s:'bp',t:'stress',type:'measures',label:'+~7 mmHg (weak)',sec:'5',src:['mentalhrv'],note:''},
-  {s:'hrv',t:'stress',type:'measures',label:'sympathetic shift',sec:'5',src:['mentalhrv','autonomic'],note:''},
-  {s:'restHR',t:'symptoms',type:'measures',label:'pre-symptom flag (63%)',sec:'7',src:['mishra20','stanford','laad'],note:'81% of COVID cases changed HR, steps or sleep. Limit: catches symptomatic infection, not silent viral shedding.'},
-  {s:'sleep',t:'stress',type:'measures',label:'cause and symptom',sec:'5',src:['barger14'],note:''},
-  {s:'scans',t:'muscle',type:'measures',label:'slow, not daily',sec:'4',src:[],note:''},
-  {s:'scans',t:'bone',type:'measures',label:'slow, not daily',sec:'4',src:[],note:''},
-  {s:'exerciselog',t:'unloading',type:'measures',label:'loading actually received',sec:'4',src:[],note:''},
-  {s:'dosimeter',t:'radiation',type:'measures',label:'dose & solar spikes',sec:'4',src:[],note:''},
-  {s:'wearables',t:'hrv',type:'measures',label:'chest ECG',sec:'8',src:['astroskin','wang25'],note:'Wrist PPG is noisier than chest ECG.'},
-  {s:'wearables',t:'restHR',type:'measures',label:'HR, 48 h continuous',sec:'8',src:['astroskin','trialx'],note:''},
-  {s:'wearables',t:'sleep',type:'measures',label:'wristband actigraphy',sec:'8',src:['archer','trialx'],note:''},
-  {s:'rppg',t:'hrv',type:'measures',label:'contact-free HRV',sec:'9',src:['nowara','rgbnir','repss'],note:''},
-  {s:'rppg',t:'restHR',type:'measures',label:'contact-free HR',sec:'9',src:['mayo','intelomed'],note:''},
-  {s:'rppg',t:'vessels',type:'measures',label:'pulse transit time (partial proxy)',sec:'9',src:['fullbody'],note:'Reads the pulse, not vessel walls; stiffness needs ultrasound.'}
-];
 
 /* ---------------- META ---------------- */
 const CAT = {
@@ -403,6 +444,7 @@ function visible(e){
 /* ---------------- SVG ---------------- */
 const NS='http://www.w3.org/2000/svg';
 const svg=document.getElementById('web');
+svg.setAttribute('viewBox','0 0 1240 '+VIEW_H);
 function mk(tag,attrs,parent){const el=document.createElementNS(NS,tag);for(const k in (attrs||{}))el.setAttribute(k,attrs[k]);if(parent)parent.appendChild(el);return el;}
 const defs=mk('defs',{},svg);
 Object.keys(ETYPE).forEach(t=>{
@@ -410,10 +452,10 @@ Object.keys(ETYPE).forEach(t=>{
   mk('path',{d:'M0,0 L10,5 L0,10 z',class:'mk-'+t},m);
 });
 const gCols=mk('g',{},svg);
-const bg=mk('rect',{x:0,y:0,width:1240,height:760,fill:'transparent'},gCols);
+const bg=mk('rect',{x:0,y:0,width:1240,height:VIEW_H,fill:'transparent'},gCols);
 COLS.forEach(c=>{const t=mk('text',{x:c.x,y:24,'text-anchor':'middle',class:'colhead'},gCols);t.textContent=c.t;});
 const devHead=mk('text',{x:860,y:528,'text-anchor':'middle',class:'colhead'},gCols);devHead.textContent='SENSING DEVICES';
-mk('line',{x1:990,y1:40,x2:990,y2:750,class:'colrule'},gCols);
+mk('line',{x1:990,y1:40,x2:990,y2:VIEW_H-10,class:'colrule'},gCols);
 const gE=mk('g',{},svg), gH=mk('g',{},svg), gN=mk('g',{},svg), gL=mk('g',{},svg);
 
 EDGES.forEach(e=>{
@@ -658,6 +700,13 @@ document.getElementById('strong').addEventListener('click',e=>{
 measure();
 showTab('overview');
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
+
+// Core / All toggle (the page reloads so the layout is rebuilt for the chosen layer).
+(function(){
+  const t=document.getElementById('layerToggle'); if(!t) return;
+  if(LAYER==='all'){t.href='?';t.firstElementChild.textContent='Hide nervous system';t.setAttribute('aria-pressed','true');}
+  else t.setAttribute('aria-pressed','false');
+})();
 </script>
 </body>
 </html>

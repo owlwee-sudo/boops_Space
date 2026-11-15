@@ -21,6 +21,10 @@
     "linked_log_fields": [
       "sbp_mmhg",
       "dbp_mmhg"
+    ],
+    "sources": [
+      "norsk15",
+      "arterial20"
     ]
   },
   {
@@ -46,6 +50,11 @@
       "rhr_bpm",
       "hrv_rmssd_ms",
       "signal_quality"
+    ],
+    "sources": [
+      "mentalhrv",
+      "autonomic",
+      "mishra20"
     ]
   },
   {
@@ -59,7 +68,7 @@
     ],
     "why_it_matters": "Subtle temperature rises (+0.5–1.0 °C) combined with resting HR jumps distinguish true early infection from isolated sleep loss or stress.",
     "common_mistakes": [
-      "Cold probe air gap yielding implausible values (< 30 °C) flagged as Check device.",
+      "Cold probe or air gap: below 35.5 °C repeat the reading; below 30 °C BOOPS flags it as Check device.",
       "Measuring immediately after drinking cold pouch water."
     ],
     "how_to_fix_bad_reading": [
@@ -68,6 +77,10 @@
     ],
     "linked_log_fields": [
       "temp_c"
+    ],
+    "sources": [
+      "mishra2020",
+      "crucian2018"
     ]
   },
   {
@@ -75,7 +88,7 @@
     "title": "Saliva Sample Kit (Cortisol & Viral Shedding)",
     "steps": [
       "Collect immediately upon waking (before brushing teeth, eating, or drinking) for baseline cortisol rhythm.",
-      "Rinse mouth gently with potable water, wait 10 minutes, then saturate the Salivette cotton swab for 2 minutes without chewing excessively.",
+      "Nothing to eat or drink and no toothpaste for 30 minutes before. Rinse mouth gently with potable water, wait 10 minutes after the rinse, then saturate the Salivette cotton swab for 2 minutes without chewing excessively.",
       "Seal tube, scan/log crew ID + mission day, and place in the onboard cold-stowage / biomarker reader slot.",
       "Log collection timestamp and any oral sores or throat symptoms."
     ],
@@ -90,6 +103,10 @@
     ],
     "linked_log_fields": [
       "symptoms"
+    ],
+    "sources": [
+      "iss_saliva2020",
+      "mehta2017"
     ]
   },
   {
@@ -111,6 +128,10 @@
     ],
     "linked_log_fields": [
       "radiation_msv"
+    ],
+    "sources": [
+      "nasa_radlab",
+      "noaa_swpc"
     ]
   },
   {
@@ -132,6 +153,9 @@
     ],
     "linked_log_fields": [
       "spo2_pct"
+    ],
+    "sources": [
+      "hazards"
     ]
   },
   {
@@ -155,6 +179,11 @@
       "exercise_min",
       "resistance_min",
       "eva"
+    ],
+    "sources": [
+      "ferrando2004",
+      "inact",
+      "jacc2023"
     ]
   }
 ]

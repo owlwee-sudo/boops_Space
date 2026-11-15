@@ -124,7 +124,10 @@
     "notes_section": "3.5",
     "layer": "core",
     "note": "Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid.",
-    "sources": [],
+    "sources": [
+      "osteoclast",
+      "receptors"
+    ],
     "id": "cortisol_to_bone_causal",
     "chain_text": "cortisol → bone: osteoclast activity ↑",
     "evidence_stars": 1,
@@ -226,7 +229,8 @@
     "id": "radiation_to_vessels_causal",
     "chain_text": "radiation → vessels: endothelial damage (deep space)",
     "evidence_stars": 1,
-    "source_id": "delp16"
+    "source_id": "delp16",
+    "web_bend": -0.08
   },
   {
     "from": "microgravity",
@@ -244,7 +248,8 @@
     "id": "microgravity_to_immune_causal",
     "chain_text": "microgravity → immune: directly disrupts T-cell activation",
     "evidence_stars": 2,
-    "source_id": "chang"
+    "source_id": "chang",
+    "web_bend": -0.06
   },
   {
     "from": "microgravity",
@@ -281,7 +286,8 @@
     "id": "microgravity_to_unloading_causal",
     "chain_text": "microgravity → unloading: no weight-bearing",
     "evidence_stars": 3,
-    "source_id": "receptors"
+    "source_id": "receptors",
+    "web_bend": 0.0
   },
   {
     "from": "microgravity",
@@ -318,7 +324,8 @@
     "id": "microgravity_to_stress_amplifies",
     "chain_text": "microgravity → stress: amplifies stress effects",
     "evidence_stars": 3,
-    "source_id": "inact"
+    "source_id": "inact",
+    "web_bend": 0.25
   },
   {
     "from": "unloading",
@@ -493,7 +500,8 @@
     "id": "immune_to_bone_causal",
     "chain_text": "immune → bone: T/B cells make RANKL (two-way)",
     "evidence_stars": 2,
-    "source_id": "receptors"
+    "source_id": "receptors",
+    "web_bend": 0.18
   },
   {
     "from": "muscle",
@@ -512,7 +520,8 @@
     "id": "muscle_to_immune_causal",
     "chain_text": "muscle → immune: myokines (IL-6)",
     "evidence_stars": 1,
-    "source_id": "il6"
+    "source_id": "il6",
+    "web_bend": 0.22
   },
   {
     "from": "immune",
@@ -572,7 +581,8 @@
     "id": "glucose_to_vessels_causal",
     "chain_text": "glucose → vessels: stiffer arteries",
     "evidence_stars": 2,
-    "source_id": "vascular"
+    "source_id": "vascular",
+    "web_bend": -0.3
   },
   {
     "from": "exercise",
@@ -663,7 +673,8 @@
     "id": "fluidshift_to_restHR_confounds",
     "chain_text": "fluidshift → restHR: raises HR → set baseline in flight",
     "evidence_stars": 2,
-    "source_id": "cvmeta"
+    "source_id": "cvmeta",
+    "web_bend": 0.2
   },
   {
     "from": "fluidshift",
@@ -681,7 +692,8 @@
     "id": "fluidshift_to_hrv_confounds",
     "chain_text": "fluidshift → hrv: lowers HRV baseline",
     "evidence_stars": 2,
-    "source_id": "autonomic"
+    "source_id": "autonomic",
+    "web_bend": 0.2
   },
   {
     "from": "fluidshift",
@@ -699,7 +711,8 @@
     "id": "fluidshift_to_bp_confounds",
     "chain_text": "fluidshift → bp: lowers BP ~10 mmHg",
     "evidence_stars": 2,
-    "source_id": "norsk15"
+    "source_id": "norsk15",
+    "web_bend": 0.2
   },
   {
     "from": "fluidshift",
@@ -711,11 +724,15 @@
     "notes_section": "10",
     "layer": "core",
     "note": "Set the facial baseline in flight. Astronauts are also trained to stay composed.",
-    "sources": [],
+    "sources": [
+      "norsk15",
+      "facebio"
+    ],
     "id": "fluidshift_to_face_confounds",
     "chain_text": "fluidshift → face: puffy face changes geometry",
     "evidence_stars": 2,
-    "source_id": "hazards"
+    "source_id": "hazards",
+    "web_bend": 0.2
   },
   {
     "from": "fluidshift",
@@ -727,7 +744,10 @@
     "notes_section": "9",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "norsk15",
+      "rgbnir"
+    ],
     "id": "fluidshift_to_rppg_confounds",
     "chain_text": "fluidshift → rppg: may shift rPPG baseline (untested)",
     "evidence_stars": 2,
@@ -761,7 +781,10 @@
     "notes_section": "4",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "mars500",
+      "klos25"
+    ],
     "id": "missionday_to_isolation_measures",
     "chain_text": "missionday → isolation: days confined",
     "evidence_stars": 2,
@@ -833,7 +856,9 @@
     "notes_section": "3.15",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "bedrest28"
+    ],
     "id": "cgm_to_glucose_measures",
     "chain_text": "cgm → glucose: continuous glucose",
     "evidence_stars": 2,
@@ -965,7 +990,9 @@
     "notes_section": "4",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "ferrando2004"
+    ],
     "id": "scans_to_muscle_measures",
     "chain_text": "scans → muscle: slow, not daily",
     "evidence_stars": 2,
@@ -981,7 +1008,10 @@
     "notes_section": "4",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "willey",
+      "receptors"
+    ],
     "id": "scans_to_bone_measures",
     "chain_text": "scans → bone: slow, not daily",
     "evidence_stars": 2,
@@ -997,7 +1027,9 @@
     "notes_section": "4",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "ferrando2004"
+    ],
     "id": "exerciselog_to_unloading_measures",
     "chain_text": "exerciselog → unloading: loading actually received",
     "evidence_stars": 2,
@@ -1013,7 +1045,10 @@
     "notes_section": "4",
     "layer": "core",
     "note": "",
-    "sources": [],
+    "sources": [
+      "nasa_radlab",
+      "noaa_swpc"
+    ],
     "id": "dosimeter_to_radiation_measures",
     "chain_text": "dosimeter → radiation: dose & solar spikes",
     "evidence_stars": 2,

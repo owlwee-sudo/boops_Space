@@ -10,7 +10,11 @@
       "hazards",
       "klos25",
       "ponomarev21"
-    ]
+    ],
+    "web": {
+      "x": 120,
+      "y": 130
+    }
   },
   {
     "id": "stress",
@@ -21,7 +25,11 @@
     "varies_day_to_day": "Yes: EVA, sleep loss, conflict",
     "sources": [
       "hazards"
-    ]
+    ],
+    "web": {
+      "x": 120,
+      "y": 280
+    }
   },
   {
     "id": "radiation",
@@ -34,7 +42,11 @@
       "hazards",
       "wadhwa24",
       "continuum"
-    ]
+    ],
+    "web": {
+      "x": 120,
+      "y": 450
+    }
   },
   {
     "id": "microgravity",
@@ -46,7 +58,11 @@
     "sources": [
       "hazards",
       "continuum"
-    ]
+    ],
+    "web": {
+      "x": 120,
+      "y": 620
+    }
   },
   {
     "id": "cortisol",
@@ -57,7 +73,11 @@
     "sources": [
       "mehta17",
       "salivary"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 200
+    }
   },
   {
     "id": "inflam",
@@ -68,7 +88,11 @@
     "sources": [
       "wadhwa24",
       "il6"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 360
+    }
   },
   {
     "id": "fluidshift",
@@ -79,7 +103,11 @@
     "sources": [
       "cvmeta",
       "norsk15"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 500
+    }
   },
   {
     "id": "unloading",
@@ -89,7 +117,11 @@
     "description": "No weight-bearing, so muscle, bone and heart shrink together. Inactivity also makes muscle about 3× more sensitive to cortisol.",
     "sources": [
       "receptors"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 620
+    }
   },
   {
     "id": "exercise",
@@ -100,7 +132,11 @@
     "sources": [
       "jacc23",
       "il6"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 730
+    }
   },
   {
     "id": "immune",
@@ -116,7 +152,11 @@
       "twins19",
       "astroimm",
       "insp4"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 110
+    }
   },
   {
     "id": "glucose",
@@ -127,7 +167,11 @@
     "sources": [
       "vascular",
       "bedrest28"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 230
+    }
   },
   {
     "id": "bone",
@@ -138,7 +182,11 @@
     "sources": [
       "receptors",
       "osteoclast"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 360
+    }
   },
   {
     "id": "muscle",
@@ -150,7 +198,11 @@
       "receptors",
       "muscgen",
       "il6"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 480
+    }
   },
   {
     "id": "heart",
@@ -162,7 +214,11 @@
       "cvmeta",
       "perhonen01",
       "jacc23"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 600
+    }
   },
   {
     "id": "vessels",
@@ -175,7 +231,11 @@
       "arterial20",
       "arteries25",
       "vascular"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 720
+    }
   },
   {
     "id": "viral",
@@ -186,7 +246,11 @@
     "sources": [
       "mehta17",
       "crucian18"
-    ]
+    ],
+    "web": {
+      "x": 860,
+      "y": 160
+    }
   },
   {
     "id": "symptoms",
@@ -198,7 +262,11 @@
       "crucian16",
       "hsv1",
       "shingles"
-    ]
+    ],
+    "web": {
+      "x": 860,
+      "y": 330
+    }
   },
   {
     "id": "wearables",
@@ -215,7 +283,11 @@
       "apple_healthkit",
       "bluetooth_gatt",
       "nearby_p2p"
-    ]
+    ],
+    "web": {
+      "x": 860,
+      "y": 575
+    }
   },
   {
     "id": "rppg",
@@ -235,7 +307,11 @@
       "rppgtoolbox",
       "mediapipe",
       "eqcookbook"
-    ]
+    ],
+    "web": {
+      "x": 860,
+      "y": 690
+    }
   },
   {
     "id": "missionday",
@@ -244,7 +320,11 @@
     "layer": "core",
     "description": "Free proxy for isolation load and for viral reactivation risk, which grows with mission length.",
     "signal_verdict": "good",
-    "sources": []
+    "sources": [],
+    "web": {
+      "x": 1110,
+      "y": 60
+    }
   },
   {
     "id": "saliva",
@@ -257,7 +337,11 @@
       "mehta17",
       "salivary",
       "archer"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 115
+    }
   },
   {
     "id": "sweat",
@@ -268,7 +352,11 @@
     "signal_verdict": "early",
     "sources": [
       "sweat"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 170
+    }
   },
   {
     "id": "cgm",
@@ -277,7 +365,11 @@
     "layer": "core",
     "description": "Continuous glucose monitors are already used in space health research.",
     "signal_verdict": "good",
-    "sources": []
+    "sources": [],
+    "web": {
+      "x": 1110,
+      "y": 225
+    }
   },
   {
     "id": "symptomlog",
@@ -289,7 +381,11 @@
     "sources": [
       "crucian16",
       "shingles"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 280
+    }
   },
   {
     "id": "face",
@@ -306,7 +402,11 @@
       "euai",
       "stressid",
       "mediapipe"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 335
+    }
   },
   {
     "id": "bp",
@@ -318,7 +418,11 @@
     "sources": [
       "mentalhrv",
       "norsk15"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 390
+    }
   },
   {
     "id": "hrv",
@@ -335,7 +439,11 @@
       "neurokit2",
       "sklearn",
       "numpy"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 445
+    }
   },
   {
     "id": "restHR",
@@ -349,7 +457,11 @@
       "stanford",
       "laad",
       "iforest"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 500
+    }
   },
   {
     "id": "sleep",
@@ -360,7 +472,11 @@
     "signal_verdict": "good",
     "sources": [
       "barger14"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 555
+    }
   },
   {
     "id": "scans",
@@ -369,7 +485,11 @@
     "layer": "core",
     "description": "Only way to see muscle and bone change, and it is slow. No daily reading.",
     "signal_verdict": "weak",
-    "sources": []
+    "sources": [],
+    "web": {
+      "x": 1110,
+      "y": 610
+    }
   },
   {
     "id": "exerciselog",
@@ -378,7 +498,11 @@
     "layer": "core",
     "description": "The variable version of microgravity: how much loading each astronaut actually got.",
     "signal_verdict": "good",
-    "sources": []
+    "sources": [],
+    "web": {
+      "x": 1110,
+      "y": 665
+    }
   },
   {
     "id": "dosimeter",
@@ -390,7 +514,11 @@
     "sources": [
       "nasa_radlab",
       "noaa_swpc"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 720
+    }
   },
   {
     "id": "sns",
@@ -401,7 +529,11 @@
     "sources": [
       "capri25",
       "stowe03"
-    ]
+    ],
+    "web": {
+      "x": 370,
+      "y": 820
+    }
   },
   {
     "id": "brain",
@@ -413,7 +545,11 @@
       "mcgregor23",
       "vanombergen19",
       "hupfeld22"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 800
+    }
   },
   {
     "id": "sans",
@@ -427,7 +563,11 @@
       "sans_wjg",
       "sans_sr20",
       "eyebrain23"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 850
+    }
   },
   {
     "id": "vestibular",
@@ -439,7 +579,11 @@
       "vestib15",
       "neurovest17",
       "reentry25"
-    ]
+    ],
+    "web": {
+      "x": 630,
+      "y": 900
+    }
   },
   {
     "id": "cognition",
@@ -450,7 +594,11 @@
     "sources": [
       "cog24",
       "winscat"
-    ]
+    ],
+    "web": {
+      "x": 860,
+      "y": 830
+    }
   },
   {
     "id": "cogtest",
@@ -462,7 +610,11 @@
     "sources": [
       "cog24",
       "winscat"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 790
+    }
   },
   {
     "id": "oct",
@@ -474,7 +626,11 @@
     "sources": [
       "sans_nasa23",
       "sans_wjg"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 845
+    }
   },
   {
     "id": "mri",
@@ -485,7 +641,11 @@
     "signal_verdict": "weak",
     "sources": [
       "mcgregor23"
-    ]
+    ],
+    "web": {
+      "x": 1110,
+      "y": 900
+    }
   },
   {
     "id": "eva",
@@ -497,6 +657,10 @@
     "sources": [
       "iss_saliva2020",
       "mehta2017"
-    ]
+    ],
+    "web": {
+      "x": 120,
+      "y": 365
+    }
   }
 ]

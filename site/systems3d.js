@@ -11,6 +11,7 @@
   const canvas = document.getElementById("systems3d");
   if (!canvas || !canvas.getContext) return;
   const ctx = canvas.getContext("2d");
+  if (!ctx) return; // canvas unsupported or out of memory: the static caption still explains it
 
   // ---- Config -------------------------------------------------------------
   const INK = "#111827";
@@ -25,21 +26,28 @@
 
   // Outcomes sit on an inner ring; inputs on an outer ring at varied heights.
   // `on` marks a driver that is elevated on Day 97 for Crew A1 (Simulated).
+  // Scores, levels and `on` flags are A1 Day 97 in data/engine_output.json.
+  // `on` = the driver is active in that day's score. Radiation still counts on
+  // Day 97: the engine carries the Day 92-93 solar particle event forward.
   const nodes = [
     { id: "immune", label: "Immune 88", level: "act", outcome: true, a: 90, r: 1.0, y: 0.0 },
-    { id: "cardio", label: "Heart 49", level: "watch", outcome: true, a: 210, r: 1.0, y: 0.15 },
-    { id: "bone", label: "Bone & muscle 15", level: "normal", outcome: true, a: 330, r: 1.0, y: -0.1 },
+    { id: "cardio", label: "Heart 47", level: "watch", outcome: true, a: 210, r: 1.0, y: 0.15 },
+    { id: "bone", label: "Bone & muscle 19", level: "normal", outcome: true, a: 330, r: 1.0, y: -0.1 },
 
     { id: "stress", label: "Stress (HRV)", on: true, a: 20, r: 1.85, y: 0.55 },
-    { id: "sleep", label: "Sleep deficit", on: true, a: 75, r: 1.9, y: -0.5 },
-    { id: "rhr", label: "Resting HR jump", on: true, a: 135, r: 1.85, y: 0.6 },
-    { id: "rad", label: "Radiation (SPE)", on: true, a: 185, r: 1.9, y: -0.45 },
-    { id: "eva", label: "EVA, last 3 days", on: false, a: 245, r: 1.85, y: 0.5 },
-    { id: "time", label: "Time in flight", on: false, a: 295, r: 1.9, y: -0.55 },
-    { id: "resist", label: "Resistance exercise", on: false, a: 345, r: 1.85, y: 0.45 },
+    { id: "sleep", label: "Sleep deficit", on: true, a: 65, r: 1.9, y: -0.5 },
+    { id: "rhr", label: "Resting HR jump", on: true, a: 110, r: 1.85, y: 0.6 },
+    { id: "rad", label: "Radiation (SPE days 92-93)", on: true, a: 155, r: 1.9, y: -0.45 },
+    { id: "exercise", label: "Aerobic exercise", on: false, a: 200, r: 1.85, y: 0.5 },
+    { id: "eva", label: "EVA, last 3 days", on: false, a: 245, r: 1.9, y: -0.4 },
+    { id: "time", label: "Time in flight", on: false, a: 290, r: 1.85, y: 0.45 },
+    { id: "resist", label: "Resistance exercise", on: false, a: 335, r: 1.9, y: -0.55 },
   ];
 
-  // Immune weights match the risk engine (AGENTS.md section 5).
+  // Line width = weight in the score. Every weight is the risk engine's own
+  // (engine/risk_engine.py), so each outcome's lines add up to 1.00.
+  // Heart "autonomic strain" (0.30) is half HRV stress, half resting HR.
+  // Bone "stress x inactivity" (0.30) is drawn from stress.
   const edges = [
     ["stress", "immune", 0.30],
     ["sleep", "immune", 0.25],
@@ -47,11 +55,14 @@
     ["rad", "immune", 0.10],
     ["time", "immune", 0.10],
     ["rhr", "immune", 0.10],
-    ["stress", "cardio", 0.20],
-    ["sleep", "cardio", 0.15],
-    ["rhr", "cardio", 0.20],
-    ["resist", "bone", 0.30],
-    ["stress", "bone", 0.15],
+    ["exercise", "cardio", 0.35],
+    ["stress", "cardio", 0.15],
+    ["rhr", "cardio", 0.15],
+    ["rad", "cardio", 0.20],
+    ["time", "cardio", 0.15],
+    ["resist", "bone", 0.40],
+    ["stress", "bone", 0.30],
+    ["rad", "bone", 0.15],
     ["time", "bone", 0.15],
   ];
 
@@ -68,7 +79,8 @@
   }
 
   // ---- State --------------------------------------------------------------
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let reduceMotion = motionQuery.matches;
   let yaw = 0.6;
   let pitch = TILT;
   let dragging = false;
@@ -215,13 +227,33 @@
   }
 
   // ---- Loop ---------------------------------------------------------------
+  // Only keep a frame loop while auto-rotating; otherwise draw on demand,
+  // so a hidden or paused map uses no CPU.
+  let looping = false;
+  function animating() {
+    return visible && !dragging && !hover && !reduceMotion;
+  }
   function frame() {
-    if (visible && !dragging && !hover && !reduceMotion) {
-      yaw += AUTO_SPEED;
-      draw();
+    if (!animating()) {
+      looping = false;
+      return;
     }
+    yaw += AUTO_SPEED;
+    draw();
     requestAnimationFrame(frame);
   }
+  function startLoop() {
+    if (looping || !animating()) return;
+    looping = true;
+    requestAnimationFrame(frame);
+  }
+  const onMotionChange = (e) => {
+    reduceMotion = e.matches;
+    draw();
+    startLoop();
+  };
+  if (motionQuery.addEventListener) motionQuery.addEventListener("change", onMotionChange);
+  else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -277,6 +309,7 @@
   function release() {
     dragging = false;
     canvas.style.cursor = "grab";
+    startLoop();
   }
   canvas.addEventListener("pointerup", release);
   canvas.addEventListener("pointercancel", release);
@@ -284,12 +317,14 @@
     if (!dragging && hover) {
       hover = null;
       draw();
+      startLoop();
     }
   });
 
   if ("IntersectionObserver" in window) {
     new IntersectionObserver((entries) => {
       visible = entries[0].isIntersecting;
+      startLoop();
     }).observe(canvas);
   }
   if ("ResizeObserver" in window) new ResizeObserver(resize).observe(canvas);
@@ -297,5 +332,5 @@
 
   canvas.style.cursor = "grab";
   resize();
-  requestAnimationFrame(frame);
+  startLoop();
 })();

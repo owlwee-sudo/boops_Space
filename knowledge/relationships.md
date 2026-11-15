@@ -20,7 +20,7 @@
   On the ISS, crew who shed a latent virus had higher salivary cortisol. Reactivation was distinct to crew who did spacewalks (EVA).
 - **Cortisol / HPA axis → Muscle loss**: muscle protein loss · 🧑⭐⭐⭐ · [inact]  
   After 14 days of bed rest, high cortisol tripled amino-acid loss from muscle.
-- **Cortisol / HPA axis → Bone loss**: osteoclast activity ↑ · 🧑⭐ · ⚠️ no source yet  
+- **Cortisol / HPA axis → Bone loss**: osteoclast activity ↑ · 🧑⭐ · [osteoclast] [receptors]  
   Clinical evidence: glucocorticoid therapy is a known cause of excess osteoclast activity, and cortisol is a glucocorticoid.
 - **Cortisol / HPA axis → Insulin resistance (glucose)**: insulin resistance · 🧑⭐⭐ · [bedrest28]  
   Bed rest plus high cortisol: leg insulin sensitivity 9.1 → 5.2 mg/kg/min.
@@ -94,29 +94,29 @@
   Other HR confounders: stress, intense exercise, medications, vaccination.
 - **Fluid shift → HRV (ECG / PPG)**: lowers HRV baseline · 🧑 · [autonomic]
 - **Fluid shift → Blood pressure**: lowers BP ~10 mmHg · 🧑 · [norsk15]
-- **Fluid shift → Facial behaviour change**: puffy face changes geometry · ⚠️ no source yet  
+- **Fluid shift → Facial behaviour change**: puffy face changes geometry · [norsk15] [facebio]  
   Set the facial baseline in flight. Astronauts are also trained to stay composed.
-- **Fluid shift → Camera rPPG (RGB + NIR)**: may shift rPPG baseline (untested) · ⚠️ no source yet
+- **Fluid shift → Camera rPPG (RGB + NIR)**: may shift rPPG baseline (untested) · [norsk15] [rgbnir]
 - **Muscle loss → Inflammation / oxidative stress**: landing cytokine spike may be regeneration · 🧑 · [twinsland]  
   Twins Study re-analysis: inflammatory markers spiking at landing may reflect muscle repair, not illness. High cytokines are not always "sick".
 
 ### Measures (22)
 
-- 🟢 **Mission day count → Isolation & confinement**: days confined · ⚠️ no source yet
+- 🟢 **Mission day count → Isolation & confinement**: days confined · [mars500] [klos25]
 - 🟢 **Saliva cortisol + viral DNA → Cortisol / HPA axis**: direct hormone · [mehta17] [salivary]
 - 🟢 **Saliva cortisol + viral DNA → Latent virus reactivation**: viral DNA shedding · [mehta17] [archer]
 - 🔵 **Sweat cortisol → Cortisol / HPA axis**: hormone (prototype) · [sweat]
-- 🟢 **CGM (glucose) → Insulin resistance (glucose)**: continuous glucose · ⚠️ no source yet
+- 🟢 **CGM (glucose) → Insulin resistance (glucose)**: continuous glucose · [bedrest28]
 - 🟢 **Symptom log → Illness & symptoms**: daily check-in · [crucian16] [shingles]
 - 🟡 **Facial behaviour change → Psychological stress**: change vs own baseline (fusion only) · [barrett19] [microexp] [jyu] [facebio] [euai]
 - 🔴 **Blood pressure → Psychological stress**: +~7 mmHg (weak) · [mentalhrv]
 - 🟢 **HRV (ECG / PPG) → Psychological stress**: sympathetic shift · [mentalhrv] [autonomic]
 - 🟢 **Resting HR vs own baseline → Illness & symptoms**: pre-symptom flag (63%) · [mishra20] [stanford] [laad]
 - 🟢 **Sleep (actigraphy) → Psychological stress**: cause and symptom · [barger14]
-- 🔴 **Scans & strength tests → Muscle loss**: slow, not daily · ⚠️ no source yet
-- 🔴 **Scans & strength tests → Bone loss**: slow, not daily · ⚠️ no source yet
-- 🟢 **Exercise / loading log → Unloading / inactivity**: loading actually received · ⚠️ no source yet
-- 🟢 **Radiation dosimeter → Space radiation**: dose & solar spikes · ⚠️ no source yet
+- 🔴 **Scans & strength tests → Muscle loss**: slow, not daily · [ferrando2004]
+- 🔴 **Scans & strength tests → Bone loss**: slow, not daily · [willey] [receptors]
+- 🟢 **Exercise / loading log → Unloading / inactivity**: loading actually received · [ferrando2004]
+- 🟢 **Radiation dosimeter → Space radiation**: dose & solar spikes · [nasa_radlab] [noaa_swpc]
 - ▫️ **Wearables (Astroskin, ARCHeR) → HRV (ECG / PPG)**: chest ECG · [astroskin] [wang25]
 - ▫️ **Wearables (Astroskin, ARCHeR) → Resting HR vs own baseline**: HR, 48 h continuous · [astroskin] [trialx]
 - ▫️ **Wearables (Astroskin, ARCHeR) → Sleep (actigraphy)**: wristband actigraphy · [archer] [trialx]

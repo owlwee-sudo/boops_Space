@@ -89,7 +89,9 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
 
   let context = loadSelectedContext();
   let sharing: SharingSettings = loadSharingSettings();
-  let activeEmergencyId = "solar_radiation_storm";
+  // Empty until a protocol is opened; the Emergency screens fall back to the
+  // hash "&id=" or their own default, so "#screen=EmergencyFainting" works on reload.
+  let activeEmergencyId = "";
   let emergencyPatientId: "A1" | "A2" | "A3" = context.astronautId;
 
   const overlays = createBoopsOverlays({
@@ -211,6 +213,12 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       const targetScreen: ScreenId =
         protocolId === "solar_radiation_storm" ? "EmergencySolarRadiationStorm" : "EmergencyFainting";
       host.setScreen(targetScreen);
+      // Keep the protocol in the URL so reload / share opens the same one.
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}#screen=${targetScreen}&id=${encodeURIComponent(protocolId)}`,
+      );
     },
     openRiskScreen: (riskKey) => {
       const target: ScreenId =
