@@ -4,14 +4,41 @@
     {
       "name": "ui",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "ui", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "ui",
+        "run",
+        "dev"
+      ],
       "port": 1420
     },
     {
       "name": "web",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8010", "--bind", "127.0.0.1", "--directory", "web"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8010",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "web"
+      ],
       "port": 8010
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8020",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "dist-site"
+      ],
+      "port": 8020
     }
   ]
 }

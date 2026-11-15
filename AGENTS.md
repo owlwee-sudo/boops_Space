@@ -39,6 +39,7 @@ generate_mission.py ─► SQLite (data/mission.db) ◄─ Log forms (localStora
                web/index.html = interactive relationship map (open in a browser)
 /content       emergency_protocols.json, tool_guides.json
 /web           static front-end (+ /web/vendor for offline MediaPipe files, /web/camera = camera check, H1)
+/pwa           web-version extras (manifest, service worker, icons), added only to dist-site/app/ by tools/build-site.mjs
 /hard          compute-heavy features: rppg, face, wesad, anomaly (see hard-features-handoff.md)
 /docs          research notes (astronaut-health-relationships.md), handoff files, pitch material
 /tests         pytest checks
@@ -46,6 +47,7 @@ AGENTS.md      this file
 CLAUDE.md      imports this file for Claude Code
 ```
 Run everything: `python engine/run_all.py`, then open `/web`.
+Hosted web version (PWA): `node tools/build-site.mjs` (needs the Android APK built), then `python3 -m http.server 8020 --directory dist-site` and open `http://localhost:8020/app/`. Plan: `docs/web-version-plan.md`.
 Camera check: `python3 -m http.server 8000 --directory web`, then open `http://localhost:8000/camera/` (add `?sim=steady` for a Simulated signal with no camera).
 Tests for the hard features: `node --test hard/rppg/test_rppg_core.mjs hard/face/test_face_core.mjs` and `pytest tests/`. Python packages: `pip install -r hard/requirements.txt`.
 WESAD stress model (needs the dataset, see `hard/wesad/README.md`): `python hard/wesad/train.py`.
@@ -153,6 +155,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | Figma: risk detail, emergency, tool guides, settings | Design | — | 🛠 in progress |
 | Android Health Connect + BLE GATT + Wi-Fi Direct + iOS HealthKit + CoreBluetooth + MultipeerConnectivity + Bridge UI | Coordinator + `android-native-engineer` + `ios-native-engineer` | main | ✅ done (Android 19 JVM tests + APK built; iOS 16 XCTests + device build succeeded; UI typecheck + `/web` + `dist-site` built) |
 | App header cleanup: no separate top bar (day stepper in page header, Sensors & Sync in sidebar) | Claude Code | claude/app-seamless-header | ✅ done (`ui` typecheck + offline `/web` build + APK built; Figma still to match) |
+| Web version PWA at `/app/` (plan steps 1–2: hosting, manifest, service worker, offline/update notices) | Claude Code | claude/app-check-web-plan-d7958e | ✅ done (checked offline with the server stopped: dashboard, Emergency, camera check; update flow checked). Steps 3–6 in `docs/web-version-plan.md` ⏳ todo |
 | Landing page (`site/` → `dist-site/`): clean redesign with real crew-app screens, 3D body-systems map, plain-language copy | Gemini → Claude Code | claude/landing-page-gemini-handover-daa8b6 | ✅ done (`node tools/build-site.mjs`; checked at 1440 / 390 px) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
@@ -176,6 +179,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-15: Added native OS health, BLE GATT, and offline P2P crew sync across Android (`Health Connect`, `BluetoothGatt`, `WifiP2pManager` via `BoopsAndroid`) and Apple iOS (`HealthKit` incl. `HKHeartbeatSeriesQuery` RMSSD, `CoreBluetooth`, `MultipeerConnectivity` via `window.webkit.messageHandlers.boopsNative` / `BoopsApple`), plus desktop Chromium Web Bluetooth fallback and `DeviceHubModal` in `ui/` -> `/web`. Kept all external HTTP blocked (`403 Offline Mode` on Android, `boops-app://app` scheme on iOS) and cited all SDKs/specs in `/knowledge` (`41` concepts, `83` edges, `107` sources).
 - 2026-11-15: Landing page uses flat colours only (no gradients), no emoji or arrow glyphs, plain-language copy. The isometric laptop was replaced by a dependency-free canvas 3D body-systems map (`site/systems3d.js`); immune line weights match section 5, heart and bone line weights are illustrative.
 - 2026-11-15: Landing page redesigned (`site/index.html` + `site/home.css`; `legal.html` keeps `styles.css`). It shows real crew-app screens captured from `/web` (`site/assets/app/*.webp`, simulated data) instead of a live demo, and self-hosts Inter (OFL, credited on the Legal page).
+- 2026-11-15: Web version = the same `/web` app hosted at `/app/` on the landing site as a static, offline-first PWA. No backend, no accounts: data stays in the browser. The service worker and manifest live in `/pwa` and are added only to `dist-site/app/`, so `web/` and the Android/iOS apps are unchanged. A new version waits until the user taps "Reload". MediaPipe (18 MB) is cached on first camera use, not on install.
 - 2026-11-15: Crew App view has no separate top bar. The mission-day stepper sits on the right of each page title (`.boops-page-tools`, or inside the Log header actions), Sensors & Sync joins the sidebar actions, and the crew switcher stays in the sidebar Profile card. The top bar now only shows in Demo / Debug mode (scrubber + story jumps).
 
 ---

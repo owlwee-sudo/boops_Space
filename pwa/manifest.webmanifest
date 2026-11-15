@@ -1,0 +1,21 @@
+{
+  "name": "BOOPS · Crew health early warnings",
+  "short_name": "BOOPS",
+  "description": "Offline crew health dashboard: early warnings for immune, bone and muscle, and heart risk. Simulated data. Prototype, not a medical device.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f5f7",
+  "theme_color": "#f4f5f7",
+  "categories": ["health", "medical", "education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Emergency", "url": "./#screen=EmergencyHub", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Camera check", "url": "./camera/", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
