@@ -16,18 +16,20 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from engine.analysis import MIN_SIGNAL_QUALITY, _to_float, zscores
+from engine.analysis import MIN_SIGNAL_QUALITY, _to_float, _to_int, zscores
 
 # ---------------------------------------------------------------------------
 # Configuration thresholds
 # ---------------------------------------------------------------------------
+# Outside these ranges a reading is physically impossible for a living person
+# (or almost certainly a sensor fault). Same ranges as the Android aggregator.
 PLAUSIBLE_LIMITS: dict[str, tuple[float, float]] = {
     "rhr_bpm": (30.0, 200.0),
     "temp_c": (30.0, 42.0),
     "spo2_pct": (70.0, 100.0),
-    "hrv_rmssd_ms": (5.0, 250.0),
-    "sbp_mmhg": (65.0, 220.0),
-    "dbp_mmhg": (35.0, 130.0),
+    "hrv_rmssd_ms": (2.0, 300.0),
+    "sbp_mmhg": (50.0, 260.0),
+    "dbp_mmhg": (30.0, 180.0),
 }
 
 DANGEROUS_THRESHOLDS: dict[str, Any] = {
@@ -43,7 +45,9 @@ def _has_symptoms(row: pd.Series | dict[str, Any]) -> bool:
     raw = row.get("symptoms")
     if raw is None or (isinstance(raw, float) and np.isnan(raw)):
         return False
-    return bool(str(raw).strip())
+    text = str(raw).strip().lower()
+    # CSV round-trips can turn an empty cell into the text "nan" or "none".
+    return bool(text) and text not in ("nan", "none", "null")
 
 
 _SUGGESTED_STEPS: dict[str, str] = {
@@ -106,7 +110,9 @@ def check_reading(
     hrv = _to_float(row.get("hrv_rmssd_ms"))
     temp = _to_float(row.get("temp_c"))
     spo2 = _to_float(row.get("spo2_pct"))
-    eva = int(_to_float(row.get("eva")) or 0)
+    sbp = _to_float(row.get("sbp_mmhg"))
+    dbp = _to_float(row.get("dbp_mmhg"))
+    eva = _to_int(row.get("eva"))
     symptoms_raw = row.get("symptoms")
     symptoms_present = _has_symptoms(row)
 
@@ -117,10 +123,20 @@ def check_reading(
     severe_reasons: list[str] = []
     if rhr is not None and DANGEROUS_THRESHOLDS["rhr_high"] < rhr <= 200.0 and symptoms_present:
         severe_reasons.append(f"Critically elevated resting HR ({rhr:.0f} bpm) with logged symptoms")
-    if temp is not None and temp >= DANGEROUS_THRESHOLDS["temp_high"] and (symptoms_present or (sq is not None and sq >= 0.7)):
+    temp_max = PLAUSIBLE_LIMITS["temp_c"][1]
+    if (
+        temp is not None
+        and DANGEROUS_THRESHOLDS["temp_high"] <= temp <= temp_max
+        and (symptoms_present or (sq is not None and sq >= 0.7))
+    ):
         severe_reasons.append(f"High fever ({temp:.1f} °C)")
-    if spo2 is not None and 70.0 <= spo2 < DANGEROUS_THRESHOLDS["spo2_low"] and (symptoms_present or (sq is not None and sq >= 0.7)):
-        severe_reasons.append(f"Low blood oxygen SpO2 ({spo2:.1f}%)")
+    spo2_min = PLAUSIBLE_LIMITS["spo2_pct"][0]
+    if spo2 is not None and 0.0 < spo2 < DANGEROUS_THRESHOLDS["spo2_low"]:
+        # Low SpO2 WITH symptoms is always an emergency, even below 70 %.
+        # Without symptoms, only a clean, plausible reading counts; < 70 % with
+        # no symptoms is treated as a sensor-contact fault in step 2.
+        if symptoms_present or (spo2 >= spo2_min and sq is not None and sq >= 0.7):
+            severe_reasons.append(f"Low blood oxygen SpO2 ({spo2:.1f}%)")
     if severe_reasons:
         return finish({
             "status": "act_now",
@@ -132,6 +148,8 @@ def check_reading(
     device_reasons: list[str] = []
     if sq is not None and sq < MIN_SIGNAL_QUALITY:
         device_reasons.append(f"Low sensor signal quality ({sq:.2f} < {MIN_SIGNAL_QUALITY})")
+    if sq is None and str(row.get("source", "")).strip().lower() not in ("manual", ""):
+        device_reasons.append("Missing sensor signal quality")
     if hrv is None:
         device_reasons.append("Missing HRV (RMSSD) measurement")
     if rhr is None:
@@ -144,6 +162,16 @@ def check_reading(
         device_reasons.append(f"Implausible body temperature ({temp:.1f} °C)")
     if spo2 is not None and spo2 < PLAUSIBLE_LIMITS["spo2_pct"][0] and not symptoms_present:
         device_reasons.append(f"Implausible SpO2 ({spo2:.1f}%) without symptoms")
+    if spo2 is not None and spo2 > PLAUSIBLE_LIMITS["spo2_pct"][1]:
+        device_reasons.append(f"Implausible SpO2 ({spo2:.1f}% > 100%)")
+    if hrv is not None and not (PLAUSIBLE_LIMITS["hrv_rmssd_ms"][0] <= hrv <= PLAUSIBLE_LIMITS["hrv_rmssd_ms"][1]):
+        device_reasons.append(f"Implausible HRV ({hrv:.0f} ms)")
+    if sbp is not None and not (PLAUSIBLE_LIMITS["sbp_mmhg"][0] <= sbp <= PLAUSIBLE_LIMITS["sbp_mmhg"][1]):
+        device_reasons.append(f"Implausible systolic BP ({sbp:.0f} mmHg)")
+    if dbp is not None and not (PLAUSIBLE_LIMITS["dbp_mmhg"][0] <= dbp <= PLAUSIBLE_LIMITS["dbp_mmhg"][1]):
+        device_reasons.append(f"Implausible diastolic BP ({dbp:.0f} mmHg)")
+    if sbp is not None and dbp is not None and sbp <= dbp:
+        device_reasons.append(f"Implausible BP: systolic {sbp:.0f} not above diastolic {dbp:.0f}")
 
     if device_reasons:
         return finish({
@@ -164,7 +192,7 @@ def check_reading(
 
     prior_abnormal = False
     if history_df is not None and not history_df.empty:
-        cur_day = int(_to_float(row.get("mission_day")) or 0)
+        cur_day = _to_int(row.get("mission_day"))
         prev = history_df[history_df["mission_day"] == cur_day - 1]
         if not prev.empty:
             prev_z = zscores(prev.iloc[-1], baseline)
@@ -185,9 +213,9 @@ def check_reading(
 
     recent_eva = eva == 1
     if not recent_eva and history_df is not None and not history_df.empty:
-        cur_day = int(_to_float(row.get("mission_day")) or 0)
+        cur_day = _to_int(row.get("mission_day"))
         recent_rows = history_df[history_df["mission_day"].between(cur_day - 2, cur_day)]
-        recent_eva = bool((recent_rows.get("eva", pd.Series(dtype=int)) == 1).any())
+        recent_eva = any(_to_int(v) == 1 for v in recent_rows.get("eva", pd.Series(dtype=float)))
 
     if recent_eva or ex_min > ex_mean + 1.5 * ex_sd:
         return finish({

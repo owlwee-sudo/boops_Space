@@ -8,6 +8,7 @@ Tables:
 from __future__ import annotations
 
 import json
+import math
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -208,7 +209,7 @@ def insert_daily_records(
                 None if pd.isna(r["exercise_min"]) else float(r["exercise_min"]),
                 None if pd.isna(r["resistance_min"]) else float(r["resistance_min"]),
                 None if pd.isna(r["radiation_msv"]) else float(r["radiation_msv"]),
-                int(r.get("eva", 0) or 0),
+                _safe_int(r.get("eva")),
                 "" if pd.isna(r.get("symptoms")) else str(r.get("symptoms")),
                 None if pd.isna(r["mood_1to5"]) else int(r["mood_1to5"]),
                 None if pd.isna(r["signal_quality"]) else float(r["signal_quality"]),
@@ -231,6 +232,18 @@ def insert_daily_records(
     return len(rows)
 
 
+PLANTED_SPE_UTC = "2026-08-17T06:00:00Z"
+
+
+def _safe_int(val: Any, default: int = 0) -> int:
+    """int() that turns NaN, inf, None and junk into ``default`` instead of crashing."""
+    try:
+        out = float(val)
+    except (TypeError, ValueError):
+        return default
+    return int(out) if math.isfinite(out) else default
+
+
 def save_engine_output(
     outputs: list[dict[str, Any]],
     db_path: Path | str = DEFAULT_DB_PATH,
@@ -239,7 +252,13 @@ def save_engine_output(
     with _connect(db_path) as conn:
         conn.execute("DELETE FROM risk_drivers")
         conn.execute("DELETE FROM actions")
-        conn.execute("DELETE FROM emergency_events")
+        # Only clear the SPE events this function plants itself (so a re-run does
+        # not duplicate them). Crew-logged emergency events must never be deleted.
+        conn.execute(
+            "DELETE FROM emergency_events WHERE astronaut_id = 'all' "
+            "AND protocol_id = 'solar_radiation_storm' AND created_utc = ?",
+            (PLANTED_SPE_UTC,),
+        )
 
         for item in outputs:
             aid = item["astronaut_id"]
@@ -319,7 +338,7 @@ def save_engine_output(
                         "solar_radiation_storm",
                         "critical",
                         f"Solar Particle Event (Day {day}) — shelter protocol triggered",
-                        f"2026-08-17T06:00:00Z",
+                        PLANTED_SPE_UTC,
                     ),
                 )
     return len(outputs)

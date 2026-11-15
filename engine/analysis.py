@@ -51,6 +51,17 @@ INFECTION_RHR_Z_THRESHOLD = 2.0
 INFECTION_CONSECUTIVE_DAYS = 2
 INFECTION_MAX_PLAUSIBLE_RHR = 180.0
 
+# Smallest SD we allow per metric. A very steady baseline (e.g. the same RHR
+# every day) would otherwise make a tiny change look like z = 100.
+MIN_BASELINE_SD: dict[str, float] = {
+    "rhr_bpm": 1.5,
+    "hrv_rmssd_ms": 2.0,
+    "sleep_hours": 0.4,
+    "temp_c": 0.15,
+    "radiation_msv": 0.05,
+}
+DEFAULT_MIN_SD = 1e-3
+
 
 def _to_float(val: Any) -> float | None:
     """Safely convert a scalar to float, returning None for missing/NaN values."""
@@ -58,14 +69,21 @@ def _to_float(val: Any) -> float | None:
         return None
     try:
         out = float(val)
-        return None if np.isnan(out) else out
-    except (TypeError, ValueError):
+        # inf / -inf are as useless as NaN: drop them before they reach any score.
+        return out if np.isfinite(out) else None
+    except (TypeError, ValueError, OverflowError):
         return None
+
+
+def _to_int(val: Any, default: int = 0) -> int:
+    """Safely convert a scalar to int (NaN, inf and junk give ``default``)."""
+    out = _to_float(val)
+    return default if out is None else int(out)
 
 
 def is_low_quality(row: pd.Series | dict[str, Any]) -> bool:
     """Return True if a row has signal_quality below MIN_SIGNAL_QUALITY (marked, not deleted)."""
-    sq = _to_float(row.get("signal_quality") if isinstance(row, dict) else row["signal_quality"])
+    sq = _to_float(row.get("signal_quality"))
     return sq is not None and sq < MIN_SIGNAL_QUALITY
 
 
@@ -83,20 +101,26 @@ def personal_baseline(df: pd.DataFrame, astronaut_id: str) -> dict[str, dict[str
     )
     window = df.loc[mask]
     if window.empty:
-        window = df.loc[df["astronaut_id"] == astronaut_id]
+        # No usable days 1-14: fall back to all of this person's GOOD readings,
+        # never to low-quality glitches.
+        window = df.loc[
+            (df["astronaut_id"] == astronaut_id)
+            & (df["signal_quality"].fillna(1.0) >= MIN_SIGNAL_QUALITY)
+        ]
 
     baseline: dict[str, dict[str, float]] = {}
     for metric in BASELINE_METRICS:
         if metric not in window.columns:
             continue
-        series = pd.to_numeric(window[metric], errors="coerce").dropna()
+        series = pd.to_numeric(window[metric], errors="coerce")
+        series = series[np.isfinite(series)]
         if series.empty:
             continue
         mean_val = float(series.mean())
         sd_val = float(series.std(ddof=1)) if len(series) > 1 else 1.0
         baseline[metric] = {
             "mean": round(mean_val, 3),
-            "sd": round(max(sd_val, 1e-3), 3),
+            "sd": round(max(sd_val, MIN_BASELINE_SD.get(metric, DEFAULT_MIN_SD)), 3),
         }
     return baseline
 
@@ -116,7 +140,7 @@ def zscores(
         val = _to_float(row.get(metric) if isinstance(row, dict) else row.get(metric, None))
         if val is None:
             continue
-        sd = max(float(stats.get("sd", 1.0)), 1e-3)
+        sd = max(float(stats.get("sd", 1.0)), MIN_BASELINE_SD.get(metric, DEFAULT_MIN_SD))
         mean = float(stats.get("mean", 0.0))
         out[metric] = round((val - mean) / sd, 2)
     return out
@@ -221,20 +245,29 @@ def infection_early_warning(
     explained by a recent EVA (within 2 days) or unusually hard exercise.
     """
     ordered = astronaut_df.sort_values("mission_day").reset_index(drop=True)
-    if row_idx < 0 or row_idx >= len(ordered):
+    if not isinstance(row_idx, (int, np.integer)) or row_idx < 0 or row_idx >= len(ordered):
         return False
 
     ex_stats = baseline.get("exercise_min", {"mean": 118.0, "sd": 10.0})
     hard_exercise_cutoff = ex_stats["mean"] + 1.5 * max(ex_stats["sd"], 5.0)
     rhr_mean = baseline.get("rhr_bpm", {}).get("mean", 60.0)
-    rhr_sd = max(baseline.get("rhr_bpm", {}).get("sd", 2.0), 1e-3)
+    rhr_sd = max(baseline.get("rhr_bpm", {}).get("sd", 2.0), MIN_BASELINE_SD["rhr_bpm"])
 
+    days = pd.to_numeric(ordered["mission_day"], errors="coerce")
+    cur_day = _to_float(days.iloc[row_idx])
+    if cur_day is None:
+        return False
+    cur_day = int(cur_day)
+
+    # Look up REAL mission days (cur_day, cur_day - 1, ...), not row positions:
+    # a missing day must break the streak, and an EVA 15 days ago must not count.
     consecutive = 0
     for lookback in range(INFECTION_CONSECUTIVE_DAYS):
-        idx = row_idx - lookback
-        if idx < 0:
+        day = cur_day - lookback
+        same_day = ordered[days == day]
+        if same_day.empty:
             break
-        rec = ordered.iloc[idx]
+        rec = same_day.iloc[-1]
         sq = _to_float(rec.get("signal_quality"))
         rhr = _to_float(rec.get("rhr_bpm"))
         ex_min = _to_float(rec.get("exercise_min")) or 0.0
@@ -244,12 +277,9 @@ def infection_early_warning(
         if rhr is None or rhr >= INFECTION_MAX_PLAUSIBLE_RHR:
             break
 
-        # Exclude days explained by EVA (on that day or within previous 2 days) or hard exercise
-        recent_eva = False
-        for eva_back in range(3):
-            if idx - eva_back >= 0 and int(ordered.iloc[idx - eva_back].get("eva", 0)) == 1:
-                recent_eva = True
-                break
+        # Exclude days explained by EVA (that day or the 2 days before) or hard exercise
+        eva_window = ordered[(days >= day - 2) & (days <= day)]
+        recent_eva = any(_to_int(v) == 1 for v in eva_window.get("eva", pd.Series(dtype=float)))
         if recent_eva or ex_min > hard_exercise_cutoff:
             break
 

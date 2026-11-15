@@ -83,6 +83,9 @@ class NumpyOnlyUnpickler(pickle.Unpickler):
         ("numpy._core.multiarray", "_reconstruct"),
         ("numpy.core.multiarray", "scalar"),
         ("numpy._core.multiarray", "scalar"),
+        # NumPy >= 2 with pickle protocol 5 rebuilds arrays through _frombuffer.
+        ("numpy.core.numeric", "_frombuffer"),
+        ("numpy._core.numeric", "_frombuffer"),
         ("numpy", "ndarray"),
         ("numpy", "dtype"),
         ("_codecs", "encode"),
@@ -94,6 +97,10 @@ class NumpyOnlyUnpickler(pickle.Unpickler):
         if module.startswith("numpy"):
             import numpy._core.multiarray as multiarray
 
+            if name == "_frombuffer":
+                import numpy._core.numeric as numeric
+
+                return numeric._frombuffer
             return getattr(multiarray, name) if name in ("_reconstruct", "scalar") else getattr(np, name)
         import _codecs
 

@@ -2767,7 +2767,12 @@ function hydrateSettingsScreen(
   state: AppContextState,
 ): void {
   const debugMode = isDebugUiMode();
+  // "My data" mode: no simulated crew, no simulated readings. Everything below
+  // guards on `engine` / `record`, which are null here.
+  const personal = state.dataMode === "mine";
   const profile = getCrewProfile(state.astronautId);
+  const profileLabel = personal ? "Self" : profile.id;
+  const loggedDays = state.loggedDays ?? 0;
   let settings = loadUserSettings();
   const contentLeft = artboard.querySelector('[data-name="Left"]');
 
@@ -2776,13 +2781,15 @@ function hydrateSettingsScreen(
     const savedNote = settings.profile_notes[profile.id];
     if (profBox) {
       setParagraphs(profBox, [
-        [0, `${profile.id} · ${profile.name}`],
+        [0, `${profileLabel} · ${profile.name}`],
         [1, savedNote ? `${profile.role} · ${savedNote}` : profile.role],
         [
           2,
-          debugMode
-            ? `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Simulated`
-            : `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Offline`,
+          personal
+            ? `My data · Day ${state.missionDay} · Offline`
+            : debugMode
+              ? `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Simulated`
+              : `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Offline`,
         ],
       ]);
     }
@@ -2803,13 +2810,20 @@ function hydrateSettingsScreen(
     const valPs = row.querySelectorAll("p");
     const valP = valPs[valPs.length - 1];
 
-    if (title === "Status" && valP && engine) {
+    if (title === "Status" && valP && personal) {
+      valP.textContent =
+        loggedDays < 14
+          ? `Learning: ${loggedDays} of 14 logged days`
+          : `Ready · ${loggedDays} logged days`;
+    } else if (title === "Status" && valP && engine) {
       const rhrBase = engine.baseline.rhr_bpm;
       const hrvBase = engine.baseline.hrv_rmssd_ms;
       valP.textContent =
         state.missionDay <= 14
           ? `Learning: ${state.missionDay} of 14 days`
           : `Active · RHR ${rhrBase?.mean.toFixed(0) ?? 60}±${rhrBase?.sd.toFixed(1) ?? 2} bpm, HRV ${hrvBase?.mean.toFixed(0) ?? 50} ms`;
+    } else if (title === "Baseline set from" && valP && personal) {
+      valP.textContent = loggedDays < 14 ? "Your first 14 logged days" : `Your logged days (${loggedDays})`;
     } else if (title === "Baseline set from" && valP) {
       valP.textContent = `In-flight days 1–${settings.baseline_calibrated_day}`;
     } else if (title === "Share daily summary with mission control") {
@@ -2900,6 +2914,7 @@ function hydrateSettingsScreen(
       row.replaceWith(cloneRow);
     } else if (title === "Wearable (HRV, sleep)") {
       const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && personal) subP.textContent = "Not synced yet · tap for the fit guide";
       if (subP && record) {
         subP.textContent = `Signal ${Math.round(record.signal_quality * 100)}% · synced Day ${state.missionDay}`;
       }
@@ -2912,6 +2927,7 @@ function hydrateSettingsScreen(
       row.replaceWith(cloneRow);
     } else if (title === "Personal dosimeter") {
       const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && personal) subP.textContent = "Not synced yet · tap for the guide";
       if (subP && record) {
         subP.textContent = `${record.radiation_msv.toFixed(2)} mSv today · synced Day ${state.missionDay}`;
       }
@@ -2924,6 +2940,7 @@ function hydrateSettingsScreen(
       row.replaceWith(cloneRow);
     } else if (title === "Blood pressure cuff") {
       const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && personal) subP.textContent = "Not synced yet · tap for the guide";
       if (subP && record) {
         subP.textContent = `${Math.round(record.sbp_mmhg)}/${Math.round(record.dbp_mmhg)} mmHg · synced Day ${state.missionDay}`;
       }
@@ -3059,7 +3076,7 @@ function hydrateSettingsScreen(
         const editor = h(
           "div",
           { className: "boops-inline-panel", "data-boops-profile-editor": "1" },
-          h("strong", { style: "font-size:13px;color:#111827;" }, `Crew note for ${profile.id} · ${profile.name}`),
+          h("strong", { style: "font-size:13px;color:#111827;" }, `Crew note for ${profileLabel} · ${profile.name}`),
           noteInput,
           h(
             "div",
@@ -3089,7 +3106,7 @@ function hydrateSettingsScreen(
                   });
                   editor.remove();
                   state.reRenderScreen();
-                  state.showToast(`Updated profile note for ${profile.id}`);
+                  state.showToast(`Updated profile note for ${profileLabel}`);
                 },
               },
               "Save profile",
@@ -3104,6 +3121,14 @@ function hydrateSettingsScreen(
       recalBtn.style.cursor = "pointer";
       recalBtn.addEventListener("click", (ev) => {
         ev.stopPropagation();
+        if (personal) {
+          state.showToast(
+            loggedDays < 14
+              ? `Your baseline needs 14 logged days (${loggedDays} so far). Keep logging.`
+              : `Baseline uses your ${loggedDays} logged days.`,
+          );
+          return;
+        }
         const targetDay = Math.max(14, state.missionDay);
         settings = saveUserSettings({ ...settings, baseline_calibrated_day: targetDay });
         updateRowValue("Baseline set from", `In-flight days 1–${targetDay}`);
@@ -3657,6 +3682,12 @@ function applyPersonalModeScreen(
   }
   if (screenId.startsWith("Emergency")) {
     if (bundle) hydrateEmergencyScreens(artboard, screenId, bundle, null, state);
+    return;
+  }
+  if (screenId === "SettingsProfile") {
+    // Sharing toggles, units, devices and Nearby Crew Sync must work before any
+    // readings exist, so Settings never gets the empty state.
+    hydrateSettingsScreen(artboard, null, null, state);
     return;
   }
   const logTarget: ScreenId = screenId.includes("Sleep")
