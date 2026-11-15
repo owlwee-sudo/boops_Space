@@ -2266,3 +2266,63 @@ body {
   background: #fef3c7;
   color: #92400e;
 }
+
+/* ---------------------------------------------------------------------------
+   Seamless header (Crew App view): no separate top bar.
+   The Demo / Debug bar only shows in Debug mode; the day stepper lives in the
+   page header and Sensors & Sync joins the sidebar actions.
+   --------------------------------------------------------------------------- */
+:root[data-boops-mode="app"] .boops-topbar {
+  display: none !important;
+}
+
+.boops-day-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boops-page-tools.has-back {
+  right: 150px;
+}
+
+.figma-artboard .boops-date-stepper {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  padding: 3px 4px;
+}
+
+.figma-artboard .boops-date-stepper .boops-day-readout {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.figma-artboard .boops-stepper-btn {
+  width: 28px;
+  height: 28px;
+}
+
+.figma-artboard .boops-today-btn {
+  font-size: 12px;
+  padding: 7px 12px;
+  background: transparent;
+  border-color: transparent;
+  color: #374151;
+}
+
+.figma-artboard .boops-today-btn:hover {
+  background: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.figma-artboard .boops-today-btn.is-current-day {
+  background: transparent;
+  border-color: transparent;
+  color: #9ca3af;
+}
+
+@media (max-width: 1023px) {
+  .boops-page-tools.has-back {
+    right: auto;
+  }
+}

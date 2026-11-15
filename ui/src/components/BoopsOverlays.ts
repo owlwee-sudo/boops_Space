@@ -4,6 +4,7 @@
  *   (Readings status, Tool Guides, Export / Summary) above the Emergency button, and the crew switcher
  *   inside the Profile card
  * - "Demo & debug" section with the Demo / Debug switch on the Settings screen
+ * - Mission-day stepper in each page header (right of the title), so the app has no separate top bar
  * - Demo / Debug bar (day 1-180 slider, Demo Story jumps), hidden in the clean Crew App view
  * - Right-side Tool-Guide Drawer (7 measurement guides from content/tool_guides.json)
  * - Privacy-aware Export Modal (CSV, JSON, and Printable Flight-Surgeon Summary Sheet)
@@ -208,6 +209,10 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   statusBtn.append(dqBadge);
   statusBtn.addEventListener("click", showReadingsStatus);
 
+  // Sensors & Sync used to live in the top bar; it now sits with the other sidebar actions.
+  const sensorsBtn = sideRow("Sensors & Sync", Bluetooth);
+  sensorsBtn.addEventListener("click", () => deviceHub.open("health"));
+
   const guidesBtn = sideRow("Tool Guides", BookOpen);
   guidesBtn.addEventListener("click", () => openDrawer(activeGuideId));
 
@@ -218,6 +223,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     "div",
     { className: "boops-side-actions", "data-name": "Sidebar actions" },
     statusBtn,
+    sensorsBtn,
     guidesBtn,
     exportBtn,
   );
@@ -311,6 +317,25 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const anchor = sidebar.querySelector<HTMLElement>('[data-name="Emergency button"]');
     if (anchor?.parentElement) anchor.parentElement.insertBefore(sideActions, anchor);
     else sidebar.append(sideActions);
+    mountDayControls(artboard);
+  }
+
+  // The mission-day stepper sits on the right of each page title (no separate top bar).
+  // Log screens already have a header action row there, so the stepper joins it.
+  function mountDayControls(artboard: HTMLElement) {
+    const logActions = artboard.querySelector<HTMLElement>("[data-boops-log-actions]");
+    if (logActions) {
+      logActions.prepend(dayGroup);
+      return;
+    }
+    const tools = h(
+      "div",
+      { className: "boops-artboard-header-actions boops-page-tools", "data-boops-page-tools": "1" },
+      dayGroup,
+    );
+    // Detail screens have a "← Home" pill in the top-right corner; sit just left of it.
+    if (artboard.querySelector('[data-name="Back"]')) tools.classList.add("has-back");
+    artboard.append(tools);
   }
 
   function syncModeUi() {
@@ -355,25 +380,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     dayReadout,
     nextBtn,
   );
-
-  const topSensorsBtn = h(
-    "button",
-    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => deviceHub.open("health") },
-    createElement(Bluetooth, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
-    "Sensors & Sync",
-  );
-  const topGuidesBtn = h(
-    "button",
-    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => openDrawer(activeGuideId) },
-    createElement(BookOpen, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
-    "Tool Guides",
-  );
-  const topExportBtn = h(
-    "button",
-    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => openExport() },
-    createElement(FileDown, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
-    "Export",
-  );
+  // One node, moved into each freshly rendered screen by mountDayControls().
+  const dayGroup = h("div", { className: "boops-day-group", role: "group", "aria-label": "Mission day" }, dayStepper, todayBtn);
 
   const scrubberGroup = h(
     "div",
@@ -382,28 +390,16 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     daySlider,
   );
 
+  // Demo / Debug bar only: hidden in the clean Crew App view (see boops.css).
+  // Everyday controls live in the sidebar (crew, sensors, guides, export) and the page header (day).
   const topbar = h(
     "header",
     { className: "boops-topbar", "data-boops-mode": uiMode },
     h(
       "div",
       { className: "boops-topbar-main" },
-      h(
-        "div",
-        { className: "boops-topbar-group" },
-        topCrewSelect,
-        dayStepper,
-        todayBtn,
-      ),
-      h(
-        "div",
-        { className: "boops-topbar-group" },
-        scrubberGroup,
-        h("span", { className: "boops-tag-offline" }, "Offline · On-device"),
-        topSensorsBtn,
-        topGuidesBtn,
-        topExportBtn,
-      ),
+      h("div", { className: "boops-topbar-group" }, topCrewSelect),
+      h("div", { className: "boops-topbar-group" }, scrubberGroup),
     ),
     demoStrip,
   );
@@ -791,7 +787,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const rec = getDailyRecord(bundle, astronautId, missionDay);
     const defaultDay = uiMode === "debug" ? 96 : 45;
     dayReadout.textContent = rec?.date ? `Day ${missionDay} / 180 · ${rec.date}` : `Day ${missionDay} / 180`;
-    todayBtn.textContent = `Today (D${defaultDay})`;
+    todayBtn.textContent = "Today";
+    todayBtn.title = `Jump to today (mission day ${defaultDay})`;
     todayBtn.classList.toggle("is-current-day", missionDay === defaultDay);
 
     const engine = getEngineDay(bundle, astronautId, missionDay);
