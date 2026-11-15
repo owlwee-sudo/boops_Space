@@ -162,6 +162,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 
 | Fix plan Phase 0 (`docs/fix-plan/`): engine triage + NaN/inf safety, IEW day lookup, adaptation driver kept, emergency events kept, WESAD unpickler, "My data" Settings unlocked | Claude Code | claude/fix-plan-phase0 | ✅ done (pytest 63/63, node 18/18, `ui` typecheck + offline `/web` built; "My data" Settings not clicked through in a browser). Phases 1–3 ⏳ todo |
 | Fix plan Phase 1 (`docs/fix-plan/03`): per-risk sharing in exports + Nearby, safe CSV/JSON, local API CSRF/bounds/no listings, Android WebView + backup + BLE bounds, iOS BLE/RMSSD bounds, Tauri CSP | Claude Code | claude/fix-plan-phase0 | 🛠 mostly done (pytest 88/88, Android JVM 20/20 + debug APK, iOS 18/18 XCTests, `ui` typecheck + `/web` built). Not done: Android/iOS Nearby peer authentication, iOS bridge `null`-origin carve-out, R8 minify, Tauri build not run (no Rust toolchain) |
+| Mission-day calendar dropdown: tap the "Day N / 180 · date" readout in any page header to pick a day from a month grid (Watch/Act dots, keyboard, Esc/back closes) | Claude Code | claude/fix-plan-phase0 | ✅ done (`ui` typecheck + offline `/web` + `ui/dist` built; checked in the browser at desktop and phone width. APK / iOS / Tauri rebuilds not run) |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
