@@ -1139,3 +1139,619 @@
   gap: 8px;
   flex-shrink: 0;
 }
+
+/* ==========================================================================
+   Multi-Device Responsive Layout (Desktop >= 1024px preserved 1:1 with Figma)
+   ========================================================================== */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Mobile/tablet navigation bar & scrim (hidden on desktop >= 1024px) */
+.boops-mobile-nav,
+.boops-mobile-scrim,
+.boops-mobile-drawer-close {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .boops-topbar {
+    padding: 8px 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  :root[data-boops-mode="app"] .boops-topbar {
+    padding: 6px 12px;
+  }
+
+  .boops-topbar-main {
+    gap: 8px;
+  }
+
+  .boops-topbar-group {
+    min-width: 0;
+    max-width: 100%;
+    gap: 6px;
+  }
+
+  .boops-select,
+  .boops-input {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .boops-mobile-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 14px;
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  }
+
+  .boops-mobile-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .boops-mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    color: #111827;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .boops-mobile-menu-btn:hover {
+    background: #f3f4f6;
+  }
+
+  .boops-mobile-menu-lines {
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .boops-mobile-nav-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .boops-mobile-nav-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .boops-mobile-tab {
+    min-height: 32px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .boops-mobile-tab.is-active {
+    background: #c6f432;
+    border-color: #a3e635;
+    color: #111827;
+  }
+
+  .boops-mobile-tab-danger {
+    color: #b91c1c;
+    border-color: #fecaca;
+    background: #fef2f2;
+  }
+
+  .boops-mobile-tab-danger.is-active {
+    background: #dc2626;
+    border-color: #991b1b;
+    color: #ffffff;
+  }
+
+  .boops-mobile-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: rgba(17, 24, 39, 0.48);
+  }
+
+  .boops-mobile-scrim[hidden] {
+    display: none;
+  }
+
+  /* Responsive stage & artboard flow (1:1 CSS layout instead of miniature desktop zoom) */
+  .app-stage {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    min-height: 0;
+    overflow-x: clip;
+  }
+
+  .figma-scale-box {
+    width: 100% !important;
+    min-height: 0 !important;
+    flex-shrink: 1;
+  }
+
+  .figma-artboard {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px 28px !important;
+    box-sizing: border-box;
+  }
+
+  /* Sidebar becomes an accessible off-canvas drawer */
+  .figma-artboard [data-name^="Sidebar/"] {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: min(296px, 84vw) !important;
+    height: 100dvh !important;
+    z-index: 85 !important;
+    border-radius: 0 24px 24px 0 !important;
+    overflow-y: auto !important;
+    padding-top: max(16px, env(safe-area-inset-top)) !important;
+    padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+    box-shadow: 12px 0 36px rgba(17, 24, 39, 0.22);
+    transform: translateX(-110%);
+    transition: transform 0.2s ease;
+  }
+
+  :root[data-boops-nav="open"] .figma-artboard [data-name^="Sidebar/"] {
+    transform: translateX(0);
+  }
+
+  .figma-artboard [data-name^="Sidebar/"] [data-name="Spacer"] {
+    min-height: 12px;
+    flex: 1 0 auto;
+  }
+
+  .boops-mobile-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    margin-bottom: -16px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Header, Back pill, Log header actions & Main content become fluid flex children */
+  .figma-artboard [data-name="Back"] {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    order: 1;
+    align-self: flex-start;
+    width: auto !important;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 6px 12px !important;
+  }
+
+  .figma-artboard [data-name="Page header"] {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    order: 2;
+    overflow: visible !important;
+    white-space: normal !important;
+  }
+
+  .figma-artboard [data-name="Page header"] p:first-child {
+    font-size: clamp(24px, 4.4vw, 32px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .figma-artboard .boops-artboard-header-actions {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    order: 3;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .figma-artboard [data-name="Content"] {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    min-width: 0;
+    order: 4;
+    overflow: visible !important;
+    gap: 18px !important;
+  }
+
+  /* Tool-guide artboard screens behave like fixed slide-over sheets */
+  .figma-artboard [data-name="Dim"] {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    z-index: 86 !important;
+  }
+
+  .figma-artboard [data-name="Tool guide"] {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    left: auto !important;
+    width: min(420px, 100vw) !important;
+    height: 100dvh !important;
+    overflow-y: auto !important;
+    z-index: 88 !important;
+    padding-bottom: 28px !important;
+  }
+
+  .figma-artboard [data-name="Tooltip"] {
+    left: 16px !important;
+    right: 16px !important;
+    top: 210px !important;
+    width: auto !important;
+    max-width: 320px;
+  }
+
+  /* Allow wrapped readable text inside cards instead of Figma desktop nowrap clipping */
+  .figma-artboard [data-name="Page header"] p,
+  .figma-artboard [data-name="Section header"],
+  .figma-artboard [data-name="Section header"] [data-name="Text"],
+  .figma-artboard [data-name="Section header"] p,
+  .figma-artboard [data-name="Alert banner"] [data-name="Text"],
+  .figma-artboard [data-name="Alert banner"] p,
+  .figma-artboard [data-name="Risk card"] [data-name="Why"] p,
+  .figma-artboard [data-name="Chart card"] [data-name="Text"],
+  .figma-artboard [data-name="Chart card"] [data-name="Header"] p,
+  .figma-artboard [data-name="Chain row"] p,
+  .figma-artboard [data-name="What it means"] p,
+  .figma-artboard [data-name="Log entry"] p,
+  .figma-artboard [data-name="Settings row"] p,
+  .figma-artboard [data-name="Profile"] [data-name="Info"] p,
+  .figma-artboard [data-name="Emergency tile"] p,
+  .figma-artboard [data-name="Crew member"] p,
+  .figma-artboard [data-name="Input field"] [data-name="Label row"],
+  .figma-artboard [data-name="Input field"] > p,
+  .figma-artboard [data-name="Rating scale"] p {
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  /* Cards, rows & multi-column layouts adapt to 2-col (tablet) or 1-col (mobile) */
+  .figma-artboard [data-name="Alert banner"] {
+    flex-wrap: wrap !important;
+  }
+
+  .figma-artboard [data-name="Row"],
+  .figma-artboard [data-name="Summary"],
+  .figma-artboard [data-name="Risk summary"] {
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    gap: 14px !important;
+  }
+
+  .figma-artboard [data-name="Row"] > [data-name="Metric card"],
+  .figma-artboard [data-name="Row"] > [data-name="Progress card"],
+  .figma-artboard [data-name="Row"] > [data-name="Risk card"],
+  .figma-artboard [data-name="Row"] > [data-name="Emergency tile"] {
+    flex: 1 1 calc(50% - 14px) !important;
+    min-width: 240px !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .figma-artboard [data-name="Score card"] {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 168px;
+  }
+
+  .figma-artboard [data-name="Row"] > [data-name="Chart card"],
+  .figma-artboard [data-name="Summary"] > [data-name="Chart card"],
+  .figma-artboard [data-name="Risk summary"] > [data-name="Chart card"] {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .figma-artboard [data-name="Chart card"] [data-name="Header"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .figma-artboard [data-name="Plot"] {
+    overflow: hidden !important;
+  }
+
+  .figma-artboard [data-name="Metric card"] [data-name="Header"],
+  .figma-artboard [data-name="Risk card"] [data-name="Header"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .figma-artboard [data-name="Rating scale"] [data-name="Options"],
+  .figma-artboard [data-name="Input field"] [data-name="Label row"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  /* Stack 2-column detail/settings layouts vertically on tablet & phone */
+  .figma-artboard [data-name="Why and how"],
+  .figma-artboard [data-name="Body"],
+  .figma-artboard[data-name="Settings & profile"] [data-name="Content"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+    gap: 20px !important;
+  }
+
+  .figma-artboard [data-name="Right"],
+  .figma-artboard [data-name="Left"],
+  .figma-artboard [data-name="Why it matters"],
+  .figma-artboard [data-name="How to fix"],
+  .figma-artboard [data-name="What affects it"],
+  .figma-artboard [data-name="Why and how"] > *,
+  .figma-artboard [data-name="Body"] > *,
+  .figma-artboard [data-name="Entry form"] {
+    width: 100% !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  .figma-artboard [data-name="Stats"] {
+    flex-wrap: wrap !important;
+  }
+
+  .figma-artboard [data-name="Stats"] > * {
+    flex: 1 1 130px !important;
+    min-width: 110px !important;
+  }
+
+  .figma-artboard [data-name="Chain row"] [data-name="Meta"],
+  .figma-artboard [data-name="What it means"] [data-name="Evidence"] {
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+  }
+
+  /* Emergency pages */
+  .figma-artboard [data-name="Crew"] {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .boops-em-cols {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .boops-em-aside {
+    width: 100%;
+  }
+
+  .figma-artboard [data-name="Call mission control"] {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .boops-topbar {
+    padding: 6px 10px;
+  }
+
+  .boops-brand-pill {
+    font-size: 12px;
+    padding: 3px 8px;
+    gap: 4px;
+  }
+
+  .boops-day-slider {
+    width: clamp(92px, 32vw, 150px);
+  }
+
+  .boops-day-readout {
+    min-width: auto;
+    font-size: 11px;
+  }
+
+  .boops-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .boops-mobile-nav {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .boops-mobile-nav-title {
+    font-size: 12px;
+  }
+
+  .boops-mobile-tab {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .figma-artboard {
+    padding: 12px 12px 24px !important;
+    gap: 14px;
+  }
+
+  .figma-artboard [data-name="Row"] > [data-name="Metric card"],
+  .figma-artboard [data-name="Row"] > [data-name="Progress card"],
+  .figma-artboard [data-name="Row"] > [data-name="Risk card"],
+  .figma-artboard [data-name="Row"] > [data-name="Emergency tile"] {
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .figma-artboard [data-name="Chart card"] [data-name="Plot"] {
+    gap: 4px !important;
+    height: 120px !important;
+  }
+
+  .figma-artboard [data-name="Metric card"],
+  .figma-artboard [data-name="Risk card"],
+  .figma-artboard [data-name="Score card"],
+  .figma-artboard [data-name="Chart card"],
+  .figma-artboard [data-name="What it means"],
+  .figma-artboard [data-name="Who needs help?"],
+  .figma-artboard [data-name="Emergency tile"],
+  .figma-artboard [data-name="Entry form"],
+  .figma-artboard [data-name="About"] {
+    padding: 16px !important;
+  }
+
+  .figma-artboard [data-name="Crew member"] {
+    flex: 1 1 calc(33.333% - 8px) !important;
+    min-width: 96px !important;
+    width: auto !important;
+    padding: 10px 8px !important;
+  }
+
+  .figma-artboard [data-name="Profile"],
+  .figma-artboard [data-name="Settings row"],
+  .figma-artboard [data-name="Log entry"],
+  .figma-artboard [data-name="Section header"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .figma-artboard [data-name="Log entry"] [data-name="When"] {
+    width: auto !important;
+    min-width: 64px;
+  }
+
+  .figma-artboard [data-name="Log entry"] [data-name="Entry"] {
+    flex: 1 1 170px !important;
+  }
+
+  .boops-mind-camera-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .boops-mind-camera-actions {
+    width: 100%;
+  }
+
+  .boops-mind-camera-actions .boops-btn {
+    flex: 1 1 140px;
+    justify-content: center;
+  }
+
+  .boops-em-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .boops-em-hero-title {
+    font-size: 18px;
+  }
+
+  .boops-em-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .boops-em-footer-btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .boops-drawer-panel {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 16px 16px 24px;
+  }
+
+  .boops-modal-backdrop {
+    padding: 8px;
+  }
+
+  .boops-modal-card {
+    width: 100%;
+    max-height: 94dvh;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .frame-hud__panel {
+    width: min(320px, 92vw);
+  }
+
+  .boops-footer {
+    padding: 12px 12px max(18px, env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

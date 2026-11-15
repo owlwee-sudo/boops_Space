@@ -212,15 +212,99 @@ export function createApp(root: HTMLElement) {
   let hudFilter = "";
   let toastTimer: number | null = null;
 
+  const MOBILE_BREAKPOINT = 768;
+  const TABLET_BREAKPOINT = 1024;
+  let mobileNavOpen = false;
+
   const toggleState = new Map<string, boolean>();
   const checklistState = new Map<string, boolean>();
   const logDrafts = new Map<string, string>();
   const savedLogs = new Map<ScreenId, SavedLogEntry[]>();
 
+  const mobileNavTitle = h("span", { className: "boops-mobile-nav-title" }, "");
+  const mobileHealthTab = h(
+    "button",
+    {
+      type: "button",
+      className: "boops-mobile-tab",
+      onclick: () => {
+        setMobileNavOpen(false);
+        navigateTo("HealthHome");
+      },
+    },
+    "Health",
+  );
+  const mobileLogTab = h(
+    "button",
+    {
+      type: "button",
+      className: "boops-mobile-tab",
+      onclick: () => {
+        setMobileNavOpen(false);
+        navigateTo("LogVitals");
+      },
+    },
+    "Log",
+  );
+  const mobileEmergencyBtn = h(
+    "button",
+    {
+      type: "button",
+      className: "boops-mobile-tab boops-mobile-tab-danger",
+      onclick: () => {
+        setMobileNavOpen(false);
+        navigateTo("EmergencyHub");
+      },
+    },
+    "SOS",
+  );
+  const mobileMenuBtn = h(
+    "button",
+    {
+      type: "button",
+      className: "boops-mobile-menu-btn",
+      "aria-label": "Toggle navigation menu",
+      "aria-expanded": "false",
+      onclick: () => setMobileNavOpen(!mobileNavOpen),
+    },
+    h("span", { className: "boops-mobile-menu-lines", "aria-hidden": "true" }, "☰"),
+    h("span", null, "Menu"),
+  );
+
+  const mobileNavBar = h(
+    "div",
+    { className: "boops-mobile-nav" },
+    h("div", { className: "boops-mobile-nav-left" }, mobileMenuBtn, mobileNavTitle),
+    h("div", { className: "boops-mobile-nav-tabs" }, mobileHealthTab, mobileLogTab, mobileEmergencyBtn),
+  );
+  const mobileScrim = h("div", {
+    className: "boops-mobile-scrim",
+    hidden: true,
+    onclick: () => setMobileNavOpen(false),
+  });
+
   const scaleBox = h("div", { className: "figma-scale-box" });
-  const stage = h("div", { className: "app-stage" }, scaleBox);
+  const stage = h("div", { className: "app-stage" }, mobileNavBar, mobileScrim, scaleBox);
   const toastEl = h("div", { className: "figma-toast", hidden: true });
   let boopsRuntime: { enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void } | null = null;
+
+  function setMobileNavOpen(next: boolean) {
+    mobileNavOpen = next;
+    document.documentElement.dataset.boopsNav = next ? "open" : "closed";
+    mobileScrim.hidden = !next;
+    mobileMenuBtn.setAttribute("aria-expanded", String(next));
+  }
+
+  function updateMobileNavChrome(screenId: ScreenId) {
+    const entry = SCREEN_MAP[screenId];
+    mobileNavTitle.textContent = entry.name.replace(/\s*\/\s*/g, " · ");
+    const isEmergency = entry.category === "Emergency";
+    const isLog = entry.category === "Log";
+    const isHealth = !isEmergency && !isLog;
+    mobileHealthTab.classList.toggle("is-active", isHealth);
+    mobileLogTab.classList.toggle("is-active", isLog);
+    mobileEmergencyBtn.classList.toggle("is-active", isEmergency);
+  }
 
   // Floating 52-Frame Switcher HUD
   const hudPillLabel = h("span", null, "");
@@ -286,12 +370,32 @@ export function createApp(root: HTMLElement) {
     }, 2600);
   }
 
+  function getViewportKind(width: number): "mobile" | "tablet" | "desktop" {
+    if (width > 0 && width < MOBILE_BREAKPOINT) return "mobile";
+    if (width > 0 && width < TABLET_BREAKPOINT) return "tablet";
+    return "desktop";
+  }
+
   function applyScaleAndHeight(artboard: HTMLElement) {
     const w = window.innerWidth;
+    const vp = getViewportKind(w);
+    document.documentElement.dataset.boopsViewport = vp;
+
+    if (vp !== "desktop") {
+      // Below desktop width, render at 1:1 with responsive CSS rather than tiny scaled desktop coordinates.
+      (scaleBox as HTMLElement).style.setProperty("zoom", "1");
+      artboard.style.minHeight = "";
+      const dimEl = artboard.querySelector<HTMLElement>('[data-name="Dim"]');
+      if (dimEl) dimEl.style.height = "";
+      return;
+    }
+
+    setMobileNavOpen(false);
     const zoom = w > 0 && w < 1440 ? w / 1440 : 1;
     (scaleBox as HTMLElement).style.setProperty("zoom", String(zoom));
 
     window.requestAnimationFrame(() => {
+      if (getViewportKind(window.innerWidth) !== "desktop") return;
       const boxRect = artboard.getBoundingClientRect();
       let maxRelBottom = 1024;
       for (const child of Array.from(artboard.children)) {
@@ -309,6 +413,7 @@ export function createApp(root: HTMLElement) {
   }
 
   function navigateTo(next: ScreenId) {
+    setMobileNavOpen(false);
     if (next === activeScreen) return;
     if (
       activeScreen !== "LogVitalsGuideBloodPressure" &&
@@ -767,21 +872,58 @@ export function createApp(root: HTMLElement) {
     });
   }
 
+  function attachMobileDrawerChrome(artboard: HTMLElement) {
+    const sidebar = artboard.querySelector<HTMLElement>('[data-name^="Sidebar/"]');
+    if (!sidebar) return;
+    if (!sidebar.querySelector(".boops-mobile-drawer-close")) {
+      const closeDrawerBtn = h(
+        "button",
+        {
+          type: "button",
+          className: "boops-mobile-drawer-close",
+          "aria-label": "Close navigation menu",
+          onclick: (ev: MouseEvent) => {
+            ev.stopPropagation();
+            setMobileNavOpen(false);
+          },
+        },
+        "✕",
+      );
+      sidebar.prepend(closeDrawerBtn);
+    }
+    sidebar.addEventListener("click", (ev: MouseEvent) => {
+      if (getViewportKind(window.innerWidth) === "desktop") return;
+      const t = ev.target as HTMLElement | null;
+      if (t?.closest('[data-name^="Nav"], [data-name="Section tabs"] a, [data-name="Emergency button"], [data-name="Profile"], [data-name="icon/settings"]')) {
+        setMobileNavOpen(false);
+      }
+    });
+  }
+
   function renderActiveScreen() {
     const entry = SCREEN_MAP[activeScreen];
     const artboard = entry.render();
     enhanceFormsAndState(artboard);
     wireInteractions(artboard);
     boopsRuntime?.enhanceArtboard(artboard, activeScreen);
+    attachMobileDrawerChrome(artboard);
+    updateMobileNavChrome(activeScreen);
     scaleBox.replaceChildren(artboard);
     applyScaleAndHeight(artboard);
     updateHud();
   }
 
+  window.addEventListener("keydown", (ev: KeyboardEvent) => {
+    if (ev.key === "Escape" && mobileNavOpen) {
+      setMobileNavOpen(false);
+    }
+  });
+
   window.addEventListener("hashchange", () => {
     const next = readScreenFromHash();
     if (next !== activeScreen) {
       activeScreen = next;
+      setMobileNavOpen(false);
       renderActiveScreen();
     }
   });
