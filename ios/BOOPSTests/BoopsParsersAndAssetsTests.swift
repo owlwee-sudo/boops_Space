@@ -57,19 +57,34 @@ final class BoopsParsersAndAssetsTests: XCTestCase {
     XCTAssertEqual(parsed8?.rrIntervalsMs[0] ?? 0, 819.0 * 1000.0 / 1024.0, accuracy: 0.01)
     XCTAssertEqual(parsed8?.rrIntervalsMs[1] ?? 0, 840.0 * 1000.0 / 1024.0, accuracy: 0.01)
 
-    // Flags 0x19 (16-bit HR + Energy Expended + RR present), HR=260 (0x0104), Energy=500, RR=1024 (1000.0ms)
+    // Flags 0x19 (16-bit HR + Energy Expended + RR present), HR=180 (0x00B4), Energy=500, RR=1024 (1000.0ms)
     let packet16 = Data([
       0x19,
-      0x04, 0x01,
+      0xB4, 0x00,
       0xF4, 0x01,
       0x00, 0x04,
     ])
     let parsed16 = BleGattParsers.parseHeartRateMeasurement(packet16)
-    XCTAssertEqual(parsed16?.bpm, 260)
+    XCTAssertEqual(parsed16?.bpm, 180)
     XCTAssertEqual(parsed16?.rrIntervalsMs.count, 1)
     XCTAssertEqual(parsed16?.rrIntervalsMs[0] ?? 0, 1000.0, accuracy: 0.001)
 
     XCTAssertNil(BleGattParsers.parseHeartRateMeasurement(Data([0x00])))
+    // 260 bpm is outside 25...240
+    XCTAssertNil(BleGattParsers.parseHeartRateMeasurement(Data([0x01, 0x04, 0x01])))
+  }
+
+  func testRejectsImplausibleBloodPressureAndTemperature() {
+    // SBP 70 below DBP 90 (mmHg)
+    XCTAssertNil(BleGattParsers.parseBloodPressureMeasurement(Data([0x00, 0x46, 0x00, 0x5A, 0x00, 0x50, 0x00])))
+    // 50.0 C (FLOAT 50 * 10^0)
+    XCTAssertNil(BleGattParsers.parseTemperatureMeasurement(Data([0x00, 0x32, 0x00, 0x00, 0x00])))
+  }
+
+  func testRMSSDIgnoresTooShortIntervals() {
+    // 50 ms is a double-counted beat; it splits the run: [800, 820] and [1000, 1010] -> diffs 20, 10
+    let rmssd = HealthMetricsMath.computeRMSSD(fromRRIntervalsMs: [800, 820, 50, 1000, 1010])
+    XCTAssertEqual(rmssd ?? -1, sqrt((400.0 + 100.0) / 2.0), accuracy: 0.001)
   }
 
   func testParsePulseOximeterMeasurement() {

@@ -21,7 +21,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset:; media-src 'self' blob: mediastream:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* http://localhost:*; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
     }
   },
   "bundle": {

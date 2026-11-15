@@ -234,6 +234,39 @@ def insert_daily_records(
 
 PLANTED_SPE_UTC = "2026-08-17T06:00:00Z"
 
+# Text starting with one of these is run as a formula by Excel / Sheets.
+_CSV_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+
+
+def csv_safe(value: Any) -> Any:
+    """Neutralise spreadsheet formulas in a CSV cell (prefix with ').
+
+    Numbers are left alone, so negative values like -1.5 stay numeric.
+    """
+    if isinstance(value, str) and value.startswith(_CSV_FORMULA_PREFIXES):
+        try:
+            float(value)
+            return value
+        except ValueError:
+            return "'" + value
+    return value
+
+
+def json_safe(obj: Any) -> Any:
+    """Recursively replace NaN / inf with None so the JSON is valid (RFC 8259)."""
+    if isinstance(obj, float):
+        return obj if math.isfinite(obj) else None
+    if isinstance(obj, dict):
+        return {k: json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [json_safe(v) for v in obj]
+    return obj
+
+
+def dumps_safe(obj: Any, **kwargs: Any) -> str:
+    """json.dumps that never writes NaN / Infinity."""
+    return json.dumps(json_safe(obj), allow_nan=False, **kwargs)
+
 
 def _safe_int(val: Any, default: int = 0) -> int:
     """int() that turns NaN, inf, None and junk into ``default`` instead of crashing."""
@@ -276,12 +309,12 @@ def save_engine_output(
                     day,
                     int(item["stress_score"]),
                     int(item["sleep_score"]),
-                    json.dumps(item["baseline"]),
-                    json.dumps(item["z"]),
-                    json.dumps(item["risks"]),
-                    json.dumps(item["data_quality"]),
-                    json.dumps(item["flags"]),
-                    json.dumps(item["labels"]),
+                    dumps_safe(item["baseline"]),
+                    dumps_safe(item["z"]),
+                    dumps_safe(item["risks"]),
+                    dumps_safe(item["data_quality"]),
+                    dumps_safe(item["flags"]),
+                    dumps_safe(item["labels"]),
                 ),
             )
 
@@ -429,7 +462,7 @@ def export_json(
         )
 
     with open(out, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, ensure_ascii=False)
+        f.write(dumps_safe(payload, indent=2, ensure_ascii=False))
         f.write("\n")
     return out
 
@@ -445,6 +478,8 @@ def export_csv(
         df = pd.read_sql_query(
             "SELECT * FROM daily_records ORDER BY astronaut_id, mission_day", conn
         )
+    for col in df.select_dtypes(include=["object", "string"]).columns:
+        df[col] = df[col].map(csv_safe)
     df.to_csv(out, index=False)
     return out
 

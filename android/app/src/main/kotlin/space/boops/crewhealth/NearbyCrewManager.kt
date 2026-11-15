@@ -400,7 +400,7 @@ class NearbyCrewManager(
         addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
         addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
       }
-      ContextCompat.registerReceiver(activity, p2pReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
+      ContextCompat.registerReceiver(activity, p2pReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
       receiverRegistered = true
     }
   }

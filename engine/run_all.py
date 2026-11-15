@@ -34,7 +34,7 @@ from engine.analysis import (
     zscores,
 )
 from engine.data_quality import check_reading
-from engine.db import init_db, insert_daily_records, save_engine_output
+from engine.db import dumps_safe, init_db, insert_daily_records, save_engine_output
 from engine.export import generate_flight_surgeon_pdf
 from engine.generate_mission import ASTRONAUT_PROFILES, generate_mission_data
 from engine.risk_engine import evaluate_risks, recommend_actions
@@ -109,7 +109,7 @@ def run_pipeline() -> list[dict[str, Any]]:
     # Save engine_output.json and merge anomaly_score / anomaly_kind fields
     engine_json_path = DATA_DIR / "engine_output.json"
     with open(engine_json_path, "w", encoding="utf-8") as f:
-        json.dump(outputs, f, indent=2, ensure_ascii=False)
+        f.write(dumps_safe(outputs, indent=2, ensure_ascii=False))
         f.write("\n")
     merge_into_engine_output(anomaly_records, path=engine_json_path)
     with open(engine_json_path, "r", encoding="utf-8") as f:
@@ -139,12 +139,12 @@ def run_pipeline() -> list[dict[str, Any]]:
 
     UI_PUBLIC_DATA_DIR.mkdir(parents=True, exist_ok=True)
     with open(UI_PUBLIC_DATA_DIR / "boops_bundle.json", "w", encoding="utf-8") as f:
-        json.dump(bundle, f, ensure_ascii=False)
+        f.write(dumps_safe(bundle, ensure_ascii=False))
 
     WEB_DIR.mkdir(parents=True, exist_ok=True)
     with open(WEB_DIR / "data_bundle.js", "w", encoding="utf-8") as f:
         f.write("window.BOOPS_DATA = ")
-        json.dump(bundle, f, ensure_ascii=False)
+        f.write(dumps_safe(bundle, ensure_ascii=False))
         f.write(";\n")
 
     return outputs

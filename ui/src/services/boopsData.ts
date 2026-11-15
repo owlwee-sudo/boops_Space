@@ -1028,7 +1028,13 @@ export function buildExportPayload(
       engine.data_quality.status === "act_now" ||
       (record ? record.radiation_msv >= 1.5 : false);
 
-    if (!sharing.daily_summary && !sharing.raw_data && !isEmergencyDay) {
+    // Crew-first privacy: each risk domain is shared only when its own
+    // "Share with mission control" toggle is on (or on an emergency day).
+    const riskShared = (k: "immune" | "musculoskeletal" | "cardio") =>
+      isEmergencyDay || Boolean(sharing.risk_detail_share?.[k]);
+    const anyRiskShared = riskShared("immune") || riskShared("musculoskeletal") || riskShared("cardio");
+
+    if (!sharing.daily_summary && !sharing.raw_data && !anyRiskShared && !isEmergencyDay) {
       continue;
     }
 
@@ -1050,15 +1056,21 @@ export function buildExportPayload(
     if (sharing.daily_summary || isEmergencyDay) {
       row.stress_score = engine.stress_score;
       row.sleep_score = engine.sleep_score;
-      row.immune_level = engine.risks.immune.level;
-      row.immune_score = engine.risks.immune.score;
-      row.musculoskeletal_level = engine.risks.musculoskeletal.level;
-      row.musculoskeletal_score = engine.risks.musculoskeletal.score;
-      row.cardio_level = engine.risks.cardio.level;
-      row.cardio_score = engine.risks.cardio.score;
       row.data_quality_status = engine.data_quality.status;
       row.infection_early_warning = engine.flags.infection_early_warning;
       row.top_action = engine.actions[0]?.text ?? "";
+    }
+    if (riskShared("immune")) {
+      row.immune_level = engine.risks.immune.level;
+      row.immune_score = engine.risks.immune.score;
+    }
+    if (riskShared("musculoskeletal")) {
+      row.musculoskeletal_level = engine.risks.musculoskeletal.level;
+      row.musculoskeletal_score = engine.risks.musculoskeletal.score;
+    }
+    if (riskShared("cardio")) {
+      row.cardio_level = engine.risks.cardio.level;
+      row.cardio_score = engine.risks.cardio.score;
     }
 
     if (sharing.raw_data && record) {
@@ -1105,10 +1117,26 @@ export function formatExportCsv(rows: Array<Record<string, unknown>>): string {
   if (rows.length === 0) {
     return "astronaut_id,mission_day,notice\n,,No shareable rows for selected sharing toggles\n";
   }
-  const headers = Object.keys(rows[0]);
+  // Ordered union of every row's keys: rows can have different columns
+  // (raw-only days vs emergency days), and none may be dropped.
+  const headers: string[] = [];
+  const seen = new Set<string>();
+  for (const r of rows) {
+    for (const k of Object.keys(r)) {
+      if (!seen.has(k)) {
+        seen.add(k);
+        headers.push(k);
+      }
+    }
+  }
   const esc = (val: unknown) => {
-    const str = val == null ? "" : String(val);
-    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+    let str = val == null ? "" : String(val);
+    // Spreadsheet formula injection: text starting with = + - @ tab or CR is
+    // run as a formula by Excel / Sheets. Prefix it with ' (numbers stay as is).
+    if (typeof val === "string" && /^[=+\-@\t\r]/.test(str) && !/^-?\d+(\.\d+)?$/.test(str)) {
+      str = `'${str}`;
+    }
+    return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
   };
   const lines = [headers.join(",")];
   for (const r of rows) {

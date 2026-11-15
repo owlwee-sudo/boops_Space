@@ -136,7 +136,7 @@ class BleSensorManager(
   fun register() {
     if (receiverRegistered) return
     val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-    ContextCompat.registerReceiver(activity, bluetoothStateReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
+    ContextCompat.registerReceiver(activity, bluetoothStateReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     receiverRegistered = true
   }
 

@@ -29,7 +29,6 @@
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
     <!-- Android 13+ Nearby Wi-Fi Direct permissions + local P2P ServerSocket/Socket transport -->
     <uses-permission
@@ -59,7 +58,9 @@
     </queries>
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

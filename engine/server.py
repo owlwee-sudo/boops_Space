@@ -32,10 +32,41 @@ DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
 DEFAULT_WEB_DIR = ROOT_DIR / "web"
 MAX_REQUEST_BYTES = 1024 * 1024  # 1 MiB safety cap for local JSON payloads
+MAX_MISSION_DAY = 3650           # 10 years; anything bigger is a bad request
+REQUEST_TIMEOUT_S = 15           # a slow or stuck client cannot hold a thread forever
+LISTEN_BACKLOG = 64              # default is 5, which drops bursts of connections
+LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
+
+
+def _reject_constant(name: str) -> Any:
+    """json.loads hook: NaN / Infinity are not valid JSON and are refused."""
+    raise ValueError(f"{name} is not allowed")
+
+
+def parse_mission_day(value: Any) -> int:
+    """Strict mission day: a whole number from 1 to MAX_MISSION_DAY (no bools, no floats)."""
+    if isinstance(value, bool):
+        raise ValueError("mission_day must be a whole number")
+    if isinstance(value, str) and value.strip().isdigit():
+        value = int(value.strip())
+    if not isinstance(value, int):
+        raise ValueError("mission_day must be a whole number")
+    if not 1 <= value <= MAX_MISSION_DAY:
+        raise ValueError(f"mission_day must be between 1 and {MAX_MISSION_DAY}")
+    return value
+
+
+class BoopsHTTPServer(ThreadingHTTPServer):
+    """Threaded server with a larger listen backlog so bursts do not reset sockets."""
+
+    request_queue_size = LISTEN_BACKLOG
+    daemon_threads = True
 
 
 class BoopsRequestHandler(SimpleHTTPRequestHandler):
     """Serve static `/web` files and handle local SQLite API requests."""
+
+    timeout = REQUEST_TIMEOUT_S
 
     def __init__(
         self,
@@ -60,6 +91,31 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def list_directory(self, path: Any) -> None:  # type: ignore[override]
+        """No directory listings: they would reveal every file in /web."""
+        self.send_error(HTTPStatus.NOT_FOUND, "Not found")
+        return None
+
+    def _same_origin_ok(self) -> bool:
+        """Allow writes only from this local server's own pages (blocks CSRF).
+
+        The Host must be loopback. If the browser sends Origin (or, failing
+        that, Referer) it must point at the same loopback host and port.
+        """
+        server_port = self.server.server_address[1]
+        host_hdr = urlparse(f"http://{self.headers.get('Host', '')}")
+        if host_hdr.hostname not in LOOPBACK_HOSTS:
+            return False
+        source = self.headers.get("Origin") or self.headers.get("Referer")
+        if not source:
+            return True  # non-browser local client (e.g. curl, tests)
+        try:
+            src = urlparse(source)
+            src_port = src.port or (443 if src.scheme == "https" else 80)
+        except ValueError:
+            return False
+        return src.scheme == "http" and src.hostname in LOOPBACK_HOSTS and src_port == server_port
+
     def _read_json_body(self) -> tuple[dict[str, Any] | None, tuple[int, str] | None]:
         raw_len = self.headers.get("Content-Length", "0")
         try:
@@ -68,6 +124,8 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
             return None, (HTTPStatus.BAD_REQUEST, "Invalid Content-Length header.")
 
         if length < 0 or length > MAX_REQUEST_BYTES:
+            # Do not read the oversized body; close the connection after replying.
+            self.close_connection = True
             return None, (
                 HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
                 "Request payload exceeds local limit.",
@@ -78,8 +136,8 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
             return None, (HTTPStatus.BAD_REQUEST, "Empty JSON request body.")
 
         try:
-            parsed = json.loads(raw_bytes.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError):
+            parsed = json.loads(raw_bytes.decode("utf-8"), parse_constant=_reject_constant)
+        except (UnicodeDecodeError, ValueError):
             return None, (HTTPStatus.BAD_REQUEST, "Malformed UTF-8 or JSON payload.")
 
         if not isinstance(parsed, dict):
@@ -95,7 +153,6 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
                     "status": "ok",
                     "offline": True,
                     "db_exists": self.db_path.exists(),
-                    "db_path": str(self.db_path),
                 },
             )
             return
@@ -110,6 +167,19 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "Not found"})
             return
 
+        if not self._same_origin_ok():
+            self.close_connection = True
+            self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "Cross-origin request refused."})
+            return
+        content_type = self.headers.get("Content-Type", "").split(";")[0].strip().lower()
+        if content_type != "application/json":
+            self.close_connection = True
+            self._send_json(
+                HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
+                {"ok": False, "error": "Content-Type must be application/json."},
+            )
+            return
+
         data, err = self._read_json_body()
         if err is not None or data is None:
             status, message = err or (HTTPStatus.BAD_REQUEST, "Invalid payload.")
@@ -119,7 +189,7 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
         try:
             if path in {"/api/log", "/api/log_entries"}:
                 astronaut_id = str(data.get("astronaut_id") or "A1")
-                mission_day = int(data.get("mission_day") or data.get("day") or 1)
+                mission_day = parse_mission_day(data.get("mission_day", data.get("day", 1)))
                 category = str(data.get("category") or data.get("type") or "manual_log")
                 payload = data.get("payload", data)
                 created_utc = data.get("created_utc")
@@ -149,7 +219,7 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
 
             # /api/emergency
             astronaut_id = str(data.get("astronaut_id") or "A1")
-            mission_day = int(data.get("mission_day") or data.get("day") or 1)
+            mission_day = parse_mission_day(data.get("mission_day", data.get("day", 1)))
             protocol_id = str(data.get("protocol_id") or "general_emergency")
             severity = str(data.get("severity") or "critical")
             summary = str(data.get("summary") or "")
@@ -164,7 +234,7 @@ class BoopsRequestHandler(SimpleHTTPRequestHandler):
                 db_path=self.db_path,
             )
             self._send_json(HTTPStatus.CREATED, {"ok": True, "id": row_id})
-        except (TypeError, ValueError) as exc:
+        except (TypeError, ValueError, OverflowError) as exc:
             self._send_json(
                 HTTPStatus.BAD_REQUEST,
                 {"ok": False, "error": f"Invalid request field: {exc}"},
@@ -176,7 +246,7 @@ def create_server(
     port: int = DEFAULT_PORT,
     web_dir: Path | str = DEFAULT_WEB_DIR,
     db_path: Path | str = DEFAULT_DB_PATH,
-) -> ThreadingHTTPServer:
+) -> BoopsHTTPServer:
     """Create the local-only BOOPS HTTP + SQLite server without blocking."""
     resolved_db = Path(db_path)
     init_db(resolved_db)
@@ -186,7 +256,7 @@ def create_server(
         directory=str(resolved_web),
         db_path=resolved_db,
     )
-    return ThreadingHTTPServer((host, port), handler)
+    return BoopsHTTPServer((host, port), handler)
 
 
 def main() -> None:
