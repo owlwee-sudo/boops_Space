@@ -4,7 +4,7 @@
 ---
 
 ## 1. Project in one paragraph
-**B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System)** is our entry for the **NASA Space Apps Challenge 2026**, challenge *"Create Health Monitoring Software for Astronauts on Space Missions"* (event: 14–15 Nov 2026). It is an **offline, crew-first** app that turns daily wearable, sleep and environment data into **early warnings** for downstream health risks (**immune, bone & muscle, heart**), using each astronaut's **personal in-flight baseline**. It explains **why** each risk matters (evidence chains with ⭐ strength + sources), **how to fix** it (actions ranked by root cause), **how to use each instrument** (tool guides) and **what to do in an emergency** (offline protocols).
+**BOOPS (Biobehavioral Observation & Offline Predictive System)** is our entry for the **NASA Space Apps Challenge 2026**, challenge *"Create Health Monitoring Software for Astronauts on Space Missions"* (event: 14–15 Nov 2026). It is an **offline, crew-first** app that turns daily wearable, sleep and environment data into **early warnings** for downstream health risks (**immune, bone & muscle, heart**), using each astronaut's **personal in-flight baseline**. It explains **why** each risk matters (evidence chains with ⭐ strength + sources), **how to fix** it (actions ranked by root cause), **how to use each instrument** (tool guides) and **what to do in an emergency** (offline protocols).
 
 **The judges asked for:** (1) track health data, (2) what to do in an emergency, (3) explain how to use each tool, why it matters, and how to fix it.
 
@@ -162,7 +162,7 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-14: HRV is the main stress signal; BP and SpO₂ are context only.
 - 2026-11-14: Micro-expressions dropped; facial input = opt-in "change vs own baseline", no emotion labels.
 - 2026-11-14: Camera rPPG runs in the browser for an offline live demo.
-- 2026-11-14: Official project name set to B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System).
+- 2026-11-14: Official project name set to BOOPS (Biobehavioral Observation & Offline Predictive System).
 - 2026-11-14: Camera check uses POS (Wang 2017). Signal quality < 0.5 hides the number and asks for a retry. One badly failing part (face, motion, light, pulse) caps quality at 0.40.
 - 2026-11-14: Facial input (H2): `FACE_WEIGHT` defaults to 0 and is capped at 0.15. Baseline = the person's first 14 camera checks. Simulated checks are stored apart from real ones. Output words are only low / medium / high.
 - 2026-11-14: Isolation Forest (H4) only adds an opinion (`anomaly_score`, `anomaly_kind`). It never changes `data_quality.status` itself: the odd-reading checker and its safety rule stay in charge. Low signal quality outranks "trend"; an EVA day excuses a one-day spike.

@@ -39,7 +39,7 @@
       "Measuring HRV right after caffeine or exercise instead of resting morning window."
     ],
     "how_to_fix_bad_reading": [
-      "When B.O.O.P.S. flags 'Check device', tighten strap contact, wipe optical sensor, and perform a 2-minute seated resting check.",
+      "When BOOPS flags 'Check device', tighten strap contact, wipe optical sensor, and perform a 2-minute seated resting check.",
       "If chest strap stays noisy, use the offline camera rPPG spot-check module as a cross-sensor confirmation."
     ],
     "linked_log_fields": [

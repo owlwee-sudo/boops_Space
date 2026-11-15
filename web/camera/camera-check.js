@@ -47,6 +47,7 @@ const el = {
   simCanvas: $("sim-canvas"),
   overlay: $("overlay"),
   placeholder: $("placeholder"),
+  liveGuide: $("live-guide"),
   ring: $("ring"),
   ringArc: $("ring-arc"),
   ringText: $("ring-text"),
@@ -92,6 +93,8 @@ function setStatus(text, tone = "") {
 function setRing(fraction, label) {
   el.ringArc.style.strokeDashoffset = String(RING_LENGTH * (1 - Math.min(1, Math.max(0, fraction))));
   el.ringText.textContent = label;
+  // The tick ring around the face fills in with the same progress.
+  el.liveGuide?.firstElementChild?.style.setProperty("--progress", String(Math.min(1, Math.max(0, fraction))));
 }
 
 function setMeter(node, score) {
@@ -128,7 +131,7 @@ function drawWave(pulse, fs) {
   const w = c.width;
   const h = c.height;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = "#d4d4d4";
+  ctx.strokeStyle = "#e5e7eb";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(0, h / 2);
@@ -139,7 +142,7 @@ function drawWave(pulse, fs) {
   const seg = pulse.subarray(pulse.length - n);
   let peak = 1e-9;
   for (const v of seg) peak = Math.max(peak, Math.abs(v));
-  ctx.strokeStyle = "#111111";
+  ctx.strokeStyle = "#111827";
   ctx.lineWidth = 2;
   ctx.lineJoin = "round";
   ctx.beginPath();
@@ -223,6 +226,7 @@ async function startCheck() {
   el.overlay.width = s.sampler.width = source.width;
   el.overlay.height = s.sampler.height = source.height;
   s.samplerCtx = s.sampler.getContext("2d", { willReadFrequently: true });
+  show(el.liveGuide, true);
   s.phase = "settling";
   plugins.forEach((p) => p.onStart && p.onStart());
   source.onFrame((now) => onFrame(s, now));
@@ -347,6 +351,7 @@ function endSession() {
   if (session) session.source.stop();
   session = null;
   drawOverlay(null);
+  show(el.liveGuide, false);
   el.startBtn.disabled = false;
   show(el.stopBtn, false);
 }
@@ -430,6 +435,10 @@ el.retryBtn.addEventListener("click", startCheck);
 el.stopBtn.addEventListener("click", stopCheck);
 el.saveBtn.addEventListener("click", saveResult);
 el.astronaut.textContent = currentAstronautId();
+const selfNavLink = document.querySelector('.nav-sub[aria-current="page"]');
+if (selfNavLink && window.location.search) {
+  selfNavLink.setAttribute("href", `./index.html${window.location.search}`);
+}
 el.ringArc.style.strokeDasharray = String(RING_LENGTH);
 setRing(0, "");
 if (simMode) show(el.simBanner, true);

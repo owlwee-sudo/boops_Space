@@ -6,26 +6,48 @@
     <meta name="theme-color" content="#f4f5f7" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Camera check · B.O.O.P.S.</title>
+    <title>Camera check · BOOPS</title>
     <link rel="stylesheet" href="camera.css" />
   </head>
   <body>
     <div class="app">
-      <!-- Sidebar: same shape as the Figma lo-fi (260 px, Health | Log) -->
+      <!-- Sidebar: same as the app (brand, Health | Log, white pill rows). Camera check is a
+           sub-screen of Mindfulness, so Mindfulness is lit and Camera check sits under it. -->
       <aside class="sidebar">
-        <div class="brand">B.O.O.P.S.</div>
+        <a class="brand" href="../index.html#screen=HealthHome">
+          <img src="../assets/figma/imgIconLogoPlaceholder.svg" alt="" width="20" height="20" />
+          <span>BOOPS</span>
+        </a>
+        <div class="tabs">
+          <a class="tab is-active" href="../index.html#screen=HealthMindfulness">Health</a>
+          <a class="tab" href="../index.html#screen=LogMindfulness">Log</a>
+        </div>
         <nav class="nav" aria-label="Main">
-          <a class="nav-item" href="../index.html#screen=HealthMindfulness">Health</a>
-          <a class="nav-item" href="../index.html#screen=LogMindfulness">Log</a>
-          <a class="nav-item nav-sub is-active" href="./index.html" aria-current="page">Camera check</a>
+          <a class="nav-item" href="../index.html#screen=HealthHome"><img src="../assets/figma/imgIconHome.svg" alt="" width="18" height="18" />Home</a>
+          <a class="nav-item" href="../index.html#screen=HealthEnvironment"><img src="../assets/figma/imgIconEnvironment.svg" alt="" width="18" height="18" />Environment</a>
+          <a class="nav-sub" href="../index.html#screen=HealthEnvironmentRadiation"><img src="../assets/figma/imgIconRadiation.svg" alt="" width="16" height="16" />Radiation</a>
+          <a class="nav-sub" href="../index.html#screen=HealthEnvironmentGravity"><img src="../assets/figma/imgIconGravity.svg" alt="" width="16" height="16" />Gravity</a>
+          <a class="nav-item" href="../index.html#screen=HealthVitals"><img src="../assets/figma/imgIconVitals.svg" alt="" width="18" height="18" />Vitals</a>
+          <a class="nav-item" href="../index.html#screen=HealthNutrition"><img src="../assets/figma/imgIconNutrition.svg" alt="" width="18" height="18" />Nutrition</a>
+          <a class="nav-item" href="../index.html#screen=HealthSleep"><img src="../assets/figma/imgIconSleep.svg" alt="" width="18" height="18" />Sleep</a>
+          <a class="nav-item is-active" href="../index.html#screen=HealthMindfulness"><img src="../assets/figma/imgIconMindfulness.svg" alt="" width="18" height="18" />Mindfulness</a>
+          <a class="nav-sub is-active" href="./index.html" aria-current="page"><img src="../assets/figma/imgIconCamera.svg" alt="" width="16" height="16" />Camera check</a>
         </nav>
         <div class="sidebar-foot">
-          <div class="crew">Crew member <strong id="astronaut-id">A1</strong></div>
-          <div>Prototype · Not a medical device</div>
+          <a class="emergency" href="../index.html#screen=EmergencyHub"><img src="../assets/figma/imgIconSiren.svg" alt="" width="18" height="18" />Emergency</a>
+          <div class="profile">
+            <span class="avatar" aria-hidden="true"></span>
+            <div class="who">
+              <strong>Crew member <span id="astronaut-id">A1</span></strong>
+              <small>Offline · On-device</small>
+            </div>
+            <a href="../index.html#screen=SettingsProfile" aria-label="Settings &amp; profile"><img src="../assets/figma/imgIconSettings.svg" alt="" width="18" height="18" /></a>
+          </div>
         </div>
       </aside>
 
       <main class="main">
+        <a class="back" href="../index.html#screen=HealthMindfulness">‹ Back to Mindfulness</a>
         <header class="page-head">
           <div>
             <h1>Camera check</h1>
@@ -46,8 +68,10 @@
               <video id="video" class="mirror" playsinline muted hidden></video>
               <canvas id="sim-canvas" hidden></canvas>
               <canvas id="overlay" class="mirror"></canvas>
+              <!-- Shown over the live video: the tick ring fills in as the check runs. -->
+              <div id="live-guide" class="live-guide" hidden><div class="face-guide" aria-hidden="true"><span class="ticks"></span><span class="ticks-fill"></span></div></div>
               <div id="placeholder" class="placeholder">
-                <div class="face-guide" aria-hidden="true"></div>
+                <div class="face-guide" aria-hidden="true"><span class="ticks"></span><span class="ticks-fill"></span></div>
                 <p>Sit still, face the light, look at the camera.</p>
               </div>
               <div id="ring" class="ring" role="timer" aria-label="Time left">
@@ -99,7 +123,13 @@
                 </div>
               </div>
               <p id="result-rmssd-note" class="note"></p>
-              <p id="face-chip" class="chip face-chip" hidden></p>
+              <div id="face-chip" class="face-result" hidden>
+                <div class="face-result-top">
+                  <span class="face-result-label">Face check</span>
+                  <span class="face-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+                </div>
+                <p id="face-chip-text" class="face-result-text"></p>
+              </div>
               <ul id="result-reasons" class="reasons"></ul>
               <div class="actions">
                 <button id="retry-btn" class="btn btn-ghost" type="button">Measure again</button>
@@ -121,32 +151,57 @@
               </ul>
             </section>
 
-            <!-- H2: opt-in facial-behaviour check. Off until the user agrees. -->
-            <section id="face-card" class="card face-card" aria-label="Facial-behaviour check">
-              <div class="card-head">
-                <h2>Facial-behaviour check <span class="tag">optional</span></h2>
+            <!-- H2: opt-in face check. Off until the user agrees. Never names an emotion. -->
+            <section id="face-card" class="card face-card" aria-label="Face check">
+              <div class="face-head">
+                <span class="face-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 10h.01M15.5 10h.01M8.5 14.5c1 1.2 2.2 1.8 3.5 1.8s2.5-.6 3.5-1.8"/></svg>
+                </span>
+                <div class="face-title">
+                  <h2>Face check <span class="tag">optional</span></h2>
+                  <p id="face-sub">A little extra insight, only if you want it.</p>
+                </div>
                 <span id="face-state" class="badge" data-level="fair">Off</span>
               </div>
+
               <div id="face-consent">
-                <p>
-                  During the same 30 seconds, the app can also measure how your face behaves and compare it with
-                  <strong>your own</strong> earlier checks. It is one small extra input for the stress indicator.
+                <p class="face-lede">
+                  While the camera reads your pulse, it can also notice how your face is moving today compared with
+                  <strong>your own usual</strong>. You stay in charge.
                 </p>
-                <ul>
-                  <li><strong>What is measured:</strong> blink rate, eye openness, brow lowering, how much your face and head move.</li>
-                  <li><strong>What is not:</strong> emotions. The app never labels how you feel.</li>
-                  <li>Processed on this device. No video or image is stored, only the numbers.</li>
-                  <li>For medical and safety use only. Not shared unless you choose to share your daily summary.</li>
-                  <li>You can turn it off here or in Settings at any time, and delete the stored numbers.</li>
+                <ul class="face-points">
+                  <li>
+                    <span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+                    <span><strong>What it looks at</strong>Blinks, how open your eyes are, your brows, and how much you move.</span>
+                  </li>
+                  <li>
+                    <span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span>
+                    <span><strong>It never guesses feelings</strong>No labels like happy or sad. Only "like your usual" or "different".</span>
+                  </li>
+                  <li>
+                    <span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+                    <span><strong>It stays with you</strong>Worked out on this device. No photo or video is kept, only a few numbers.</span>
+                  </li>
                 </ul>
-                <div class="actions"><button id="face-on-btn" class="btn" type="button">I agree, turn on</button></div>
+                <details class="face-more">
+                  <summary>More about how it is used</summary>
+                  <p>
+                    It is one small extra input for your stress indicator, for medical and safety use only. It is not shared
+                    unless you choose to share your daily summary. You can turn it off or delete the numbers at any time,
+                    here or in Settings.
+                  </p>
+                </details>
+                <div class="actions"><button id="face-on-btn" class="btn" type="button">Turn on face check</button></div>
               </div>
+
               <div id="face-settings" hidden>
-                <p id="face-progress"></p>
+                <p id="face-progress" class="face-lede"></p>
+                <div id="face-dots" class="face-dots" role="img" aria-label="Baseline progress"></div>
                 <div class="actions">
-                  <button id="face-delete-btn" class="btn btn-ghost" type="button">Delete my facial data</button>
-                  <button id="face-off-btn" class="btn btn-ghost" type="button">Turn off</button>
+                  <button id="face-delete-btn" class="btn btn-ghost btn-small" type="button">Delete my face data</button>
+                  <button id="face-off-btn" class="btn btn-ghost btn-small" type="button">Turn off</button>
                 </div>
+                <p id="face-note" class="note" role="status" aria-live="polite"></p>
               </div>
             </section>
           </div>

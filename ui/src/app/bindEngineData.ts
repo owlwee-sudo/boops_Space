@@ -1,5 +1,5 @@
 /**
- * Hydrates rendered Figma 52-screen artboards with live B.O.O.P.S. engine outputs,
+ * Hydrates rendered Figma 52-screen artboards with live BOOPS engine outputs,
  * daily telemetry, tool-guide hooks, emergency protocols, and sharing controls.
  */
 
@@ -68,7 +68,7 @@ export function normalizeOfflineAssetsAndBrand(artboard: HTMLElement): void {
 
   artboard.querySelectorAll("p").forEach((p) => {
     if (p.textContent?.trim() === "[Name TBD]") {
-      p.textContent = "B.O.O.P.S.";
+      p.textContent = "BOOPS";
     }
   });
 }

@@ -1,4 +1,4 @@
-"""End-to-end verification tests for B.O.O.P.S. Easy Features (Tasks 1–10)."""
+"""End-to-end verification tests for BOOPS Easy Features (Tasks 1–10)."""
 
 from __future__ import annotations
 

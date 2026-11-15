@@ -1,5 +1,5 @@
 /**
- * B.O.O.P.S. global interactive chrome:
+ * BOOPS global interactive chrome:
  * - Sidebar chrome injected into every screen: Offline / Simulated tags beside the brand, action rows
  *   (Readings status, Tool Guides, Export / Summary) above the Emergency button, and the crew switcher
  *   inside the Profile card
@@ -71,7 +71,7 @@ export interface OverlayCallbacks {
   onToast: (msg: string) => void;
 }
 
-/** Creates and wires all global B.O.O.P.S. controls outside the Figma artboard. */
+/** Creates and wires all global BOOPS controls outside the Figma artboard. */
 export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   let activeGuideId = "wearable_hrv_fit";
   let uiMode: BoopsUiMode = detectInitialUiMode();
@@ -150,8 +150,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       cb.onToast(`Run "python engine/server.py" and open http://127.0.0.1:8000/camera/${qs} for the camera check.`);
       return;
     }
-    const opened = window.open(relUrl, "_blank", "noopener");
-    if (!opened) window.location.href = relUrl;
+    // Same tab: the camera check is a screen of the app (Health / Mindfulness), with its own back link.
+    window.location.href = relUrl;
   }
 
   // Sidebar action rows: same shape as the Figma "Nav row" (18 px icon + label + optional badge).
@@ -695,7 +695,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     h(
       "span",
       null,
-      "B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
+      "BOOPS (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
     ),
   );
 
