@@ -1049,8 +1049,7 @@
 /* Profile card doubles as the crew switcher: an invisible native select covers the name block */
 .boops-side-crew {
   cursor: pointer;
-  padding-right: 20px;
-  border-radius: 8px;
+  padding-right: 18px;
 }
 
 .boops-side-crew p {
@@ -1059,9 +1058,19 @@
   text-overflow: ellipsis;
 }
 
-.boops-side-crew:focus-within {
-  outline: 2px solid var(--color-bg-strong, #111827);
-  outline-offset: 4px;
+/* The whole Profile card reacts, not a box around the name: soft grey on hover,
+   a ring only for keyboard focus. */
+[data-name="Profile"]:has(.boops-side-crew) {
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+[data-name="Profile"]:has(.boops-side-crew:hover) {
+  background: var(--color-bg-surface, #f4f5f7);
+  box-shadow: inset 0 0 0 1px #e5e7eb;
+}
+
+[data-name="Profile"]:has(.boops-side-crew-select:focus-visible) {
+  box-shadow: 0 0 0 2px var(--color-bg-strong, #111827);
 }
 
 .boops-side-settings-btn {
@@ -1095,8 +1104,21 @@
   right: 0;
   display: flex;
   transform: translateY(-50%);
-  color: var(--color-text-muted, #6b7280);
+  color: var(--color-text-muted, #9ca3af);
+  opacity: 0.7;
   pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.boops-side-crew:hover .boops-side-crew-chevron {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-name="Profile"]:has(.boops-side-crew),
+  .boops-side-crew-chevron {
+    transition: none;
+  }
 }
 
 :root[data-boops-mode="app"] .boops-debug-only,
