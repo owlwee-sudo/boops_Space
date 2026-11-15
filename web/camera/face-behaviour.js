@@ -138,6 +138,13 @@ registerPlugin({
 // ----------------------------------------------------------------------------
 const $ = (id) => document.getElementById(id);
 
+// Friendly wording. It describes CHANGE only and never names a feeling.
+const LEVEL_TEXT = {
+  low: "Your face is moving like your usual self today.",
+  medium: "A little different from your usual today.",
+  high: "Quite different from your usual today. A good moment to check in with yourself.",
+};
+
 function renderChip() {
   const chip = $("face-chip");
   if (!chip) return;
@@ -146,12 +153,20 @@ function renderChip() {
     return;
   }
   chip.hidden = false;
+  const need = FACE_CONFIG.BASELINE_SESSIONS;
   if (lastOutcome.ready && lastOutcome.change.level) {
-    chip.textContent = `Facial change vs your baseline: ${lastOutcome.change.level}`;
-    chip.dataset.level = lastOutcome.change.level;
+    const level = lastOutcome.change.level;
+    chip.dataset.level = level;
+    chip.setAttribute("aria-label", `Facial change vs your baseline: ${level}`);
+    $("face-chip-text").textContent = LEVEL_TEXT[level];
   } else {
-    chip.textContent = `Facial baseline: ${lastOutcome.baselineCount} of ${FACE_CONFIG.BASELINE_SESSIONS} checks done`;
+    const left = need - lastOutcome.baselineCount;
     chip.dataset.level = "building";
+    chip.setAttribute("aria-label", `Facial baseline: ${lastOutcome.baselineCount} of ${need} checks done`);
+    $("face-chip-text").textContent =
+      left > 0
+        ? `Still learning your usual: ${lastOutcome.baselineCount} of ${need} checks done. ${left} to go.`
+        : "That was check 14. Your usual is now set, so the next check can compare against it.";
   }
 }
 
@@ -161,24 +176,59 @@ function render() {
   if (!state) return;
   state.textContent = on ? "On" : "Off";
   state.dataset.level = on ? "good" : "fair";
+  $("face-sub").textContent = on ? "On for this crew member." : "A little extra insight, only if you want it.";
   $("face-consent").hidden = on;
   $("face-settings").hidden = !on;
-  if (on) {
-    const simulated = new URLSearchParams(window.location.search).has("sim");
-    const count = readFaceSessions(simulated).length;
-    const need = FACE_CONFIG.BASELINE_SESSIONS;
-    $("face-progress").textContent =
-      count >= need
-        ? `Your baseline is set (first ${need} checks). ${count} checks stored on this device.`
-        : `Building your baseline: ${count} of ${need} checks done. Change is shown after that.`;
+  if (!on) return;
+  const simulated = new URLSearchParams(window.location.search).has("sim");
+  const need = FACE_CONFIG.BASELINE_SESSIONS;
+  const count = readFaceSessions(simulated).length;
+  const done = Math.min(count, need);
+  $("face-progress").textContent =
+    count === 0
+      ? `Thanks. Your next ${need} camera checks teach the app what is usual for you.`
+      : count < need
+        ? `Learning your usual: ${done} of ${need} checks done.`
+        : "Your usual is set. Each new check is compared with it.";
+  // One dot per baseline check, filled as they are done.
+  const dots = $("face-dots");
+  dots.replaceChildren();
+  for (let i = 0; i < need; i++) {
+    const dot = document.createElement("i");
+    if (i < done) dot.className = "is-done";
+    dots.append(dot);
   }
+  dots.setAttribute("aria-label", `${done} of ${need} baseline checks done`);
 }
 
 if ($("face-on-btn")) {
+  let deleteArmed = null; // two taps to delete, no pop-up
+  const resetDelete = () => {
+    clearTimeout(deleteArmed);
+    deleteArmed = null;
+    $("face-delete-btn").textContent = "Delete my face data";
+  };
   $("face-on-btn").addEventListener("click", () => setFaceOptIn(true));
-  $("face-off-btn").addEventListener("click", () => setFaceOptIn(false));
+  $("face-off-btn").addEventListener("click", () => {
+    resetDelete();
+    $("face-note").textContent = "";
+    setFaceOptIn(false);
+  });
   $("face-delete-btn").addEventListener("click", () => {
-    if (window.confirm("Delete all facial-behaviour numbers stored on this device? This cannot be undone.")) deleteFaceData();
+    if (!deleteArmed) {
+      $("face-delete-btn").textContent = "Tap again to delete";
+      $("face-note").textContent = "This removes the stored numbers from this device. It cannot be undone.";
+      deleteArmed = setTimeout(() => {
+        resetDelete();
+        $("face-note").textContent = "";
+      }, 5000);
+      return;
+    }
+    resetDelete();
+    deleteFaceData();
+    lastOutcome = null;
+    renderChip();
+    $("face-note").textContent = "Deleted. Your face data is gone from this device.";
   });
   render();
 }

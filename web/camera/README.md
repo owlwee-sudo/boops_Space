@@ -88,7 +88,7 @@ During the same 30 seconds it measures five things (`face-behaviour-core.js`):
 | Expressivity | How much brow, mouth and chin landmarks move, measured in face coordinates so head movement does not count |
 | Head motion | Movement of the face centre, in eye-widths per second |
 
-- **Baseline = the person's first 14 checks.** After that, each check gets `facial_change_z` = the mean |z| across the five features, shown as a chip: "Facial change vs your baseline: low / medium / high" (medium from 1.3, high from 2.0). Before that the chip shows "Facial baseline: n of 14 checks done".
+- **Baseline = the person's first 14 checks.** After that, each check gets `facial_change_z` = the mean |z| across the five features, shown on the result card as a three-step bar for low / medium / high (medium from 1.3, high from 2.0) with a plain sentence such as "Your face is moving like your usual self today." Before that it shows "Still learning your usual: n of 14 checks done", and the card shows 14 progress dots.
 - **No emotion labels.** Facial movements are not reliable signs of emotion (Barrett et al. 2019), so the app never shows words like "angry" or "sad". Micro-expressions are not used. `facial_change_z` has no direction: it only says "different from your normal".
 - **Low quality is ignored.** If the camera check asks for a retry, or has fewer than 150 face frames, nothing is computed or stored.
 - **Stored:** the five numbers per check in `localStorage` (`ahm.face_sessions`), and `facial_change_z`, `facial_change_level`, `facial_features`, `facial_baseline_sessions` on the saved log entry. Blendshapes are only requested from the face model after opt-in.
