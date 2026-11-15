@@ -60,11 +60,18 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
   }
   const renderedMode: DataMode = getDataMode();
   document.documentElement.dataset.boopsData = renderedMode;
+  if (renderedMode === "mine") {
+    // Personal logs live only in this browser: ask it not to evict them under storage pressure.
+    void navigator.storage?.persist?.().catch(() => undefined);
+  }
 
   /** Reloads when the data mode changed, because the bundle and context depend on it. */
   const applyModeChoice = (mode: DataMode) => {
     if (mode === renderedMode) return;
-    window.location.replace(window.location.pathname + window.location.hash.replace(/screen=[^&]*/, "screen=HealthHome"));
+    // Keep other query params (e.g. ?mode=debug); only the screen goes back to Home.
+    window.location.replace(
+      window.location.pathname + window.location.search + window.location.hash.replace(/screen=[^&]*/, "screen=HealthHome"),
+    );
   };
   const openDataChoice = () =>
     showWelcome({ startAtChoice: true, dismissible: true, preselected: getDataMode(), onDone: applyModeChoice });

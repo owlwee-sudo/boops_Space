@@ -426,7 +426,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
   </footer>
 
   <!-- Start choice: demo (simulated mission) or your own data. Opened by any [data-start] link. -->
-  <dialog class="start-dialog" id="start-dialog" aria-labelledby="start-title">
+  <dialog class="start-dialog" id="start-dialog" aria-labelledby="start-title" aria-describedby="start-note">
+    <div class="start-dialog-panel">
     <form method="dialog" class="start-close-form"><button class="start-close" aria-label="Close">✕</button></form>
     <p class="start-kicker" id="start-kicker">Open the web app</p>
     <h2 class="start-title" id="start-title">How do you want to start?</h2>
@@ -442,7 +443,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         <span class="start-tag" id="start-mine-tag">Your data</span>
       </a>
     </div>
-    <p class="start-note">Prototype · Not a medical device · You can switch any time inside the app.</p>
+    <p class="start-note" id="start-note">Prototype · Not a medical device · You can switch any time inside the app.</p>
+    </div>
   </dialog>
 
   <script src="./systems3d.js" defer></script>
@@ -497,7 +499,7 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
       };
       var mine = document.getElementById("start-mine");
       function openStart(kind) {
-        var c = copy[kind];
+        var c = copy[kind] || copy.web;
         document.getElementById("start-kicker").textContent = c.kicker;
         document.getElementById("start-mine-title").textContent = c.mineTitle;
         document.getElementById("start-mine-body").textContent = c.mineBody;
@@ -508,6 +510,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         mine.setAttribute("href", c.mineHref);
         if (c.download) mine.setAttribute("download", ""); else mine.removeAttribute("download");
         dialog.showModal();
+        // Start on the first real choice, not on the Close button.
+        document.getElementById("start-demo").focus();
       }
       if (dialog && typeof dialog.showModal === "function") {
         document.querySelectorAll("[data-start]").forEach(function (link) {
@@ -516,7 +520,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
             openStart(link.getAttribute("data-start"));
           });
         });
-        // Click on the dimmed backdrop closes it.
+        // Click on the dimmed backdrop closes it. The panel fills the dialog box, so a
+        // click on its padding lands on the panel, never on the <dialog> itself.
         dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
         mine.addEventListener("click", function () { if (mine.hasAttribute("download")) dialog.close(); });
       }

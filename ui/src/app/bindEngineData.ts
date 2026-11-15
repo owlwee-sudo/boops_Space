@@ -19,6 +19,9 @@ import {
   type SharingSettings,
   appendEmergencyEvent,
   appendManualLog,
+  buildLocalBackup,
+  downloadTextFile,
+  restoreLocalBackup,
   dotForLevel,
   formatRiskLevel,
   formatSourceLabel,
@@ -3081,6 +3084,69 @@ function hydrateSettingsScreen(
     }
   });
 
+  // Back up / restore everything BOOPS keeps in this browser (PWA plan step 4).
+  const aboutForBackup = artboard.querySelector('[data-name="About"]');
+  if (aboutForBackup && !artboard.querySelector("[data-boops-backup]")) {
+    const fileInput = h("input", { type: "file", accept: "application/json,.json", style: "display:none" }) as HTMLInputElement;
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      file.text().then((text) => {
+        try {
+          if (!window.confirm("Restore this backup? It replaces the BOOPS data saved in this browser.")) return;
+          const n = restoreLocalBackup(text);
+          state.showToast(`Restored ${n} saved items. Reloading…`);
+          window.setTimeout(() => window.location.reload(), 600);
+        } catch (err) {
+          state.showToast(err instanceof Error ? err.message : "Could not restore that file.");
+        }
+      });
+      fileInput.value = "";
+    });
+    const panel = h(
+      "div",
+      { className: "boops-inline-panel", "data-boops-backup": "1" },
+      h("strong", { style: "font-size:13px;color:#111827;" }, "Back up your data"),
+      h(
+        "span",
+        { className: "boops-hub-row-sub" },
+        "Everything stays in this browser. Save a copy as a file, or restore one on a new device.",
+      ),
+      h(
+        "div",
+        { className: "boops-hub-actions" },
+        h(
+          "button",
+          {
+            type: "button",
+            className: "boops-inline-btn boops-inline-btn-dark",
+            onClick: (ev: MouseEvent) => {
+              ev.stopPropagation();
+              const day = new Date().toISOString().slice(0, 10);
+              downloadTextFile(`boops-backup-${day}.json`, buildLocalBackup(), "application/json");
+              state.showToast("Backup file saved");
+            },
+          },
+          "Back up all local data (JSON)",
+        ),
+        h(
+          "button",
+          {
+            type: "button",
+            className: "boops-inline-btn",
+            onClick: (ev: MouseEvent) => {
+              ev.stopPropagation();
+              fileInput.click();
+            },
+          },
+          "Restore from backup",
+        ),
+        fileInput,
+      ),
+    );
+    aboutForBackup.before(panel);
+  }
+
   const aboutCard = artboard.querySelector('[data-name="About"]');
   if (aboutCard && !debugMode) {
     aboutCard.querySelectorAll("p").forEach((p) => {
@@ -3440,6 +3506,14 @@ function hydrateEmergencyScreens(
           "data-checked": ts ? "true" : "false",
           role: "button",
           tabIndex: 0,
+          "aria-pressed": ts ? "true" : "false",
+          onKeydown: (ev: KeyboardEvent) => {
+            // role="button" must also work from the keyboard.
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              (ev.currentTarget as HTMLElement).click();
+            }
+          },
           onClick: (ev: MouseEvent) => {
             ev.stopPropagation();
             const nextTs = toggleChecklistTimestamp(protocol.id, stepKey, !ts);

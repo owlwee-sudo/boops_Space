@@ -220,7 +220,38 @@ function main() {
   // 4. Crew web app under /app/ (offline PWA)
   const app = buildWebApp();
 
-  // 5. Cloudflare Workers Static Assets ignore file
+  // 5. Security headers (Cloudflare `_headers`). The app is offline-first: it only ever
+  // talks to its own origin, so connect-src is 'self'. The landing page keeps its one
+  // small inline script, so only /app/* gets the strict no-inline script policy.
+  const APP_CSP = [
+    "default-src 'self'",
+    "script-src 'self' 'wasm-unsafe-eval'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "media-src 'self' blob: mediastream:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "worker-src 'self' blob:",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+  ].join("; ");
+  fs.writeFileSync(
+    path.join(DIST_DIR, "_headers"),
+    [
+      "/*",
+      "  X-Content-Type-Options: nosniff",
+      "  Referrer-Policy: no-referrer",
+      "  Permissions-Policy: camera=(self), microphone=(), geolocation=(), bluetooth=(self)",
+      "",
+      "/app/*",
+      `  Content-Security-Policy: ${APP_CSP}`,
+      "",
+    ].join("\n"),
+    "utf8"
+  );
+
+  // 6. Cloudflare Workers Static Assets ignore file
   fs.writeFileSync(
     path.join(DIST_DIR, ".assetsignore"),
     [

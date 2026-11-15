@@ -15,7 +15,7 @@
 
   // ---- Config -------------------------------------------------------------
   const INK = "#111827";
-  const MUTED = "#94a3b8";
+  const MUTED = "#94a3b8"; // lines and outlines only (not text)
   const LINE = "#cbd5e1";
   const LEVEL = { act: "#dc2626", watch: "#d97706", normal: "#0fb869" };
   const AUTO_SPEED = 0.0035; // radians per frame
@@ -108,7 +108,7 @@
 
   function depthAlpha(depth) {
     // depth is roughly -2..2; the front is opaque, the back fades.
-    return Math.max(0.3, Math.min(1, 0.64 + depth * 0.2));
+    return Math.max(0.55, Math.min(1, 0.64 + depth * 0.2)); // labels stay readable at the back
   }
 
   function radius(n, p) {
@@ -178,7 +178,7 @@
       .forEach(({ n, p }) => {
         const alpha = depthAlpha(p.depth);
         const dim = hover && hover !== n && !linked(hover.id, n.id);
-        ctx.globalAlpha = dim ? alpha * 0.3 : alpha;
+        ctx.globalAlpha = dim ? alpha * 0.55 : alpha;
         const r = radius(n, p);
 
         ctx.beginPath();

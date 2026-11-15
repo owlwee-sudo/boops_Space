@@ -434,7 +434,15 @@ el.startBtn.addEventListener("click", startCheck);
 el.retryBtn.addEventListener("click", startCheck);
 el.stopBtn.addEventListener("click", stopCheck);
 el.saveBtn.addEventListener("click", saveResult);
-el.astronaut.textContent = currentAstronautId();
+// "My data" mode stores entries under the app's one personal id, but shows "Self".
+el.astronaut.textContent = (() => {
+  try {
+    if (window.localStorage.getItem("boops.data_mode") === "mine") return "Self";
+  } catch {
+    // storage blocked: fall through
+  }
+  return currentAstronautId();
+})();
 const selfNavLink = document.querySelector('.nav-sub[aria-current="page"]');
 if (selfNavLink && window.location.search) {
   selfNavLink.setAttribute("href", `./index.html${window.location.search}`);

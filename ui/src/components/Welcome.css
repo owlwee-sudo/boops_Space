@@ -38,8 +38,8 @@ html.boops-welcome-open body {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: 1px solid var(--color-border-default, #e5e7eb);
   background: #ffffff;
@@ -479,4 +479,17 @@ html[data-boops-viewport="tablet"] .boops-artboard-empty .boops-page-tools {
 html[data-boops-data="mine"] [data-name^="Nav row/"] [data-name="Badge"],
 html[data-boops-data="mine"] .boops-side-row-badge:not(.boops-data-badge) {
   display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boops-welcome,
+  .boops-welcome * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* The debug HUD (z-index 9999) must not sit on top of the welcome dialog. */
+html.boops-welcome-open .frame-hud {
+  z-index: 100 !important;
 }

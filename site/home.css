@@ -11,7 +11,7 @@
 :root {
   --ink: #0a0a0a;
   --ink-2: #3f3f46;
-  --muted: #71717a;
+  --muted: #52525b; /* was #71717a: 4.4:1 on --band */
   --faint: #a1a1aa;
   --line: #e4e4e7;
   --band: #f4f4f5;
@@ -324,7 +324,9 @@ section[id], div[id] { scroll-margin-top: 72px; }
 .start-dialog {
   width: min(480px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
-  padding: 28px 24px 20px;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border: none;
   border-radius: 24px;
   background: var(--card);
@@ -332,13 +334,14 @@ section[id], div[id] { scroll-margin-top: 72px; }
   font-family: var(--font);
   box-shadow: 0 24px 60px rgba(10, 10, 10, 0.25);
 }
+.start-dialog-panel { position: relative; padding: 28px 24px 20px; }
 .start-dialog::backdrop { background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(4px); }
 .start-dialog[open] { animation: start-in 0.18s ease-out; }
 @keyframes start-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .start-dialog[open] { animation: none; } }
 .start-close-form { position: absolute; top: 14px; right: 14px; margin: 0; }
 .start-close {
-  width: 34px; height: 34px; border-radius: 999px; cursor: pointer;
+  width: 44px; height: 44px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--line); background: #ffffff; color: var(--ink-2); font-size: 13px;
 }
 .start-kicker { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
@@ -349,7 +352,8 @@ section[id], div[id] { scroll-margin-top: 72px; }
   border: 1.5px solid var(--line); border-radius: 18px; color: inherit; text-decoration: none;
   transition: border-color 0.15s, background-color 0.15s;
 }
-.start-option:hover, .start-option:focus-visible { border-color: var(--ink); background: var(--band); outline: none; }
+.start-option:hover, .start-option:focus-visible { border-color: var(--ink); background: var(--band); }
+.start-option:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .start-option-icon {
   flex: none; display: inline-flex; align-items: center; justify-content: center;
   width: 36px; height: 36px; border-radius: 12px; background: var(--band);

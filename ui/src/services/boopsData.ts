@@ -1294,6 +1294,51 @@ export function ingestBleReading(
   });
 }
 
+// ---- Backup / restore of everything BOOPS keeps in this browser ----
+const BACKUP_KEY_RE = /^(boops|ahm\.)/;
+
+/** JSON text with every BOOPS localStorage entry (demo and personal). */
+export function buildLocalBackup(): string {
+  const data: Record<string, string> = {};
+  try {
+    for (let i = 0; i < window.localStorage.length; i += 1) {
+      const key = window.localStorage.key(i);
+      if (key && BACKUP_KEY_RE.test(key)) data[key] = window.localStorage.getItem(key) ?? "";
+    }
+  } catch {
+    // Storage blocked: an empty backup is still valid JSON.
+  }
+  return JSON.stringify({ app: "BOOPS", backup_version: 1, created_utc: new Date().toISOString(), data }, null, 2);
+}
+
+/**
+ * Validates and restores a backup made by buildLocalBackup(). Only BOOPS keys with
+ * string values are written; anything else is rejected. Returns the number restored.
+ */
+export function restoreLocalBackup(text: string): number {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error("This file is not valid JSON.");
+  }
+  const obj = parsed as { app?: unknown; backup_version?: unknown; data?: unknown };
+  if (!obj || typeof obj !== "object" || obj.app !== "BOOPS" || obj.backup_version !== 1) {
+    throw new Error("This is not a BOOPS backup file.");
+  }
+  if (!obj.data || typeof obj.data !== "object" || Array.isArray(obj.data)) {
+    throw new Error("The backup has no data section.");
+  }
+  const entries = Object.entries(obj.data as Record<string, unknown>);
+  for (const [key, value] of entries) {
+    if (!BACKUP_KEY_RE.test(key) || typeof value !== "string") {
+      throw new Error(`Unexpected entry in backup: ${key.slice(0, 40)}`);
+    }
+  }
+  for (const [key, value] of entries) window.localStorage.setItem(key, value as string);
+  return entries.length;
+}
+
 /** Triggers an offline export via Android/Apple native file-saver bridge or browser Blob download. */
 export function downloadTextFile(filename: string, content: string, mimeType: string): boolean {
   const nativeSaved = saveFileWithNativeBridge(filename, content, mimeType);

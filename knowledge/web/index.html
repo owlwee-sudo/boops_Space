@@ -50,6 +50,10 @@ h1{margin:0;font-size:20px;line-height:1.2;font-weight:700;letter-spacing:-.01em
 .layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:0}
 .graph-wrap{position:relative;overflow:auto;padding:8px 12px 12px}
 svg#web{width:100%;min-width:900px;height:auto;display:block;user-select:none;touch-action:none}
+/* Phones: the map is wider than the screen, so let a finger scroll it sideways
+   (node dragging is a mouse feature) and keep the page itself from overflowing. */
+.graph-wrap{max-width:100%;-webkit-overflow-scrolling:touch}
+@media (pointer: coarse), (max-width: 900px){ svg#web{touch-action:pan-x pan-y} body{overflow-x:hidden} }
 .hint{position:absolute;left:20px;bottom:10px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 9px;pointer-events:none}
 aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
 .tabs{display:flex;border-bottom:1px solid var(--line);padding:0 12px}
@@ -152,7 +156,7 @@ textarea.copybox{width:100%;height:120px;font:12px var(--font-mono);margin-top:8
 
 <main class="layout">
   <section class="graph-wrap" id="graphWrap">
-    <svg id="web" viewBox="0 0 1240 760" role="img" aria-label="Relationship web: four spaceflight stressors act through cortisol, inflammation, fluid shift and unloading on immune, bone, muscle, heart, vessels and glucose, ending in latent virus reactivation and symptoms; a right-hand column lists the signals that can measure each node."></svg>
+    <svg id="web" viewBox="0 0 1240 760" role="group" aria-label="Relationship web: four spaceflight stressors act through cortisol, inflammation, fluid shift and unloading on immune, bone, muscle, heart, vessels and glucose, ending in latent virus reactivation and symptoms; a right-hand column lists the signals that can measure each node."></svg>
     <div class="hint">Hover to trace · click for details and sources · drag boxes to rearrange</div>
   </section>
   <aside>
