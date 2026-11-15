@@ -30,18 +30,6 @@
   gap: 8px;
 }
 
-.boops-brand-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  font-size: 13px;
-  color: #111827;
-  padding: 4px 10px;
-  background: #f4f5f7;
-  border-radius: 999px;
-}
-
 .boops-tag-offline {
   font-size: 10px;
   font-weight: 600;
@@ -60,7 +48,6 @@
   border-radius: 999px;
 }
 
-.boops-select,
 .boops-input {
   border: 1px solid #d1d5db;
   background: #ffffff;
@@ -117,32 +104,21 @@
   background: #b91c1c;
 }
 
-.boops-dq-pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  border: 1px solid transparent;
-}
-
-.boops-dq-ok {
+/* Readings status badge colours (sidebar "Readings" row) */
+.boops-side-row-badge.boops-dq-ok {
   background: #ecfdf5;
   color: #065f46;
-  border-color: #a7f3d0;
 }
 
-.boops-dq-check_device {
+.boops-side-row-badge.boops-dq-check_device {
   background: #fef3c7;
   color: #92400e;
-  border-color: #fcd34d;
 }
 
-.boops-dq-check_yourself,
-.boops-dq-act_now {
+.boops-side-row-badge.boops-dq-check_yourself,
+.boops-side-row-badge.boops-dq-act_now {
   background: #fee2e2;
   color: #991b1b;
-  border-color: #fca5a5;
 }
 
 .boops-demo-strip {
@@ -999,21 +975,128 @@
   letter-spacing: 0.02em;
 }
 
-.boops-mode-toggle {
-  border-color: #cbd5e1;
-  color: #374151;
-  background: #f8fafc;
+/* Sidebar action rows (Readings, Tool Guides, Export / Summary).
+   Same shape as the Figma "Nav row": 44 px white pill, 18 px icon, 14 px medium label, grey badge. */
+.boops-side-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.boops-mode-toggle:hover {
-  background: #f1f5f9;
+.boops-side-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 10px 0 14px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-secondary, #374151);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
-.boops-mode-toggle.is-active {
-  background: #fef3c7;
-  border-color: #f59e0b;
-  color: #78350f;
-  font-weight: 600;
+.boops-side-row:hover {
+  background: #fafafa;
+}
+
+.boops-side-row:focus-visible {
+  outline: 2px solid var(--color-bg-strong, #111827);
+  outline-offset: 2px;
+}
+
+.boops-side-row-icon {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.boops-side-row-label {
+  flex: 1 0 0;
+  min-width: 1px;
+}
+
+.boops-side-row-badge {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: var(--color-bg-surface, #f4f5f7);
+  color: var(--color-text-muted, #6b7280);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Offline / Simulated tags beside the sidebar brand */
+.boops-side-brand-tags {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* Profile card doubles as the crew switcher: an invisible native select covers the name block */
+.boops-side-crew {
+  cursor: pointer;
+  padding-right: 20px;
+  border-radius: 8px;
+}
+
+.boops-side-crew p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.boops-side-crew:focus-within {
+  outline: 2px solid var(--color-bg-strong, #111827);
+  outline-offset: 4px;
+}
+
+.boops-side-settings-btn {
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.boops-side-settings-btn:hover {
+  background: var(--color-bg-surface, #f4f5f7);
+}
+
+.boops-side-settings-btn:focus-visible {
+  outline: 2px solid var(--color-bg-strong, #111827);
+  outline-offset: 2px;
+}
+
+.boops-side-crew-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.boops-side-crew-chevron {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: flex;
+  transform: translateY(-50%);
+  color: var(--color-text-muted, #6b7280);
+  pointer-events: none;
 }
 
 :root[data-boops-mode="app"] .boops-debug-only,
@@ -1022,9 +1105,9 @@
   display: none !important;
 }
 
+/* Clean Crew App view: every control lives in the sidebar, so the bar is debug-only */
 :root[data-boops-mode="app"] .boops-topbar {
-  padding: 6px 16px;
-  gap: 0;
+  display: none;
 }
 
 /* Artboard top-right header actions (Log screens + Camera shortcut) */
@@ -1165,10 +1248,6 @@ body {
     padding-right: max(12px, env(safe-area-inset-right));
   }
 
-  :root[data-boops-mode="app"] .boops-topbar {
-    padding: 6px 12px;
-  }
-
   .boops-topbar-main {
     gap: 8px;
   }
@@ -1179,7 +1258,6 @@ body {
     gap: 6px;
   }
 
-  .boops-select,
   .boops-input {
     max-width: 100%;
     min-width: 0;
@@ -1598,12 +1676,6 @@ body {
 @media (max-width: 767px) {
   .boops-topbar {
     padding: 6px 10px;
-  }
-
-  .boops-brand-pill {
-    font-size: 12px;
-    padding: 3px 8px;
-    gap: 4px;
   }
 
   .boops-day-slider {

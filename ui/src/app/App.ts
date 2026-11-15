@@ -845,7 +845,7 @@ export function createApp(root: HTMLElement) {
           return;
         }
         if (txt === "export") {
-          showToast(`${getCleanText(actionBtn)} · use top bar Export / Summary`);
+          showToast(`${getCleanText(actionBtn)} · use sidebar Export / Summary`);
           return;
         }
       }
@@ -894,7 +894,7 @@ export function createApp(root: HTMLElement) {
     sidebar.addEventListener("click", (ev: MouseEvent) => {
       if (getViewportKind(window.innerWidth) === "desktop") return;
       const t = ev.target as HTMLElement | null;
-      if (t?.closest('[data-name^="Nav"], [data-name="Section tabs"] a, [data-name="Emergency button"], [data-name="Profile"], [data-name="icon/settings"]')) {
+      if (t?.closest('[data-name^="Nav"], [data-name="Section tabs"] a, [data-name="Emergency button"], [data-name="Profile"], [data-name="icon/settings"], .boops-side-row')) {
         setMobileNavOpen(false);
       }
     });

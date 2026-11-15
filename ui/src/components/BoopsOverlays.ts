@@ -1,12 +1,17 @@
 /**
  * B.O.O.P.S. global interactive chrome:
- * - Mission Control Bar (crew selector, day 1-180 slider, Demo Story jumps, Data-Quality badge)
+ * - Sidebar chrome injected into every screen: Offline / Simulated tags beside the brand, action rows
+ *   (Readings status, Tool Guides, Export / Summary) above the Emergency button, and the crew switcher
+ *   inside the Profile card
+ * - "Demo & debug" section with the Demo / Debug switch on the Settings screen
+ * - Demo / Debug bar (day 1-180 slider, Demo Story jumps), hidden in the clean Crew App view
  * - Right-side Tool-Guide Drawer (7 measurement guides from content/tool_guides.json)
  * - Privacy-aware Export Modal (CSV, JSON, and Printable Flight-Surgeon Summary Sheet)
  * - Persistent safety disclaimer footer
  */
 
 import "../styles/boops.css";
+import { Activity, BookOpen, ChevronsUpDown, FileDown, createElement, type IconNode } from "lucide";
 import { h } from "../lib/dom";
 import {
   CREW_PROFILES,
@@ -53,6 +58,8 @@ export interface OverlayController {
   openCameraCheck: (simulated?: boolean) => void;
   getUiMode: () => BoopsUiMode;
   setUiMode: (mode: BoopsUiMode) => void;
+  /** Places the shared controls into a freshly rendered screen (sidebar rows, Settings debug switch). */
+  mountScreenControls: (artboard: HTMLElement, screenId: string) => void;
 }
 
 export interface OverlayCallbacks {
@@ -60,7 +67,7 @@ export interface OverlayCallbacks {
   getContext: () => { astronautId: "A1" | "A2" | "A3"; missionDay: number; sharing: SharingSettings };
   setContext: (astronautId: "A1" | "A2" | "A3", missionDay: number, jumpHome?: boolean) => void;
   onToggleSharing: (key: "daily_summary" | "raw_data", val: boolean) => void;
-  onOpenEmergency: () => void;
+  onOpenSettings?: () => void;
   onToast: (msg: string) => void;
 }
 
@@ -70,19 +77,25 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   let uiMode: BoopsUiMode = detectInitialUiMode();
 
   // -------------------------------------------------------------------------
-  // 1. Mission Control Bar
+  // 1. Sidebar controls + Demo / Debug bar
   // -------------------------------------------------------------------------
   const crewSelect = h(
     "select",
-    { className: "boops-select", "aria-label": "Select Astronaut" },
+    { className: "boops-side-crew-select", "aria-label": "Select Astronaut", title: "Switch crew member" },
     ...CREW_PROFILES.map((c) => h("option", { value: c.id }, `${c.id} · ${c.name} (${c.role})`)),
   ) as HTMLSelectElement;
 
   crewSelect.addEventListener("change", () => {
+    const wasFocused = document.activeElement === crewSelect;
     const { missionDay } = cb.getContext();
     const id = crewSelect.value as "A1" | "A2" | "A3";
     cb.setContext(id, missionDay, false);
+    if (wasFocused && crewSelect.isConnected) {
+      crewSelect.focus({ preventScroll: true });
+    }
   });
+  // The Profile card itself opens Settings on click; keep the crew picker from triggering that.
+  crewSelect.addEventListener("click", (ev) => ev.stopPropagation());
 
   const prevBtn = h("button", { type: "button", className: "boops-btn", title: "Previous mission day" }, "◀");
   const nextBtn = h("button", { type: "button", className: "boops-btn", title: "Next mission day" }, "▶");
@@ -112,8 +125,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     cb.setContext(astronautId, nextDay, false);
   });
 
-  const dqBadge = h("button", { type: "button", className: "boops-dq-pill boops-dq-ok" }, "Sensor OK");
-  dqBadge.addEventListener("click", () => {
+  const dqBadge = h("span", { className: "boops-side-row-badge boops-dq-ok" }, "Sensor OK");
+  const showReadingsStatus = () => {
     const bundle = cb.getBundle();
     const { astronautId, missionDay } = cb.getContext();
     const engine = getEngineDay(bundle, astronautId, missionDay);
@@ -127,7 +140,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
         ? `${engine.data_quality.status}: ${engine.data_quality.reasons.join("; ")} -> ${engine.data_quality.suggested_step}${anomalySuffix}`
         : `Sensor quality OK (${astronautId} Day ${missionDay})${anomalySuffix}`;
     cb.onToast(msg);
-  });
+  };
 
   function launchCameraCheck(simulated = false) {
     const { astronautId } = cb.getContext();
@@ -141,37 +154,135 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     if (!opened) window.location.href = relUrl;
   }
 
-  const guidesBtn = h("button", { type: "button", className: "boops-btn" }, "ⓘ Tool Guides");
+  // Sidebar action rows: same shape as the Figma "Nav row" (18 px icon + label + optional badge).
+  function sideRow(label: string, iconNode: IconNode, attrs: Record<string, string> = {}) {
+    const iconEl = createElement(iconNode, { width: 18, height: 18, "stroke-width": 1.5, "aria-hidden": "true" });
+    return h(
+      "button",
+      { type: "button", className: "boops-side-row", ...attrs },
+      h("span", { className: "boops-side-row-icon" }, iconEl),
+      h("span", { className: "boops-side-row-label" }, label),
+    );
+  }
+
+  const statusBtn = sideRow("Readings", Activity);
+  statusBtn.append(dqBadge);
+  statusBtn.addEventListener("click", showReadingsStatus);
+
+  const guidesBtn = sideRow("Tool Guides", BookOpen);
   guidesBtn.addEventListener("click", () => openDrawer(activeGuideId));
 
-  const exportBtn = h("button", { type: "button", className: "boops-btn boops-btn-dark" }, "Export / Summary");
+  const exportBtn = sideRow("Export / Summary", FileDown);
   exportBtn.addEventListener("click", () => openExport());
 
-  const emergencyBtn = h("button", { type: "button", className: "boops-btn boops-btn-danger" }, "Emergency Protocols");
-  emergencyBtn.addEventListener("click", () => cb.onOpenEmergency());
-
-  const modeToggleBtn = h(
-    "button",
-    {
-      type: "button",
-      className: "boops-btn boops-mode-toggle",
-      "data-boops-mode-toggle": "1",
-      title: "Switch between clean Crew App view and Demo / Debug controls",
-    },
-    "Demo / Debug",
+  const sideActions = h(
+    "div",
+    { className: "boops-side-actions", "data-name": "Sidebar actions" },
+    statusBtn,
+    guidesBtn,
+    exportBtn,
   );
+
+  const brandTags = h(
+    "span",
+    { className: "boops-side-brand-tags" },
+    h("span", { className: "boops-tag-offline" }, "Offline"),
+    h("span", { className: "boops-tag-sim" }, "Simulated"),
+  );
+  const crewChevron = h(
+    "span",
+    { className: "boops-side-crew-chevron" },
+    createElement(ChevronsUpDown, { width: 14, height: 14, "stroke-width": 1.5, "aria-hidden": "true" }),
+  );
+
+  // Demo / Debug switch on the Settings screen, rebuilt from the Figma "Data sharing" rows on each render.
+  let modeSwitch: HTMLElement | null = null;
+
+  function mountDebugSetting(artboard: HTMLElement) {
+    modeSwitch = null;
+    const left = artboard.querySelector<HTMLElement>('[data-name="Left"]');
+    const rows = Array.from(left?.querySelectorAll<HTMLElement>(':scope > [data-name="Settings row"]') ?? []);
+    const headers = Array.from(left?.querySelectorAll<HTMLElement>(':scope > [data-name="Section header"]') ?? []);
+    const rowTemplate = rows.find((row) => row.querySelector('[data-name="Toggle"]'));
+    const headerTemplate = headers[headers.length - 1];
+    if (!left || !rowTemplate || !headerTemplate) return;
+
+    const header = headerTemplate.cloneNode(true) as HTMLElement;
+    const headerPs = header.querySelectorAll("p");
+    if (headerPs[0]) headerPs[0].textContent = "Demo & debug";
+    if (headerPs[1]) headerPs[1].textContent = "For demos and development · off in the crew view";
+
+    const row = rowTemplate.cloneNode(true) as HTMLElement;
+    const rowPs = row.querySelectorAll("p");
+    if (rowPs[0]) rowPs[0].textContent = "Demo / Debug controls";
+    if (rowPs[1]) rowPs[1].textContent = "Day 1–180 scrubber, demo story jumps and frame HUD";
+
+    const toggle = row.querySelector<HTMLElement>('[data-name="Toggle"]');
+    if (!toggle) return;
+    toggle.setAttribute("data-boops-mode-toggle", "1");
+    toggle.setAttribute("role", "switch");
+    toggle.setAttribute("tabindex", "0");
+    toggle.setAttribute("aria-label", "Demo / Debug controls");
+    toggle.style.cursor = "pointer";
+    const flip = (ev: Event) => {
+      ev.stopPropagation();
+      const next: BoopsUiMode = uiMode === "app" ? "debug" : "app";
+      setUiMode(next);
+      cb.onToast(next === "debug" ? "Demo & Debug controls enabled" : "Switched to clean Crew App view");
+    };
+    toggle.addEventListener("click", flip);
+    toggle.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      flip(ev);
+    });
+
+    modeSwitch = toggle;
+    left.append(header, row);
+    syncModeUi();
+  }
+
+  function mountScreenControls(artboard: HTMLElement, screenId: string) {
+    if (screenId === "SettingsProfile") mountDebugSetting(artboard);
+    const sidebar = artboard.querySelector<HTMLElement>('[data-name^="Sidebar/"]');
+    if (!sidebar) return;
+    sidebar.querySelector<HTMLElement>('[data-name="Brand"]')?.append(brandTags);
+    // The Profile card already names the selected astronaut, so it doubles as the crew switcher.
+    const profileCard = sidebar.querySelector<HTMLElement>('[data-name="Profile"]');
+    const profileInfo = profileCard?.querySelector<HTMLElement>('[data-name="Info"]');
+    if (profileInfo) {
+      profileInfo.classList.add("boops-side-crew");
+      profileInfo.append(crewChevron, crewSelect);
+    }
+    const settingsIcon = profileCard?.querySelector<HTMLElement>('[data-name="icon/settings"]');
+    if (settingsIcon && !settingsIcon.dataset.boopsSettingsBound) {
+      settingsIcon.dataset.boopsSettingsBound = "1";
+      settingsIcon.classList.add("boops-side-settings-btn");
+      settingsIcon.setAttribute("role", "button");
+      settingsIcon.setAttribute("tabindex", "0");
+      settingsIcon.setAttribute("aria-label", "Settings & profile");
+      settingsIcon.setAttribute("title", "Settings & profile");
+      settingsIcon.addEventListener("keydown", (ev) => {
+        if (ev.key !== "Enter" && ev.key !== " ") return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        cb.onOpenSettings?.();
+      });
+    }
+    const anchor = sidebar.querySelector<HTMLElement>('[data-name="Emergency button"]');
+    if (anchor?.parentElement) anchor.parentElement.insertBefore(sideActions, anchor);
+    else sidebar.append(sideActions);
+  }
 
   function syncModeUi() {
     document.documentElement.dataset.boopsMode = uiMode;
     topbar.dataset.boopsMode = uiMode;
-    if (uiMode === "debug") {
-      modeToggleBtn.textContent = "← App View";
-      modeToggleBtn.classList.add("is-active");
-      modeToggleBtn.title = "Switch back to clean Crew App interface";
-    } else {
-      modeToggleBtn.textContent = "Demo / Debug";
-      modeToggleBtn.classList.remove("is-active");
-      modeToggleBtn.title = "Open Demo & Debug controls (Day 1–180 scrubber, presets, frame HUD)";
+    if (modeSwitch) {
+      const debugOn = uiMode === "debug";
+      modeSwitch.setAttribute("aria-checked", String(debugOn));
+      modeSwitch
+        .querySelector("img")
+        ?.setAttribute("src", debugOn ? "./assets/figma/imgToggleOn.svg" : "./assets/figma/imgToggleOff.svg");
     }
   }
 
@@ -184,12 +295,6 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     }
     syncModeUi();
   }
-
-  modeToggleBtn.addEventListener("click", () => {
-    const next: BoopsUiMode = uiMode === "app" ? "debug" : "app";
-    setUiMode(next);
-    cb.onToast(next === "debug" ? "Demo & Debug controls enabled" : "Switched to clean Crew App view");
-  });
 
   const demoStrip = h("div", { className: "boops-demo-strip boops-debug-only" });
   const demoButtons = DEMO_JUMPS.map((jump) => {
@@ -219,26 +324,9 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       h(
         "div",
         { className: "boops-topbar-group" },
-        h(
-          "span",
-          { className: "boops-brand-pill" },
-          "B.O.O.P.S.",
-          h("span", { className: "boops-tag-offline" }, "Offline"),
-          h("span", { className: "boops-tag-sim" }, "Simulated"),
-          h("span", { className: "boops-tag-debug boops-debug-only" }, "Demo / Debug"),
-        ),
-        crewSelect,
+        h("span", { className: "boops-tag-debug" }, "Demo / Debug"),
         scrubberGroup,
         dayReadout,
-        dqBadge,
-      ),
-      h(
-        "div",
-        { className: "boops-topbar-group" },
-        guidesBtn,
-        exportBtn,
-        emergencyBtn,
-        modeToggleBtn,
       ),
     ),
     demoStrip,
@@ -621,20 +709,20 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const engine = getEngineDay(bundle, astronautId, missionDay);
     if (engine) {
       const status = engine.data_quality.status;
-      dqBadge.className = `boops-dq-pill boops-dq-${status}`;
+      dqBadge.className = `boops-side-row-badge boops-dq-${status}`;
       dqBadge.textContent =
         status === "check_device"
-          ? "⚠ Check device"
+          ? "Check device"
           : status === "check_yourself"
-            ? "⚠ Check yourself"
+            ? "Check yourself"
             : status === "act_now"
-              ? "🚨 Act now"
-              : "✓ Sensor OK";
+              ? "Act now"
+              : "Sensor OK";
       const anomalyMeta =
         typeof engine.data_quality.anomaly_score === "number"
           ? ` | Isolation Forest score: ${engine.data_quality.anomaly_score.toFixed(2)}${engine.data_quality.anomaly_kind ? ` (${engine.data_quality.anomaly_kind})` : ""}`
           : "";
-      dqBadge.title =
+      statusBtn.title =
         (engine.data_quality.reasons.join("; ") || "Readings consistent across sensors") + anomalyMeta;
     }
 
@@ -656,5 +744,6 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     openCameraCheck: (simulated = false) => launchCameraCheck(simulated),
     getUiMode: () => uiMode,
     setUiMode,
+    mountScreenControls,
   };
 }
