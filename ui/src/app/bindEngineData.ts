@@ -354,9 +354,10 @@ function hydrateSidebar(
   const profile = getCrewProfile(state.astronautId);
   const profileCard = artboard.querySelector('[data-name="Profile"] [data-name="Info"]');
   if (profileCard) {
+    // Name first, then "A1 · Commander". The day already shows in the page header.
     setParagraphs(profileCard, [
-      [0, `${profile.id} · ${profile.name}`],
-      [1, `${profile.role} · Day ${state.missionDay}`],
+      [0, profile.name],
+      [1, `${profile.id} · ${profile.role}`],
     ]);
   }
 
