@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BOOPS</string>
+    <string name="health_connect_rationale_title">BOOPS Health Connect Privacy</string>
+    <string name="health_connect_rationale_heading">Offline, Crew-First Health Monitoring</string>
+    <string name="health_connect_rationale_body">BOOPS (Biobehavioral Observation &amp; Offline Predictive System) reads your Heart Rate, Heart Rate Variability (RMSSD), Sleep, Oxygen Saturation (SpO2), Blood Pressure, Body Temperature, and Exercise Sessions from Health Connect solely to compute your personal in-flight baseline and early risk indicators.\n\n100% Offline &amp; Crew-First:\n• All calculations and risk scoring stay strictly on your device.\n• BOOPS makes zero cloud API calls, sends no telemetry or analytics, and never uploads raw health data.\n• Optional crew-to-crew summary sharing uses local peer-to-peer Wi-Fi Direct only when you explicitly initiate a sync.\n\nPrototype · Not a medical device.</string>
+    <string name="health_connect_rationale_close">Close</string>
+</resources>

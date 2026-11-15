@@ -129,10 +129,17 @@ function mapLinkTextToScreen(text: string, current: ScreenId): ScreenId | null {
   if (t.includes("immune")) return "HealthRiskDetailImmune";
   if (t.includes("bone & muscle") || t.includes("bone loss")) return "HealthRiskDetailBoneMuscle";
   if (t.includes("heart:")) return "HealthRiskDetailHeart";
-  if (t.includes("open log › vitals")) return "LogVitals";
-  if (t.includes("open log › sleep")) return "LogSleep";
-  if (t.includes("open log › nutrition")) return "LogNutrition";
-  if (t.includes("open log › environment › gravity")) return "LogEnvironmentGravity";
+  if (t.includes("open log › environment › gravity") || t.includes("log › environment › gravity")) {
+    return "LogEnvironmentGravity";
+  }
+  if (t.includes("open log › environment › radiation") || t.includes("log › environment › radiation")) {
+    return "LogEnvironmentRadiation";
+  }
+  if (t.includes("open log › environment") || t.includes("log › environment")) return "LogEnvironment";
+  if (t.includes("open log › vitals") || t.includes("log › vitals")) return "LogVitals";
+  if (t.includes("open log › sleep") || t.includes("log › sleep")) return "LogSleep";
+  if (t.includes("open log › nutrition") || t.includes("log › nutrition")) return "LogNutrition";
+  if (t.includes("open log › mindfulness") || t.includes("log › mindfulness")) return "LogMindfulness";
   if (t.includes("open health › nutrition")) return "HealthNutrition";
   if (t.includes("see calories & protein") || t === "calories & protein") return "DetailCaloriesProtein";
   if (t === "mission & career dose") return "DetailMissionCareerDose";
@@ -221,61 +228,59 @@ export function createApp(root: HTMLElement) {
   const logDrafts = new Map<string, string>();
   const savedLogs = new Map<ScreenId, SavedLogEntry[]>();
 
-  const mobileNavTitle = h("span", { className: "boops-mobile-nav-title" }, "");
-  const mobileHealthTab = h(
-    "button",
-    {
-      type: "button",
-      className: "boops-mobile-tab",
-      onclick: () => {
-        setMobileNavOpen(false);
-        navigateTo("HealthHome");
-      },
-    },
-    "Health",
-  );
-  const mobileLogTab = h(
-    "button",
-    {
-      type: "button",
-      className: "boops-mobile-tab",
-      onclick: () => {
-        setMobileNavOpen(false);
-        navigateTo("LogVitals");
-      },
-    },
-    "Log",
-  );
-  const mobileEmergencyBtn = h(
-    "button",
-    {
-      type: "button",
-      className: "boops-mobile-tab boops-mobile-tab-danger",
-      onclick: () => {
-        setMobileNavOpen(false);
-        navigateTo("EmergencyHub");
-      },
-    },
-    "SOS",
-  );
-  const mobileMenuBtn = h(
-    "button",
-    {
-      type: "button",
-      className: "boops-mobile-menu-btn",
-      "aria-label": "Toggle navigation menu",
-      "aria-expanded": "false",
-      onclick: () => setMobileNavOpen(!mobileNavOpen),
-    },
-    h("span", { className: "boops-mobile-menu-lines", "aria-hidden": "true" }, "☰"),
-    h("span", null, "Menu"),
-  );
+  // ---- Mobile/tablet bottom tab bar (hidden on desktop >= 1024px) ----
+  // Inline SVG icons use currentColor so active / SOS / emergency states can recolour them.
+  const TAB_ICONS: Record<string, string> = {
+    home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+    vitals: '<path d="M3 12h4l2-5 4 10 2-5h6"/>',
+    sos: '<path d="M7 18v-5a5 5 0 0 1 10 0v5"/><path d="M5 21h14"/><path d="M12 3v2M4.2 6.2l1.4 1.4M19.8 6.2l-1.4 1.4"/>',
+    log: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+    more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+  };
+  function tabIcon(name: string) {
+    const span = h("span", { className: "boops-tab-icon", "aria-hidden": "true" });
+    span.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${TAB_ICONS[name]}</svg>`;
+    return span;
+  }
+  function makeTab(name: string, label: string, onclick: () => void, extraClass = "") {
+    return h(
+      "button",
+      { type: "button", className: `boops-tab ${extraClass}`.trim(), onclick },
+      tabIcon(name),
+      h("span", { className: "boops-tab-label" }, label),
+    );
+  }
+
+  /** Log counterpart of the current Health section (e.g. Health / Sleep → Log / Sleep). */
+  function logTargetFor(screenId: ScreenId): ScreenId {
+    if (screenId.startsWith("Health")) {
+      const candidate = `Log${screenId.slice("Health".length)}`;
+      if (candidate in SCREEN_MAP) return candidate as ScreenId;
+    }
+    return "LogVitals";
+  }
+
+  const mobileHomeTab = makeTab("home", "Home", () => navigateTo("HealthHome"));
+  const mobileVitalsTab = makeTab("vitals", "Vitals", () => navigateTo("HealthVitals"));
+  const mobileEmergencyBtn = makeTab("sos", "SOS", () => navigateTo("EmergencyHub"), "boops-tab-sos");
+  mobileEmergencyBtn.setAttribute("aria-label", "Emergency (SOS)");
+  const mobileLogTab = makeTab("log", "Log", () => {
+    const entry = SCREEN_MAP[activeScreen];
+    navigateTo(entry.category === "Log" ? activeScreen : logTargetFor(activeScreen));
+  });
+  const mobileMenuBtn = makeTab("more", "More", () => setMobileNavOpen(!mobileNavOpen));
+  mobileMenuBtn.setAttribute("aria-label", "More: full menu");
+  mobileMenuBtn.setAttribute("aria-expanded", "false");
+  mobileMenuBtn.setAttribute("aria-controls", "boops-mobile-sheet");
 
   const mobileNavBar = h(
-    "div",
-    { className: "boops-mobile-nav" },
-    h("div", { className: "boops-mobile-nav-left" }, mobileMenuBtn, mobileNavTitle),
-    h("div", { className: "boops-mobile-nav-tabs" }, mobileHealthTab, mobileLogTab, mobileEmergencyBtn),
+    "nav",
+    { className: "boops-bottom-nav", "aria-label": "Primary" },
+    mobileHomeTab,
+    mobileVitalsTab,
+    mobileLogTab,
+    mobileEmergencyBtn,
+    mobileMenuBtn,
   );
   const mobileScrim = h("div", {
     className: "boops-mobile-scrim",
@@ -286,24 +291,50 @@ export function createApp(root: HTMLElement) {
   const scaleBox = h("div", { className: "figma-scale-box" });
   const stage = h("div", { className: "app-stage" }, mobileNavBar, mobileScrim, scaleBox);
   const toastEl = h("div", { className: "figma-toast", hidden: true });
-  let boopsRuntime: { enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void } | null = null;
+  let boopsRuntime: {
+    enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void;
+    closeTopOverlay?: () => boolean;
+  } | null = null;
+  const screenHistory: ScreenId[] = [];
 
   function setMobileNavOpen(next: boolean) {
+    const wasOpen = mobileNavOpen;
     mobileNavOpen = next;
     document.documentElement.dataset.boopsNav = next ? "open" : "closed";
     mobileScrim.hidden = !next;
     mobileMenuBtn.setAttribute("aria-expanded", String(next));
+    mobileMenuBtn.classList.toggle("is-open", next);
+    if (next && !wasOpen) {
+      // Move focus into the sheet so keyboard / screen-reader users land in the menu.
+      window.requestAnimationFrame(() => {
+        scaleBox.querySelector<HTMLElement>(".boops-mobile-drawer-close")?.focus();
+      });
+    } else if (!next && wasOpen && scaleBox.contains(document.activeElement)) {
+      mobileMenuBtn.focus();
+    }
   }
 
   function updateMobileNavChrome(screenId: ScreenId) {
     const entry = SCREEN_MAP[screenId];
-    mobileNavTitle.textContent = entry.name.replace(/\s*\/\s*/g, " · ");
-    const isEmergency = entry.category === "Emergency";
-    const isLog = entry.category === "Log";
-    const isHealth = !isEmergency && !isLog;
-    mobileHealthTab.classList.toggle("is-active", isHealth);
-    mobileLogTab.classList.toggle("is-active", isLog);
-    mobileEmergencyBtn.classList.toggle("is-active", isEmergency);
+    const cat = entry.category;
+    const isEmergency = cat === "Emergency";
+    const isLog = cat === "Log" || screenId.startsWith("LogVitalsGuide");
+    const isSettings = cat === "Settings";
+    const isHome = screenId === "HealthHome";
+    const isHealth = !isEmergency && !isLog && !isSettings && !isHome;
+    const tabs: [HTMLElement, boolean][] = [
+      [mobileHomeTab, isHome],
+      [mobileVitalsTab, isHealth],
+      [mobileLogTab, isLog],
+      [mobileEmergencyBtn, isEmergency],
+      [mobileMenuBtn, isSettings],
+    ];
+    for (const [tab, active] of tabs) {
+      tab.classList.toggle("is-active", active);
+      if (active) tab.setAttribute("aria-current", "page");
+      else tab.removeAttribute("aria-current");
+    }
+    mobileNavBar.classList.toggle("is-emergency", isEmergency);
   }
 
   // Floating 52-Frame Switcher HUD
@@ -412,9 +443,13 @@ export function createApp(root: HTMLElement) {
     });
   }
 
-  function navigateTo(next: ScreenId) {
+  function navigateTo(next: ScreenId, pushHistory = true) {
     setMobileNavOpen(false);
     if (next === activeScreen) return;
+    if (pushHistory) {
+      screenHistory.push(activeScreen);
+      if (screenHistory.length > 40) screenHistory.shift();
+    }
     if (
       activeScreen !== "LogVitalsGuideBloodPressure" &&
       activeScreen !== "LogVitalsGuideWearableFitCheck" &&
@@ -498,6 +533,28 @@ export function createApp(root: HTMLElement) {
       }) as HTMLInputElement;
       firstP.replaceWith(input);
     });
+
+    // 1b. Reset Figma's static pre-selected Chip ("Fatigue") / Rating ("3") on Log screens
+    if (activeScreen.startsWith("Log")) {
+      artboard.querySelectorAll<HTMLElement>('[data-name="Chip"]').forEach((chip) => {
+        chip.className =
+          "bg-[var(--color-bg-card,white)] border border-[var(--color-border-default,#e5e7eb)] border-solid content-stretch flex items-center px-[var(--spacing-md,12px)] py-[6px] relative rounded-[var(--radius-full,999px)] shrink-0";
+        const p = chip.querySelector("p");
+        if (p) {
+          p.className =
+            "[word-break:break-word] font-['Inter:Regular'] font-normal leading-[1.4] not-italic relative shrink-0 text-[14px] text-[color:var(--color-text-secondary,#374151)] whitespace-nowrap";
+        }
+      });
+      artboard.querySelectorAll<HTMLElement>('[data-name="Options"] > div').forEach((opt) => {
+        opt.className =
+          "bg-[var(--color-bg-card,white)] border border-[var(--color-border-default,#e5e7eb)] border-solid content-stretch flex items-center justify-center overflow-clip relative rounded-[var(--radius-full,999px)] shrink-0 size-[40px]";
+        const op = opt.querySelector("p");
+        if (op) {
+          op.className =
+            "[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.4] not-italic relative shrink-0 text-[14px] text-[color:var(--color-text-secondary,#374151)] whitespace-nowrap";
+        }
+      });
+    }
 
     // 2. Prepend saved log entries when standalone (without boopsRuntime)
     if (!boopsRuntime) {
@@ -875,6 +932,7 @@ export function createApp(root: HTMLElement) {
   function attachMobileDrawerChrome(artboard: HTMLElement) {
     const sidebar = artboard.querySelector<HTMLElement>('[data-name^="Sidebar/"]');
     if (!sidebar) return;
+    sidebar.id = "boops-mobile-sheet";
     if (!sidebar.querySelector(".boops-mobile-drawer-close")) {
       const closeDrawerBtn = h(
         "button",
@@ -941,7 +999,10 @@ export function createApp(root: HTMLElement) {
         setScreen: (id: ScreenId) => void;
         renderActiveScreen: () => void;
         showToast: (msg: string) => void;
-      }) => { enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void };
+      }) => {
+        enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void;
+        closeTopOverlay?: () => boolean;
+      };
     }
   ).__boopsInstall;
   if (boopsInstallFn) {
@@ -966,6 +1027,29 @@ export function createApp(root: HTMLElement) {
       },
     });
   }
+
+  (globalThis as unknown as { __boopsHandleBack?: () => boolean }).__boopsHandleBack = () => {
+    if (boopsRuntime?.closeTopOverlay?.()) return true;
+    if (hudOpen) {
+      hudOpen = false;
+      updateHud();
+      return true;
+    }
+    if (mobileNavOpen) {
+      setMobileNavOpen(false);
+      return true;
+    }
+    const prev = screenHistory.pop();
+    if (prev && prev !== activeScreen) {
+      navigateTo(prev, false);
+      return true;
+    }
+    if (activeScreen !== "HealthHome") {
+      navigateTo("HealthHome", false);
+      return true;
+    }
+    return false;
+  };
 
   renderActiveScreen();
 }

@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BOOPS — Biobehavioral Observation &amp; Offline Predictive System</title>
+  <meta
+    name="description"
+    content="Offline, crew-first cross-system health risk indicators and early warnings for spaceflight crews. Download BOOPS for Android or explore the open-source repository on GitHub."
+  />
+  <link rel="icon" href="./assets/boops-logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="brand" href="#header" aria-label="BOOPS Home">
+        <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="38" height="38" />
+        <span class="brand-text">
+          <span class="brand-title">BOOPS</span>
+          <span class="brand-sub">NASA Space Apps 2026 · Offline Crew Health</span>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#users">Our Users</a>
+        <a class="nav-link" href="#how-it-works">How It Works</a>
+        <a class="nav-link" href="#scenarios">Scenarios</a>
+        <a class="nav-link" href="#conclusion">Conclusion</a>
+        <a class="nav-link" href="#download">Download</a>
+        <a class="nav-link" href="./legal.html">Legal</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a
+          class="btn btn-secondary"
+          href="https://github.com/owlwee-sudo/boops_Space"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+          </svg>
+          GitHub
+        </a>
+        <a class="btn btn-primary btn-pill-cta" href="#download">
+          Download
+          <span class="btn-icon-circle" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14"/>
+              <path d="m19 12-7 7-7-7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Prototype Notice Bar -->
+  <div class="notice-bar" role="note" aria-label="Prototype notice">
+    <div class="container notice-bar-inner">
+      <span>
+        <strong>Prototype · Not a medical device.</strong>
+        All sample telemetry is explicitly labeled <strong>Simulated</strong>. Offline-first APK &amp; open-source suite.
+      </span>
+      <a href="./legal.html">Disclaimers, Privacy &amp; 103 Citations →</a>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <!-- 1. Centered Hero + Realistic BOOPS Workstation Mockup -->
+    <section id="header" class="hero-centered">
+      <div class="container">
+        <div class="hero-header">
+          <div class="eyebrow-row">
+            <span class="badge badge-lime">NASA Space Apps Challenge 2026</span>
+            <span class="badge">Offline-First · Zero Cloud</span>
+            <span class="badge">Crew-First Privacy</span>
+          </div>
+
+          <h1>
+            <span class="text-highlight">Cross-System</span> Early Risk Warnings for Deep-Space Crews
+          </h1>
+
+          <p class="hero-lead">
+            <strong>BOOPS (Biobehavioral Observation &amp; Offline Predictive System)</strong> turns daily wearable,
+            sleep, exercise, and radiation readings into explainable <strong>risk indicators</strong> for
+            <strong>immune</strong>, <strong>bone &amp; muscle</strong>, and <strong>cardiovascular</strong> health —
+            personalized to each astronaut's Days 1–14 baseline.
+          </p>
+
+          <div class="cta-group">
+            <a class="btn btn-primary btn-lg btn-pill-cta" href="./downloads/boops-android.apk" download>
+              Download Android App (.apk)
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </a>
+
+            <a
+              class="btn btn-secondary btn-lg btn-pill-cta"
+              href="https://github.com/owlwee-sudo/boops_Space"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Source on GitHub
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+                </svg>
+              </span>
+            </a>
+
+            <a class="btn btn-accent btn-lg btn-pill-cta" href="#download">
+              All Downloads &amp; Desktop Setup
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </span>
+            </a>
+          </div>
+
+          <div class="quick-links">
+            <span>Jump to:</span>
+            <a href="#conclusion">Mission Insights (#conclusion)</a>
+            <a href="./knowledge/">Evidence Map (41 concepts)</a>
+            <a href="./downloads/flight_surgeon_summary_A1.pdf" download>Flight Surgeon PDF</a>
+            <a href="./legal.html">Legal &amp; Citations</a>
+          </div>
+        </div>
+
+        <!-- BOOPS App Preview Mockup Window (Static Representation) -->
+        <div class="mockup-window" aria-label="BOOPS offline workstation interface preview">
+          <div class="window-chrome">
+            <div class="window-dots" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="window-title">BOOPS Workstation · Local SQLite (<code>data/mission.db</code>)</div>
+            <div class="window-badges">
+              <span class="badge badge-sim">Simulated Telemetry</span>
+              <span class="badge badge-lime">100% Offline</span>
+            </div>
+          </div>
+
+          <div class="mockup-shell">
+            <aside class="mockup-sidebar">
+              <div>
+                <div class="sidebar-section-label">Navigation</div>
+                <div class="sidebar-nav">
+                  <div class="sidebar-item is-active">
+                    <span>Health</span>
+                    <span>Day 96</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <span>Log</span>
+                    <span>Wearable / Manual / rPPG</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <span>Tool Guides</span>
+                    <span>7 Instruments</span>
+                  </div>
+                  <div class="sidebar-item">
+                    <span>Emergency</span>
+                    <span>6 Checklists</span>
+                  </div>
+                </div>
+
+                <div class="sidebar-section-label" style="margin-top: 18px;">Active Crew Member</div>
+                <div class="sidebar-crew-card">
+                  <strong>A1 · Amara Okafor</strong>
+                  <span>Baseline: In-Flight Days 1–14</span>
+                  <span>Sleep: 15/100 · Stress: 90/100</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="sidebar-section-label">Crew-First Privacy</div>
+                <div class="sidebar-privacy-list">
+                  <div class="privacy-row"><span>Daily summary</span><span class="badge badge-normal">On</span></div>
+                  <div class="privacy-row"><span>Raw telemetry</span><span class="badge">Off</span></div>
+                  <div class="privacy-row"><span>Emergency auto-share</span><span class="badge badge-act">Locked On</span></div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="mockup-main">
+              <div class="mockup-topbar">
+                <div>
+                  <h2>Mission Day 96 · Pre-Symptomatic Window</h2>
+                  <div class="mockup-topbar-meta">Personal baseline z-scores + cross-system causal weights</div>
+                </div>
+                <div class="window-badges">
+                  <span class="badge badge-watch">Data Quality: Check Yourself</span>
+                  <span class="badge">Anomaly: 0.611 (Trend)</span>
+                </div>
+              </div>
+
+              <div class="mockup-alert-banner">
+                <div>
+                  <strong>Infection Early Warning Flagged — Before Symptoms Appear</strong>
+                  <span>Resting HR ≥ 2 SD above personal baseline for ≥ 2 consecutive days, unexplained by EVA or exercise (Mishra et al., 2020).</span>
+                </div>
+                <span class="badge badge-act">Saliva Test + Rest</span>
+              </div>
+
+              <div class="mockup-risk-grid">
+                <div class="mockup-risk-card">
+                  <div class="mockup-risk-head">
+                    <span class="mockup-risk-title">Immune Risk</span>
+                    <span class="badge badge-act">Act · 88</span>
+                  </div>
+                  <div class="mockup-risk-score">88<span style="font-size: 14px; color: var(--color-text-muted); font-weight: 600;">/100</span></div>
+                  <div class="mockup-risk-driver">HRV stress (0.30) + Sleep deficit (0.25) + RHR jump · ⭐⭐⭐</div>
+                </div>
+
+                <div class="mockup-risk-card">
+                  <div class="mockup-risk-head">
+                    <span class="mockup-risk-title">Cardio Risk</span>
+                    <span class="badge badge-watch">Watch · 49</span>
+                  </div>
+                  <div class="mockup-risk-score">49<span style="font-size: 14px; color: var(--color-text-muted); font-weight: 600;">/100</span></div>
+                  <div class="mockup-risk-driver">Elevated RHR + 7-day workload sleep loss · ⭐⭐⭐</div>
+                </div>
+
+                <div class="mockup-risk-card">
+                  <div class="mockup-risk-head">
+                    <span class="mockup-risk-title">Bone &amp; Muscle</span>
+                    <span class="badge badge-normal">Normal · 15</span>
+                  </div>
+                  <div class="mockup-risk-score">15<span style="font-size: 14px; color: var(--color-text-muted); font-weight: 600;">/100</span></div>
+                  <div class="mockup-risk-driver">ARED resistance adherence within target · ⭐⭐⭐</div>
+                </div>
+              </div>
+
+              <div class="mockup-bottom-grid">
+                <div class="mockup-panel">
+                  <div class="mockup-panel-title">Prioritized Actions (Ranked by Root Driver)</div>
+                  <div class="action-list">
+                    <div class="action-item">
+                      <span class="action-rank">1</span>
+                      <div>
+                        <strong>Fix sleep first: target 7 h tonight (strongest lever)</strong>
+                        <span style="display: block; color: var(--color-text-muted);">Addresses immune &amp; cardio sleep-deficit driver (⭐⭐⭐ Barger 2014)</span>
+                      </div>
+                    </div>
+                    <div class="action-item">
+                      <span class="action-rank">2</span>
+                      <div>
+                        <strong>Take a saliva test to screen cortisol and latent viral reactivation</strong>
+                        <span style="display: block; color: var(--color-text-muted);">Follows ISS salivary biomarker workflow (⭐⭐⭐ Mehta 2017)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mockup-panel">
+                  <div class="mockup-panel-title">"Device or Astronaut?" Funnel</div>
+                  <div class="funnel-steps">
+                    <div class="funnel-step"><span>1. Signal quality</span><span class="badge badge-normal">Pass</span></div>
+                    <div class="funnel-step"><span>2. Plausibility bounds</span><span class="badge badge-normal">Pass</span></div>
+                    <div class="funnel-step"><span>3. Cross-sensor match</span><span class="badge badge-watch">Multi-day</span></div>
+                    <div class="funnel-step"><span>4. Context + EVA check</span><span class="badge badge-act">Check Body</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Numbers Strip -->
+    <section class="section-tight" aria-label="System metrics">
+      <div class="container stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">540</div>
+          <div class="stat-label">Simulated crew-day records across Crew A1, A2, A3 (180 mission days)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">41 / 83</div>
+          <div class="stat-label">Evidence-graded physiological concepts &amp; cross-system edges</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">103</div>
+          <div class="stat-label">Cited peer-reviewed papers, NASA/NOAA datasets &amp; open-source packages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">6 + 7</div>
+          <div class="stat-label">Offline high-contrast emergency checklists &amp; instrument guides</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Why This Matters for Human Spaceflight (#why-it-matters) -->
+    <section id="why-it-matters" class="section section-white">
+      <div class="container split-grid">
+        <div class="visual-panel" aria-label="Cross-system compounding visual">
+          <div class="visual-panel-head">
+            <span class="visual-panel-kicker">Cross-System Synergy Model</span>
+            <span class="badge badge-dark">Not Single-Vital Thresholds</span>
+          </div>
+
+          <div class="synergy-nodes">
+            <div class="synergy-node">
+              <div>
+                <strong>Autonomic Stress (HRV RMSSD z-score)</strong>
+                <span>Weight 0.30 · Cortisol &amp; sympathetic strain</span>
+              </div>
+              <span class="badge badge-lime">⭐⭐⭐</span>
+            </div>
+            <div class="synergy-node">
+              <div>
+                <strong>Sleep Deficiency Streak</strong>
+                <span>Weight 0.25 · Circadian misalignment &lt; 6h/night</span>
+              </div>
+              <span class="badge badge-lime">⭐⭐⭐</span>
+            </div>
+            <div class="synergy-node">
+              <div>
+                <strong>Recent EVA (≤ 3 days) + Radiation Dose</strong>
+                <span>Weights 0.15 + 0.10 · Physical strain + SPE flux</span>
+              </div>
+              <span class="badge badge-lime">⭐⭐⭐ / ⭐⭐</span>
+            </div>
+            <div class="synergy-node">
+              <div>
+                <strong>Stress × Resistance Unloading Interaction</strong>
+                <span>Amplifies muscle catabolic loss when ARED skipped</span>
+              </div>
+              <span class="badge badge-lime">Ferrando 2004</span>
+            </div>
+          </div>
+
+          <div class="synergy-output">
+            <strong>Composite Early Warning Output</strong>
+            <span>Normal (&lt;40) · Watch (40–70) · Act (&gt;70) — plus ranked root-cause actions and citation chains.</span>
+          </div>
+        </div>
+
+        <div>
+          <span class="section-pill">Preparing Crews For Deep Space</span>
+          <h2 style="margin: 12px 0 14px; font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -0.025em; font-weight: 800;">
+            Why Cross-System Monitoring <span class="text-underline-lime">Matters</span> Beyond Low Earth Orbit
+          </h2>
+          <p style="color: var(--color-text-secondary); margin: 0 0 12px;">
+            On missions to the Moon and Mars, communication delays reach minutes each way and real-time ground
+            triage cannot catch every subtle shift. Most health monitors only sound an alarm when a single vital
+            crosses a generic population cutoff.
+          </p>
+          <p style="color: var(--color-text-secondary); margin: 0 0 18px;">
+            In reality, spaceflight hazards compound: poor sleep plus autonomic stress plus EVA exertion and
+            microgravity unloading interact across immune, musculoskeletal, and cardiovascular systems before
+            symptoms ever appear.
+          </p>
+
+          <div class="stack-list">
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Hidden Pre-Symptomatic Signals</strong>
+                <p>Detects sustained resting-HR rises (≥ 2 SD for ≥ 2 days) days before sore throat or viral reactivation symptoms surface.</p>
+              </div>
+            </div>
+
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 8v4"/>
+                  <path d="M12 16h.01"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Adaptation &amp; Sensor Noise False Alarms</strong>
+                <p>Days 1–14 fluid shift is dampened as normal adaptation, and bad wearable contact routes to <em>Check device</em> instead of alarming the crew.</p>
+              </div>
+            </div>
+
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Disconnected Emergency &amp; Tool Guidance</strong>
+                <p>Pairs every alert with offline high-contrast emergency checklists and plain-language tool guides explaining how to verify readings.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. About BOOPS (#about) -->
+    <section id="about" class="section">
+      <div class="container">
+        <span class="section-pill">About BOOPS</span>
+        <p class="statement-lead">
+          <span class="text-highlight">BOOPS is an offline crew-first health workstation</span> that transforms
+          daily wearables, sleep logs, cabin radiation, and optional browser rPPG pulse checks into
+          evidence-graded early risk warnings.
+        </p>
+
+        <div class="subgrid-label">
+          <span class="badge badge-lime">01</span>
+          What Makes BOOPS Different?
+        </div>
+        <div class="card-grid-3">
+          <article class="card">
+            <div class="card-icon card-icon-lime" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <h3>Personal Days 1–14 Baseline</h3>
+            <p>
+              Every astronaut is compared against their own in-flight Days 1–14 mean and standard deviation
+              (excluding low-quality readings), recognizing that microgravity fluid shift changes resting baselines.
+            </p>
+            <div class="card-meta">
+              <span><code>z = (value − mean) / SD</code></span>
+              <span>engine/analysis.py</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <h3>Evidence-Graded Explanations</h3>
+            <p>
+              Every risk driver shows its exact causal chain, percentage contribution, star rating
+              (⭐⭐⭐ human data · ⭐⭐ animal + human · ⭐ hypothesis), and direct source citation.
+            </p>
+            <div class="card-meta">
+              <span>41 concepts · 83 links</span>
+              <a class="link-inline" href="./knowledge/">Evidence Map</a>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h3>"Device or Astronaut?" Funnel</h3>
+            <p>
+              Runs a 4-stage filter — signal quality, plausibility bounds, cross-sensor agreement, and EVA
+              context — with optional Isolation Forest opinions and a strict safety rule that never suppresses true threats.
+            </p>
+            <div class="card-meta">
+              <span>Never deletes raw data</span>
+              <span>data_quality.py</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="subgrid-label">
+          <span class="badge badge-dark">02</span>
+          Where Can You Use BOOPS?
+        </div>
+        <div class="card-grid-3">
+          <article class="card">
+            <h3>Offline Mobile &amp; Cabin Check-Ins</h3>
+            <p>
+              Install the standalone Android APK (<code>boops-android.apk</code>) for pocket-ready health status,
+              manual check-ins, 7 tool measurement guides, and offline emergency checklists with zero internet.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Desktop &amp; Local Python Pipeline</h3>
+            <p>
+              Run the deterministic Python + SQLite engine (<code>python engine/run_all.py</code>) and Tauri desktop
+              shell locally to generate 2-page Flight Surgeon PDFs and inspect 540 crew-days of telemetry.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>On-Device Contactless Camera rPPG</h3>
+            <p>
+              Measure pulse locally using Wang et al. (2017) POS + vendored MediaPipe Face Landmarker. No video leaves
+              the device, quality &lt; 0.50 hides the estimate, and no emotion labels are ever produced.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Our Users (#users) -->
+    <section id="users" class="section section-white">
+      <div class="container split-grid">
+        <div class="visual-panel visual-panel-light" aria-label="Crew-first privacy architecture">
+          <div class="visual-panel-head">
+            <span class="visual-panel-kicker">Crew-First Privacy &amp; Ethics</span>
+            <span class="badge badge-lime">No Emotion Surveillance</span>
+          </div>
+
+          <h3 style="margin: 0 0 10px; font-size: 20px; font-weight: 800;">
+            Built for Crew Autonomy First, Ground Triage Second
+          </h3>
+          <p style="margin: 0 0 18px; font-size: 14px; color: var(--color-text-secondary);">
+            Astronauts see their own risk indicators before anyone else. Raw sensor streams default to private,
+            and facial behaviour tracking is strictly opt-in (<code>FACE_WEIGHT = 0.0</code> default, hard-capped at <code>0.15</code>)
+            with zero emotion classification (Barrett et al., 2019).
+          </p>
+
+          <div class="action-list">
+            <div class="action-item">
+              <span class="badge badge-normal">On</span>
+              <div>
+                <strong>Daily Risk Summary Sharing</strong>
+                <span style="display: block; color: var(--color-text-muted);">Crew-toggleable daily immune/muscle/cardio status for mission planning.</span>
+              </div>
+            </div>
+            <div class="action-item">
+              <span class="badge">Off</span>
+              <div>
+                <strong>Raw Physiological Telemetry</strong>
+                <span style="display: block; color: var(--color-text-muted);">HRV, mood, and individual raw records remain private on local SQLite by default.</span>
+              </div>
+            </div>
+            <div class="action-item">
+              <span class="badge badge-act">Locked On</span>
+              <div>
+                <strong>Safety-Critical Emergency Events</strong>
+                <span style="display: block; color: var(--color-text-muted);">Only active emergency checklist triggers share automatically for crew safety.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="section-pill">Our Users</span>
+          <h2 style="margin: 12px 0 16px; font-size: clamp(26px, 3.2vw, 36px); line-height: 1.15; letter-spacing: -0.025em; font-weight: 800;">
+            <span class="text-highlight">Who</span> Is BOOPS Built For?
+          </h2>
+
+          <div class="stack-list">
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Spaceflight &amp; Analog Crew Members</strong>
+                <p>Receive plain-language "why it matters" chains, ranked self-care levers (e.g., sleep vs. ARED exercise), instrument guides, and instant emergency checklists offline.</p>
+              </div>
+            </div>
+
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Flight Surgeons &amp; Medical Officers</strong>
+                <p>Export concise 2-page Flight Surgeon PDF summaries with pre-filtered sensor anomalies and traceable peer-reviewed citations for every alert.</p>
+              </div>
+            </div>
+
+            <div class="stack-item">
+              <div class="stack-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </div>
+              <div>
+                <strong>Space Health &amp; Human-Factors Researchers</strong>
+                <p>Audit an open, deterministic baseline + causal-graph architecture with modular hooks for WESAD stress validation (<code>hard/wesad/</code>) and Isolation Forest anomaly opinions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. How It Works (#how-it-works) -->
+    <section id="how-it-works" class="section">
+      <div class="container">
+        <div class="section-header is-centered">
+          <span class="section-pill">How It Works</span>
+          <h2>3 Simple Steps From Raw Telemetry to Prioritized Action</h2>
+          <p>
+            Every calculation runs locally in SQLite and deterministic Python rules — zero black boxes, zero internet required.
+          </p>
+        </div>
+
+        <div class="card-grid-3">
+          <article class="card step-card">
+            <div>
+              <span class="step-badge">1</span>
+              <h3>Ingest &amp; Personal Baseline</h3>
+              <p>
+                Daily wearable, sleep, radiation, ARED exercise, EVA, and optional camera check-ins write to local
+                <code>data/mission.db</code>. Days 1–14 establish each astronaut's personal mean and SD (ignoring readings with signal quality &lt; 0.5).
+              </p>
+            </div>
+            <div class="formula-box">
+              z = (value − mean₁₋₁₄) / SD₁₋₁₄
+            </div>
+          </article>
+
+          <article class="card step-card">
+            <div>
+              <span class="step-badge">2</span>
+              <h3>Filter Glitches &amp; Score Risk</h3>
+              <p>
+                <code>data_quality.py</code> separates device spikes from physiological trends (never deleting data).
+                <code>risk_engine.py</code> combines HRV stress, sleep deficit, EVA, radiation, and flight time into Normal / Watch / Act scores.
+              </p>
+            </div>
+            <div class="formula-box">
+              Immune = 0.30·HRV + 0.25·Sleep + 0.15·EVA + 0.10·Rad + 0.10·Day + 0.10·RHR/Symp
+            </div>
+          </article>
+
+          <article class="card step-card">
+            <div>
+              <span class="step-badge">3</span>
+              <h3>Explain Why &amp; How to Fix</h3>
+              <p>
+                Surfaces evidence-graded drivers (⭐ to ⭐⭐⭐), triggers infection early warning when RHR ≥ 2 SD for ≥ 2 days,
+                ranks root-cause actions, and links directly to offline tool guides &amp; emergency protocols.
+              </p>
+            </div>
+            <div class="formula-box">
+              Normal &lt; 40 · Watch 40–70 · Act &gt; 70
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Example Mission Scenarios Carousel (#scenarios) -->
+    <section id="scenarios" class="section section-white">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Example Mission Scenarios</span>
+          <h2>Real Spaceflight Patterns Modeled in the Simulated Dataset</h2>
+          <p>
+            All scenarios below are deterministically planted (<code>SEED=42</code>) in the 180-day <strong>Simulated</strong>
+            mission dataset so reviewers can inspect multi-system behavior end-to-end.
+          </p>
+        </div>
+
+        <div class="scenario-toolbar">
+          <div class="scenario-tabs" role="tablist" aria-label="Mission scenario selector">
+            <button class="scenario-tab" type="button" role="tab" aria-selected="true" data-scenario-index="0">
+              Case 1 · Pre-Symptomatic Infection (Days 88–98)
+            </button>
+            <button class="scenario-tab" type="button" role="tab" aria-selected="false" data-scenario-index="1">
+              Case 2 · Skipped Resistance (Days 60–75)
+            </button>
+            <button class="scenario-tab" type="button" role="tab" aria-selected="false" data-scenario-index="2">
+              Case 3 · Solar Storm &amp; Glitches (Days 30, 92–93)
+            </button>
+            <button class="scenario-tab" type="button" role="tab" aria-selected="false" data-scenario-index="3">
+              Case 4 · Fluid-Shift Adaptation (Days 1–14)
+            </button>
+          </div>
+
+          <div class="carousel-controls">
+            <button class="carousel-btn" type="button" id="scenario-prev" aria-label="Previous scenario">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button class="carousel-btn" type="button" id="scenario-next" aria-label="Next scenario">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Case 1 -->
+        <article class="scenario-card" data-scenario-panel="0">
+          <div class="scenario-top">
+            <div>
+              <span class="badge badge-sim">Simulated · Crew A1 (Amara Okafor)</span>
+              <h3>Case 1 — Sleep Deficit Escalating Into Pre-Symptomatic Viral Reactivation</h3>
+            </div>
+            <div class="scenario-stat-group">
+              <span class="badge badge-act">Immune 88 / 100 (Act)</span>
+              <span class="badge badge-watch">Cardio 49 / 100 (Watch)</span>
+              <span class="badge badge-dark">Day 95–96 Early Warning</span>
+            </div>
+          </div>
+
+          <div class="scenario-body-grid">
+            <div class="scenario-box">
+              <div class="scenario-box-label">Planted Input Signals</div>
+              <p>Workload restricts A1 sleep to ≤ 5 h/night on Days 88–94 (Sleep score drops to 15). On Days 95–96, resting HR jumps ≥ 2 SD above personal baseline with zero symptoms logged yet.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">BOOPS Cross-System Output</div>
+              <p>Triggers <code>infection_early_warning = true</code> 24–48h before fatigue, sore throat (Day 97), and cold sore (Day 98) appear. Data quality sets <code>check_yourself</code> (anomaly 0.611).</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">Ranked Actions Surfaced</div>
+              <p>1) <em>Fix sleep first: target 7 h tonight</em>; 2) <em>Take a saliva test to screen cortisol &amp; latent viral reactivation</em> (following ISS salivary biomarker protocol).</p>
+            </div>
+          </div>
+
+          <div class="scenario-footer">
+            <span style="font-size: 13px; color: var(--color-text-muted);">
+              Evidence anchors: Mishra et al. (2020) · Mehta et al. (2017) · Barger et al. (2014) · Crucian et al. (2018)
+            </span>
+            <div class="nav-actions">
+              <a class="btn btn-secondary" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7673274/" target="_blank" rel="noopener noreferrer">View Mishra 2020 Paper</a>
+              <a class="btn btn-primary" href="./downloads/flight_surgeon_summary_A1.pdf" download>Download A1 PDF Report</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Case 2 -->
+        <article class="scenario-card" data-scenario-panel="1" hidden>
+          <div class="scenario-top">
+            <div>
+              <span class="badge badge-sim">Simulated · Crew A2 (Jun Park)</span>
+              <h3>Case 2 — Skipped ARED Resistance Exercise × Stress Interaction</h3>
+            </div>
+            <div class="scenario-stat-group">
+              <span class="badge badge-watch">Musculoskeletal 61 / 100 (Watch)</span>
+              <span class="badge badge-watch">Cardio 53 / 100 (Watch)</span>
+              <span class="badge badge-dark">Days 60–75</span>
+            </div>
+          </div>
+
+          <div class="scenario-body-grid">
+            <div class="scenario-box">
+              <div class="scenario-box-label">Planted Input Signals</div>
+              <p>A2 logs near-zero ARED resistance exercise for 16 consecutive days (Days 60–75) paired with elevated daily stress (Stress score 48).</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">BOOPS Cross-System Output</div>
+              <p>Applies the stress × inactivity amplification factor (Ferrando et al., 2004): cortisol strain plus mechanical unloading accelerates bone &amp; muscle risk even while resting vitals look calm.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">Ranked Actions Surfaced</div>
+              <p>1) <em>Resume daily ARED resistance exercise (target 60 min)</em>; 2) <em>Complete 30–45 min CEVIS/T2 aerobic conditioning and verify hydration</em>.</p>
+            </div>
+          </div>
+
+          <div class="scenario-footer">
+            <span style="font-size: 13px; color: var(--color-text-muted);">
+              Evidence anchors: Ferrando et al. (2004, NASA NTRS) · Wadhwa et al. (2024)
+            </span>
+            <div class="nav-actions">
+              <a class="btn btn-secondary" href="https://ntrs.nasa.gov/citations/20040141797" target="_blank" rel="noopener noreferrer">View Ferrando 2004 Paper</a>
+              <a class="btn btn-primary" href="./knowledge/">Explore Muscle Links</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Case 3 -->
+        <article class="scenario-card" data-scenario-panel="2" hidden>
+          <div class="scenario-top">
+            <div>
+              <span class="badge badge-sim">Simulated · All Crew &amp; Glitch Days</span>
+              <h3>Case 3 — Solar Particle Event Shelter Alert vs. Sensor Contact Glitches</h3>
+            </div>
+            <div class="scenario-stat-group">
+              <span class="badge badge-act">SPE Days 92–93</span>
+              <span class="badge badge-watch">Check Device (Days 30, 50, 110)</span>
+            </div>
+          </div>
+
+          <div class="scenario-body-grid">
+            <div class="scenario-box">
+              <div class="scenario-box-label">Planted Input Signals</div>
+              <p>Radiation spikes across all crew on Days 92–93 (modeled on NOAA SWPC GOES &amp; NASA OSDR RadLab curves). Separately, Days 30, 50, and 110 inject an HR=220 bpm spike, 25 °C temp dropout, and NaN HRV + 65% SpO₂.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">BOOPS Cross-System Output</div>
+              <p>Days 92–93 trigger the high-contrast radiation shelter banner &amp; checklist. Meanwhile, Day 30 (anomaly 0.835, signal quality 0.20) routes to <code>check_device</code> while Immune risk stays at <code>4 (Normal)</code>.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">Safety &amp; Verification Rule</div>
+              <p>Glitch readings are flagged, never deleted. If an uncorroborated anomaly is dangerous-if-real, the funnel routes to <code>act_now</code> and opens the appropriate tool guide.</p>
+            </div>
+          </div>
+
+          <div class="scenario-footer">
+            <span style="font-size: 13px; color: var(--color-text-muted);">
+              Reference data: NASA OSDR RadLab · NOAA SWPC GOES Primary Protons Feed
+            </span>
+            <div class="nav-actions">
+              <a class="btn btn-secondary" href="https://visualization.osdr.nasa.gov/radlab/" target="_blank" rel="noopener noreferrer">NASA OSDR RadLab</a>
+              <a class="btn btn-primary" href="./downloads/daily_records.csv" download>Inspect 540-Row CSV</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Case 4 -->
+        <article class="scenario-card" data-scenario-panel="3" hidden>
+          <div class="scenario-top">
+            <div>
+              <span class="badge badge-sim">Simulated · All Crew (A1, A2, A3)</span>
+              <h3>Case 4 — Days 1–14 Microgravity Fluid-Shift Adaptation Dampening</h3>
+            </div>
+            <div class="scenario-stat-group">
+              <span class="badge badge-normal">Adaptation Phase</span>
+              <span class="badge badge-dark">Baseline Calibration</span>
+            </div>
+          </div>
+
+          <div class="scenario-body-grid">
+            <div class="scenario-box">
+              <div class="scenario-box-label">Planted Input Signals</div>
+              <p>Headward (cephalad) fluid shift during the first 14 days in orbit elevates resting HR, drops blood pressure ~10 mmHg, and lowers HRV compared to Earth norms.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">BOOPS Cross-System Output</div>
+              <p>Instead of flooding astronauts with false red alerts on arrival, BOOPS dampens early alerts, labels the window <em>Adaptation Phase</em>, and builds each person's true in-flight baseline.</p>
+            </div>
+            <div class="scenario-box">
+              <div class="scenario-box-label">Mission Utility</div>
+              <p>Eliminates alert fatigue during orbital insertion so warnings later in flight carry high crew trust.</p>
+            </div>
+          </div>
+
+          <div class="scenario-footer">
+            <span style="font-size: 13px; color: var(--color-text-muted);">
+              Evidence anchors: NASA HRP 5 Hazards · JACC (2023) Cardiac Spaceflight Effects
+            </span>
+            <div class="nav-actions">
+              <a class="btn btn-secondary" href="https://www.nasa.gov/hrp/hazards" target="_blank" rel="noopener noreferrer">NASA 5 Hazards</a>
+              <a class="btn btn-primary" href="#download">Get BOOPS Offline</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 7. Conclusion & Key Takeaways Bento Grid (#conclusion) -->
+    <section id="conclusion" class="section">
+      <div class="container">
+        <div class="section-header is-centered">
+          <span class="section-pill">Conclusion</span>
+          <h2>
+            <span class="text-highlight">Mission Insights:</span> Cross-System Crew Health Without Cloud Dependency
+          </h2>
+          <p>
+            Bringing together deterministic physiology rules, transparent evidence grading, and strictly scoped offline sensors into one crew-first system.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Top Full-Width Bento Card (4 Columns) -->
+          <div class="bento-card">
+            <div class="bento-card-head">
+              <div>
+                <h3>Key Operational &amp; Physiological Findings</h3>
+                <p>
+                  Evaluating BOOPS across 540 simulated crew-days and four lab/sensor validation tracks (<code>H1</code>–<code>H4</code>) demonstrated how cross-system context outperforms isolated vital-sign thresholds.
+                </p>
+              </div>
+              <span class="badge badge-lime">Verified Pipeline &amp; Test Suite</span>
+            </div>
+
+            <div class="bento-cols-4">
+              <div class="bento-subblock">
+                <h4>Pre-Symptomatic RHR Surge</h4>
+                <p>
+                  Sustained resting heart rate ≥ 2 SD above personal Days 1–14 baseline flags infection onset on Days 95–96 — up to 48 hours before symptoms appear on Day 97.
+                </p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Stress × Unloading Synergy</h4>
+                <p>
+                  Modeling the interaction between autonomic stress and skipped ARED resistance sessions surfaces musculoskeletal risk (61/100 Watch) before structural loss compounds.
+                </p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Glitch &amp; Adaptation Filtering</h4>
+                <p>
+                  The 4-step odd-reading funnel isolates optical spikes (Day 30) and contact dropouts (Days 50, 110) into <em>Check device</em> while keeping dangerous-if-real safety overrides intact.
+                </p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Scoped Advisory ML Guardrails</h4>
+                <p>
+                  WESAD wrist models achieve 91.0% LOSO accuracy in lab tasks yet miscalibrate on daily HRV, so BOOPS keeps deterministic rules primary and ML strictly second-opinion.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Row: 2 Equal Bento Cards -->
+          <div class="bento-split">
+            <div class="bento-card">
+              <div class="card-icon card-icon-lime" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                  <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                  <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                </svg>
+              </div>
+              <h3>Data &amp; Validation Summary</h3>
+              <p style="margin-top: 8px; color: var(--color-text-secondary); font-size: 14.5px;">
+                Because day-by-day astronaut clinical telemetry is private, BOOPS combines a deterministic
+                180-day synthetic mission (<strong>540 records</strong>) with <strong>41 concepts</strong>,
+                <strong>83 directional links</strong>, and <strong>103 cited sources</strong>. Browser camera
+                rPPG (POS, Wang 2017) suppresses low-quality readings (&lt; 0.50) and tags HRV as
+                <code>hrv_confidence: "low"</code> so camera noise never corrupts personal baselines.
+              </p>
+            </div>
+
+            <div class="bento-card">
+              <div class="card-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </div>
+              <h3>Impact Beyond Deep Space</h3>
+              <p style="margin-top: 8px; color: var(--color-text-secondary); font-size: 14.5px;">
+                The exact offline architecture built for Moon and Mars transit directly serves remote Earth
+                crews — Antarctic research stations, submarines, maritime expeditions, and rural clinics —
+                providing explainable early warnings, privacy-first local storage, and zero emotion
+                surveillance.
+              </p>
+            </div>
+          </div>
+
+          <!-- Bottom Full-Width Bento Card: Future Vision (4 Columns) -->
+          <div class="bento-card">
+            <div class="bento-card-head">
+              <div>
+                <h3>Future Vision</h3>
+                <p>
+                  Roadmap to evolve BOOPS from an open-source hackathon prototype into a validated analog and deep-space health companion:
+                </p>
+              </div>
+              <span class="badge">Roadmap</span>
+            </div>
+
+            <div class="bento-cols-4">
+              <div class="bento-subblock">
+                <h4>Live BLE Wearable Ingestion</h4>
+                <p>Bridge real chest-strap ECG, actigraphy, and cabin CO₂/dosimetry streams directly into local SQLite.</p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Analog Crew Trials</h4>
+                <p>Validate z-score risk weights and adaptation dampening windows across HI-SEAS, HERA, and Concordia analog missions.</p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Hands-Free Emergency Audio</h4>
+                <p>Add offline voice-guided step confirmation for the 6 high-contrast emergency protocols during suit or cabin ops.</p>
+              </div>
+              <div class="bento-subblock">
+                <h4>Tauri Desktop &amp; Sync</h4>
+                <p>Package signed macOS/Windows/Linux desktop bundles alongside encrypted delay-tolerant ground synchronization.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closing Statement Banner -->
+          <div class="bento-closing">
+            <p>
+              "This is our first prototype: proving that spaceflight health software can be offline-first,
+              scientifically transparent, and respectful of crew privacy — never guessing when lives depend on clarity."
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Download & GitHub Repository Hub (#download) -->
+    <section id="download" class="section section-white">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Download &amp; Source Code</span>
+          <h2>Get BOOPS Offline or Inspect the Full Repository</h2>
+          <p>
+            No web demo required — download the standalone Android app, grab the complete open-source codebase from GitHub, or download the generated reports directly.
+          </p>
+        </div>
+
+        <div class="card-grid-4">
+          <article class="card download-card download-card-featured">
+            <div>
+              <div class="download-meta-row">
+                <span class="badge badge-lime">Recommended · Mobile</span>
+                <span class="badge">~21.2 MiB</span>
+              </div>
+              <h3>BOOPS Android App</h3>
+              <p>
+                Offline Android APK wrapping the full crew health dashboard, 7 tool guides, 6 emergency protocols, and on-device camera rPPG check.
+              </p>
+            </div>
+            <a class="btn btn-primary btn-pill-cta" href="./downloads/boops-android.apk" download>
+              Download APK
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </a>
+          </article>
+
+          <article class="card download-card">
+            <div>
+              <div class="download-meta-row">
+                <span class="badge badge-dark">Source · Engine + UI</span>
+                <span class="badge">GitHub</span>
+              </div>
+              <h3>Full Source Archive</h3>
+              <p>
+                Includes the Python analysis/risk engine, SQLite schema, Tauri desktop UI, Android project, ML validation scripts, and pytest suite.
+              </p>
+            </div>
+            <div style="display: grid; gap: 8px;">
+              <a
+                class="btn btn-accent btn-pill-cta"
+                href="https://github.com/owlwee-sudo/boops_Space/archive/refs/heads/main.zip"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download Source ZIP
+                <span class="btn-icon-circle" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                </span>
+              </a>
+              <a
+                class="btn btn-secondary"
+                href="https://github.com/owlwee-sudo/boops_Space"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open GitHub Repo →
+              </a>
+            </div>
+          </article>
+
+          <article class="card download-card">
+            <div>
+              <div class="download-meta-row">
+                <span class="badge">Sample Report</span>
+                <span class="badge">61 KB PDF</span>
+              </div>
+              <h3>Flight Surgeon Summary</h3>
+              <p>
+                2-page offline summary generated by <code>engine/export.py</code> for Crew Member A1, including risk timeline and prioritized actions.
+              </p>
+            </div>
+            <a class="btn btn-secondary btn-pill-cta" href="./downloads/flight_surgeon_summary_A1.pdf" download>
+              Download PDF
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </a>
+          </article>
+
+          <article class="card download-card">
+            <div>
+              <div class="download-meta-row">
+                <span class="badge badge-sim">Simulated Dataset</span>
+                <span class="badge">53 KB CSV</span>
+              </div>
+              <h3>180-Day Telemetry CSV</h3>
+              <p>
+                Complete 540-row synthetic mission table (<code>A1</code>, <code>A2</code>, <code>A3</code> × 20 columns) generated deterministically by <code>generate_mission.py</code>.
+              </p>
+            </div>
+            <a class="btn btn-secondary btn-pill-cta" href="./downloads/daily_records.csv" download>
+              Download CSV
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </span>
+            </a>
+          </article>
+        </div>
+
+        <div class="cli-card">
+          <h3>Run From Source Locally (100% Offline)</h3>
+          <p>Clone from GitHub to run the Python pipeline, Tauri desktop app, local server with SQLite persistence, and automated test suite:</p>
+          <pre class="cli-code">git clone https://github.com/owlwee-sudo/boops_Space.git
+cd boops_Space
+pip install -r requirements.txt
+python engine/run_all.py          # Generates 540 simulated days, runs analysis + SQLite + PDF/CSV exports
+python engine/server.py           # Serves local workstation + SQLite write-back on http://127.0.0.1:8000
+pytest tests/ -q                  # Runs automated unit &amp; integration checks</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Behind The System: Data Sources & Process (#process) -->
+    <section id="process" class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Data Sources &amp; Traceability</span>
+          <h2>Behind The System</h2>
+          <p>
+            Every relationship weight, radiation spike profile, and sensor safeguard in BOOPS is documented and verifiable.
+          </p>
+        </div>
+
+        <div class="process-stack">
+          <article class="card process-card">
+            <div class="process-content">
+              <div class="download-meta-row">
+                <span class="badge badge-lime">Interactive Graph</span>
+                <span class="badge">41 Concepts · 83 Edges · 103 Sources</span>
+              </div>
+              <h3>Curated Spaceflight Knowledge Graph</h3>
+              <p>
+                Built from peer-reviewed NASA HRP, <em>Frontiers in Immunology</em>, <em>The Lancet Neurology</em>,
+                <em>npj Microgravity</em>, and <em>Nature Biomedical Engineering</em> papers. Inspect every directional
+                physiological chain and evidence grade in the standalone Evidence Map.
+              </p>
+            </div>
+            <a class="btn btn-primary btn-pill-cta" href="./knowledge/">
+              Open Evidence Map
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </span>
+            </a>
+          </article>
+
+          <article class="card process-card">
+            <div class="process-content">
+              <div class="download-meta-row">
+                <span class="badge badge-sim">Simulated Reference Anchors</span>
+                <span class="badge">NASA OSDR RadLab · NOAA SWPC GOES</span>
+              </div>
+              <h3>Public Space Weather Profiles &amp; Legal Transparency</h3>
+              <p>
+                Radiation storm morphology follows <strong>NASA OSDR RadLab</strong> and <strong>NOAA SWPC GOES</strong>
+                integral proton curves, while advisory ML experiments follow <strong>WESAD</strong> (Schmidt 2018) and
+                <strong>rPPG POS</strong> (Wang 2017). Review full disclaimers, licenses, and privacy rules on our Legal page.
+              </p>
+            </div>
+            <a class="btn btn-secondary btn-pill-cta" href="./legal.html">
+              Read Legal &amp; Citations
+              <span class="btn-icon-circle" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. FAQ Accordion (#faq) -->
+    <section id="faq" class="section section-white">
+      <div class="container">
+        <div class="section-header is-centered">
+          <span class="section-pill">Frequently Asked Questions</span>
+          <h2>Common Questions Answered</h2>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>
+              Does BOOPS diagnose infections or medical conditions?
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                <strong>No.</strong> BOOPS is a research prototype (<em>Prototype · Not a medical device</em>) created for
+                NASA Space Apps Challenge 2026. It surfaces statistical <strong>risk indicators</strong> and
+                <strong>early warnings</strong> based on personal baseline z-scores and literature-inspired weights, never clinical diagnoses.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              Why does BOOPS use rules and z-scores instead of a black-box neural network?
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                Day-by-day longitudinal astronaut clinical telemetry is not publicly available, so training an end-to-end
+                flight-health deep model would overfit or invent patterns. Deterministic z-scores and weighted rules stay
+                100% explainable and auditable, while real-data ML (WESAD stress, Isolation Forest anomalies) is kept strictly optional and advisory.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              Where does the telemetry data come from?
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                The preloaded 180-day dataset (540 records for Crew A1–A3) is deterministically <strong>Simulated</strong>
+                (<code>SEED=42</code>) in <code>engine/generate_mission.py</code>, informed by public space radiation
+                patterns from <strong>NASA OSDR RadLab</strong> and <strong>NOAA SWPC GOES</strong>. Every simulated row is explicitly labeled <strong>Simulated</strong>.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              How does the camera pulse check handle privacy and emotion labels?
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                All MediaPipe landmarking and Wang (2017) POS rPPG processing run strictly on-device with zero video
+                stored or transmitted. Optional facial-behaviour drift (<code>FACE_WEIGHT = 0.0</code> default, capped at <code>0.15</code>)
+                compares only against the user's own first 14 checks (<code>low</code> / <code>medium</code> / <code>high</code>) and <strong>never assigns emotion labels</strong>.
+              </p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>
+              How do I install or run BOOPS right now?
+              <span class="faq-toggle" aria-hidden="true">+</span>
+            </summary>
+            <div class="faq-answer">
+              <p>
+                On Android, download <a class="link-inline" href="./downloads/boops-android.apk" download>boops-android.apk</a>
+                directly from the Download section above. On macOS, Linux, or Windows, clone or download the source from
+                <a class="link-inline" href="https://github.com/owlwee-sudo/boops_Space" target="_blank" rel="noopener noreferrer">GitHub</a>
+                and run <code>python engine/run_all.py</code> followed by <code>python engine/server.py</code> or <code>cd ui &amp;&amp; npm run dev</code>.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Final CTA Banner (Matches SpaceGenes+ Bottom CTA in BOOPS Style) -->
+    <section class="final-cta" aria-label="Download and GitHub Call to Action">
+      <div class="container">
+        <div class="eyebrow-row">
+          <span class="badge badge-lime">100% Offline · Open Source · Crew-First</span>
+        </div>
+        <h2>
+          Ready to explore <span class="text-highlight">offline crew health</span> monitoring?
+        </h2>
+        <p>
+          Download the Android APK, grab the full Python + Tauri + SQLite repository on GitHub, or inspect the 103-source evidence graph.
+        </p>
+        <div class="cta-group">
+          <a class="btn btn-primary btn-lg btn-pill-cta" href="./downloads/boops-android.apk" download>
+            Download Android APK
+            <span class="btn-icon-circle" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </span>
+          </a>
+
+          <a
+            class="btn btn-secondary btn-lg btn-pill-cta"
+            href="https://github.com/owlwee-sudo/boops_Space"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Explore on GitHub
+            <span class="btn-icon-circle" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <a class="brand" href="#header">
+          <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="34" height="34" />
+          <span class="brand-text">
+            <span class="brand-title">BOOPS</span>
+            <span class="brand-sub">Biobehavioral Observation &amp; Offline Predictive System</span>
+          </span>
+        </a>
+
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#about">About</a>
+          <a href="#users">Our Users</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#scenarios">Scenarios</a>
+          <a href="#conclusion">Conclusion</a>
+          <a href="#download">Download</a>
+          <a href="./knowledge/">Evidence Map</a>
+          <a href="./legal.html">Legal &amp; Privacy</a>
+        </nav>
+
+        <a
+          class="btn btn-secondary"
+          href="https://github.com/owlwee-sudo/boops_Space"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="BOOPS GitHub Repository"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <p class="footer-disclaimer">Prototype · Not a medical device · All sample telemetry labeled Simulated</p>
+          <span>© 2026 Team boops boops · Built for NASA Space Apps Challenge 2026</span>
+        </div>
+        <div style="text-align: right;">
+          <span>Grounded in NASA OSDR RadLab, NOAA SWPC GOES &amp; 103 cited sources</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Offline Scenario Carousel Controller -->
+  <script>
+    (function () {
+      const tabs = Array.from(document.querySelectorAll('[data-scenario-index]'));
+      const panels = Array.from(document.querySelectorAll('[data-scenario-panel]'));
+      const prevBtn = document.getElementById('scenario-prev');
+      const nextBtn = document.getElementById('scenario-next');
+      if (!tabs.length || !panels.length) return;
+
+      let active = 0;
+      function showScenario(index) {
+        active = (index + panels.length) % panels.length;
+        tabs.forEach((tab, i) => {
+          tab.setAttribute('aria-selected', i === active ? 'true' : 'false');
+        });
+        panels.forEach((panel, i) => {
+          panel.hidden = i !== active;
+        });
+      }
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => showScenario(i));
+      });
+      if (prevBtn) prevBtn.addEventListener('click', () => showScenario(active - 1));
+      if (nextBtn) nextBtn.addEventListener('click', () => showScenario(active + 1));
+    })();
+  </script>
+</body>
+</html>

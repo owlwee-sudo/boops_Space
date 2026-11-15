@@ -1101,13 +1101,147 @@
 
 :root[data-boops-mode="app"] .boops-debug-only,
 :root[data-boops-mode="app"] .boops-demo-strip,
-:root[data-boops-mode="app"] .frame-hud {
+:root[data-boops-mode="app"] .frame-hud,
+:root[data-boops-mode="app"] .boops-tag-sim,
+:root[data-boops-mode="app"] .boops-tag-debug {
   display: none !important;
 }
 
-/* Clean Crew App view: every control lives in the sidebar, so the bar is debug-only */
-:root[data-boops-mode="app"] .boops-topbar {
-  display: none;
+/* Top bar: crisp Crew App mission-day header in App mode; full scrubber + jumps in Debug mode */
+.boops-topbar-crew-select {
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #111827;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  max-width: 240px;
+}
+
+.boops-topbar-crew-select:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.boops-date-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 999px;
+  padding: 2px 4px;
+}
+
+.boops-stepper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #111827;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.boops-stepper-btn:hover {
+  background: #e5e7eb;
+}
+
+.boops-date-stepper .boops-day-readout {
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111827;
+  min-width: auto;
+}
+
+.boops-today-btn {
+  font-size: 11px;
+  padding: 4px 9px;
+}
+
+.boops-today-btn.is-current-day {
+  background: #111827;
+  border-color: #111827;
+  color: #ffffff;
+}
+
+.boops-tag-debug {
+  font-size: 10px;
+  font-weight: 600;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+/* Semantic risk & health status pills */
+.boops-badge-normal {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border-color: #a7f3d0 !important;
+}
+
+.boops-badge-normal p {
+  color: #065f46 !important;
+}
+
+.boops-badge-watch {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+}
+
+.boops-badge-watch p {
+  color: #92400e !important;
+}
+
+.boops-badge-act {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+  border-color: #fca5a5 !important;
+}
+
+.boops-badge-act p {
+  color: #991b1b !important;
+}
+
+/* Interactive chart bars & calibrated baseline indicator */
+[data-name="Plot"] [data-boops-bar="1"] {
+  transition: transform 0.12s ease, opacity 0.12s ease, background-color 0.15s ease;
+  cursor: pointer;
+}
+
+[data-name="Plot"] [data-boops-bar="1"]:hover {
+  opacity: 0.92;
+  transform: scaleY(1.06);
+  transform-origin: bottom;
+}
+
+[data-name="Plot"] [data-boops-bar="1"].is-active-day {
+  box-shadow: 0 0 0 2px #0284c7;
+}
+
+.boops-baseline-pill {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-100%);
+  font-size: 10px;
+  font-weight: 600;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 1px 6px;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Artboard top-right header actions (Log screens + Camera shortcut) */
@@ -1234,8 +1368,8 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Mobile/tablet navigation bar & scrim (hidden on desktop >= 1024px) */
-.boops-mobile-nav,
+/* Mobile/tablet bottom tab bar & scrim (hidden on desktop >= 1024px) */
+.boops-bottom-nav,
 .boops-mobile-scrim,
 .boops-mobile-drawer-close {
   display: none;
@@ -1263,107 +1397,142 @@ body {
     min-width: 0;
   }
 
-  .boops-mobile-nav {
-    display: flex;
+  /* Bottom tab bar: Home · Vitals · Log · SOS · More (flat Figma style, equal slot sizing) */
+  .boops-bottom-nav {
+    --boops-tabbar-h: 62px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    width: 100%;
     box-sizing: border-box;
-    padding: 8px 14px;
-    padding-left: max(14px, env(safe-area-inset-left));
-    padding-right: max(14px, env(safe-area-inset-right));
+    min-height: calc(var(--boops-tabbar-h) + env(safe-area-inset-bottom));
+    padding: 8px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
     background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb;
     font-family: "Inter Variable", "Inter", system-ui, sans-serif;
   }
 
-  .boops-mobile-nav-left {
+  .boops-tab {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    min-width: 0;
-    flex: 1 1 auto;
+    justify-content: center;
+    gap: 4px;
+    min-width: 44px;
+    min-height: 46px;
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    color: #6b7280;
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .boops-mobile-menu-btn {
+  .boops-tab-icon {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 5px 11px;
+    justify-content: center;
+    width: 48px;
+    height: 28px;
     border-radius: 999px;
-    border: 1px solid #d1d5db;
-    background: #f9fafb;
-    color: #111827;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    flex-shrink: 0;
+    border: 1.5px solid transparent;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
 
-  .boops-mobile-menu-btn:hover {
-    background: #f3f4f6;
-  }
-
-  .boops-mobile-menu-lines {
-    font-size: 14px;
-    line-height: 1;
-  }
-
-  .boops-mobile-nav-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #111827;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-  }
-
-  .boops-mobile-nav-tabs {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-
-  .boops-mobile-tab {
-    min-height: 32px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid #e5e7eb;
-    background: #ffffff;
-    color: #374151;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
+  .boops-tab-label {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.1;
     white-space: nowrap;
   }
 
-  .boops-mobile-tab.is-active {
+  .boops-tab:hover .boops-tab-icon {
+    background: #f4f5f7;
+  }
+
+  .boops-tab:focus-visible {
+    outline: none;
+  }
+
+  .boops-tab:focus-visible .boops-tab-icon {
+    box-shadow: 0 0 0 2px #111827;
+  }
+
+  .boops-tab.is-active,
+  .boops-tab.is-open {
+    color: #111827;
+  }
+
+  .boops-tab.is-active .boops-tab-icon,
+  .boops-tab.is-open .boops-tab-icon {
     background: #c6f432;
-    border-color: #a3e635;
-    color: #111827;
   }
 
-  .boops-mobile-tab-danger {
-    color: #b91c1c;
-    border-color: #fecaca;
+  .boops-tab.is-active .boops-tab-label,
+  .boops-tab.is-open .boops-tab-label {
+    font-weight: 600;
+  }
+
+  /* SOS: same size and baseline as Log, matching Figma's outlined Emergency button */
+  .boops-tab-sos {
+    color: #dc2626;
+  }
+
+  .boops-tab-sos .boops-tab-icon {
+    background: #ffffff;
+    border-color: #ef4444;
+    color: #dc2626;
+  }
+
+  .boops-tab-sos:hover .boops-tab-icon {
     background: #fef2f2;
   }
 
-  .boops-mobile-tab-danger.is-active {
+  .boops-tab-sos .boops-tab-label {
+    font-weight: 600;
+  }
+
+  .boops-tab-sos.is-active .boops-tab-icon {
     background: #dc2626;
-    border-color: #991b1b;
+    border-color: #dc2626;
     color: #ffffff;
+  }
+
+  /* Emergency screens: high-contrast red/white bar */
+  .boops-bottom-nav.is-emergency {
+    background: #b91c1c;
+    border-top-color: #991b1b;
+  }
+
+  .boops-bottom-nav.is-emergency .boops-tab {
+    color: #ffffff;
+  }
+
+  .boops-bottom-nav.is-emergency .boops-tab:hover .boops-tab-icon {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .boops-bottom-nav.is-emergency .boops-tab-sos .boops-tab-icon {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #b91c1c;
+  }
+
+  /* Keep the "Not a medical device" footer clear of the fixed bottom bar */
+  .boops-footer {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
   }
 
   .boops-mobile-scrim {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 80;
+    z-index: 92;
     background: rgba(17, 24, 39, 0.48);
   }
 
@@ -1393,49 +1562,80 @@ body {
     height: auto !important;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px 20px 28px !important;
+    gap: 20px;
+    padding: 20px 24px 32px !important;
     box-sizing: border-box;
   }
 
-  /* Sidebar becomes an accessible off-canvas drawer */
+  /* Sidebar becomes the "More" bottom sheet (compact spacing so sections fit cleanly) */
   .figma-artboard [data-name^="Sidebar/"] {
     position: fixed !important;
     left: 0 !important;
-    top: 0 !important;
+    right: 0 !important;
+    top: auto !important;
     bottom: 0 !important;
-    width: min(296px, 84vw) !important;
-    height: 100dvh !important;
-    z-index: 85 !important;
-    border-radius: 0 24px 24px 0 !important;
+    width: 100% !important;
+    max-width: 560px;
+    margin: 0 auto !important;
+    height: auto !important;
+    max-height: 85dvh !important;
+    z-index: 95 !important;
+    box-sizing: border-box !important;
+    gap: 12px !important;
+    border-radius: 20px 20px 0 0 !important;
     overflow-y: auto !important;
-    padding-top: max(16px, env(safe-area-inset-top)) !important;
-    padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
-    box-shadow: 12px 0 36px rgba(17, 24, 39, 0.22);
-    transform: translateX(-110%);
-    transition: transform 0.2s ease;
+    overscroll-behavior: contain;
+    padding: 18px 16px max(20px, env(safe-area-inset-bottom)) !important;
+    box-shadow: 0 -8px 28px rgba(17, 24, 39, 0.16);
+    transform: translateY(110%);
+    visibility: hidden;
+    transition: transform 0.2s ease, visibility 0s linear 0.2s;
   }
 
   :root[data-boops-nav="open"] .figma-artboard [data-name^="Sidebar/"] {
-    transform: translateX(0);
+    transform: translateY(0);
+    visibility: visible;
+    transition: transform 0.2s ease, visibility 0s;
+  }
+
+  .figma-artboard [data-name^="Sidebar/"] [data-name="Brand"] {
+    padding-right: 40px !important;
+  }
+
+  .figma-artboard [data-name^="Sidebar/"] [data-name="Section tabs"] {
+    gap: 16px !important;
+  }
+
+  .figma-artboard [data-name^="Sidebar/"] [data-name="Section tabs"] p {
+    font-size: 22px !important;
+  }
+
+  .figma-artboard [data-name^="Sidebar/"] [data-name^="Nav"] > a,
+  .figma-artboard [data-name^="Sidebar/"] .boops-side-row,
+  .figma-artboard [data-name^="Sidebar/"] [data-name="Emergency button"] {
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+
+  .figma-toast {
+    bottom: calc(78px + env(safe-area-inset-bottom));
   }
 
   .figma-artboard [data-name^="Sidebar/"] [data-name="Spacer"] {
-    min-height: 12px;
-    flex: 1 0 auto;
+    min-height: 4px;
+    flex: 0 0 auto !important;
   }
 
   .boops-mobile-drawer-close {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    align-self: flex-end;
-    position: sticky;
-    top: 0;
+    position: absolute;
+    top: 14px;
+    right: 16px;
     z-index: 3;
     width: 32px;
     height: 32px;
-    margin-bottom: -16px;
     border-radius: 999px;
     border: 1px solid #d1d5db;
     background: #ffffff;
@@ -1490,6 +1690,8 @@ body {
     width: 100% !important;
     min-width: 0;
     order: 4;
+    flex-direction: column !important;
+    align-items: stretch !important;
     overflow: visible !important;
     gap: 18px !important;
   }
@@ -1513,7 +1715,7 @@ body {
     height: 100dvh !important;
     overflow-y: auto !important;
     z-index: 88 !important;
-    padding-bottom: 28px !important;
+    padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
   }
 
   .figma-artboard [data-name="Tooltip"] {
@@ -1543,7 +1745,9 @@ body {
   .figma-artboard [data-name="Crew member"] p,
   .figma-artboard [data-name="Input field"] [data-name="Label row"],
   .figma-artboard [data-name="Input field"] > p,
-  .figma-artboard [data-name="Rating scale"] p {
+  .figma-artboard [data-name="Rating scale"] p,
+  .figma-artboard [data-name="Header"] > p,
+  .figma-artboard [data-name="Header"] > div > p {
     white-space: normal !important;
     overflow: visible !important;
   }
@@ -1576,7 +1780,8 @@ body {
     width: 100% !important;
     min-width: 0 !important;
     height: auto !important;
-    min-height: 168px;
+    min-height: 184px;
+    gap: 16px !important;
   }
 
   .figma-artboard [data-name="Row"] > [data-name="Chart card"],
@@ -1585,12 +1790,30 @@ body {
     flex: 1 1 100% !important;
     width: 100% !important;
     min-width: 0 !important;
+    gap: 14px !important;
     overflow: visible !important;
   }
 
   .figma-artboard [data-name="Chart card"] [data-name="Header"] {
     flex-wrap: wrap !important;
     gap: 8px !important;
+  }
+
+  .figma-artboard [data-name="Sparkline"] {
+    gap: 4px !important;
+  }
+
+  .figma-artboard [data-name="Sparkline"] > [data-name="Bar"] {
+    max-width: 12px;
+  }
+
+  .figma-artboard [data-name="Score card"] [data-name="Trend"] {
+    justify-content: center;
+    gap: 4px !important;
+  }
+
+  .figma-artboard [data-name="Score card"] [data-name="Trend"] > [data-name="Bar"] {
+    max-width: 10px;
   }
 
   .figma-artboard [data-name="Plot"] {
@@ -1620,8 +1843,20 @@ body {
     gap: 20px !important;
   }
 
+  .figma-artboard [data-name="Section header"] {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .figma-artboard [data-name="Section header"] [data-name="Text"] {
+    flex: 1 1 200px !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
   .figma-artboard [data-name="Right"],
   .figma-artboard [data-name="Left"],
+  .figma-artboard [data-name="History"],
   .figma-artboard [data-name="Why it matters"],
   .figma-artboard [data-name="How to fix"],
   .figma-artboard [data-name="What affects it"],
@@ -1652,6 +1887,8 @@ body {
   /* Emergency pages */
   .figma-artboard [data-name="Crew"] {
     flex-wrap: wrap !important;
+    align-items: stretch !important;
+    gap: 10px !important;
     width: 100% !important;
     overflow: visible !important;
   }
@@ -1665,11 +1902,28 @@ body {
     width: 100%;
   }
 
-  .figma-artboard [data-name="Call mission control"] {
+  .figma-artboard [data-name="Call bar"] {
     flex-wrap: wrap !important;
     height: auto !important;
     width: 100% !important;
-    gap: 12px !important;
+    gap: 8px 12px !important;
+  }
+
+  .figma-artboard [data-name="Call bar"] p {
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  .figma-artboard [data-name="Call bar"] > p:last-child {
+    flex: 1 1 220px !important;
+    text-align: left !important;
+  }
+
+  .figma-artboard [data-name="Call mission control"] {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    max-width: 100% !important;
+    gap: 8px !important;
   }
 }
 
@@ -1692,23 +1946,33 @@ body {
     font-size: 12px;
   }
 
-  .boops-mobile-nav {
-    padding: 8px 10px;
-    gap: 8px;
-  }
-
-  .boops-mobile-nav-title {
-    font-size: 12px;
-  }
-
-  .boops-mobile-tab {
-    padding: 4px 8px;
+  .boops-topbar-crew-select {
+    max-width: 145px;
     font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .boops-topbar-action {
+    display: none;
   }
 
   .figma-artboard {
-    padding: 12px 12px 24px !important;
-    gap: 14px;
+    padding: 20px 16px 28px !important;
+    gap: 18px;
+  }
+
+  .figma-artboard [data-name="Alert banner"] {
+    align-items: flex-start !important;
+    gap: 10px 12px !important;
+    padding: 16px !important;
+  }
+
+  .figma-artboard [data-name="Alert banner"] [data-name="Text"] {
+    flex: 1 1 calc(100% - 36px) !important;
+  }
+
+  .figma-artboard [data-name="Alert banner"] [data-name="Action"] {
+    margin-left: 34px;
   }
 
   .figma-artboard [data-name="Row"] > [data-name="Metric card"],
@@ -1727,29 +1991,65 @@ body {
 
   .figma-artboard [data-name="Metric card"],
   .figma-artboard [data-name="Risk card"],
-  .figma-artboard [data-name="Score card"],
-  .figma-artboard [data-name="Chart card"],
   .figma-artboard [data-name="What it means"],
   .figma-artboard [data-name="Who needs help?"],
   .figma-artboard [data-name="Emergency tile"],
   .figma-artboard [data-name="Entry form"],
   .figma-artboard [data-name="About"] {
-    padding: 16px !important;
+    padding: 18px !important;
+  }
+
+  .figma-artboard [data-name="Score card"],
+  .figma-artboard [data-name="Chart card"] {
+    padding: 20px !important;
   }
 
   .figma-artboard [data-name="Crew member"] {
     flex: 1 1 calc(33.333% - 8px) !important;
     min-width: 96px !important;
     width: auto !important;
-    padding: 10px 8px !important;
+    padding: 12px 8px !important;
+    gap: 6px !important;
   }
 
-  .figma-artboard [data-name="Profile"],
+  .figma-artboard [data-name="Crew member"] [data-name="Avatar"] {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .figma-artboard [data-name="Crew member"] [data-name="Avatar"] img {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .figma-artboard [data-name="Crew member"] [data-name="Avatar"] span {
+    font-size: 14px !important;
+  }
+
   .figma-artboard [data-name="Settings row"],
   .figma-artboard [data-name="Log entry"],
   .figma-artboard [data-name="Section header"] {
     flex-wrap: wrap !important;
     gap: 8px !important;
+  }
+
+  .figma-artboard [data-name="Settings row"] {
+    gap: 6px 12px !important;
+  }
+
+  .figma-artboard [data-name="Content"] [data-name="Profile"] {
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .figma-artboard [data-name="Content"] [data-name="Profile"] [data-name="Info"] {
+    flex: 1 1 calc(100% - 80px) !important;
+    min-width: 160px !important;
+  }
+
+  .figma-artboard [data-name="Content"] [data-name="Profile"] [data-name="Button"] {
+    margin-left: 76px;
   }
 
   .figma-artboard [data-name="Log entry"] [data-name="When"] {
@@ -1822,8 +2122,147 @@ body {
   }
 
   .boops-footer {
-    padding: 12px 12px max(18px, env(safe-area-inset-bottom));
+    padding: 14px 16px calc(76px + env(safe-area-inset-bottom));
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figma-artboard [data-name^="Sidebar/"],
+  .boops-tab-icon {
+    transition: none !important;
+  }
+}
+
+/* Connected Sensors, OS Health Sync, BLE & Nearby Crew Sync Hub */
+.boops-hub-card {
+  width: min(720px, 96vw);
+}
+
+.boops-hub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boops-hub-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.boops-hub-status-box,
+.boops-hub-reading-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.boops-hub-status-head,
+.boops-hub-reading-head,
+.boops-hub-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.boops-hub-status-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.boops-hub-status-detail {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #374151;
+  margin: 0;
+}
+
+.boops-hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.boops-hub-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  margin: 2px 0 0 0;
+}
+
+.boops-hub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.boops-hub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.boops-hub-row-main {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.boops-hub-row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.boops-hub-row-sub,
+.boops-hub-empty {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #6b7280;
+  margin: 0;
+  word-break: break-word;
+}
+
+.boops-hub-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.boops-hub-badge-ok {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.boops-hub-badge-warn {
+  background: #fef3c7;
+  color: #92400e;
 }

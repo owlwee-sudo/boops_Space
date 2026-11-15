@@ -5,6 +5,8 @@
 
 import { h } from "../lib/dom";
 import type { ScreenId } from "../screens";
+import type { DeviceHubTab } from "../components/DeviceHubModal";
+import { getNativeBridgeState } from "../services/nativeBridge";
 import {
   CREW_PROFILES,
   type BoopsBundle,
@@ -17,6 +19,7 @@ import {
   appendManualLog,
   dotForLevel,
   formatRiskLevel,
+  formatSourceLabel,
   formatStars,
   getCrewProfile,
   getCumulativeRadiation,
@@ -24,6 +27,7 @@ import {
   getEngineDay,
   getRangeSeries,
   getSourceCitation,
+  isDebugUiMode,
   loadChecklistTimestamps,
   loadManualLogs,
   loadUserSettings,
@@ -41,12 +45,27 @@ export interface AppContextState {
   onChangeEmergencyPatient: (id: "A1" | "A2" | "A3") => void;
   onToggleSharing: (key: "daily_summary" | "raw_data" | { risk: string }, nextVal: boolean) => void;
   openToolGuide: (guideId: string) => void;
+  openDeviceHub?: (tab?: DeviceHubTab) => void;
   openCameraCheck: (simulated?: boolean) => void;
   openEmergencyProtocol: (protocolId: string) => void;
   openRiskScreen: (riskKey: "immune" | "musculoskeletal" | "cardio") => void;
+  setDay?: (missionDay: number) => void;
   navigateScreen: (screenId: ScreenId) => void;
   reRenderScreen: () => void;
   showToast: (msg: string) => void;
+}
+
+function applyStatusBadgeStyle(chip: Element | null, levelOrText: string): void {
+  if (!chip) return;
+  chip.classList.remove("boops-badge-normal", "boops-badge-watch", "boops-badge-act");
+  const lower = levelOrText.toLowerCase();
+  if (lower.includes("act") || lower.includes("storm") || lower.includes("high") || lower.includes("elevated")) {
+    chip.classList.add("boops-badge-act");
+  } else if (lower.includes("watch") || lower.includes("check") || lower.includes("medium") || lower.includes("deficit")) {
+    chip.classList.add("boops-badge-watch");
+  } else {
+    chip.classList.add("boops-badge-normal");
+  }
 }
 
 /** Finds direct or descendant paragraph text nodes inside an element by exact or partial match. */
@@ -82,6 +101,7 @@ function hydrateMetricCard(
   statusText: string,
   dotPath: string,
   sparkSeries?: number[],
+  sourceLabel?: string,
 ): void {
   const statusEl = card.querySelector('[data-name="Status"]');
   if (statusEl) {
@@ -89,7 +109,11 @@ function hydrateMetricCard(
     if (statusDot) statusDot.setAttribute("src", dotPath);
     const statusP = statusEl.querySelector("p");
     if (statusP) statusP.textContent = statusText;
+    applyStatusBadgeStyle(statusEl, statusText);
   }
+
+  const tagP = card.querySelector('[data-name="Data tag"] p');
+  if (tagP) tagP.textContent = sourceLabel ?? formatSourceLabel(null, "Sensor sync");
 
   const valRow = card.querySelector('[data-name="Value row"]');
   if (valRow) {
@@ -110,20 +134,31 @@ function hydrateMetricCard(
   }
 }
 
+interface SparklineOptions {
+  endDay?: number;
+  activeDay?: number;
+  unit?: string;
+  baselineVal?: number;
+  baselineLabel?: string;
+  onSelectDay?: (day: number) => void;
+}
+
 /** Applies scaled bar heights inside a sparkline or chart container. */
 function applySparklineBars(
   container: Element,
   values: number[],
   minPx: number,
   maxPx: number,
-  colorFn?: (val: number, idx: number) => string,
+  colorFn?: (val: number, idx: number, dayNum?: number) => string,
+  opts?: SparklineOptions,
 ): void {
   const bars = Array.from(container.querySelectorAll('[data-name="Bar"]')) as HTMLElement[];
   if (bars.length === 0 || values.length === 0) return;
 
   const slice = values.slice(-bars.length);
-  const minVal = Math.min(...slice);
-  const maxVal = Math.max(...slice);
+  const allVals = opts?.baselineVal != null ? [...slice, opts.baselineVal] : slice;
+  const minVal = Math.min(...allVals);
+  const maxVal = Math.max(...allVals);
   const span = Math.max(1e-6, maxVal - minVal);
 
   bars.forEach((bar, i) => {
@@ -131,18 +166,60 @@ function applySparklineBars(
     if (offset < 0) {
       bar.style.height = `${minPx}px`;
       bar.style.opacity = "0.22";
+      bar.classList.remove("is-active-day");
       return;
     }
     const v = slice[offset];
     const ratio = (v - minVal) / span;
     const hPx = Math.round(minPx + ratio * (maxPx - minPx));
+    const dayNum = opts?.endDay != null ? opts.endDay - (slice.length - 1 - offset) : undefined;
     bar.style.height = `${hPx}px`;
     bar.style.opacity = "1";
-    bar.title = `Value: ${Math.round(v * 10) / 10}`;
+    bar.setAttribute("data-boops-bar", "1");
+    const unitStr = opts?.unit ? ` ${opts.unit}` : "";
+    const baseHint = opts?.baselineLabel ? ` · ${opts.baselineLabel}` : "";
+    const formatted = Number.isInteger(v) ? String(v) : (Math.round(v * 10) / 10).toString();
+    bar.title = dayNum != null ? `Day ${dayNum}: ${formatted}${unitStr}${baseHint}` : `Value: ${formatted}${unitStr}`;
+
+    const isToday = dayNum != null && opts?.activeDay != null ? dayNum === opts.activeDay : offset === slice.length - 1;
+    bar.classList.toggle("is-active-day", isToday);
+
     if (colorFn) {
-      bar.style.backgroundColor = colorFn(v, offset);
+      bar.style.backgroundColor = colorFn(v, offset, dayNum);
+    } else if (isToday) {
+      bar.style.backgroundColor = "#0284c7";
+    } else {
+      bar.style.backgroundColor = "#334155";
+    }
+
+    if (dayNum != null && opts?.onSelectDay) {
+      bar.onclick = (ev) => {
+        ev.stopPropagation();
+        opts.onSelectDay?.(dayNum);
+      };
     }
   });
+
+  // Reposition dashed [data-name="Baseline"] horizontally across [data-name="Plot"] at baselineVal
+  const baselineEl = container.querySelector<HTMLElement>('[data-name="Baseline"]');
+  if (baselineEl && opts?.baselineVal != null) {
+    const plotHeight = (container as HTMLElement).clientHeight || 140;
+    const clampedBase = Math.max(minVal, Math.min(maxVal, opts.baselineVal));
+    const baseRatio = (clampedBase - minVal) / span;
+    const baseHPx = minPx + baseRatio * (maxPx - minPx);
+    const topPx = Math.max(10, Math.min(plotHeight - 10, Math.round(plotHeight - baseHPx)));
+    baselineEl.style.top = `${topPx}px`;
+    baselineEl.style.bottom = "auto";
+    if (opts.baselineLabel) {
+      let badge = baselineEl.querySelector<HTMLElement>(".boops-baseline-pill");
+      if (!badge) {
+        badge = document.createElement("span");
+        badge.className = "boops-baseline-pill";
+        baselineEl.append(badge);
+      }
+      badge.textContent = opts.baselineLabel;
+    }
+  }
 }
 
 /** Updates a left Score card (Health Score, Sleep Score, Stress Score, Risk Summary, Mission Dose). */
@@ -152,7 +229,7 @@ function hydrateScoreCard(
   bigText: string,
   subText: string,
   sparkValues?: number[],
-  tagText = "Simulated",
+  tagText = formatSourceLabel(null, "On-device sync"),
   tooltipNote?: string,
 ): void {
   const top = card.querySelector('[data-name="Top"]');
@@ -215,7 +292,7 @@ function hydrateProgressCard(
   }
 }
 
-/** Hydrates a Chart card's subtitle, status pill, bar heights, and X-axis window. */
+/** Hydrates a Chart card's subtitle, status pill, bar heights, baseline line, and X-axis window. */
 function hydrateChartCard(
   card: Element,
   subtitle: string,
@@ -224,12 +301,17 @@ function hydrateChartCard(
   values: number[],
   startDay: number,
   endDay: number,
-  colorFn?: (val: number, idx: number) => string,
+  colorFn?: (val: number, idx: number, dayNum?: number) => string,
+  opts?: Omit<SparklineOptions, "endDay">,
 ): void {
   const textBox = card.querySelector('[data-name="Header"] [data-name="Text"]');
   const textPs = textBox?.querySelectorAll("p");
   if (textPs && textPs[1]) {
     textPs[1].textContent = subtitle;
+  }
+  const tagP = card.querySelector('[data-name="Data tag"] p');
+  if (tagP) {
+    tagP.textContent = formatSourceLabel(null, "Sensor trend");
   }
   const statusChip = card.querySelector('[data-name="Status"]');
   if (statusChip) {
@@ -237,17 +319,34 @@ function hydrateChartCard(
     if (dot) dot.setAttribute("src", dotForLevel(statusLevel));
     const p = statusChip.querySelector("p");
     if (p) p.textContent = statusLabel;
+    applyStatusBadgeStyle(statusChip, `${statusLevel} ${statusLabel}`);
   }
   const plot = card.querySelector('[data-name="Plot"]');
+  const barsCount = plot ? plot.querySelectorAll('[data-name="Bar"]').length : 0;
+  const displayStart = barsCount > 0 && values.length > barsCount ? Math.max(startDay, endDay - barsCount + 1) : startDay;
+
   if (plot && values.length > 0) {
-    applySparklineBars(plot, values, 12, 128, colorFn);
+    applySparklineBars(plot, values, 12, 128, colorFn, {
+      ...opts,
+      endDay,
+      activeDay: opts?.activeDay ?? endDay,
+    });
   }
-  updateChartXAxis(card, startDay, endDay);
+
+  // Hide static Figma "EVA · Day 41" marker unless Day 41 is in view
+  const marker = card.querySelector<HTMLElement>('[data-name="Marker"]');
+  if (marker) {
+    const showEva = displayStart <= 41 && endDay >= 41;
+    marker.style.display = showEva ? "" : "none";
+  }
+
+  updateChartXAxis(card, displayStart, endDay);
 }
 
-/** Updates the shared Sidebar profile card and dynamic status badges. */
+/** Updates the shared Sidebar profile card, dynamic status badges, and active sub-rows. */
 function hydrateSidebar(
   artboard: HTMLElement,
+  screenId: ScreenId,
   engine: EngineDayOutput | null,
   record: DailyRecordRow | null,
   state: AppContextState,
@@ -261,6 +360,18 @@ function hydrateSidebar(
     ]);
   }
 
+  // Keep Environment sub-row active state synchronized cleanly
+  const radSub = artboard.querySelector<HTMLElement>('[data-name="Nav sub-row/Radiation"]');
+  const gravSub = artboard.querySelector<HTMLElement>('[data-name="Nav sub-row/Gravity"]');
+  for (const [el, isTarget] of [
+    [radSub, screenId === "HealthEnvironmentRadiation" || screenId === "LogEnvironmentRadiation"],
+    [gravSub, screenId === "HealthEnvironmentGravity" || screenId === "LogEnvironmentGravity"],
+  ] as Array<[HTMLElement | null, boolean]>) {
+    if (!el) continue;
+    el.classList.toggle("bg-[var(--color-bg-active,#c6f432)]", isTarget);
+    el.style.backgroundColor = isTarget ? "#c6f432" : "";
+  }
+
   if (!engine || !record) return;
 
   const radLevel = record.radiation_msv >= 1.5 ? "Act" : record.radiation_msv >= 0.8 ? "Watch" : "Normal";
@@ -268,12 +379,15 @@ function hydrateSidebar(
     engine.data_quality.status === "check_device"
       ? "Check"
       : formatRiskLevel(engine.risks.cardio.level);
-  const sleepLabel = engine.sleep_score < 45 ? "Watch" : "Normal";
+  const sleepLabel = `${record.sleep_hours.toFixed(1)} h`;
+  const kcal = calcCalories(record, state.astronautId, state.missionDay);
+  const nutLabel = kcal < 2100 ? "Low" : "On track";
   const stressLabel = engine.stress_score >= 70 ? "Act" : engine.stress_score >= 45 ? "Watch" : "Normal";
 
   const badgeMap: Record<string, string> = {
     "Nav row/Environment": radLevel,
     "Nav row/Vitals": vitalsLabel,
+    "Nav row/Nutrition": nutLabel,
     "Nav row/Sleep": sleepLabel,
     "Nav row/Mindfulness": stressLabel,
   };
@@ -573,6 +687,8 @@ function hydrateHealthHome(
   record: DailyRecordRow,
   state: AppContextState,
 ): void {
+  const srcLabel = formatSourceLabel(record);
+  const debugMode = isDebugUiMode();
   const profile = getCrewProfile(state.astronautId);
   const inAdaptation = state.missionDay <= 14;
   const pageHeader = artboard.querySelector('[data-name="Page header"]');
@@ -582,7 +698,7 @@ function hydrateHealthHome(
       record.date,
       `${profile.id} ${profile.name}`,
       inAdaptation ? "Adaptation phase (alerts dampened)" : formatDqLabel(engine.data_quality.status),
-      "Simulated",
+      ...(debugMode ? ["Simulated"] : [srcLabel]),
     ];
     setParagraphs(pageHeader, [[1, subParts.join(" · ")]]);
   }
@@ -605,7 +721,7 @@ function hydrateHealthHome(
       String(todayComposite),
       inAdaptation ? "Baseline building (Days 1–14)" : `Status: ${formatDqLabel(engine.data_quality.status)}`,
       compositeScores,
-      "Simulated",
+      srcLabel,
       "Composite indicator comparing stress, sleep, vitals & downstream risks to YOUR Day 1–14 baseline (not a diagnosis).",
     );
   }
@@ -723,6 +839,7 @@ function hydrateHealthHome(
       if (dot) dot.setAttribute("src", dotForLevel(risk.level));
       const p = pill.querySelector("p");
       if (p) p.textContent = `${levelLabel} · ${risk.score}`;
+      applyStatusBadgeStyle(pill, risk.level);
     }
 
     const levelMeter = card.querySelector('[data-name="Level meter"], [data-name="Level bar"]');
@@ -798,10 +915,12 @@ function hydrateRiskDetail(
   const levelLabel = formatRiskLevel(risk.level);
   const levelNum = risk.level === "act" ? 3 : risk.level === "watch" ? 2 : 1;
 
+  const srcLabel = formatSourceLabel(getDailyRecord(bundle, state.astronautId, state.missionDay));
+  const debugMode = isDebugUiMode();
   const pageHeader = artboard.querySelector('[data-name="Page header"]');
   if (pageHeader) {
     setParagraphs(pageHeader, [
-      [1, `Day ${state.missionDay} · ${profile.id} ${profile.name} · ${levelLabel} (${risk.score}/100) · Simulated`],
+      [1, `Day ${state.missionDay} · ${profile.id} ${profile.name} · ${levelLabel} (${risk.score}/100) · ${debugMode ? "Simulated" : srcLabel}`],
     ]);
   }
 
@@ -817,7 +936,7 @@ function hydrateRiskDetail(
       levelLabel,
       `Score ${risk.score}/100 · Level ${levelNum} of 3`,
       riskScores,
-      "Simulated",
+      srcLabel,
       `${levelLabel} threshold: <40 Normal, 40–70 Watch, >70 Act.`,
     );
   }
@@ -825,26 +944,28 @@ function hydrateRiskDetail(
   // 30-day Chart card
   const chartCard = artboard.querySelector('[data-name="Chart card"]');
   if (chartCard) {
-    const chartPs = chartCard.querySelectorAll("p");
-    if (chartPs[1]) {
-      chartPs[1].textContent = `Day ${start30}–${state.missionDay} · simulated · 40 = Watch, 70 = Act`;
-    }
-    const statusChip = chartCard.querySelector('[data-name="Status"]');
-    if (statusChip) {
-      const dot = statusChip.querySelector("img");
-      if (dot) dot.setAttribute("src", dotForLevel(risk.level));
-      const p = statusChip.querySelector("p");
-      if (p) p.textContent = levelLabel;
-    }
-    const plot = chartCard.querySelector('[data-name="Plot"]');
-    if (plot) {
-      applySparklineBars(plot, riskScores.length ? riskScores : [risk.score], 14, 134, (val) => {
+    const modeTag = debugMode ? "simulated · " : "";
+    hydrateChartCard(
+      chartCard,
+      `Day ${start30}–${state.missionDay} · ${modeTag}dashed line = Watch (40) · Act >70`,
+      levelLabel,
+      risk.level,
+      riskScores.length ? riskScores : [risk.score],
+      start30,
+      state.missionDay,
+      (val, _idx, dayNum) => {
         if (val > 70) return "#dc2626";
         if (val >= 40) return "#f59e0b";
-        return "#111827";
-      });
-    }
-    updateChartXAxis(chartCard, start30, state.missionDay);
+        return dayNum === state.missionDay ? "#0284c7" : "#334155";
+      },
+      {
+        activeDay: state.missionDay,
+        unit: "risk",
+        baselineVal: 40,
+        baselineLabel: "Watch 40",
+        onSelectDay: state.setDay,
+      },
+    );
   }
 
   // Why it matters -> replace Chain rows dynamically with drivers + stars + citations
@@ -1461,10 +1582,13 @@ function hydrateHealthSubAndDetailScreens(
     hydrateAlertBanner(artboard, record, engine, state);
   }
 
+  const srcLabel = formatSourceLabel(record);
+  const debugMode = isDebugUiMode();
+  const profile = getCrewProfile(state.astronautId);
   const pageHeader = artboard.querySelector('[data-name="Page header"]');
   if (pageHeader) {
     setParagraphs(pageHeader, [
-      [1, `Day ${state.missionDay} · ${getCrewProfile(state.astronautId).id} ${getCrewProfile(state.astronautId).name} · Simulated`],
+      [1, `Day ${state.missionDay} · ${profile.id} ${profile.name} · ${debugMode ? "Simulated" : srcLabel}`],
     ]);
   }
 
@@ -1479,6 +1603,7 @@ function hydrateHealthSubAndDetailScreens(
         detailSpec.bigText,
         detailSpec.subText,
         detailSpec.series,
+        srcLabel,
       );
     } else if (screenId === "HealthSleep") {
       hydrateScoreCard(
@@ -1487,6 +1612,7 @@ function hydrateHealthSubAndDetailScreens(
         String(engine.sleep_score),
         engine.sleep_score < 45 ? "Below baseline" : "Within baseline",
         series.map((s) => s.engine.sleep_score),
+        srcLabel,
       );
     } else if (screenId === "HealthMindfulness") {
       hydrateScoreCard(
@@ -1495,6 +1621,7 @@ function hydrateHealthSubAndDetailScreens(
         String(engine.stress_score),
         engine.stress_score >= 70 ? "Elevated strain" : engine.stress_score >= 45 ? "Moderate" : "Low",
         series.map((s) => s.engine.stress_score),
+        srcLabel,
       );
     } else if (screenId === "HealthEnvironmentRadiation") {
       hydrateScoreCard(
@@ -1503,6 +1630,7 @@ function hydrateHealthSubAndDetailScreens(
         cumDose.toFixed(1),
         `mSv cumulative (${record.radiation_msv.toFixed(2)} mSv today)`,
         series.map((s) => s.record?.radiation_msv ?? 0.5),
+        srcLabel,
       );
     } else if (screenId === "HealthEnvironmentGravity") {
       hydrateScoreCard(
@@ -1511,6 +1639,7 @@ function hydrateHealthSubAndDetailScreens(
         String(state.missionDay),
         state.missionDay <= 14 ? "of 180 · Adaptation phase" : "of 180",
         series.map((s) => s.engine.mission_day),
+        srcLabel,
       );
     } else if (screenId === "HealthEnvironment") {
       const co2 = calcCabinCo2(record, state.astronautId, state.missionDay);
@@ -1526,6 +1655,7 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) =>
           s.record ? Math.max(40, Math.round(95 - Math.max(0, s.record.radiation_msv - 0.6) * 20)) : 86,
         ),
+        srcLabel,
       );
     }
   }
@@ -1826,12 +1956,51 @@ function hydrateHealthSubAndDetailScreens(
     }
   });
 
-  // Update ALL Chart card plots & X-axes on both Health* subpages and all 27 Detail* screens
+  // Update ALL Chart card plots, baselines & X-axes on both Health* subpages and all 27 Detail* screens
   artboard.querySelectorAll('[data-name="Chart card"]').forEach((chartCard) => {
     const chartTitle = (chartCard.querySelector('[data-name="Header"] [data-name="Text"] p')?.textContent ?? "").toLowerCase();
-    const subLabel = `Day ${winStart}–${state.missionDay} · simulated · dashed line = your baseline`;
+    const modeTag = debugMode ? "simulated · " : "";
+    const subLabel = `Day ${winStart}–${state.missionDay} · ${modeTag}dashed line = personal baseline`;
+    const barBaseColor = (_val: number, _idx: number, dayNum?: number) =>
+      dayNum === state.missionDay ? "#0284c7" : "#334155";
 
     if (detailSpec) {
+      let dBaseVal: number | undefined;
+      let dBaseLabel: string | undefined;
+      if (screenId === "DetailRestingHeartRate") {
+        dBaseVal = engine.baseline.rhr_bpm?.mean ?? 60;
+        dBaseLabel = `Base ${Math.round(dBaseVal)} bpm`;
+      } else if (screenId === "DetailHrv") {
+        dBaseVal = engine.baseline.hrv_rmssd_ms?.mean ?? 50;
+        dBaseLabel = `Base ${Math.round(dBaseVal)} ms`;
+      } else if (screenId === "DetailBloodPressure") {
+        dBaseVal = engine.baseline.sbp_mmhg?.mean ?? 112;
+        dBaseLabel = `Base ${Math.round(dBaseVal)} mmHg`;
+      } else if (screenId === "DetailBloodOxygenSpo2") {
+        dBaseVal = engine.baseline.spo2_pct?.mean ?? 98;
+        dBaseLabel = `Base ${Math.round(dBaseVal)}%`;
+      } else if (screenId === "DetailSleepDuration") {
+        dBaseVal = engine.baseline.sleep_hours?.mean ?? 7.0;
+        dBaseLabel = `Base ${dBaseVal.toFixed(1)} h`;
+      } else if (screenId === "DetailSleepScore") {
+        dBaseVal = 70;
+        dBaseLabel = "Goal 70";
+      } else if (screenId === "DetailSleepQuality") {
+        dBaseVal = 85;
+        dBaseLabel = "Goal 85%";
+      } else if (screenId === "DetailStressScore") {
+        dBaseVal = 45;
+        dBaseLabel = "Watch 45";
+      } else if (screenId === "DetailMood") {
+        dBaseVal = engine.baseline.mood_1to5?.mean ?? 3.8;
+        dBaseLabel = `Base ${dBaseVal.toFixed(1)}`;
+      } else if (screenId === "DetailRadiationDose") {
+        dBaseVal = engine.baseline.radiation_msv?.mean ?? 0.5;
+        dBaseLabel = `Base ${dBaseVal.toFixed(2)} mSv`;
+      } else if (screenId === "DetailExerciseCountermeasures" || screenId === "DetailBoneDensity") {
+        dBaseVal = engine.baseline.resistance_min?.mean ?? 45;
+        dBaseLabel = `Target ${Math.round(dBaseVal)}m`;
+      }
       hydrateChartCard(
         chartCard,
         subLabel,
@@ -1840,11 +2009,20 @@ function hydrateHealthSubAndDetailScreens(
         detailSpec.series,
         winStart,
         state.missionDay,
+        barBaseColor,
+        {
+          activeDay: state.missionDay,
+          baselineVal: dBaseVal,
+          baselineLabel: dBaseLabel,
+          onSelectDay: state.setDay,
+        },
       );
       return;
     }
 
     if (chartTitle.includes("resting heart rate")) {
+      const rhrMean = engine.baseline.rhr_bpm?.mean ?? 60;
+      const rhrSd = Math.max(1, engine.baseline.rhr_bpm?.sd ?? 2.5);
       const isGlitch = engine.data_quality.status === "check_device" && record.rhr_bpm > 150;
       const lvl = isGlitch ? "watch" : Math.abs(engine.z.rhr_bpm ?? 0) >= 2 ? "watch" : "normal";
       hydrateChartCard(
@@ -1855,8 +2033,19 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => Math.min(115, s.record?.rhr_bpm ?? 60)),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) =>
+          val > rhrMean + 2 * rhrSd ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155",
+        {
+          activeDay: state.missionDay,
+          unit: "bpm",
+          baselineVal: rhrMean,
+          baselineLabel: `Base ${Math.round(rhrMean)} bpm`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("hrv") || chartTitle.includes("stress trend")) {
+      const hrvMean = engine.baseline.hrv_rmssd_ms?.mean ?? 50;
+      const hrvSd = Math.max(2, engine.baseline.hrv_rmssd_ms?.sd ?? 6);
       const lvl = engine.stress_score >= 70 ? "act" : engine.stress_score >= 45 ? "watch" : "normal";
       hydrateChartCard(
         chartCard,
@@ -1866,8 +2055,18 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => s.record?.hrv_rmssd_ms ?? 50),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) =>
+          val < hrvMean - 1.5 * hrvSd ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155",
+        {
+          activeDay: state.missionDay,
+          unit: "ms",
+          baselineVal: hrvMean,
+          baselineLabel: `Base ${Math.round(hrvMean)} ms`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("blood pressure")) {
+      const sbpMean = engine.baseline.sbp_mmhg?.mean ?? 112;
       const lvl = record.sbp_mmhg >= 135 || record.dbp_mmhg >= 88 ? "watch" : "normal";
       hydrateChartCard(
         chartCard,
@@ -1877,8 +2076,17 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => s.record?.sbp_mmhg ?? 112),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) => (val >= 135 ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155"),
+        {
+          activeDay: state.missionDay,
+          unit: "mmHg",
+          baselineVal: sbpMean,
+          baselineLabel: `Base ${Math.round(sbpMean)} mmHg`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("sleep duration")) {
+      const sleepMean = engine.baseline.sleep_hours?.mean ?? 6.8;
       const lvl = engine.sleep_score < 45 ? "watch" : "normal";
       hydrateChartCard(
         chartCard,
@@ -1888,8 +2096,18 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => s.record?.sleep_hours ?? 6.5),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) =>
+          val < 5.5 ? "#dc2626" : val < 6.5 ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155",
+        {
+          activeDay: state.missionDay,
+          unit: "h",
+          baselineVal: sleepMean,
+          baselineLabel: `Base ${sleepMean.toFixed(1)} h`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("radiation dose")) {
+      const radMean = engine.baseline.radiation_msv?.mean ?? 0.5;
       const lvl = record.radiation_msv >= 1.5 ? "act" : record.radiation_msv >= 0.8 ? "watch" : "normal";
       hydrateChartCard(
         chartCard,
@@ -1899,8 +2117,18 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => s.record?.radiation_msv ?? 0.5),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) =>
+          val >= 1.5 ? "#dc2626" : val >= 0.8 ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155",
+        {
+          activeDay: state.missionDay,
+          unit: "mSv",
+          baselineVal: radMean,
+          baselineLabel: `Base ${radMean.toFixed(2)} mSv`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("exercise load")) {
+      const resMean = engine.baseline.resistance_min?.mean ?? 45;
       const lvl = record.resistance_min < 25 ? "watch" : "normal";
       hydrateChartCard(
         chartCard,
@@ -1910,6 +2138,14 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => s.record?.resistance_min ?? 50),
         winStart,
         state.missionDay,
+        (val, _idx, dayNum) => (val < 25 ? "#f59e0b" : dayNum === state.missionDay ? "#0284c7" : "#334155"),
+        {
+          activeDay: state.missionDay,
+          unit: "min",
+          baselineVal: resMean,
+          baselineLabel: `Target ${Math.round(resMean)}m`,
+          onSelectDay: state.setDay,
+        },
       );
     } else if (chartTitle.includes("calories")) {
       hydrateChartCard(
@@ -1920,6 +2156,14 @@ function hydrateHealthSubAndDetailScreens(
         series.map((s) => (s.record ? calcCalories(s.record, state.astronautId, s.engine.mission_day) : 2450)),
         winStart,
         state.missionDay,
+        barBaseColor,
+        {
+          activeDay: state.missionDay,
+          unit: "kcal",
+          baselineVal: 2650,
+          baselineLabel: "Target 2,650",
+          onSelectDay: state.setDay,
+        },
       );
     } else {
       updateChartXAxis(chartCard, winStart, state.missionDay);
@@ -1970,7 +2214,7 @@ function renderMindfulnessCameraCard(artboard: HTMLElement, state: AppContextSta
     "button",
     {
       type: "button",
-      className: "boops-btn",
+      className: "boops-btn boops-debug-only",
       "data-boops-mind-camera-sim": "1",
     },
     "Simulated Signal Demo",
@@ -2034,6 +2278,8 @@ function makeDynamicLogEntryNode(
   const headline = parts.slice(0, 2).join(" · ") || `${entry.screen} entry`;
   const detail = parts.slice(2).join(" · ") || `Logged for ${entry.astronaut_id} Day ${entry.mission_day}`;
   const isCamera = entry.screen.includes("Camera");
+  const isSynced = Boolean(entry.id?.startsWith("sync-"));
+  const badgeText = isCamera ? "Camera rPPG" : isSynced ? formatSourceLabel({ source: "wearable" }, "Synced") : "Manual";
 
   const editBtn = onEdit
     ? h(
@@ -2042,7 +2288,7 @@ function makeDynamicLogEntryNode(
           type: "button",
           className: "relative shrink-0 size-[18px] cursor-pointer",
           style: "border:none;background:transparent;padding:0;",
-          title: "Edit this log entry",
+          title: isSynced ? "Load these readings into form to log an override" : "Edit this log entry",
           "data-name": "icon/edit",
           onClick: (ev: MouseEvent) => {
             ev.stopPropagation();
@@ -2125,17 +2371,67 @@ function makeDynamicLogEntryNode(
           className:
             "[word-break:break-word] font-['Inter:Medium'] font-medium leading-[1.3] not-italic relative shrink-0 text-[11px] text-[color:var(--color-text-secondary,#374151)] whitespace-nowrap",
         },
-        isCamera ? "Camera rPPG" : "Manual",
+        badgeText,
       ),
     ),
     editBtn ?? "",
   );
 }
 
+function buildFallbackHistoryEntries(
+  bundle: BoopsBundle,
+  screenId: ScreenId,
+  state: AppContextState,
+  daysCount = 7,
+): ManualLogEntry[] {
+  const start = Math.max(1, state.missionDay - daysCount + 1);
+  const series = getRangeSeries(bundle, state.astronautId, start, state.missionDay);
+  const out: ManualLogEntry[] = [];
+  for (let i = series.length - 1; i >= 0; i--) {
+    const rec = series[i].record;
+    if (!rec) continue;
+    const fields: Record<string, string> = {};
+    if (screenId.startsWith("LogVitals")) {
+      fields["Resting heart rate"] = `${Math.round(rec.rhr_bpm)} bpm`;
+      fields["Blood pressure"] = `${Math.round(rec.sbp_mmhg)}/${Math.round(rec.dbp_mmhg)} mmHg`;
+      fields["Body temperature"] = `${rec.temp_c.toFixed(1)} °C`;
+      if (rec.symptoms) fields["Tags"] = rec.symptoms.split(";").join(", ");
+    } else if (screenId === "LogSleep") {
+      fields["Hours slept"] = `${rec.sleep_hours.toFixed(1)} h`;
+      fields["Rating"] = `${rec.sleep_quality_1to5}/5`;
+    } else if (screenId === "LogEnvironmentRadiation") {
+      fields["Personal dosimeter reading"] = `${rec.radiation_msv.toFixed(2)} mSv`;
+    } else if (screenId === "LogEnvironmentGravity") {
+      fields["Duration"] = `${Math.round(rec.resistance_min)} min`;
+      fields["Notes"] = `Total exercise ${Math.round(rec.exercise_min)} min · ARED protocol`;
+    } else if (screenId === "LogEnvironment") {
+      fields["Radiation dose (dosimeter)"] = `${rec.radiation_msv.toFixed(2)} mSv`;
+      fields["Cabin CO₂"] = `${calcCabinCo2(rec, state.astronautId, rec.mission_day)} ppm`;
+    } else if (screenId === "LogNutrition") {
+      fields["Calories"] = `${calcCalories(rec, state.astronautId, rec.mission_day)} kcal`;
+      fields["Protein"] = `${calcProtein(rec, state.astronautId, rec.mission_day)} g`;
+      fields["Water"] = `${calcWaterL(rec, state.astronautId, rec.mission_day).toFixed(1)} L`;
+    } else if (screenId === "LogMindfulness") {
+      fields["Minutes of practice"] = rec.mood_1to5 >= 3 ? "10 min" : "5 min";
+      fields["Rating"] = `${rec.mood_1to5}/5`;
+    }
+    out.push({
+      id: `sync-${screenId}-${rec.mission_day}`,
+      astronaut_id: state.astronautId,
+      mission_day: rec.mission_day,
+      screen: screenId,
+      fields,
+      saved_at: rec.date || "08:00 UTC",
+    });
+  }
+  return out;
+}
+
 /** Wires Form header day, "How to measure" links, offline persistence, See all, and History edit controls. */
 function hydrateLogScreen(
   artboard: HTMLElement,
   screenId: ScreenId,
+  bundle: BoopsBundle,
   state: AppContextState,
 ): void {
   const fieldToGuide: Array<[RegExp, string]> = [
@@ -2217,6 +2513,23 @@ function hydrateLogScreen(
       actionsBar.append(camBtn);
     }
 
+    if (screenId === "LogVitals" || screenId === "LogSleep") {
+      const syncBtn = h(
+        "button",
+        {
+          type: "button",
+          "data-boops-sync-btn": "1",
+          className: "boops-btn boops-btn-dark",
+        },
+        screenId === "LogSleep" ? "Sync Health App" : "Sync Health / BLE",
+      );
+      syncBtn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        state.openDeviceHub?.(screenId === "LogSleep" ? "health" : "ble");
+      });
+      actionsBar.append(syncBtn);
+    }
+
     const guideBtn = h(
       "button",
       {
@@ -2238,12 +2551,13 @@ function hydrateLogScreen(
   let showAllHistory = false;
 
   const populateFormFromEntry = (entry: ManualLogEntry) => {
-    editingEntry = entry;
+    editingEntry = entry.id?.startsWith("sync-") ? null : entry;
     const inputs = Array.from(artboard.querySelectorAll<HTMLInputElement>(".figma-field-input"));
     inputs.forEach((inp, idx) => {
       const key = inp.dataset.fieldLabel ?? inp.placeholder ?? `field_${idx}`;
       if (entry.fields[key] != null) {
         inp.value = entry.fields[key];
+        inp.dispatchEvent(new Event("input"));
       }
     });
 
@@ -2290,8 +2604,12 @@ function hydrateLogScreen(
     }
 
     const saveP = artboard.querySelector<HTMLElement>('[data-boops-save-btn] p');
-    if (saveP) saveP.textContent = "Update entry";
-    state.showToast(`Editing Day ${entry.mission_day} entry — save to update`);
+    if (saveP) saveP.textContent = editingEntry ? "Update entry" : "Save entry";
+    state.showToast(
+      editingEntry
+        ? `Editing Day ${entry.mission_day} entry — save to update`
+        : `Loaded Day ${entry.mission_day} values — save to log update`,
+    );
   };
 
   const renderHistoryList = () => {
@@ -2302,11 +2620,13 @@ function hydrateLogScreen(
 
     const crewLogs = loadManualLogs().filter((l) => l.astronaut_id === state.astronautId);
     const matching = crewLogs.filter((l) => l.screen === screenId);
-    const ordered = showAllHistory
-      ? crewLogs
-      : matching.length > 0
-        ? matching
-        : crewLogs;
+    const syncedFallback = buildFallbackHistoryEntries(bundle, screenId, state, 7);
+    const seenSyncedDays = new Set(matching.map((m) => Number(m.mission_day)));
+    const combinedMatching = [
+      ...matching,
+      ...syncedFallback.filter((f) => !seenSyncedDays.has(Number(f.mission_day))),
+    ];
+    const ordered = showAllHistory ? [...crewLogs, ...syncedFallback] : combinedMatching;
 
     if (ordered.length > 0) {
       const staticEntries = Array.from(historyWrap.querySelectorAll('[data-name="Log entry"]'));
@@ -2315,17 +2635,21 @@ function hydrateLogScreen(
       const limit = showAllHistory ? ordered.length : 4;
       const frag = document.createDocumentFragment();
       for (const entry of ordered.slice(0, limit)) {
-        const isEditable = !entry.screen.includes("Camera");
+        const isEditable =
+          !entry.screen.includes("Camera") && entry.screen !== "Wearable Sync" && entry.screen !== "BLE Sensor";
         frag.appendChild(makeDynamicLogEntryNode(entry, isEditable ? populateFormFromEntry : undefined));
       }
       sectionHeader.after(frag);
     }
 
+    const debugMode = isDebugUiMode();
     const subP = sectionHeader.querySelector('[data-name="Text"] p:nth-of-type(2)');
     if (subP) {
       subP.textContent = showAllHistory
         ? `Showing all ${ordered.length} offline entries · newest first`
-        : "Last 7 days · newest first (Simulated + manual)";
+        : debugMode
+          ? "Last 7 days · newest first (Simulated + manual)"
+          : "Last 7 days · newest first (On-device sync + manual)";
     }
 
     const rawSeeAll = sectionHeader.querySelector<HTMLElement>('[data-name="Action"]');
@@ -2414,7 +2738,10 @@ function hydrateLogScreen(
         }
 
         inputs.forEach((inp) => {
-          if (inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement) inp.value = "";
+          if (inp instanceof HTMLInputElement || inp instanceof HTMLTextAreaElement) {
+            inp.value = "";
+            inp.dispatchEvent(new Event("input"));
+          }
         });
         state.reRenderScreen();
       });
@@ -2427,8 +2754,10 @@ function hydrateLogScreen(
 function hydrateSettingsScreen(
   artboard: HTMLElement,
   engine: EngineDayOutput | null,
+  record: DailyRecordRow | null,
   state: AppContextState,
 ): void {
+  const debugMode = isDebugUiMode();
   const profile = getCrewProfile(state.astronautId);
   let settings = loadUserSettings();
   const contentLeft = artboard.querySelector('[data-name="Left"]');
@@ -2440,7 +2769,12 @@ function hydrateSettingsScreen(
       setParagraphs(profBox, [
         [0, `${profile.id} · ${profile.name}`],
         [1, savedNote ? `${profile.role} · ${savedNote}` : profile.role],
-        [2, `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Simulated`],
+        [
+          2,
+          debugMode
+            ? `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Simulated`
+            : `Mission LEO-180 · 3-person crew · Day ${state.missionDay} · Offline`,
+        ],
       ]);
     }
   }
@@ -2556,6 +2890,10 @@ function hydrateSettingsScreen(
       });
       row.replaceWith(cloneRow);
     } else if (title === "Wearable (HRV, sleep)") {
+      const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && record) {
+        subP.textContent = `Signal ${Math.round(record.signal_quality * 100)}% · synced Day ${state.missionDay}`;
+      }
       const cloneRow = row.cloneNode(true) as HTMLElement;
       cloneRow.style.cursor = "pointer";
       cloneRow.addEventListener("click", (ev) => {
@@ -2564,6 +2902,10 @@ function hydrateSettingsScreen(
       });
       row.replaceWith(cloneRow);
     } else if (title === "Personal dosimeter") {
+      const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && record) {
+        subP.textContent = `${record.radiation_msv.toFixed(2)} mSv today · synced Day ${state.missionDay}`;
+      }
       const cloneRow = row.cloneNode(true) as HTMLElement;
       cloneRow.style.cursor = "pointer";
       cloneRow.addEventListener("click", (ev) => {
@@ -2572,6 +2914,10 @@ function hydrateSettingsScreen(
       });
       row.replaceWith(cloneRow);
     } else if (title === "Blood pressure cuff") {
+      const subP = row.querySelector('[data-name="Text"] p:nth-of-type(2)');
+      if (subP && record) {
+        subP.textContent = `${Math.round(record.sbp_mmhg)}/${Math.round(record.dbp_mmhg)} mmHg · synced Day ${state.missionDay}`;
+      }
       const cloneRow = row.cloneNode(true) as HTMLElement;
       cloneRow.style.cursor = "pointer";
       cloneRow.addEventListener("click", (ev) => {
@@ -2579,6 +2925,68 @@ function hydrateSettingsScreen(
         state.openToolGuide("blood_pressure_cuff");
       });
       row.replaceWith(cloneRow);
+      if (!artboard.querySelector("[data-boops-device-hub-bar]")) {
+        const caps = getNativeBridgeState().capabilities;
+        const hubBar = h(
+          "div",
+          { className: "boops-inline-panel", "data-boops-device-hub-bar": "1" },
+          h(
+            "div",
+            { className: "boops-hub-settings-head" },
+            h("strong", { style: "font-size:13px;color:#111827;" }, "Live Device, Health App & Nearby Access"),
+            h(
+              "span",
+              { className: "boops-hub-row-sub" },
+              `${caps.healthApi.name} (${caps.healthApi.status.replace("_", " ")}) · BLE (${caps.bluetooth.mode.replace("_", " ")})`,
+            ),
+          ),
+          h(
+            "div",
+            { className: "boops-hub-actions" },
+            h(
+              "button",
+              {
+                type: "button",
+                className: "boops-inline-btn boops-inline-btn-dark",
+                onClick: (ev: MouseEvent) => {
+                  ev.stopPropagation();
+                  state.openDeviceHub?.("health");
+                },
+              },
+              caps.platform === "ios"
+                ? "Apple HealthKit Sync"
+                : caps.platform === "android"
+                  ? "Health Connect Sync"
+                  : "Health App Sync",
+            ),
+            h(
+              "button",
+              {
+                type: "button",
+                className: "boops-inline-btn",
+                onClick: (ev: MouseEvent) => {
+                  ev.stopPropagation();
+                  state.openDeviceHub?.("ble");
+                },
+              },
+              "Bluetooth Sensors (BLE)",
+            ),
+            h(
+              "button",
+              {
+                type: "button",
+                className: "boops-inline-btn",
+                onClick: (ev: MouseEvent) => {
+                  ev.stopPropagation();
+                  state.openDeviceHub?.("nearby");
+                },
+              },
+              "Nearby Crew Sync",
+            ),
+          ),
+        );
+        cloneRow.after(hubBar);
+      }
     } else if (title === "Units") {
       const fmt = (u: "metric" | "imperial") =>
         u === "imperial" ? "Imperial (rem, °F, lb)" : "Metric (mSv, °C, kg)";
@@ -2609,6 +3017,15 @@ function hydrateSettingsScreen(
       row.replaceWith(cloneRow);
     }
   });
+
+  const aboutCard = artboard.querySelector('[data-name="About"]');
+  if (aboutCard && !debugMode) {
+    aboutCard.querySelectorAll("p").forEach((p) => {
+      if ((p.textContent ?? "").includes("Simulated prototype")) {
+        p.textContent = "BOOPS Offline Prototype · Not a medical device";
+      }
+    });
+  }
 
   // Wire "Edit profile" & "Recalibrate baseline" buttons
   artboard.querySelectorAll<HTMLElement>('[data-name="Button"]').forEach((rawBtn) => {
@@ -2714,10 +3131,18 @@ function hydrateEmergencyScreens(
       ? `Medical officer (${patient.name}) is patient → Next crew leads: ${nextLeader.name} (${nextLeader.role})`
       : `Responder lead: ${nextLeader.name} (Medical Officer) · Patient: ${patient.name} (${patient.role})`;
 
+  const debugMode = isDebugUiMode();
   const header = artboard.querySelector<HTMLElement>('[data-name="Page header"]');
 
   // EmergencyHub: replace static Figma dummy names with real CREW_PROFILES + bind Lead note + protocol tiles
   if (screenId === "EmergencyHub") {
+    if (header && !debugMode) {
+      header.querySelectorAll("p").forEach((p) => {
+        if ((p.textContent ?? "").includes("Simulated protocols")) {
+          p.textContent = "Offline flight emergency protocols · Confirm procedures with Flight Surgeon";
+        }
+      });
+    }
     const crewRow = artboard.querySelector<HTMLElement>('[data-name="Crew"]');
     if (crewRow) {
       const crewCards = CREW_PROFILES.map((crew) => {
@@ -2845,7 +3270,12 @@ function hydrateEmergencyScreens(
   if (header) {
     setParagraphs(header, [
       [0, protocol.title],
-      [1, `OFFLINE EMERGENCY PROTOCOL · Severity: ${protocol.severity.toUpperCase()} · Simulated demo`],
+      [
+        1,
+        debugMode
+          ? `OFFLINE EMERGENCY PROTOCOL · Severity: ${protocol.severity.toUpperCase()} · Simulated demo`
+          : `OFFLINE EMERGENCY PROTOCOL · Severity: ${protocol.severity.toUpperCase()}`,
+      ],
     ]);
     const hTitle = header.querySelector("p");
     if (hTitle) (hTitle as HTMLElement).style.color = "#991b1b";
@@ -2956,7 +3386,7 @@ function hydrateEmergencyScreens(
           `Temp: ${patientRecord.temp_c.toFixed(1)} °C`,
           `Today Dose: ${patientRecord.radiation_msv.toFixed(2)} mSv (Cum: ${cumDose.toFixed(1)} / 600 mSv)`,
         ]
-      : ["Simulated patient vitals loaded offline."];
+      : [debugMode ? "Simulated patient vitals loaded offline." : "Patient telemetry loaded offline."];
 
     const guideButtons = protocol.related_tool_guides.map((gid) => {
       const g = bundle.toolGuides.find((item) => item.id === gid);
@@ -2998,7 +3428,11 @@ function hydrateEmergencyScreens(
         h(
           "div",
           { className: "boops-em-card" },
-          h("p", { className: "boops-em-card-kicker", style: "color:#4b5563;" }, "Patient live snapshot (Simulated)"),
+          h(
+            "p",
+            { className: "boops-em-card-kicker", style: "color:#4b5563;" },
+            debugMode ? "Patient live snapshot (Simulated)" : "Patient live snapshot (Offline)",
+          ),
           ...vitalsSnapshot.map((line) => h("p", { className: "boops-em-card-body" }, line)),
           h("div", { className: "boops-em-guide-links", style: "margin-top:6px;" }, ...guideButtons),
         ),
@@ -3039,6 +3473,102 @@ function hydrateEmergencyScreens(
   }
 }
 
+function resolveToolGuideForText(text: string, screenId: ScreenId): string | null {
+  const lower = text.toLowerCase();
+  if (!lower.includes("how to") && !lower.includes("wearable fit") && !lower.includes("tool guide") && !lower.includes("dosimeter") && !lower.includes("saliva")) {
+    return null;
+  }
+  if (lower.includes("blood pressure") || lower.includes("cuff")) return "blood_pressure_cuff";
+  if (lower.includes("saliva")) return "saliva_sample_kit";
+  if (lower.includes("dosimeter") || lower.includes("radiation")) return "personal_dosimeter";
+  if (lower.includes("oxygen") || lower.includes("spo2") || screenId === "DetailBloodOxygenSpo2") return "pulse_oximeter";
+  if (lower.includes("temp")) return "thermometer";
+  if (lower.includes("exercise") || lower.includes("ared") || screenId === "DetailBoneDensity" || screenId === "DetailExerciseCountermeasures") {
+    return "exercise_device_log";
+  }
+  if (lower.includes("wearable") || lower.includes("pulse") || lower.includes("fit check")) return "wearable_hrv_fit";
+  return null;
+}
+
+/** Wires ALL Link rows (RELATED LOG subtitles + 7 offline Tool Guides) and strips Demo-only copy in App mode. */
+function hydrateLinkRowsAndDemoCleanup(
+  artboard: HTMLElement,
+  screenId: ScreenId,
+  record: DailyRecordRow | null,
+  state: AppContextState,
+): void {
+  const debugMode = isDebugUiMode();
+  const srcLabel = formatSourceLabel(record);
+
+  // 1. Hydrate RELATED LOG subtitles + wire TOOL GUIDE Link rows across screens
+  artboard.querySelectorAll<HTMLElement>('[data-name="Link row"]').forEach((row) => {
+    const ps = Array.from(row.querySelectorAll("p"));
+    const titleText = ps[0]?.textContent?.trim() ?? "";
+    const subP = ps[1];
+    const rowAllText = `${titleText} ${subP?.textContent ?? ""}`;
+
+    if (subP && record) {
+      const sText = subP.textContent ?? "";
+      if (sText.includes("Day 42") || sText.startsWith("Last entry:") || sText.startsWith("ARED ")) {
+        if (titleText.includes("Vitals") && screenId === "DetailBloodPressure") {
+          subP.textContent = `Last entry: Day ${record.mission_day} · ${Math.round(record.sbp_mmhg)}/${Math.round(record.dbp_mmhg)} mmHg`;
+        } else if (titleText.includes("Vitals") && screenId === "DetailBloodOxygenSpo2") {
+          subP.textContent = `Last entry: Day ${record.mission_day} · ${record.spo2_pct.toFixed(0)}% SpO₂`;
+        } else if (titleText.includes("Vitals")) {
+          subP.textContent = `Last entry: Day ${record.mission_day} · ${Math.round(record.rhr_bpm)} bpm`;
+        } else if (titleText.includes("Sleep")) {
+          subP.textContent = `Last entry: Day ${record.mission_day} · ${record.sleep_hours.toFixed(1)} h`;
+        } else if (titleText.includes("Gravity")) {
+          subP.textContent = `ARED ${Math.round(record.resistance_min)} min · Day ${record.mission_day}`;
+        } else if (titleText.includes("Radiation")) {
+          subP.textContent = `Dosimeter: ${record.radiation_msv.toFixed(2)} mSv · Day ${record.mission_day}`;
+        } else {
+          subP.textContent = sText.replace(/Day 42/g, `Day ${record.mission_day}`);
+        }
+      }
+    }
+
+    const guideId = resolveToolGuideForText(rowAllText, screenId);
+    if (guideId && !row.closest('[data-name="History"]')) {
+      row.style.cursor = "pointer";
+      row.addEventListener(
+        "click",
+        (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+          state.openToolGuide(guideId);
+        },
+        true,
+      );
+    }
+  });
+
+  // 2. Replace any residual static "Simulated" / "Day 43" dummy copy in clean Crew App mode
+  if (!debugMode) {
+    artboard.querySelectorAll<HTMLElement>('[data-name="Data tag"] p').forEach((p) => {
+      if ((p.textContent ?? "").trim().toLowerCase() === "simulated") {
+        p.textContent = srcLabel;
+      }
+    });
+
+    artboard.querySelectorAll("p").forEach((p) => {
+      if (p.closest(".boops-debug-only")) return;
+      const txt = p.textContent ?? "";
+      if (txt.includes("App model (simulated)")) {
+        p.textContent = txt.replace(/App model \(simulated\)/g, "On-device statistical model");
+      } else if (txt.includes("Simulated data · Not a medical device")) {
+        p.textContent = "On-device telemetry · Not a medical device · Early-warning risk indicator, not a diagnosis";
+      } else if (txt.includes("· simulated ·")) {
+        p.textContent = txt.replace(/· simulated ·/g, "·");
+      } else if (txt.includes("Simulated demo")) {
+        p.textContent = txt.replace(/\s*·?\s*Simulated demo/g, "");
+      } else if (txt.startsWith("Day 43 ·") && record) {
+        p.textContent = txt.replace(/^Day 43 ·/, `Day ${record.mission_day} ·`).replace(/· Simulated data/g, `· ${srcLabel}`);
+      }
+    });
+  }
+}
+
 /** Main entry point invoked after rendering any Figma screen artboard. */
 export function applyBoopsBindings(
   artboard: HTMLElement,
@@ -3051,9 +3581,11 @@ export function applyBoopsBindings(
   const engine = getEngineDay(bundle, state.astronautId, state.missionDay);
   const record = getDailyRecord(bundle, state.astronautId, state.missionDay);
 
-  hydrateSidebar(artboard, engine, record, state);
+  hydrateSidebar(artboard, screenId, engine, record, state);
 
-  if (!bundle || !engine || !record) return;
+  if (!bundle || !engine || !record) {
+    return;
+  }
 
   if (screenId === "HealthHome") {
     hydrateHealthHome(artboard, bundle, engine, record, state);
@@ -3064,12 +3596,14 @@ export function applyBoopsBindings(
   } else if (screenId === "HealthRiskDetailHeart") {
     hydrateRiskDetail(artboard, "cardio", bundle, engine, state);
   } else if (screenId === "SettingsProfile") {
-    hydrateSettingsScreen(artboard, engine, state);
+    hydrateSettingsScreen(artboard, engine, record, state);
   } else if (screenId.startsWith("Emergency")) {
     hydrateEmergencyScreens(artboard, screenId, bundle, record, state);
   } else if (screenId.startsWith("Log")) {
-    hydrateLogScreen(artboard, screenId, state);
+    hydrateLogScreen(artboard, screenId, bundle, state);
   } else {
     hydrateHealthSubAndDetailScreens(artboard, screenId, bundle, engine, record, state);
   }
+
+  hydrateLinkRowsAndDemoCleanup(artboard, screenId, record, state);
 }

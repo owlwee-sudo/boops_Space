@@ -11,8 +11,10 @@
  */
 
 import "../styles/boops.css";
-import { Activity, BookOpen, ChevronsUpDown, FileDown, createElement, type IconNode } from "lucide";
+import { Activity, Bluetooth, BookOpen, ChevronsUpDown, FileDown, createElement, type IconNode } from "lucide";
 import { h } from "../lib/dom";
+import { type DeviceHubTab, createDeviceHubModal } from "./DeviceHubModal";
+import { printDocumentWithNativeBridge } from "../services/nativeBridge";
 import {
   CREW_PROFILES,
   DEMO_JUMPS,
@@ -23,6 +25,7 @@ import {
   formatExportCsv,
   formatRiskLevel,
   getCrewProfile,
+  getDailyRecord,
   getEngineDay,
   getRangeSeries,
 } from "../services/boopsData";
@@ -50,11 +53,14 @@ export interface OverlayController {
   footer: HTMLElement;
   drawerBackdrop: HTMLElement;
   exportBackdrop: HTMLElement;
+  deviceHubBackdrop: HTMLElement;
   updateBar: () => void;
   openDrawer: (guideId?: string) => void;
   closeDrawer: () => void;
   openExport: () => void;
   closeExport: () => void;
+  openDeviceHub: (tab?: DeviceHubTab) => void;
+  closeTopOverlay: () => boolean;
   openCameraCheck: (simulated?: boolean) => void;
   getUiMode: () => BoopsUiMode;
   setUiMode: (mode: BoopsUiMode) => void;
@@ -67,7 +73,9 @@ export interface OverlayCallbacks {
   getContext: () => { astronautId: "A1" | "A2" | "A3"; missionDay: number; sharing: SharingSettings };
   setContext: (astronautId: "A1" | "A2" | "A3", missionDay: number, jumpHome?: boolean) => void;
   onToggleSharing: (key: "daily_summary" | "raw_data", val: boolean) => void;
+  onDataIngested?: () => void;
   onOpenSettings?: () => void;
+  onUiModeChange?: (mode: BoopsUiMode) => void;
   onToast: (msg: string) => void;
 }
 
@@ -97,17 +105,41 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   // The Profile card itself opens Settings on click; keep the crew picker from triggering that.
   crewSelect.addEventListener("click", (ev) => ev.stopPropagation());
 
-  const prevBtn = h("button", { type: "button", className: "boops-btn", title: "Previous mission day" }, "◀");
-  const nextBtn = h("button", { type: "button", className: "boops-btn", title: "Next mission day" }, "▶");
+  const topCrewSelect = h(
+    "select",
+    { className: "boops-topbar-crew-select", "aria-label": "Active crew member", title: "Switch crew member" },
+    ...CREW_PROFILES.map((c) => h("option", { value: c.id }, `${c.id} · ${c.name} (${c.role})`)),
+  ) as HTMLSelectElement;
+
+  topCrewSelect.addEventListener("change", () => {
+    const { missionDay } = cb.getContext();
+    cb.setContext(topCrewSelect.value as "A1" | "A2" | "A3", missionDay, false);
+  });
+
+  const prevBtn = h(
+    "button",
+    { type: "button", className: "boops-stepper-btn", title: "Previous mission day", "aria-label": "Previous day" },
+    "‹",
+  );
+  const nextBtn = h(
+    "button",
+    { type: "button", className: "boops-stepper-btn", title: "Next mission day", "aria-label": "Next day" },
+    "›",
+  );
+  const todayBtn = h(
+    "button",
+    { type: "button", className: "boops-btn boops-today-btn", title: "Jump to current mission day" },
+    "Today",
+  );
   const daySlider = h("input", {
     type: "range",
     min: "1",
     max: "180",
-    value: "96",
+    value: "45",
     className: "boops-day-slider",
     "aria-label": "Mission Day Slider",
   }) as HTMLInputElement;
-  const dayReadout = h("span", { className: "boops-day-readout" }, "Day 96 / 180");
+  const dayReadout = h("span", { className: "boops-day-readout" }, "Day 45 / 180");
 
   prevBtn.addEventListener("click", () => {
     const { astronautId, missionDay } = cb.getContext();
@@ -117,6 +149,12 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   nextBtn.addEventListener("click", () => {
     const { astronautId, missionDay } = cb.getContext();
     cb.setContext(astronautId, Math.min(180, missionDay + 1), false);
+  });
+
+  todayBtn.addEventListener("click", () => {
+    const { astronautId } = cb.getContext();
+    const targetDay = uiMode === "debug" ? 96 : 45;
+    cb.setContext(astronautId, targetDay, false);
   });
 
   daySlider.addEventListener("input", () => {
@@ -146,7 +184,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     const { astronautId } = cb.getContext();
     const qs = simulated ? `?sim=steady&astronaut=${encodeURIComponent(astronautId)}` : `?astronaut=${encodeURIComponent(astronautId)}`;
     const relUrl = `./camera/${qs}`;
-    if (!window.location.protocol.startsWith("http")) {
+    const proto = window.location.protocol;
+    if (!proto.startsWith("http") && proto !== "boops-app:") {
       cb.onToast(`Run "python engine/server.py" and open http://127.0.0.1:8000/camera/${qs} for the camera check.`);
       return;
     }
@@ -294,6 +333,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       // Ignore storage errors.
     }
     syncModeUi();
+    updateBar();
+    cb.onUiModeChange?.(next);
   }
 
   const demoStrip = h("div", { className: "boops-demo-strip boops-debug-only" });
@@ -307,12 +348,38 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     return { jump, btn };
   });
 
+  const dayStepper = h(
+    "div",
+    { className: "boops-date-stepper" },
+    prevBtn,
+    dayReadout,
+    nextBtn,
+  );
+
+  const topSensorsBtn = h(
+    "button",
+    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => deviceHub.open("health") },
+    createElement(Bluetooth, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
+    "Sensors & Sync",
+  );
+  const topGuidesBtn = h(
+    "button",
+    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => openDrawer(activeGuideId) },
+    createElement(BookOpen, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
+    "Tool Guides",
+  );
+  const topExportBtn = h(
+    "button",
+    { type: "button", className: "boops-btn boops-topbar-action", onClick: () => openExport() },
+    createElement(FileDown, { width: 14, height: 14, "stroke-width": 1.6, "aria-hidden": "true" }),
+    "Export",
+  );
+
   const scrubberGroup = h(
     "div",
     { className: "boops-topbar-group boops-debug-only", "data-boops-scrubber": "1" },
-    prevBtn,
+    h("span", { className: "boops-tag-debug" }, "Demo / Debug"),
     daySlider,
-    nextBtn,
   );
 
   const topbar = h(
@@ -324,9 +391,18 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       h(
         "div",
         { className: "boops-topbar-group" },
-        h("span", { className: "boops-tag-debug" }, "Demo / Debug"),
+        topCrewSelect,
+        dayStepper,
+        todayBtn,
+      ),
+      h(
+        "div",
+        { className: "boops-topbar-group" },
         scrubberGroup,
-        dayReadout,
+        h("span", { className: "boops-tag-offline" }, "Offline · On-device"),
+        topSensorsBtn,
+        topGuidesBtn,
+        topExportBtn,
       ),
     ),
     demoStrip,
@@ -457,7 +533,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
                 "button",
                 {
                   type: "button",
-                  className: "boops-btn",
+                  className: "boops-btn boops-debug-only",
                   onClick: () => launchCameraCheck(true),
                 },
                 "Open Simulated Demo (?sim=steady) ↗",
@@ -537,7 +613,11 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
               { className: "boops-modal-preview-title" },
               `Flight-Surgeon Summary · ${profile.id} ${profile.name} (Days ${sDay}–${eDay})`,
             ),
-            h("span", { className: "boops-tag-sim" }, "Simulated · Not a medical device"),
+            h(
+              "span",
+              { className: uiMode === "debug" ? "boops-tag-sim" : "boops-tag-offline" },
+              uiMode === "debug" ? "Simulated · Not a medical device" : "Offline · Not a medical device",
+            ),
           ),
           h(
             "p",
@@ -612,6 +692,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       "Print Flight-Surgeon Summary (PDF)",
     );
     printBtn.addEventListener("click", () => {
+      if (printDocumentWithNativeBridge("BOOPS_Flight_Surgeon_Summary")) return;
       try {
         window.print();
       } catch {
@@ -695,17 +776,24 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     h(
       "span",
       null,
-      "BOOPS (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
+      "BOOPS (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device",
+      h("span", { className: "boops-debug-only" }, " · Sample crew data labeled Simulated"),
     ),
   );
 
   function updateBar() {
     const { astronautId, missionDay } = cb.getContext();
     crewSelect.value = astronautId;
+    topCrewSelect.value = astronautId;
     daySlider.value = String(missionDay);
-    dayReadout.textContent = `Day ${missionDay} / 180`;
 
     const bundle = cb.getBundle();
+    const rec = getDailyRecord(bundle, astronautId, missionDay);
+    const defaultDay = uiMode === "debug" ? 96 : 45;
+    dayReadout.textContent = rec?.date ? `Day ${missionDay} / 180 · ${rec.date}` : `Day ${missionDay} / 180`;
+    todayBtn.textContent = `Today (D${defaultDay})`;
+    todayBtn.classList.toggle("is-current-day", missionDay === defaultDay);
+
     const engine = getEngineDay(bundle, astronautId, missionDay);
     if (engine) {
       const status = engine.data_quality.status;
@@ -731,16 +819,43 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     }
   }
 
+  const deviceHub = createDeviceHubModal({
+    getBundle: cb.getBundle,
+    getContext: cb.getContext,
+    onDataIngested: () => {
+      updateBar();
+      cb.onDataIngested?.();
+    },
+    onToast: cb.onToast,
+  });
+
   return {
     topbar,
     footer,
     drawerBackdrop,
     exportBackdrop,
+    deviceHubBackdrop: deviceHub.backdrop,
     updateBar,
     openDrawer,
     closeDrawer,
     openExport,
     closeExport,
+    openDeviceHub: (tab) => deviceHub.open(tab),
+    closeTopOverlay: () => {
+      if (deviceHub.isOpen()) {
+        deviceHub.close();
+        return true;
+      }
+      if (!exportBackdrop.hidden) {
+        closeExport();
+        return true;
+      }
+      if (!drawerBackdrop.hidden) {
+        closeDrawer();
+        return true;
+      }
+      return false;
+    },
     openCameraCheck: (simulated = false) => launchCameraCheck(simulated),
     getUiMode: () => uiMode,
     setUiMode,

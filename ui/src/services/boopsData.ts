@@ -3,6 +3,8 @@
  * Reads `window.BOOPS_DATA` (when opened via file:// with data_bundle.js) or `./data/boops_bundle.json`.
  */
 
+import { type BleReading, type HealthSyncRecord, saveFileWithNativeBridge } from "./nativeBridge";
+
 export type RiskLevel = "normal" | "watch" | "act";
 export type DataQualityStatus = "ok" | "check_device" | "check_yourself" | "act_now";
 
@@ -316,10 +318,50 @@ export function saveSharingSettings(
   return normalized;
 }
 
+/** Returns true when BOOPS is running in Demo / Debug UI mode instead of clean Crew App mode. */
+export function isDebugUiMode(): boolean {
+  if (typeof window === "undefined") return false;
+  const docMode = document.documentElement.dataset.boopsMode;
+  if (docMode === "debug" || docMode === "app") {
+    return docMode === "debug";
+  }
+  const params = new URLSearchParams(window.location.search);
+  const param = (params.get("mode") || params.get("boops_mode") || "").toLowerCase();
+  if (
+    param === "debug" ||
+    params.get("debug") === "1" ||
+    params.get("debug") === "true" ||
+    window.location.pathname.endsWith("/debug.html")
+  ) {
+    return true;
+  }
+  if ((window as unknown as { __BOOPS_DEFAULT_MODE?: string }).__BOOPS_DEFAULT_MODE === "debug") {
+    return true;
+  }
+  try {
+    return window.sessionStorage?.getItem("boops_ui_mode") === "debug";
+  } catch {
+    return false;
+  }
+}
+
+/** Formats source attribution badge text based on record source and active UI mode. */
+export function formatSourceLabel(
+  record?: Pick<DailyRecordRow, "source"> | null,
+  fallbackAppLabel = "On-device sync",
+  debug = isDebugUiMode(),
+): string {
+  if (record?.source === "manual") return "Manual entry";
+  if (record?.source === "camera") return "Camera rPPG";
+  if (record?.source === "wearable") return "Wearable sync";
+  return debug ? "Simulated" : fallbackAppLabel;
+}
+
 /** Loads the active astronaut and mission day selection. */
 export function loadSelectedContext(): PersistedContext {
+  const defaultDay = isDebugUiMode() ? 96 : 45;
   const raw = safeStorageGet("context");
-  const fallback: PersistedContext = { astronautId: "A1", missionDay: 96 };
+  const fallback: PersistedContext = { astronautId: "A1", missionDay: defaultDay };
   if (!raw) return fallback;
   try {
     const parsed = JSON.parse(raw) as Partial<PersistedContext>;
@@ -330,7 +372,7 @@ export function loadSelectedContext(): PersistedContext {
     const missionDay =
       typeof parsed.missionDay === "number" && parsed.missionDay >= 1 && parsed.missionDay <= 180
         ? Math.round(parsed.missionDay)
-        : 96;
+        : defaultDay;
     return { astronautId, missionDay };
   } catch {
     return fallback;
@@ -575,35 +617,310 @@ export async function loadBoopsBundle(): Promise<BoopsBundle | null> {
   }
 }
 
-/** Looks up the engine output for a specific astronaut and mission day. */
+function clampNum(val: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, val));
+}
+
+function parseFirstFloat(raw?: string): number | null {
+  if (!raw) return null;
+  const m = /-?\d+(?:\.\d+)?/.exec(raw);
+  if (!m) return null;
+  const n = Number(m[0]);
+  return Number.isFinite(n) ? n : null;
+}
+
+function parseClockMinutes(raw?: string): number | null {
+  if (!raw) return null;
+  const m = /^(\d{1,2}):(\d{2})$/.exec(raw.trim());
+  if (!m) return null;
+  const hh = Number(m[1]);
+  const mm = Number(m[2]);
+  if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
+  return hh * 60 + mm;
+}
+
+function groupManualLogsByDay(astronautId: string): Map<number, ManualLogEntry[]> {
+  const map = new Map<number, ManualLogEntry[]>();
+  const all = loadManualLogs();
+  // Traverse oldest -> newest so latest submission for a day overrides earlier ones cleanly.
+  for (let i = all.length - 1; i >= 0; i--) {
+    const entry = all[i];
+    if (entry.astronaut_id !== astronautId) continue;
+    const day = Number(entry.mission_day);
+    if (!Number.isFinite(day)) continue;
+    const list = map.get(day);
+    if (list) list.push(entry);
+    else map.set(day, [entry]);
+  }
+  return map;
+}
+
+function applyEntriesToRecord(base: DailyRecordRow, entries: ManualLogEntry[] | undefined): DailyRecordRow {
+  if (!entries || entries.length === 0) return base;
+  const rec: DailyRecordRow = { ...base };
+  let applied = false;
+
+  for (const entry of entries) {
+    const f = entry.fields || {};
+    if (entry.screen === "Camera Check (rPPG)") {
+      const src = (f["Source"] || "").toLowerCase();
+      if (src === "simulated") continue;
+      const rhr = parseFirstFloat(f["Resting HR"]);
+      const sq = parseFirstFloat(f["Signal quality"]);
+      if (rhr != null && rhr >= 35 && rhr <= 220 && (sq == null || sq >= 0.5)) {
+        rec.rhr_bpm = Math.round(rhr);
+        if (sq != null) rec.signal_quality = clampNum(sq, 0, 1);
+        rec.source = "camera";
+        applied = true;
+      }
+      continue;
+    }
+
+    if (entry.screen === "Wearable Sync" || entry.screen === "BLE Sensor") {
+      const rhr = parseFirstFloat(f["Resting HR"]);
+      if (rhr != null && rhr >= 30 && rhr <= 240) rec.rhr_bpm = Math.round(rhr);
+      const hrvMetric = (f["HRV metric"] || "").toLowerCase();
+      const hrvRmssd = parseFirstFloat(f["HRV (RMSSD)"]);
+      if (hrvRmssd != null && hrvRmssd >= 5 && hrvRmssd <= 250 && hrvMetric !== "sdnn") {
+        rec.hrv_rmssd_ms = Number(hrvRmssd.toFixed(1));
+      }
+      const sleepH = parseFirstFloat(f["Sleep hours"]);
+      if (sleepH != null && sleepH >= 0 && sleepH <= 18) rec.sleep_hours = Number(sleepH.toFixed(1));
+      const spo2 = parseFirstFloat(f["SpO2"]);
+      if (spo2 != null && spo2 >= 50 && spo2 <= 100) rec.spo2_pct = Number(spo2.toFixed(1));
+      const bpMatch = /(\d{2,3})\s*\/\s*(\d{2,3})/.exec(f["Blood pressure"] || "");
+      if (bpMatch) {
+        rec.sbp_mmhg = Number(bpMatch[1]);
+        rec.dbp_mmhg = Number(bpMatch[2]);
+      }
+      const temp = parseFirstFloat(f["Body temperature"]);
+      if (temp != null && temp >= 34 && temp <= 43) rec.temp_c = Number(temp.toFixed(1));
+      const ex = parseFirstFloat(f["Exercise"]);
+      if (ex != null && ex >= 0 && ex <= 360) rec.exercise_min = Math.round(ex);
+      const sq = parseFirstFloat(f["Signal quality"]);
+      if (sq != null) rec.signal_quality = clampNum(sq, 0, 1);
+      else rec.signal_quality = Math.max(rec.signal_quality, 0.94);
+      rec.source = "wearable";
+      applied = true;
+      continue;
+    }
+
+    if (entry.screen.startsWith("LogVitals")) {
+      const rhr = parseFirstFloat(f["Resting heart rate"]);
+      if (rhr != null && rhr >= 30 && rhr <= 240) rec.rhr_bpm = Math.round(rhr);
+      const bpMatch = /(\d{2,3})\s*\/\s*(\d{2,3})/.exec(f["Blood pressure"] || "");
+      if (bpMatch) {
+        rec.sbp_mmhg = Number(bpMatch[1]);
+        rec.dbp_mmhg = Number(bpMatch[2]);
+      }
+      const temp = parseFirstFloat(f["Body temperature"]);
+      if (temp != null && temp >= 34 && temp <= 43) rec.temp_c = Number(temp.toFixed(1));
+      if (typeof f["Tags"] === "string") {
+        const cleaned = f["Tags"]
+          .split(",")
+          .map((t) => t.trim())
+          .filter((t) => t && t.toLowerCase() !== "none");
+        rec.symptoms = cleaned.join(";");
+      }
+      rec.signal_quality = Math.max(rec.signal_quality, 0.92);
+      rec.source = "manual";
+      applied = true;
+    } else if (entry.screen === "LogSleep") {
+      let hours = parseFirstFloat(f["Hours slept"]);
+      if (hours == null) {
+        const bed = parseClockMinutes(f["Bedtime"]);
+        const wake = parseClockMinutes(f["Wake time"]);
+        if (bed != null && wake != null) {
+          hours = ((wake - bed + 1440) % 1440) / 60;
+        }
+      }
+      if (hours != null && hours >= 0 && hours <= 18) rec.sleep_hours = Number(hours.toFixed(1));
+      const rating = /([1-5])\s*\/\s*5/.exec(f["Rating"] || "");
+      if (rating) rec.sleep_quality_1to5 = Number(rating[1]);
+      rec.source = "manual";
+      applied = true;
+    } else if (entry.screen === "LogEnvironment" || entry.screen === "LogEnvironmentRadiation") {
+      const rad = parseFirstFloat(f["Radiation dose (dosimeter)"] || f["Personal dosimeter reading"]);
+      if (rad != null && rad >= 0 && rad <= 500) rec.radiation_msv = Number(rad.toFixed(2));
+      rec.source = "manual";
+      applied = true;
+    } else if (entry.screen === "LogEnvironmentGravity") {
+      const dur = parseFirstFloat(f["Duration"]);
+      if (dur != null && dur >= 0 && dur <= 360) {
+        const tagText = (f["Tags"] || "").toLowerCase();
+        const isCardioOnly = (tagText.includes("treadmill") || tagText.includes("cycle")) && !tagText.includes("ared");
+        if (!isCardioOnly) {
+          rec.resistance_min = Math.round(dur);
+        }
+        rec.exercise_min = Math.max(rec.exercise_min, Math.round(dur));
+      }
+      rec.source = "manual";
+      applied = true;
+    } else if (entry.screen === "LogMindfulness") {
+      const rating = /([1-5])\s*\/\s*5/.exec(f["Rating"] || "");
+      if (rating) rec.mood_1to5 = Number(rating[1]);
+      const mins = parseFirstFloat(f["Minutes of practice"]);
+      if (mins != null && mins >= 10) {
+        rec.eda_mean_us = Number(Math.max(1.2, rec.eda_mean_us * 0.92).toFixed(2));
+      }
+      rec.source = "manual";
+      applied = true;
+    } else if (entry.screen === "LogNutrition") {
+      rec.source = "manual";
+      applied = true;
+    }
+  }
+
+  return applied ? rec : base;
+}
+
+function levelFromScore(score: number): RiskLevel {
+  if (score > 70) return "act";
+  if (score >= 40) return "watch";
+  return "normal";
+}
+
+function recomputeEngineFromRecord(
+  baseEngine: EngineDayOutput,
+  baseRec: DailyRecordRow | undefined,
+  rec: DailyRecordRow | undefined,
+): EngineDayOutput {
+  if (!rec || !baseRec || (rec.source !== "manual" && rec.source !== "camera" && rec.source !== "wearable")) {
+    return baseEngine;
+  }
+
+  const nextZ: Record<string, number> = { ...baseEngine.z };
+  const recordLookup: Record<string, number> = {
+    rhr_bpm: rec.rhr_bpm,
+    hrv_rmssd_ms: rec.hrv_rmssd_ms,
+    sleep_hours: rec.sleep_hours,
+    sleep_quality_1to5: rec.sleep_quality_1to5,
+    eda_mean_us: rec.eda_mean_us,
+    spo2_pct: rec.spo2_pct,
+    sbp_mmhg: rec.sbp_mmhg,
+    dbp_mmhg: rec.dbp_mmhg,
+    temp_c: rec.temp_c,
+    exercise_min: rec.exercise_min,
+    resistance_min: rec.resistance_min,
+    radiation_msv: rec.radiation_msv,
+    mood_1to5: rec.mood_1to5,
+  };
+  for (const [metric, stats] of Object.entries(baseEngine.baseline)) {
+    const val = recordLookup[metric];
+    if (typeof val === "number" && Number.isFinite(val)) {
+      const sd = Math.max(Number(stats.sd) || 1, 1e-3);
+      nextZ[metric] = Number(((val - Number(stats.mean)) / sd).toFixed(2));
+    }
+  }
+
+  // Exact rules formulas from engine/analysis.py
+  const hrvComp = clampNum(28 + -(nextZ.hrv_rmssd_ms ?? 0) * 20, 0, 100);
+  const rhrComp = clampNum(28 + Math.min(nextZ.rhr_bpm ?? 0, 5) * 14, 0, 100);
+  const edaComp = clampNum(28 + (nextZ.eda_mean_us ?? 0) * 16, 0, 100);
+  const moodComp = clampNum(((5 - rec.mood_1to5) / 4) * 100, 0, 100);
+  const nextStress = Math.round(clampNum(0.5 * hrvComp + 0.2 * rhrComp + 0.15 * edaComp + 0.15 * moodComp, 0, 100));
+
+  let durFromZ = 78 + clampNum(nextZ.sleep_hours ?? 0, -4.5, 2) * 14;
+  if (rec.sleep_hours < 5.5) durFromZ -= (5.5 - rec.sleep_hours) * 8;
+  const durComp = clampNum(durFromZ, 0, 100);
+  const qualComp = clampNum(((rec.sleep_quality_1to5 - 1) / 4) * 100, 0, 100);
+  const nextSleep = Math.round(clampNum(0.65 * durComp + 0.35 * qualComp, 0, 100));
+
+  const sleepDelta = (baseEngine.sleep_score - nextSleep) * 0.35;
+  const stressDelta = nextStress - baseEngine.stress_score;
+  const rhrDelta = clampNum(((nextZ.rhr_bpm ?? 0) - (baseEngine.z.rhr_bpm ?? 0)) * 8, -12, 22);
+  const radDelta = clampNum(((nextZ.radiation_msv ?? 0) - (baseEngine.z.radiation_msv ?? 0)) * 6, -8, 18);
+  const symHad = Boolean(baseRec.symptoms && baseRec.symptoms.trim());
+  const symNow = Boolean(rec.symptoms && rec.symptoms.trim());
+  const symDelta = !symHad && symNow ? 18 : symHad && !symNow ? -15 : 0;
+  const feverDelta = rec.temp_c >= 38.0 ? 15 : rec.temp_c <= 37.3 && baseRec.temp_c >= 38.0 ? -12 : 0;
+  const resDelta = clampNum((baseRec.resistance_min - rec.resistance_min) * 0.45, -18, 25);
+  const exDelta = clampNum((baseRec.exercise_min - rec.exercise_min) * 0.35, -15, 22);
+
+  const immuneScore = Math.round(clampNum(baseEngine.risks.immune.score + sleepDelta + stressDelta * 0.28 + rhrDelta + radDelta + symDelta + feverDelta, 0, 100));
+  const muscScore = Math.round(clampNum(baseEngine.risks.musculoskeletal.score + resDelta + stressDelta * 0.2 + radDelta * 0.6, 0, 100));
+  const cardioScore = Math.round(clampNum(baseEngine.risks.cardio.score + exDelta + stressDelta * 0.25 + rhrDelta * 0.7 + radDelta * 0.6, 0, 100));
+
+  let dqStatus = baseEngine.data_quality.status;
+  const dqReasons = [...baseEngine.data_quality.reasons];
+  if (rec.rhr_bpm > 180 || rec.rhr_bpm < 35) {
+    dqStatus = "check_device";
+    if (!dqReasons.some((r) => r.includes("implausible"))) {
+      dqReasons.unshift(`Entered RHR (${rec.rhr_bpm} bpm) outside plausible resting range`);
+    }
+  } else if (rec.spo2_pct < 90 || rec.temp_c >= 39.0) {
+    dqStatus = "act_now";
+  } else if (symNow && dqStatus === "ok") {
+    dqStatus = "check_yourself";
+  }
+
+  return {
+    ...baseEngine,
+    stress_score: nextStress,
+    sleep_score: nextSleep,
+    z: nextZ,
+    risks: {
+      immune: { ...baseEngine.risks.immune, score: immuneScore, level: levelFromScore(immuneScore) },
+      musculoskeletal: {
+        ...baseEngine.risks.musculoskeletal,
+        score: muscScore,
+        level: levelFromScore(muscScore),
+      },
+      cardio: { ...baseEngine.risks.cardio, score: cardioScore, level: levelFromScore(cardioScore) },
+    },
+    data_quality: {
+      ...baseEngine.data_quality,
+      status: dqStatus,
+      reasons: dqReasons,
+    },
+    flags: {
+      infection_early_warning:
+        baseEngine.flags.infection_early_warning ||
+        ((nextZ.rhr_bpm ?? 0) >= 2.0 && rec.rhr_bpm <= 180 && rec.temp_c >= 37.6),
+    },
+    labels: rec.source === "manual" ? ["Manual entry"] : rec.source === "wearable" ? ["Wearable sync"] : ["Camera rPPG"],
+  };
+}
+
+/** Looks up the engine output for a specific astronaut and mission day (including user log overrides). */
 export function getEngineDay(
   bundle: BoopsBundle | null,
   astronautId: string,
   missionDay: number,
 ): EngineDayOutput | null {
   if (!bundle) return null;
-  return (
+  const baseEngine =
     bundle.engineOutput.find(
       (item) => item.astronaut_id === astronautId && Number(item.mission_day) === Number(missionDay),
-    ) ?? null
+    ) ?? null;
+  if (!baseEngine) return null;
+  const entries = groupManualLogsByDay(astronautId).get(Number(missionDay));
+  if (!entries || entries.length === 0) return baseEngine;
+  const baseRec = bundle.dailyRecords.find(
+    (row) => row.astronaut_id === astronautId && Number(row.mission_day) === Number(missionDay),
   );
+  if (!baseRec) return baseEngine;
+  const nextRec = applyEntriesToRecord(baseRec, entries);
+  return recomputeEngineFromRecord(baseEngine, baseRec, nextRec);
 }
 
-/** Looks up the daily record row for a specific astronaut and mission day. */
+/** Looks up the daily record row for a specific astronaut and mission day (including user log overrides). */
 export function getDailyRecord(
   bundle: BoopsBundle | null,
   astronautId: string,
   missionDay: number,
 ): DailyRecordRow | null {
   if (!bundle) return null;
-  return (
+  const base =
     bundle.dailyRecords.find(
       (row) => row.astronaut_id === astronautId && Number(row.mission_day) === Number(missionDay),
-    ) ?? null
-  );
+    ) ?? null;
+  if (!base) return null;
+  const entries = groupManualLogsByDay(astronautId).get(Number(missionDay));
+  return applyEntriesToRecord(base, entries);
 }
 
-/** Returns paired daily records + engine outputs over [startDay, endDay]. */
+/** Returns paired daily records + engine outputs over [startDay, endDay] (with user log overrides). */
 export function getRangeSeries(
   bundle: BoopsBundle | null,
   astronautId: string,
@@ -611,16 +928,28 @@ export function getRangeSeries(
   endDay: number,
 ): Array<{ record: DailyRecordRow | undefined; engine: EngineDayOutput }> {
   if (!bundle) return [];
+  const logMap = groupManualLogsByDay(astronautId);
+  const baseRecMap = new Map<number, DailyRecordRow>();
   const recMap = new Map<number, DailyRecordRow>();
   for (const r of bundle.dailyRecords) {
     if (r.astronaut_id === astronautId && r.mission_day >= startDay && r.mission_day <= endDay) {
-      recMap.set(Number(r.mission_day), r);
+      const d = Number(r.mission_day);
+      baseRecMap.set(d, r);
+      recMap.set(d, applyEntriesToRecord(r, logMap.get(d)));
     }
   }
   return bundle.engineOutput
     .filter((e) => e.astronaut_id === astronautId && e.mission_day >= startDay && e.mission_day <= endDay)
     .sort((a, b) => a.mission_day - b.mission_day)
-    .map((engine) => ({ record: recMap.get(Number(engine.mission_day)), engine }));
+    .map((engine) => {
+      const d = Number(engine.mission_day);
+      const baseRec = baseRecMap.get(d);
+      const rec = recMap.get(d);
+      return {
+        record: rec,
+        engine: recomputeEngineFromRecord(engine, baseRec, rec),
+      };
+    });
 }
 
 /** Looks up a source citation by source_id from knowledge/sources.json. */
@@ -634,17 +963,19 @@ export function getCrewProfile(astronautId: string): CrewProfile {
   return CREW_PROFILES.find((c) => c.id === astronautId) ?? CREW_PROFILES[0];
 }
 
-/** Computes cumulative radiation dose through missionDay (simulated baseline for demo). */
+/** Computes cumulative radiation dose through missionDay (including user dosimeter overrides). */
 export function getCumulativeRadiation(
   bundle: BoopsBundle | null,
   astronautId: string,
   missionDay: number,
 ): number {
   if (!bundle) return 0;
+  const logMap = groupManualLogsByDay(astronautId);
   let total = 0;
   for (const row of bundle.dailyRecords) {
     if (row.astronaut_id === astronautId && row.mission_day <= missionDay) {
-      total += Number(row.radiation_msv) || 0;
+      const effective = applyEntriesToRecord(row, logMap.get(Number(row.mission_day)));
+      total += Number(effective.radiation_msv) || 0;
     }
   }
   return Math.round(total * 10) / 10;
@@ -669,6 +1000,7 @@ export function buildExportPayload(
   };
   rows: Array<Record<string, unknown>>;
 } {
+  const debugMode = isDebugUiMode();
   const series = getRangeSeries(bundle, astronautId, startDay, endDay);
   const rows: Array<Record<string, unknown>> = [];
 
@@ -682,11 +1014,18 @@ export function buildExportPayload(
       continue;
     }
 
+    const rowLabels =
+      record?.source === "manual" || record?.source === "camera" || record?.source === "wearable"
+        ? engine.labels
+        : debugMode
+          ? engine.labels
+          : ["On-device sync"];
+
     const row: Record<string, unknown> = {
       astronaut_id: engine.astronaut_id,
       mission_day: engine.mission_day,
       date: record?.date ?? "",
-      labels: engine.labels.join(";"),
+      labels: rowLabels.join(";"),
       is_emergency_event: isEmergencyDay,
     };
 
@@ -734,8 +1073,10 @@ export function buildExportPayload(
       start_day: startDay,
       end_day: endDay,
       sharing_settings: sharing,
-      disclaimer: "Prototype · Not a medical device · All sample telemetry labeled Simulated",
-      labels: ["Simulated"],
+      disclaimer: debugMode
+        ? "Prototype · Not a medical device · All sample telemetry labeled Simulated"
+        : "Prototype · Not a medical device · Offline crew export",
+      labels: debugMode ? ["Simulated"] : ["On-device"],
     },
     rows,
   };
@@ -758,8 +1099,113 @@ export function formatExportCsv(rows: Array<Record<string, unknown>>): string {
   return lines.join("\n") + "\n";
 }
 
-/** Triggers an offline browser Blob download without any network call. */
+/** Persists synced Health Connect / Apple HealthKit records into the active astronaut's offline logs. */
+export function ingestWearableSyncRecords(
+  astronautId: string,
+  missionDay: number,
+  provider: string,
+  records: HealthSyncRecord[],
+): number {
+  if (!Array.isArray(records) || records.length === 0) return 0;
+  const sorted = [...records].sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  const total = sorted.length;
+  let savedCount = 0;
+
+  sorted.forEach((rec, idx) => {
+    const offset = total - 1 - idx;
+    const targetDay = Math.max(1, Math.min(180, Math.round(missionDay) - offset));
+    const fields: Record<string, string> = {
+      Provider: provider === "apple_healthkit" ? "Apple HealthKit" : provider === "health_connect" ? "Health Connect" : provider,
+      Date: rec.date,
+      "Signal quality": String(rec.signal_quality ?? 0.95),
+    };
+    if (typeof rec.rhr_bpm === "number" && Number.isFinite(rec.rhr_bpm)) {
+      fields["Resting HR"] = `${Math.round(rec.rhr_bpm)} bpm`;
+    }
+    if (typeof rec.hrv_rmssd_ms === "number" && Number.isFinite(rec.hrv_rmssd_ms)) {
+      if (rec.hrv_metric === "sdnn") {
+        fields["HRV (SDNN)"] = `${rec.hrv_rmssd_ms.toFixed(1)} ms`;
+        fields["HRV metric"] = "sdnn";
+      } else {
+        fields["HRV (RMSSD)"] = `${rec.hrv_rmssd_ms.toFixed(1)} ms`;
+        fields["HRV metric"] = "rmssd";
+      }
+    }
+    if (typeof rec.sleep_hours === "number" && Number.isFinite(rec.sleep_hours)) {
+      fields["Sleep hours"] = `${rec.sleep_hours.toFixed(1)} h`;
+    }
+    if (typeof rec.spo2_pct === "number" && Number.isFinite(rec.spo2_pct)) {
+      fields["SpO2"] = `${rec.spo2_pct.toFixed(1)} %`;
+    }
+    if (typeof rec.sbp_mmhg === "number" && typeof rec.dbp_mmhg === "number") {
+      fields["Blood pressure"] = `${Math.round(rec.sbp_mmhg)}/${Math.round(rec.dbp_mmhg)} mmHg`;
+    }
+    if (typeof rec.temp_c === "number" && Number.isFinite(rec.temp_c)) {
+      fields["Body temperature"] = `${rec.temp_c.toFixed(1)} °C`;
+    }
+    if (typeof rec.exercise_min === "number" && Number.isFinite(rec.exercise_min)) {
+      fields["Exercise"] = `${Math.round(rec.exercise_min)} min`;
+    }
+    if (Object.keys(fields).length <= 3) return;
+    updateManualLog({
+      id: `wearable-${provider}-${astronautId}-${rec.date}`,
+      astronaut_id: astronautId,
+      mission_day: targetDay,
+      screen: "Wearable Sync",
+      fields,
+      saved_at: new Date().toISOString().slice(0, 19).replace("T", " ") + " UTC",
+    });
+    savedCount += 1;
+  });
+
+  return savedCount;
+}
+
+/** Persists a live BLE sensor reading into the active astronaut's offline logs. */
+export function ingestBleReading(
+  astronautId: string,
+  missionDay: number,
+  reading: BleReading,
+): void {
+  const fields: Record<string, string> = {
+    Device: reading.deviceName || reading.deviceId,
+    "Signal quality": String(reading.signal_quality ?? 0.94),
+  };
+  if (typeof reading.rhr_bpm === "number" && Number.isFinite(reading.rhr_bpm)) {
+    fields["Resting HR"] = `${Math.round(reading.rhr_bpm)} bpm`;
+  }
+  if (typeof reading.hrv_rmssd_ms === "number" && Number.isFinite(reading.hrv_rmssd_ms)) {
+    fields["HRV (RMSSD)"] = `${reading.hrv_rmssd_ms.toFixed(1)} ms`;
+    fields["HRV metric"] = "rmssd";
+  }
+  if (typeof reading.spo2_pct === "number" && Number.isFinite(reading.spo2_pct)) {
+    fields["SpO2"] = `${reading.spo2_pct.toFixed(1)} %`;
+  }
+  if (typeof reading.sbp_mmhg === "number" && typeof reading.dbp_mmhg === "number") {
+    fields["Blood pressure"] = `${Math.round(reading.sbp_mmhg)}/${Math.round(reading.dbp_mmhg)} mmHg`;
+  }
+  if (typeof reading.temp_c === "number" && Number.isFinite(reading.temp_c)) {
+    fields["Body temperature"] = `${reading.temp_c.toFixed(1)} °C`;
+  }
+  if (typeof reading.batteryPct === "number" && Number.isFinite(reading.batteryPct)) {
+    fields["Battery"] = `${Math.round(reading.batteryPct)}%`;
+  }
+
+  appendManualLog({
+    astronaut_id: astronautId,
+    mission_day: missionDay,
+    screen: "BLE Sensor",
+    fields,
+    saved_at: new Date().toISOString().slice(0, 19).replace("T", " ") + " UTC",
+  });
+}
+
+/** Triggers an offline export via Android/Apple native file-saver bridge or browser Blob download. */
 export function downloadTextFile(filename: string, content: string, mimeType: string): boolean {
+  const nativeSaved = saveFileWithNativeBridge(filename, content, mimeType);
+  if (nativeSaved !== null) {
+    return nativeSaved;
+  }
   try {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);

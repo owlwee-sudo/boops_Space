@@ -183,21 +183,61 @@ img { display: block; }
 .face-result[data-level="building"] .face-bars { display: none; }
 .face-result[data-level="building"] .face-result-text { font-weight: 400; color: var(--text-muted); }
 
-/* ---- Small screens: sidebar becomes a top strip ---- */
+/* ---- Bottom tab bar + "More" sheet (hidden on desktop) ---- */
+.bottom-nav, .sheet-scrim { display: none; }
+
+/* ---- Small screens: sidebar becomes the "More" bottom sheet, nav moves to a bottom tab bar ---- */
 @media (max-width: 1000px) {
-  .app { grid-template-columns: 1fr; gap: 12px; padding: 0 0 20px; }
-  .sidebar { flex-direction: row; align-items: center; padding: 12px 16px; gap: 12px; min-height: 0; overflow-x: auto; background: var(--surface); border-bottom: 1px solid var(--border); }
-  .tabs, .nav-sub, .sidebar-foot { display: none; }
-  .nav { flex-direction: row; }
-  .nav-item { height: 36px; background: var(--bg); white-space: nowrap; }
-  .main { padding: 8px 16px 0; }
+  .app { grid-template-columns: 1fr; gap: 12px; padding: 0 0 calc(76px + env(safe-area-inset-bottom)); }
+  .main { padding: 16px 16px 0; }
   .grid { grid-template-columns: 1fr; }
+
+  .sidebar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 95;
+    width: 100%; max-width: 560px; margin: 0 auto; min-height: 0; max-height: 85dvh;
+    overflow-y: auto; overscroll-behavior: contain;
+    gap: 14px;
+    padding: 16px 16px max(20px, env(safe-area-inset-bottom));
+    background: var(--bg); border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -8px 24px rgba(17, 24, 39, 0.14);
+    transform: translateY(110%); visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s;
+  }
+  body.sheet-open .sidebar { transform: translateY(0); visibility: visible; transition: transform 0.22s ease, visibility 0s; }
+  .sheet-scrim { display: block; position: fixed; inset: 0; z-index: 92; background: rgba(17, 24, 39, 0.45); }
+  .sheet-scrim[hidden] { display: none; }
+
+  .bottom-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center;
+    min-height: calc(62px + env(safe-area-inset-bottom));
+    padding: 8px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    background: var(--surface); border-top: 1px solid var(--border);
+  }
+  .btab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    min-width: 44px; min-height: 46px; padding: 2px 0; border: 0; background: transparent;
+    color: var(--text-muted); font: inherit; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .btab-icon { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 28px; border-radius: 999px; transition: background-color 0.15s ease; }
+  .btab-label { font-size: 11px; font-weight: 500; line-height: 1.1; white-space: nowrap; }
+  .btab:hover .btab-icon { background: #f3f4f6; }
+  .btab:focus-visible { outline: none; }
+  .btab:focus-visible .btab-icon { box-shadow: 0 0 0 2px var(--ink); }
+  .btab.is-active, .btab.is-open { color: var(--text); }
+  .btab.is-active .btab-icon, .btab.is-open .btab-icon { background: var(--lime); }
+  .btab.is-active .btab-label, .btab.is-open .btab-label { font-weight: 600; }
+  .btab-sos { color: #dc2626; }
+  .btab-sos .btab-icon { border: 1.5px solid #ef4444; background: var(--surface); color: #dc2626; }
+  .btab-sos:hover .btab-icon { background: #fef2f2; }
+  .btab-sos .btab-label { font-weight: 600; }
 }
 @media (max-width: 600px) {
   .brand { font-size: 13px; }
-  .main { padding: 8px 12px calc(20px + env(safe-area-inset-bottom)); gap: 14px; }
+  .main { padding: 20px 16px 0; gap: 16px; }
   h1 { font-size: 26px; }
-  .card { padding: 16px; }
+  .card { padding: 18px; }
   .chip { white-space: normal; }
   .stage-foot { flex-direction: column; align-items: stretch; gap: 12px; }
   .stage-foot .actions { width: 100%; justify-content: stretch; }
@@ -207,5 +247,5 @@ img { display: block; }
   .stat-value { font-size: 30px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ring-arc, .meter i { transition: none; }
+  .ring-arc, .meter i, .sidebar, .btab-icon { transition: none; }
 }

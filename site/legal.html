@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legal, Privacy, Disclaimers &amp; Citations — BOOPS</title>
+  <meta
+    name="description"
+    content="Medical disclaimer, simulated data disclosure, on-device privacy policy, scientific citations, and open-source attributions for BOOPS."
+  />
+  <link rel="icon" href="./assets/boops-logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a class="brand" href="./index.html" aria-label="BOOPS Home">
+        <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="38" height="38" />
+        <span class="brand-text">
+          <span class="brand-title">BOOPS</span>
+          <span class="brand-sub">NASA Space Apps 2026 · Offline Crew Health</span>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a class="nav-link" href="./index.html">Home</a>
+        <a class="nav-link" href="./index.html#about">About</a>
+        <a class="nav-link" href="./index.html#scenarios">Scenarios</a>
+        <a class="nav-link" href="./index.html#conclusion">Conclusion</a>
+        <a class="nav-link" href="./index.html#download">Download</a>
+        <a class="nav-link" href="./knowledge/">Evidence Map</a>
+        <a class="nav-link" href="./legal.html" aria-current="page">Legal &amp; Privacy</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a
+          class="btn btn-secondary"
+          href="https://github.com/owlwee-sudo/boops_Space"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+        <a class="btn btn-primary btn-pill-cta" href="./index.html#download">
+          Download
+          <span class="btn-icon-circle" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14"/>
+              <path d="m19 12-7 7-7-7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="legal-hero">
+      <div class="container">
+        <div class="eyebrow-row">
+          <span class="badge badge-act">Prototype · Not a medical device</span>
+          <span class="badge">NASA Space Apps Challenge 2026</span>
+        </div>
+        <h1>Legal Notices, Medical Disclaimer, Privacy &amp; Attributions</h1>
+        <p>
+          Transparency and scientific traceability are core principles of BOOPS (Biobehavioral Observation
+          &amp; Offline Predictive System). Below are the prototype boundaries, privacy guarantees,
+          simulated-data labels, scientific references, and third-party software notices.
+        </p>
+
+        <nav class="toc-pills" aria-label="Legal page sections">
+          <a class="toc-pill" href="#medical-disclaimer">1. Medical &amp; Safety Disclaimer</a>
+          <a class="toc-pill" href="#simulated-data">2. Simulated &amp; Reference Data</a>
+          <a class="toc-pill" href="#privacy">3. Privacy &amp; On-Device Camera</a>
+          <a class="toc-pill" href="#citations">4. Scientific Citations</a>
+          <a class="toc-pill" href="#licenses">5. Software &amp; Attributions</a>
+          <a class="toc-pill" href="#liability">6. Warranty &amp; Contact</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="container legal-stack">
+      <!-- 1. Medical Disclaimer -->
+      <article id="medical-disclaimer" class="callout callout-danger legal-card">
+        <h2>1. Medical &amp; Flight-Safety Disclaimer</h2>
+        <p>
+          <strong>Prototype · Not a medical device.</strong> BOOPS was created as a demonstration project for the
+          <strong>NASA Space Apps Challenge 2026</strong>. Nothing in this website, the downloadable Android APK,
+          the desktop/local workstation, the camera check utility, or the underlying repository constitutes medical
+          advice, clinical diagnosis, treatment, prophylaxis, or aerospace flight-medicine certification.
+        </p>
+        <ul class="legal-list">
+          <li>
+            <strong>Risk indicators only:</strong> BOOPS presents statistical <em>risk indicators</em> and
+            <em>early warnings</em> derived from baseline z-scores and literature-inspired relationship weights.
+            It does not diagnose infections, cardiovascular disease, musculoskeletal pathology, or radiation sickness.
+          </li>
+          <li>
+            <strong>Emergency checklists:</strong> The 6 emergency protocols bundled in
+            <code>content/emergency_protocols.json</code> (and displayed in the high-contrast red/white emergency
+            views) and 7 instrument guides in <code>content/tool_guides.json</code> are uncertified educational
+            prototypes. Always follow official mission flight rules, flight-surgeon guidance, and local emergency
+            medical services in real life.
+          </li>
+          <li>
+            <strong>Camera pulse &amp; HRV caveats:</strong> Browser rPPG pulse estimation is sensitive to lighting
+            and motion, suppresses estimates when quality falls below <code>0.50</code>, and records any camera HRV
+            with <code>hrv_confidence: "low"</code> without feeding clinical risk baselines.
+          </li>
+        </ul>
+      </article>
+
+      <!-- 2. Simulated & Reference Data -->
+      <article id="simulated-data" class="card legal-card">
+        <h2>2. Simulated &amp; Reference Data Disclosure</h2>
+        <p>
+          Because public day-by-day astronaut longitudinal clinical telemetry is not available, the offline BOOPS
+          app and downloadable CSV/PDF exports are preloaded with <strong>540 synthetic crew-day records</strong> across
+          three fictional crew members (<code>A1</code>, <code>A2</code>, <code>A3</code>) over <code>180</code>
+          simulated mission days. All generated telemetry rows carry an explicit <strong>Simulated</strong> badge in
+          both the database export and UI.
+        </p>
+        <ul class="legal-list">
+          <li>
+            <strong>Radiation event modeling:</strong> Simulated solar particle event timing and profile shapes
+            are informed by public space-radiation patterns from <strong>NASA OSDR RadLab</strong> and
+            <strong>NOAA SWPC GOES</strong> satellite datasets, rather than live mission telemetry.
+          </li>
+          <li>
+            <strong>Simulated camera signal:</strong> When running the repository locally
+            (<code>python engine/server.py</code>), opening <code>/camera/?sim=steady</code> feeds a deterministic
+            synthetic RGB waveform so reviewers can verify the rPPG pipeline without a webcam. Simulated
+            camera logs are tagged and kept separate from real camera sessions.
+          </li>
+        </ul>
+      </article>
+
+      <!-- 3. Privacy & On-Device Processing -->
+      <article id="privacy" class="card legal-card">
+        <h2>3. Privacy, Offline Storage &amp; On-Device Camera Policy</h2>
+        <p>
+          BOOPS is engineered around <strong>crew-first privacy</strong> and zero runtime cloud dependencies.
+          In the downloadable Android APK, local workstation, and this static site:
+        </p>
+        <ul class="legal-list">
+          <li>
+            <strong>No server-side collection of user logs:</strong> Check-ins, camera measurements, emergency logs,
+            and sharing toggles are stored strictly on your device (local SQLite <code>data/mission.db</code> or
+            browser local storage <code>ahm.log_entries</code>). No health logs are uploaded to any cloud server.
+          </li>
+          <li>
+            <strong>Zero third-party cookies or analytics trackers:</strong> This website, Legal page, and the offline
+            BOOPS application include zero advertising scripts, analytics beacons, or third-party tracking cookies.
+          </li>
+          <li>
+            <strong>In-memory camera processing:</strong> When you grant webcam/camera access in the offline app's
+            <code>/camera/</code> utility, MediaPipe Face Landmarker and POS rPPG algorithms run locally on-device
+            using vendored WASM and model files. Raw video frames are never recorded, saved to disk, or transmitted
+            over the network.
+          </li>
+          <li>
+            <strong>Opt-in facial behaviour &amp; zero emotion labels:</strong> Optional facial-behaviour change
+            tracking is off by default (<code>FACE_WEIGHT = 0.0</code>, hard-capped at <code>0.15</code>), compares only
+            within-person drift (<code>low</code> / <code>medium</code> / <code>high</code>) against the user's own
+            first 14 camera sessions, and <strong>never classifies or infers emotions</strong> (consistent with
+            Barrett et al., 2019 and EU AI Act safeguards against workplace emotion recognition).
+          </li>
+          <li>
+            <strong>Crew-first sharing defaults:</strong> In the app's privacy model, crew members see alerts first;
+            raw sensor data sharing defaults to off, daily summaries are user-toggleable, and only safety-critical
+            emergencies default to shared.
+          </li>
+          <li>
+            <strong>External stylesheet note for the Evidence Map:</strong> While the home page, legal page, and offline
+            BOOPS workstation make zero external network requests, the standalone interactive knowledge graph at
+            <a class="link-inline" href="./knowledge/"><code>/knowledge/</code></a> references <code>fonts.googleapis.com</code>
+            for <em>IBM Plex Sans</em> and <em>IBM Plex Mono</em> when online and falls back gracefully to local system fonts when offline.
+          </li>
+        </ul>
+      </article>
+
+      <!-- 4. Scientific Citations -->
+      <article id="citations" class="card legal-card">
+        <h2>4. Key Scientific Citations &amp; Datasets</h2>
+        <p>
+          BOOPS cites <strong>103 sources</strong> across <strong>41 physiological concepts</strong> and
+          <strong>83 directional relationship edges</strong> in <code>knowledge/sources.json</code> (browsable interactively
+          on the <a class="link-inline" href="./knowledge/">Evidence Map</a>). Primary anchors used in the
+          risk engine, rPPG module, and evaluation include:
+        </p>
+
+        <div class="table-wrap" style="margin-top: 14px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Area</th>
+                <th>Reference / Dataset</th>
+                <th>Role in BOOPS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Immune dysregulation</td>
+                <td>Crucian et al. (2018), <em>Frontiers in Immunology</em>; Mehta et al. (2017), <em>JCI Insight</em></td>
+                <td>Documents spaceflight immune shifts and latent virus reactivation linked to stress &amp; sleep loss.</td>
+              </tr>
+              <tr>
+                <td>Sleep &amp; circadian loss</td>
+                <td>Barger et al. (2014), <em>The Lancet Neurology</em></td>
+                <td>Grounds crew sleep deficit thresholds and sleep-score weights in immune/recovery pathways.</td>
+              </tr>
+              <tr>
+                <td>Pre-symptomatic infection</td>
+                <td>Mishra et al. (2020), <em>Nature Biomedical Engineering</em></td>
+                <td>Supports resting-HR ≥ 2 SD sustained-elevation rule for pre-symptomatic infection early warning.</td>
+              </tr>
+              <tr>
+                <td>Radiation + microgravity</td>
+                <td>Wadhwa et al. (2024); <strong>NASA OSDR RadLab</strong>; <strong>NOAA SWPC GOES</strong></td>
+                <td>Informs combined radiation + inactivity bone/immune rules and simulated solar particle event profiles.</td>
+              </tr>
+              <tr>
+                <td>Muscle countermeasures</td>
+                <td>Ferrando et al. / spaceflight unloading countermeasures literature</td>
+                <td>Informs stress × inactivity amplification on musculoskeletal degradation (Days 60–75 demo).</td>
+              </tr>
+              <tr>
+                <td>Camera rPPG</td>
+                <td>Wang et al. (2017), Plane-Orthogonal-to-Skin (POS); Liu et al. (2023), <em>rPPG-Toolbox</em></td>
+                <td>On-device browser pulse extraction algorithm with motion/lighting/SNR quality gating.</td>
+              </tr>
+              <tr>
+                <td>Facial expression science</td>
+                <td>Barrett et al. (2019), <em>Psychological Science in the Public Interest</em></td>
+                <td>Scientific rationale for rejecting emotion labels in favor of opt-in personal baseline drift only.</td>
+              </tr>
+              <tr>
+                <td>Advisory ML validation</td>
+                <td>Schmidt et al. (2018), <strong>WESAD</strong>; Makowski et al. (2021), <strong>NeuroKit2</strong>; Liu et al. (2008), <strong>Isolation Forest</strong></td>
+                <td>Advisory-only stress classification (offline WESAD training, default off in core rules) and anomaly tagging.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- 5. Open-Source Software & Attributions -->
+      <article id="licenses" class="card legal-card">
+        <h2>5. Open-Source Software &amp; Third-Party Attributions</h2>
+        <p>
+          BOOPS bundles and builds upon open-source libraries and public research tooling. Specific attributions
+          verified in this repository include:
+        </p>
+
+        <div class="table-wrap" style="margin-top: 14px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Author / Maintainer</th>
+                <th>License &amp; Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>BOOPS Prototype Codebase</strong></td>
+                <td>BOOPS Contributors (NASA Space Apps 2026)</td>
+                <td>
+                  Hosted at <a class="link-inline" href="https://github.com/owlwee-sudo/boops_Space" target="_blank" rel="noopener noreferrer">github.com/owlwee-sudo/boops_Space</a>.
+                  No root SPDX <code>LICENSE</code> file is currently committed in the repository; all rights remain
+                  with the authors unless a license file is published in the GitHub repository.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>MediaPipe Tasks Vision</strong><br /><code>@mediapipe/tasks-vision</code> v1.2.3 &amp; <code>face_landmarker.task</code> (float16 v1)</td>
+                <td>Copyright Google LLC</td>
+                <td>
+                  <strong>Apache License 2.0</strong>
+                  (<a class="link-inline" href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">apache.org/licenses/LICENSE-2.0</a>).
+                  Vendored locally under <code>web/vendor/mediapipe/</code> for offline camera landmark detection.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Python Data &amp; ML Stack</strong><br /><code>numpy</code>, <code>pandas</code>, <code>scipy</code>, <code>scikit-learn</code>, <code>joblib</code>, <code>pytest</code>, <code>matplotlib</code>, <code>neurokit2</code></td>
+                <td>Respective open-source contributors</td>
+                <td>
+                  Permissive open-source licenses (BSD-3-Clause / MIT / PSF-style). Used in the offline Python pipeline,
+                  test suite, and optional <code>hard/</code> validation scripts.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>UI &amp; App Shell Tooling</strong><br /><code>Tauri</code>, <code>Vite</code>, <code>TypeScript</code>, <code>Lucide</code>, <code>Inter</code> font package</td>
+                <td>Respective open-source contributors</td>
+                <td>
+                  Permissive open-source licenses (MIT / Apache-2.0 / ISC / SIL OFL 1.1). Used for desktop packaging and
+                  design/UI builds in <code>ui/</code>.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>WESAD Research Dataset</strong><br />(Offline validation only)</td>
+                <td>Schmidt et al. (ICMI 2018)</td>
+                <td>
+                  Not included in git or this web deployment (<code>hard/wesad/data/</code> is excluded from version control);
+                  referenced solely for offline advisory classifier benchmarking documented in <code>hard/wesad/</code>.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- 6. Warranty & Contact -->
+      <article id="liability" class="card legal-card">
+        <h2>6. No Warranty, Limitation of Liability &amp; Contact</h2>
+        <p>
+          THIS PROTOTYPE SOFTWARE AND ACCOMPANYING DOCUMENTATION ARE PROVIDED ON AN <strong>"AS IS"</strong> AND
+          <strong>"AS AVAILABLE"</strong> BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING
+          FITNESS FOR A PARTICULAR PURPOSE, CLINICAL ACCURACY, OR NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+          CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING FROM USE OF THIS
+          DEMONSTRATION.
+        </p>
+        <p>
+          Questions, attribution corrections, or takedown requests may be submitted via GitHub Issues at
+          <a
+            class="link-inline"
+            href="https://github.com/owlwee-sudo/boops_Space"
+            target="_blank"
+            rel="noopener noreferrer"
+          >https://github.com/owlwee-sudo/boops_Space</a>.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <a class="brand" href="./index.html">
+          <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="34" height="34" />
+          <span class="brand-text">
+            <span class="brand-title">BOOPS</span>
+            <span class="brand-sub">Biobehavioral Observation &amp; Offline Predictive System</span>
+          </span>
+        </a>
+
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#conclusion">Conclusion</a>
+          <a href="./index.html#download">Download</a>
+          <a href="./knowledge/">Evidence Map</a>
+          <a
+            href="https://github.com/owlwee-sudo/boops_Space"
+            target="_blank"
+            rel="noopener noreferrer"
+          >GitHub Repository</a>
+        </nav>
+
+        <a class="btn btn-primary btn-pill-cta" href="./index.html#download">
+          Download
+          <span class="btn-icon-circle" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14"/>
+              <path d="m19 12-7 7-7-7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <p class="footer-disclaimer">Prototype · Not a medical device · Telemetry labeled Simulated</p>
+          <span>Offline crew-first health risk indicator prototype for NASA Space Apps Challenge 2026.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

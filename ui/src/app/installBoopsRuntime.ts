@@ -26,6 +26,7 @@ export interface BoopsHostBridge {
 
 export interface BoopsRuntimeInstance {
   enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void;
+  closeTopOverlay: () => boolean;
 }
 
 /** Installs BOOPS controls onto the Figma app host and returns per-screen binding hooks. */
@@ -79,6 +80,14 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       host.renderActiveScreen();
     },
     onOpenSettings: () => host.setScreen("SettingsProfile"),
+    onDataIngested: () => {
+      overlays.updateBar();
+      host.renderActiveScreen();
+    },
+    onUiModeChange: () => {
+      overlays.updateBar();
+      host.renderActiveScreen();
+    },
     onToast: (msg) => host.showToast(msg),
   });
 
@@ -95,7 +104,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
     host.stage.prepend(overlays.topbar);
     host.stage.append(overlays.footer);
   }
-  document.body.append(overlays.drawerBackdrop, overlays.exportBackdrop);
+  document.body.append(overlays.drawerBackdrop, overlays.exportBackdrop, overlays.deviceHubBackdrop);
   overlays.updateBar();
 
   void loadBoopsBundle().then((loaded) => {
@@ -142,6 +151,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       host.renderActiveScreen();
     },
     openToolGuide: (guideId) => overlays.openDrawer(guideId),
+    openDeviceHub: (tab) => overlays.openDeviceHub(tab),
     openCameraCheck: (simulated = false) => overlays.openCameraCheck(simulated),
     openEmergencyProtocol: (protocolId) => {
       activeEmergencyId = protocolId;
@@ -158,6 +168,13 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
             : "HealthRiskDetailHeart";
       host.setScreen(target);
     },
+    setDay: (missionDay) => {
+      const clamped = Math.max(1, Math.min(180, Math.round(missionDay)));
+      context = { astronautId: context.astronautId, missionDay: clamped };
+      saveSelectedContext(context);
+      overlays.updateBar();
+      host.renderActiveScreen();
+    },
     navigateScreen: (targetScreen) => host.setScreen(targetScreen),
     reRenderScreen: () => host.renderActiveScreen(),
     showToast: (msg) => host.showToast(msg),
@@ -169,6 +186,7 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       overlays.mountScreenControls(artboard, screenId);
       overlays.updateBar();
     },
+    closeTopOverlay: () => overlays.closeTopOverlay(),
   };
 }
 

@@ -15,3 +15,15 @@ hard/wesad/cache/
 *.joblib.tmp
 # Local agent/editor settings and worktrees
 .claude/
+# Android local SDK & build outputs
+android/local.properties
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/*.iml
+android/**/*.iml
+*.apk
+# Cloudflare static site build & deploy artifacts
+dist-site/
+.cloudflare/
