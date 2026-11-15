@@ -12,7 +12,8 @@
   --text-muted: #6b7280;
   --ink: #111827; /* buttons, meters, stage */
   --ink-text: #ffffff;
-  --lime: #c6f432; /* active nav, hero tiles */
+  --lime: #c6f432; /* hero tiles */
+  --nav-selected: #5de2d2; /* active nav */
   --good: #111827; /* meter fill */
   --fair: #f59e0b;
   --poor: #ef4444; /* a problem the user must fix */
@@ -44,7 +45,7 @@ img { display: block; }
 .nav { display: flex; flex-direction: column; gap: 8px; }
 .nav-item { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 10px 0 14px; border-radius: 22px; background: var(--surface); color: var(--text-body); text-decoration: none; font-weight: 500; font-size: 14px; }
 .nav-item:hover { background: #ffffff; box-shadow: 0 0 0 1px var(--border); }
-.nav-item.is-active { background: var(--lime); color: var(--text); }
+.nav-item.is-active { background: var(--nav-selected); color: var(--text); }
 .nav-sub { display: flex; align-items: center; gap: 10px; height: 36px; padding-left: 40px; color: var(--text-body); text-decoration: none; font-size: 13px; font-weight: 400; border-radius: 18px; }
 .nav-sub:hover { color: var(--text); }
 .nav-sub.is-active { color: var(--text); font-weight: 600; }
@@ -226,7 +227,7 @@ img { display: block; }
   .btab:focus-visible { outline: none; }
   .btab:focus-visible .btab-icon { box-shadow: 0 0 0 2px var(--ink); }
   .btab.is-active, .btab.is-open { color: var(--text); }
-  .btab.is-active .btab-icon, .btab.is-open .btab-icon { background: var(--lime); }
+  .btab.is-active .btab-icon, .btab.is-open .btab-icon { background: var(--nav-selected); }
   .btab.is-active .btab-label, .btab.is-open .btab-label { font-weight: 600; }
   .btab-sos { color: #dc2626; }
   .btab-sos .btab-icon { border: 1.5px solid #ef4444; background: var(--surface); color: #dc2626; }

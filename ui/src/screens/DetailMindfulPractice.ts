@@ -107,7 +107,7 @@ export function renderDetailMindfulPractice(): HTMLElement {
             ),
           ),
         ),
-        h("a", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I104:7917;29:14", "data-name": "Nav row/Mindfulness" },
+        h("a", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I104:7917;29:14", "data-name": "Nav row/Mindfulness" },
           h("div", { className: "relative shrink-0 size-[18px]", "data-node-id": "I104:7917;29:21", "data-name": "icon/mindfulness" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconMindfulness.svg" }),
           ),

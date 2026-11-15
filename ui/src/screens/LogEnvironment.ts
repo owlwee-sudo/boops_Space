@@ -31,7 +31,7 @@ export function renderLogEnvironment(): HTMLElement {
         ),
       ),
       h("div", { className: "content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full", "data-node-id": "I85:1221;30:10", "data-name": "Nav list" },
-        h("div", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:1221;30:11", "data-name": "Nav row/Environment" },
+        h("div", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[10px] h-[44px] items-center overflow-clip pl-[14px] pr-[10px] relative rounded-[22px] shrink-0 w-full", "data-node-id": "I85:1221;30:11", "data-name": "Nav row/Environment" },
           h("div", { className: "relative shrink-0 size-[18px]", "data-node-id": "I85:1221;30:50", "data-name": "icon/environment" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconEnvironment.svg" }),
           ),

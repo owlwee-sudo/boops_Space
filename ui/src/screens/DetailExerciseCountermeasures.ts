@@ -60,7 +60,7 @@ export function renderDetailExerciseCountermeasures(): HTMLElement {
             "Radiation",
           ),
         ),
-        h("a", { className: "bg-[var(--color-bg-active,#c6f432)] content-stretch flex gap-[8px] h-[36px] items-center overflow-clip pl-[38px] pr-[10px] relative rounded-[18px] shrink-0 w-full", "data-node-id": "I105:11182;51:1680", "data-name": "Nav sub-row/Gravity" },
+        h("a", { className: "bg-[var(--color-nav-selected,#5de2d2)] content-stretch flex gap-[8px] h-[36px] items-center overflow-clip pl-[38px] pr-[10px] relative rounded-[18px] shrink-0 w-full", "data-node-id": "I105:11182;51:1680", "data-name": "Nav sub-row/Gravity" },
           h("div", { className: "relative shrink-0 size-[16px]", "data-node-id": "I105:11182;51:1681", "data-name": "icon/gravity" },
             h("img", { alt: "", className: "absolute block inset-0 max-w-none size-full", src: "/assets/figma/imgIconGravity.svg" }),
           ),
