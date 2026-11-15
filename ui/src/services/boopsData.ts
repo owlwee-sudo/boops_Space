@@ -1,5 +1,5 @@
 /**
- * Offline B.O.O.P.S. data loader, local state store, and privacy-respecting export helpers.
+ * Offline BOOPS data loader, local state store, and privacy-respecting export helpers.
  * Reads `window.BOOPS_DATA` (when opened via file:// with data_bundle.js) or `./data/boops_bundle.json`.
  */
 
@@ -557,7 +557,7 @@ export function appendEmergencyEvent(
   return next;
 }
 
-/** Loads the B.O.O.P.S. offline data bundle from window.BOOPS_DATA or relative JSON. */
+/** Loads the BOOPS offline data bundle from window.BOOPS_DATA or relative JSON. */
 export async function loadBoopsBundle(): Promise<BoopsBundle | null> {
   const win = window as unknown as { BOOPS_DATA?: BoopsBundle };
   if (win.BOOPS_DATA && Array.isArray(win.BOOPS_DATA.engineOutput)) {

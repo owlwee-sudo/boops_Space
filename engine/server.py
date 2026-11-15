@@ -1,4 +1,4 @@
-"""Optional local-only HTTP server for B.O.O.P.S. offline static assets and SQLite sync.
+"""Optional local-only HTTP server for BOOPS offline static assets and SQLite sync.
 
 Serves `/web` files on 127.0.0.1:8000 (configurable) and exposes zero-cloud
 local endpoints backed by `data/mission.db`.
@@ -177,7 +177,7 @@ def create_server(
     web_dir: Path | str = DEFAULT_WEB_DIR,
     db_path: Path | str = DEFAULT_DB_PATH,
 ) -> ThreadingHTTPServer:
-    """Create the local-only B.O.O.P.S. HTTP + SQLite server without blocking."""
+    """Create the local-only BOOPS HTTP + SQLite server without blocking."""
     resolved_db = Path(db_path)
     init_db(resolved_db)
     resolved_web = Path(web_dir)
@@ -191,7 +191,7 @@ def create_server(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Run the offline B.O.O.P.S. local web + SQLite server."
+        description="Run the offline BOOPS local web + SQLite server."
     )
     parser.add_argument("--host", default=DEFAULT_HOST, help="Bind address (default 127.0.0.1)")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help="TCP port (default 8000)")
@@ -205,12 +205,12 @@ def main() -> None:
         web_dir=args.web_dir,
         db_path=args.db_path,
     )
-    print(f"B.O.O.P.S. local server listening at http://{args.host}:{args.port} (offline mode)")
+    print(f"BOOPS local server listening at http://{args.host}:{args.port} (offline mode)")
     print(f"Serving {args.web_dir} | SQLite DB: {args.db_path}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\nShutting down B.O.O.P.S. local server.")
+        print("\nShutting down BOOPS local server.")
     finally:
         server.server_close()
 

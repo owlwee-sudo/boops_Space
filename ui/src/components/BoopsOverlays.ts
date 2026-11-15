@@ -1,5 +1,5 @@
 /**
- * B.O.O.P.S. global interactive chrome:
+ * BOOPS global interactive chrome:
  * - Sidebar chrome injected into every screen: Offline / Simulated tags beside the brand, action rows
  *   (Readings status, Tool Guides, Export / Summary) above the Emergency button, and the crew switcher
  *   inside the Profile card
@@ -71,7 +71,7 @@ export interface OverlayCallbacks {
   onToast: (msg: string) => void;
 }
 
-/** Creates and wires all global B.O.O.P.S. controls outside the Figma artboard. */
+/** Creates and wires all global BOOPS controls outside the Figma artboard. */
 export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   let activeGuideId = "wearable_hrv_fit";
   let uiMode: BoopsUiMode = detectInitialUiMode();

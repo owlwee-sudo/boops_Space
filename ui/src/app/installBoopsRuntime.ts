@@ -1,5 +1,5 @@
 /**
- * Connects B.O.O.P.S. offline data loading, overlays, and DOM binding hooks into App.ts
+ * Connects BOOPS offline data loading, overlays, and DOM binding hooks into App.ts
  * without requiring edits to generated Figma screen files.
  */
 
@@ -28,7 +28,7 @@ export interface BoopsRuntimeInstance {
   enhanceArtboard: (artboard: HTMLElement, screenId: ScreenId) => void;
 }
 
-/** Installs B.O.O.P.S. controls onto the Figma app host and returns per-screen binding hooks. */
+/** Installs BOOPS controls onto the Figma app host and returns per-screen binding hooks. */
 export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance {
   const win = window as unknown as { BOOPS_DATA?: BoopsBundle };
   let bundle: BoopsBundle | null =

@@ -1,4 +1,4 @@
-"""End-to-end offline B.O.O.P.S. pipeline runner.
+"""End-to-end offline BOOPS pipeline runner.
 
 Usage:
     python engine/run_all.py
@@ -154,7 +154,7 @@ def print_demo_summary(outputs: list[dict[str, Any]]) -> None:
     """Print concise demo summary for A1 days 88–98, A2 days 60–75, and glitches."""
     by_key = {(o["astronaut_id"], o["mission_day"]): o for o in outputs}
 
-    print("\n=== B.O.O.P.S. Demo Summary: A1 Days 88–98 ===")
+    print("\n=== BOOPS Demo Summary: A1 Days 88–98 ===")
     print("Day | Stress | Sleep | Immune      | IEW   | Quality        | Top Action")
     print("-" * 92)
     for d in range(88, 99):

@@ -246,7 +246,7 @@ def generate_flight_surgeon_pdf(
         fig.text(
             0.06,
             0.955,
-            "B.O.O.P.S. — Flight-Surgeon Mission Summary",
+            "BOOPS — Flight-Surgeon Mission Summary",
             fontsize=15,
             fontweight="bold",
             color="#111827",
@@ -386,7 +386,7 @@ def generate_flight_surgeon_pdf(
         fig.text(
             0.06,
             0.03,
-            "B.O.O.P.S. · Simulated · Prototype · Not a medical device · Offline Flight-Surgeon Summary (Page 1/2)",
+            "BOOPS · Simulated · Prototype · Not a medical device · Offline Flight-Surgeon Summary (Page 1/2)",
             fontsize=8.0,
             color="#6B7280",
         )
@@ -396,7 +396,7 @@ def generate_flight_surgeon_pdf(
         # Page 2: Scientific Citations & Methodology / Limitations
         fig2 = plt.figure(figsize=(8.5, 11.0), dpi=150)
         fig2.patch.set_facecolor("white")
-        fig2.text(0.06, 0.955, "B.O.O.P.S. — Scientific Sources & Limitations", fontsize=14, fontweight="bold", color="#111827")
+        fig2.text(0.06, 0.955, "BOOPS — Scientific Sources & Limitations", fontsize=14, fontweight="bold", color="#111827")
         fig2.text(
             0.06,
             0.928,
@@ -443,7 +443,7 @@ def generate_flight_surgeon_pdf(
         fig2.text(
             0.06,
             0.03,
-            "B.O.O.P.S. · Simulated · Prototype · Not a medical device · Sources Page (Page 2/2)",
+            "BOOPS · Simulated · Prototype · Not a medical device · Sources Page (Page 2/2)",
             fontsize=8.0,
             color="#6B7280",
         )

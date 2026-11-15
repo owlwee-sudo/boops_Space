@@ -1,4 +1,4 @@
-"""Offline SQLite single source of truth for B.O.O.P.S. (data/mission.db).
+"""Offline SQLite single source of truth for BOOPS (data/mission.db).
 
 Tables:
     astronauts, daily_records, engine_outputs, risk_drivers, actions,
@@ -28,7 +28,7 @@ def _connect(db_path: Path | str = DEFAULT_DB_PATH) -> sqlite3.Connection:
 
 
 def init_db(db_path: Path | str = DEFAULT_DB_PATH) -> Path:
-    """Create all 9 B.O.O.P.S. SQLite tables and seed default astronauts & sharing settings."""
+    """Create all 9 BOOPS SQLite tables and seed default astronauts & sharing settings."""
     path = Path(db_path)
     with _connect(path) as conn:
         conn.executescript(

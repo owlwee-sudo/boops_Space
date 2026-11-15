@@ -1,5 +1,5 @@
 /**
- * Hydrates rendered Figma 52-screen artboards with live B.O.O.P.S. engine outputs,
+ * Hydrates rendered Figma 52-screen artboards with live BOOPS engine outputs,
  * daily telemetry, tool-guide hooks, emergency protocols, and sharing controls.
  */
 

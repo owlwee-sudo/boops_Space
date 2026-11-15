@@ -1,4 +1,4 @@
-# B.O.O.P.S. — Biobehavioral Observation & Offline Predictive System
+# BOOPS — Biobehavioral Observation & Offline Predictive System
 NASA Space Apps Challenge 2026, team boops boops (a fish name). Health monitoring software for a space crew.
 
 ## UI
@@ -65,7 +65,7 @@ Readings are simulated, not real sensor data. Each value is a pure function of t
 
 ## Offline Engine, Data Pipeline & Architecture (`engine/` + `/web`)
 
-> **Disclaimer:** **Prototype · Not a medical device.** All sample telemetry is explicitly labeled **Simulated**. B.O.O.P.S. provides **risk indicators** and **early warnings**, never diagnoses.
+> **Disclaimer:** **Prototype · Not a medical device.** All sample telemetry is explicitly labeled **Simulated**. BOOPS provides **risk indicators** and **early warnings**, never diagnoses.
 
 ### Quick Start (100% Offline)
 
