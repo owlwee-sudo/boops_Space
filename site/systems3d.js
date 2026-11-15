@@ -26,9 +26,9 @@
   // Outcomes sit on an inner ring; inputs on an outer ring at varied heights.
   // `on` marks a driver that is elevated on Day 97 for Crew A1 (Simulated).
   const nodes = [
-    { id: "immune", label: "Immune 88", level: "act", outcome: true, a: 90, r: 0.75, y: 0.0 },
-    { id: "cardio", label: "Heart 49", level: "watch", outcome: true, a: 210, r: 0.75, y: 0.15 },
-    { id: "bone", label: "Bone & muscle 15", level: "normal", outcome: true, a: 330, r: 0.75, y: -0.1 },
+    { id: "immune", label: "Immune 88", level: "act", outcome: true, a: 90, r: 1.0, y: 0.0 },
+    { id: "cardio", label: "Heart 49", level: "watch", outcome: true, a: 210, r: 1.0, y: 0.15 },
+    { id: "bone", label: "Bone & muscle 15", level: "normal", outcome: true, a: 330, r: 1.0, y: -0.1 },
 
     { id: "stress", label: "Stress (HRV)", on: true, a: 20, r: 1.85, y: 0.55 },
     { id: "sleep", label: "Sleep deficit", on: true, a: 75, r: 1.9, y: -0.5 },
@@ -123,7 +123,7 @@
     if (!width || !height) return;
     ctx.clearRect(0, 0, width, height);
     drawRing(1.88);
-    drawRing(0.75);
+    drawRing(1.0);
 
     projected = nodes.map((n) => ({ n, p: project(n.x, n.y, n.z) }));
     const P = {};
