@@ -729,7 +729,7 @@ export function buildExportPayload(
 
   return {
     metadata: {
-      app: "B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System)",
+      app: "BOOPS (Biobehavioral Observation & Offline Predictive System)",
       astronaut_id: astronautId,
       start_day: startDay,
       end_day: endDay,

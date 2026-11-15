@@ -128,7 +128,7 @@ function drawWave(pulse, fs) {
   const w = c.width;
   const h = c.height;
   ctx.clearRect(0, 0, w, h);
-  ctx.strokeStyle = "#d4d4d4";
+  ctx.strokeStyle = "#e5e7eb";
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(0, h / 2);
@@ -139,7 +139,7 @@ function drawWave(pulse, fs) {
   const seg = pulse.subarray(pulse.length - n);
   let peak = 1e-9;
   for (const v of seg) peak = Math.max(peak, Math.abs(v));
-  ctx.strokeStyle = "#111111";
+  ctx.strokeStyle = "#111827";
   ctx.lineWidth = 2;
   ctx.lineJoin = "round";
   ctx.beginPath();

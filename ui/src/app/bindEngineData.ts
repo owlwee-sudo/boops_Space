@@ -68,7 +68,7 @@ export function normalizeOfflineAssetsAndBrand(artboard: HTMLElement): void {
 
   artboard.querySelectorAll("p").forEach((p) => {
     if (p.textContent?.trim() === "[Name TBD]") {
-      p.textContent = "B.O.O.P.S.";
+      p.textContent = "BOOPS";
     }
   });
 }

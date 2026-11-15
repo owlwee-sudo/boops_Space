@@ -6,26 +6,48 @@
     <meta name="theme-color" content="#f4f5f7" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>Camera check · B.O.O.P.S.</title>
+    <title>Camera check · BOOPS</title>
     <link rel="stylesheet" href="camera.css" />
   </head>
   <body>
     <div class="app">
-      <!-- Sidebar: same shape as the Figma lo-fi (260 px, Health | Log) -->
+      <!-- Sidebar: same as the app (brand, Health | Log, white pill rows). Camera check is a
+           sub-screen of Mindfulness, so Mindfulness is lit and Camera check sits under it. -->
       <aside class="sidebar">
-        <div class="brand">B.O.O.P.S.</div>
+        <a class="brand" href="../index.html#screen=HealthHome">
+          <img src="../assets/figma/imgIconLogoPlaceholder.svg" alt="" width="20" height="20" />
+          <span>BOOPS</span>
+        </a>
+        <div class="tabs">
+          <a class="tab is-active" href="../index.html#screen=HealthMindfulness">Health</a>
+          <a class="tab" href="../index.html#screen=LogMindfulness">Log</a>
+        </div>
         <nav class="nav" aria-label="Main">
-          <a class="nav-item" href="../index.html#screen=HealthMindfulness">Health</a>
-          <a class="nav-item" href="../index.html#screen=LogMindfulness">Log</a>
-          <a class="nav-item nav-sub is-active" href="./index.html" aria-current="page">Camera check</a>
+          <a class="nav-item" href="../index.html#screen=HealthHome"><img src="../assets/figma/imgIconHome.svg" alt="" width="18" height="18" />Home</a>
+          <a class="nav-item" href="../index.html#screen=HealthEnvironment"><img src="../assets/figma/imgIconEnvironment.svg" alt="" width="18" height="18" />Environment</a>
+          <a class="nav-sub" href="../index.html#screen=HealthEnvironmentRadiation"><img src="../assets/figma/imgIconRadiation.svg" alt="" width="16" height="16" />Radiation</a>
+          <a class="nav-sub" href="../index.html#screen=HealthEnvironmentGravity"><img src="../assets/figma/imgIconGravity.svg" alt="" width="16" height="16" />Gravity</a>
+          <a class="nav-item" href="../index.html#screen=HealthVitals"><img src="../assets/figma/imgIconVitals.svg" alt="" width="18" height="18" />Vitals</a>
+          <a class="nav-item" href="../index.html#screen=HealthNutrition"><img src="../assets/figma/imgIconNutrition.svg" alt="" width="18" height="18" />Nutrition</a>
+          <a class="nav-item" href="../index.html#screen=HealthSleep"><img src="../assets/figma/imgIconSleep.svg" alt="" width="18" height="18" />Sleep</a>
+          <a class="nav-item is-active" href="../index.html#screen=HealthMindfulness"><img src="../assets/figma/imgIconMindfulness.svg" alt="" width="18" height="18" />Mindfulness</a>
+          <a class="nav-sub is-active" href="./index.html" aria-current="page"><img src="../assets/figma/imgIconCamera.svg" alt="" width="16" height="16" />Camera check</a>
         </nav>
         <div class="sidebar-foot">
-          <div class="crew">Crew member <strong id="astronaut-id">A1</strong></div>
-          <div>Prototype · Not a medical device</div>
+          <a class="emergency" href="../index.html#screen=EmergencyHub"><img src="../assets/figma/imgIconSiren.svg" alt="" width="18" height="18" />Emergency</a>
+          <div class="profile">
+            <span class="avatar" aria-hidden="true"></span>
+            <div class="who">
+              <strong>Crew member <span id="astronaut-id">A1</span></strong>
+              <small>Offline · On-device</small>
+            </div>
+            <a href="../index.html#screen=SettingsProfile" aria-label="Settings &amp; profile"><img src="../assets/figma/imgIconSettings.svg" alt="" width="18" height="18" /></a>
+          </div>
         </div>
       </aside>
 
       <main class="main">
+        <a class="back" href="../index.html#screen=HealthMindfulness">‹ Back to Mindfulness</a>
         <header class="page-head">
           <div>
             <h1>Camera check</h1>

@@ -137,8 +137,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
       cb.onToast(`Run "python engine/server.py" and open http://127.0.0.1:8000/camera/${qs} for the camera check.`);
       return;
     }
-    const opened = window.open(relUrl, "_blank", "noopener");
-    if (!opened) window.location.href = relUrl;
+    // Same tab: the camera check is a screen of the app (Health / Mindfulness), with its own back link.
+    window.location.href = relUrl;
   }
 
   const guidesBtn = h("button", { type: "button", className: "boops-btn" }, "ⓘ Tool Guides");
@@ -222,7 +222,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
         h(
           "span",
           { className: "boops-brand-pill" },
-          "B.O.O.P.S.",
+          "BOOPS",
           h("span", { className: "boops-tag-offline" }, "Offline"),
           h("span", { className: "boops-tag-sim" }, "Simulated"),
           h("span", { className: "boops-tag-debug boops-debug-only" }, "Demo / Debug"),
@@ -607,7 +607,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     h(
       "span",
       null,
-      "B.O.O.P.S. (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
+      "BOOPS (Biobehavioral Observation & Offline Predictive System) · Prototype · Not a medical device · Sample crew data labeled Simulated",
     ),
   );
 
