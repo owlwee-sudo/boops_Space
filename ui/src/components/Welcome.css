@@ -1,0 +1,482 @@
+/* First-launch welcome flow + "My data" empty state. Grayscale cards, dark pill buttons. */
+
+html.boops-welcome-open,
+html.boops-welcome-open body {
+  overflow: hidden;
+}
+
+.boops-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  color: var(--color-text-primary, #111827);
+}
+
+.boops-welcome-card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 32px 28px 22px;
+  border-radius: 24px;
+  background: var(--color-bg-card, #ffffff);
+  box-shadow: 0 24px 60px rgba(17, 24, 39, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.boops-welcome-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  background: #ffffff;
+  color: var(--color-text-secondary, #374151);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.boops-welcome-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+
+.boops-welcome-kicker {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.boops-welcome-title {
+  margin: 0 0 10px;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.boops-welcome-lede {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #374151);
+}
+
+.boops-welcome-points {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.boops-welcome-points li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.boops-welcome-points strong,
+.boops-welcome-choice-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.boops-welcome-points span:not(.boops-welcome-icon),
+.boops-welcome-choice-text span {
+  display: block;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.boops-welcome-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--color-bg-surface, #f4f5f7);
+  color: var(--color-text-primary, #111827);
+}
+
+.boops-welcome-choices {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 12px;
+}
+
+.boops-welcome-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  border-radius: 18px;
+  border: 1.5px solid var(--color-border-default, #e5e7eb);
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.boops-welcome-choice:hover {
+  border-color: #9ca3af;
+}
+
+.boops-welcome-choice.is-selected {
+  border-color: var(--color-bg-strong, #111827);
+  background: var(--color-bg-surface, #f4f5f7);
+}
+
+.boops-welcome-choice.is-selected .boops-welcome-icon {
+  background: var(--color-bg-strong, #111827);
+  color: #ffffff;
+}
+
+.boops-welcome-choice-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.boops-welcome-tag {
+  flex: none;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--color-bg-surface, #f4f5f7);
+  color: var(--color-text-secondary, #374151);
+  border: 1px solid var(--color-border-default, #e5e7eb);
+}
+
+.boops-welcome-note {
+  margin: 0 0 16px;
+  font-size: 12.5px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.boops-welcome-form {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.boops-welcome-form label {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.boops-welcome-optional {
+  font-weight: 400;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.boops-welcome-form input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  background: #ffffff;
+  font: inherit;
+  font-size: 16px; /* 16px stops iOS zooming into the field */
+  color: inherit;
+}
+
+.boops-welcome-form input:focus-visible {
+  outline: 2px solid var(--color-bg-strong, #111827);
+  outline-offset: 1px;
+}
+
+.boops-welcome-error {
+  margin: 4px 0 0;
+  min-height: 1em;
+  font-size: 13px;
+  color: var(--color-text-danger, #dc2626);
+}
+
+.boops-welcome-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 4px 0 16px;
+}
+
+.boops-welcome-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-border-default, #e5e7eb);
+  transition: width 0.2s;
+}
+
+.boops-welcome-dots span.is-active {
+  width: 20px;
+  background: var(--color-bg-strong, #111827);
+}
+
+.boops-welcome-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.boops-welcome-actions .boops-welcome-primary {
+  flex: 1;
+  width: auto;
+}
+
+.boops-welcome-primary,
+.boops-welcome-secondary {
+  height: 50px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boops-welcome-primary {
+  flex: none;
+  width: 100%;
+  border: none;
+  background: var(--color-bg-strong, #111827);
+  color: #ffffff;
+}
+
+.boops-welcome-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.boops-welcome-secondary {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  background: #ffffff;
+  color: var(--color-text-primary, #111827);
+}
+
+.boops-welcome-foot {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Phones: full-screen sheet, buttons pinned near the thumb */
+@media (max-width: 767px) {
+  .boops-welcome {
+    padding: 0;
+    align-items: stretch;
+    background: var(--color-bg-card, #ffffff);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .boops-welcome-card {
+    max-width: none;
+    max-height: none;
+    min-height: 100dvh;
+    border-radius: 0;
+    box-shadow: none;
+    padding: calc(28px + env(safe-area-inset-top)) 22px calc(18px + env(safe-area-inset-bottom));
+  }
+
+  .boops-welcome-dots {
+    margin-top: auto;
+    padding-top: 16px;
+  }
+
+  .boops-welcome-title {
+    font-size: 28px;
+  }
+}
+
+/* ---------- Data row badge in the sidebar ---------- */
+.boops-side-row-badge.boops-data-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+html[data-boops-data="mine"] .boops-side-row-badge.boops-data-badge {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* "My data" mode: hide simulated-crew controls */
+html[data-boops-data="mine"] .boops-topbar-crew-select,
+html[data-boops-data="mine"] .boops-side-crew-select,
+html[data-boops-data="mine"] .boops-side-crew-chevron,
+html[data-boops-data="mine"] .boops-debug-only {
+  display: none !important;
+}
+
+/* ---------- Empty state ---------- */
+.boops-hidden-by-mode {
+  display: none !important;
+}
+
+.boops-empty-state {
+  position: absolute;
+  left: 306px;
+  right: 22px;
+  top: 27px;
+  padding: 40px;
+  border-radius: 24px;
+  background: var(--color-bg-card, #ffffff);
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  color: var(--color-text-primary, #111827);
+  max-width: 720px;
+}
+
+html[data-boops-viewport="mobile"] .boops-empty-state,
+html[data-boops-viewport="tablet"] .boops-empty-state {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  max-width: none;
+  margin: 16px;
+  padding: 24px 20px;
+}
+
+.boops-empty-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.boops-empty-title {
+  margin: 0 0 8px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.boops-empty-body {
+  margin: 0 0 22px;
+  max-width: 520px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #374151);
+}
+
+.boops-empty-progress {
+  margin-bottom: 24px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--color-bg-surface, #f4f5f7);
+}
+
+.boops-empty-progress-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.boops-empty-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.boops-empty-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-bg-strong, #111827);
+}
+
+.boops-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.boops-empty-primary,
+.boops-empty-secondary {
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boops-empty-primary {
+  border: none;
+  background: var(--color-bg-strong, #111827);
+  color: #ffffff;
+}
+
+.boops-empty-secondary {
+  border: 1px solid var(--color-border-default, #e5e7eb);
+  background: #ffffff;
+  color: var(--color-text-primary, #111827);
+}
+
+.boops-empty-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--color-text-muted, #6b7280);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .boops-empty-actions > button {
+    flex: 1 1 100%;
+  }
+}
+
+/* Short empty pages: start at the top instead of floating mid-screen, day stepper first. */
+.app-stage:has(.boops-artboard-empty) {
+  justify-content: flex-start;
+}
+
+html[data-boops-viewport="mobile"] .boops-artboard-empty .boops-page-tools,
+html[data-boops-viewport="tablet"] .boops-artboard-empty .boops-page-tools {
+  order: -1;
+  margin: 8px 16px 0;
+}
+
+/* "My data": the sidebar's status badges are design placeholders, so hide them until real data exists. */
+html[data-boops-data="mine"] [data-name^="Nav row/"] [data-name="Badge"],
+html[data-boops-data="mine"] .boops-side-row-badge:not(.boops-data-badge) {
+  display: none !important;
+}

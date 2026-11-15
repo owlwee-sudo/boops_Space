@@ -7,6 +7,8 @@ import { h } from "../lib/dom";
 import type { ScreenId } from "../screens";
 import type { DeviceHubTab } from "../components/DeviceHubModal";
 import { getNativeBridgeState } from "../services/nativeBridge";
+import { mountEmptyState } from "../components/Welcome";
+import type { DataMode } from "../services/dataMode";
 import {
   CREW_PROFILES,
   type BoopsBundle,
@@ -53,6 +55,11 @@ export interface AppContextState {
   navigateScreen: (screenId: ScreenId) => void;
   reRenderScreen: () => void;
   showToast: (msg: string) => void;
+  /** "mine" = personal mode: no simulated readings are shown. */
+  dataMode?: DataMode;
+  /** Number of distinct mission days with personal readings (personal mode). */
+  loggedDays?: number;
+  onTryDemo?: () => void;
 }
 
 function applyStatusBadgeStyle(chip: Element | null, levelOrText: string): void {
@@ -3585,6 +3592,11 @@ export function applyBoopsBindings(
 
   hydrateSidebar(artboard, screenId, engine, record, state);
 
+  if (state.dataMode === "mine") {
+    applyPersonalModeScreen(artboard, screenId, bundle, state);
+    return;
+  }
+
   if (!bundle || !engine || !record) {
     return;
   }
@@ -3608,4 +3620,64 @@ export function applyBoopsBindings(
   }
 
   hydrateLinkRowsAndDemoCleanup(artboard, screenId, record, state);
+}
+
+const PERSONAL_TITLES: Partial<Record<string, string>> = {
+  HealthHome: "Home",
+  SettingsProfile: "Profile & settings",
+};
+
+/** Human title for the empty state, e.g. "DetailRestingHeartRate" → "Resting heart rate". */
+function personalTitleFor(screenId: ScreenId): string {
+  const preset = PERSONAL_TITLES[screenId];
+  if (preset) return preset;
+  const words = screenId
+    .replace(/^(Health|Detail)/, "")
+    .replace(/RiskDetail/, "Risk ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .trim();
+  const lower = words.toLowerCase();
+  return lower ? lower.charAt(0).toUpperCase() + lower.slice(1) : "Health";
+}
+
+/**
+ * Personal ("My data") mode: Log, Emergency and guide screens keep working; every screen
+ * that would show readings or risk scores gets an empty state instead of simulated numbers.
+ */
+function applyPersonalModeScreen(
+  artboard: HTMLElement,
+  screenId: ScreenId,
+  bundle: BoopsBundle | null,
+  state: AppContextState,
+): void {
+  const isGuide = screenId.includes("Guide");
+  if (screenId.startsWith("Log") || isGuide) {
+    if (bundle && screenId.startsWith("Log") && !isGuide) hydrateLogScreen(artboard, screenId, bundle, state);
+    return;
+  }
+  if (screenId.startsWith("Emergency")) {
+    if (bundle) hydrateEmergencyScreens(artboard, screenId, bundle, null, state);
+    return;
+  }
+  const logTarget: ScreenId = screenId.includes("Sleep")
+    ? "LogSleep"
+    : screenId.includes("Nutrition") || /Calories|Water|Vitamin|Glucose|BodyMass|Sodium/.test(screenId)
+      ? "LogNutrition"
+      : screenId.includes("Mindful") || /Stress|Mood/.test(screenId)
+        ? "LogMindfulness"
+        : screenId.includes("Radiation") || /Dose|SpaceWeather/.test(screenId)
+          ? "LogEnvironmentRadiation"
+          : screenId.includes("Gravity") || /Bone|Exercise|FluidShift|Microgravity/.test(screenId)
+            ? "LogEnvironmentGravity"
+            : screenId.includes("Environment") || screenId.includes("Co2")
+              ? "LogEnvironment"
+              : "LogVitals";
+  mountEmptyState(artboard, {
+    title: personalTitleFor(screenId),
+    missionDay: state.missionDay,
+    loggedDays: state.loggedDays ?? 0,
+    onLog: () => state.navigateScreen(logTarget),
+    onConnect: () => state.openDeviceHub?.(),
+    onTryDemo: () => state.onTryDemo?.(),
+  });
 }

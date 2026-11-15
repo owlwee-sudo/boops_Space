@@ -4,6 +4,7 @@
  */
 
 import { type BleReading, type HealthSyncRecord, saveFileWithNativeBridge } from "./nativeBridge";
+import { getDataMode, loadPersonalProfile, personalMissionDayToday } from "./dataMode";
 
 export type RiskLevel = "normal" | "watch" | "act";
 export type DataQualityStatus = "ok" | "check_device" | "check_yourself" | "act_now";
@@ -200,6 +201,11 @@ export interface EmergencyLogEntry {
 
 const STORAGE_PREFIX = "boops_v1_";
 
+/** Personal ("My data") mode keeps its own logs and context so demo entries never mix with real ones. */
+function modeKey(key: string): string {
+  return getDataMode() === "mine" ? `${key}_mine` : key;
+}
+
 /** Reads a value from localStorage safely without throwing in restricted origins. */
 export function safeStorageGet(key: string): string | null {
   try {
@@ -359,8 +365,11 @@ export function formatSourceLabel(
 
 /** Loads the active astronaut and mission day selection. */
 export function loadSelectedContext(): PersistedContext {
+  if (getDataMode() === "mine") {
+    return { astronautId: "A1", missionDay: personalMissionDayToday() };
+  }
   const defaultDay = isDebugUiMode() ? 96 : 45;
-  const raw = safeStorageGet("context");
+  const raw = safeStorageGet(modeKey("context"));
   const fallback: PersistedContext = { astronautId: "A1", missionDay: defaultDay };
   if (!raw) return fallback;
   try {
@@ -381,7 +390,7 @@ export function loadSelectedContext(): PersistedContext {
 
 /** Saves the active astronaut and mission day selection. */
 export function saveSelectedContext(ctx: PersistedContext): void {
-  safeStorageSet("context", JSON.stringify(ctx));
+  safeStorageSet(modeKey("context"), JSON.stringify(ctx));
   try {
     window.localStorage.setItem("ahm.current_astronaut", ctx.astronautId);
   } catch {
@@ -441,7 +450,7 @@ function mapCameraLogEntry(item: Record<string, unknown>, fallbackDay: number): 
 
 /** Reads only manual entries saved in boops_v1_manual_logs. */
 function readStoredManualLogs(): ManualLogEntry[] {
-  const raw = safeStorageGet("manual_logs");
+  const raw = safeStorageGet(modeKey("manual_logs"));
   if (!raw) return [];
   try {
     const parsed = JSON.parse(raw);
@@ -485,7 +494,7 @@ export function appendManualLog(entry: ManualLogEntry): ManualLogEntry[] {
   };
   const current = readStoredManualLogs();
   const next = [withId, ...current].slice(0, 60);
-  safeStorageSet("manual_logs", JSON.stringify(next));
+  safeStorageSet(modeKey("manual_logs"), JSON.stringify(next));
   postLocalApi("./api/log", {
     astronaut_id: withId.astronaut_id,
     mission_day: withId.mission_day,
@@ -512,7 +521,7 @@ export function updateManualLog(entry: ManualLogEntry): ManualLogEntry[] {
     idx >= 0
       ? current.map((item, i) => (i === idx ? updated : item))
       : [updated, ...current].slice(0, 60);
-  safeStorageSet("manual_logs", JSON.stringify(next));
+  safeStorageSet(modeKey("manual_logs"), JSON.stringify(next));
   postLocalApi("./api/log", {
     astronaut_id: updated.astronaut_id,
     mission_day: updated.mission_day,
@@ -960,6 +969,15 @@ export function getSourceCitation(bundle: BoopsBundle | null, sourceId: string):
 
 /** Returns the crew profile for a given astronaut ID. */
 export function getCrewProfile(astronautId: string): CrewProfile {
+  if (getDataMode() === "mine") {
+    const personal = loadPersonalProfile();
+    return {
+      ...CREW_PROFILES[0],
+      id: "A1",
+      name: personal?.name || "You",
+      role: personal?.role || "Crew member",
+    };
+  }
   return CREW_PROFILES.find((c) => c.id === astronautId) ?? CREW_PROFILES[0];
 }
 

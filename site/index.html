@@ -48,8 +48,8 @@
               and warns about immune, bone and muscle, and heart risk before symptoms show.
             </p>
             <div class="hero-actions">
-              <a class="discover" href="#download"><span class="discover-fill" aria-hidden="true"></span><span class="discover-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span><span class="discover-label">Download for Android</span></a>
-              <a class="btn btn-light btn-tall" href="./app/">Open the web app</a>
+              <a class="discover" href="#download" data-start="android"><span class="discover-fill" aria-hidden="true"></span><span class="discover-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span><span class="discover-label">Download for Android</span></a>
+              <a class="btn btn-light btn-tall" href="./app/" data-start="web">Open the web app</a>
             </div>
           </div>
           <div class="hero-meta">
@@ -271,10 +271,10 @@
           <div class="item">
             <div class="item-text">
               <h3>Web app</h3>
-              <p>The same crew app in your browser, with Simulated data. Add it to your home screen and it keeps working with no internet. Anything you log stays in your browser.</p>
+              <p>The same crew app in your browser. Try the Simulated demo mission or start with your own data. Add it to your home screen and it keeps working with no internet. Anything you log stays in your browser.</p>
             </div>
             <div class="item-actions">
-              <a class="btn btn-dark btn-sm" href="./app/">Open web app</a>
+              <a class="btn btn-dark btn-sm" href="./app/" data-start="web">Open web app</a>
             </div>
           </div>
           <div class="item">
@@ -283,7 +283,7 @@
               <p>Crew dashboard, 7 tool guides, emergency checklists and the camera pulse check. APK, about 24 MB.</p>
             </div>
             <div class="item-actions">
-              <a class="btn btn-dark btn-sm" href="./downloads/boops-android.apk" download>Download APK</a>
+              <a class="btn btn-dark btn-sm" href="./downloads/boops-android.apk" download data-start="android">Download APK</a>
             </div>
           </div>
           <div class="item">
@@ -394,8 +394,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         <h2>Try BOOPS. No internet needed.</h2>
         <p class="lead">Install the Android app, open it in your browser, or read the code.</p>
         <div class="hero-actions">
-          <a class="discover" href="./downloads/boops-android.apk" download><span class="discover-fill" aria-hidden="true"></span><span class="discover-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span><span class="discover-label">Download for Android</span></a>
-          <a class="btn btn-light btn-tall" href="./app/">Open the web app</a>
+          <a class="discover" href="./downloads/boops-android.apk" download data-start="android"><span class="discover-fill" aria-hidden="true"></span><span class="discover-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></span><span class="discover-label">Download for Android</span></a>
+          <a class="btn btn-light btn-tall" href="./app/" data-start="web">Open the web app</a>
           <a class="btn btn-light btn-tall" href="https://github.com/owlwee-sudo/boops_Space" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
       </div>
@@ -424,6 +424,26 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
       </div>
     </div>
   </footer>
+
+  <!-- Start choice: demo (simulated mission) or your own data. Opened by any [data-start] link. -->
+  <dialog class="start-dialog" id="start-dialog" aria-labelledby="start-title">
+    <form method="dialog" class="start-close-form"><button class="start-close" aria-label="Close">✕</button></form>
+    <p class="start-kicker" id="start-kicker">Open the web app</p>
+    <h2 class="start-title" id="start-title">How do you want to start?</h2>
+    <div class="start-options">
+      <a class="start-option" id="start-demo" href="./app/?data=demo">
+        <span class="start-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 3 14 9-14 9z"/></svg></span>
+        <span class="start-option-text"><strong>Try the demo first</strong><span id="start-demo-body">A Simulated 180-day mission with 3 crew: an EVA, a solar storm and an infection caught before symptoms. Nothing to set up.</span></span>
+        <span class="start-tag">Simulated</span>
+      </a>
+      <a class="start-option" id="start-mine" href="./app/?data=mine">
+        <span class="start-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+        <span class="start-option-text"><strong id="start-mine-title">Start with my data</strong><span id="start-mine-body">An empty dashboard. Log readings or connect a sensor, and your personal baseline builds over 14 days. Stays in your browser.</span></span>
+        <span class="start-tag" id="start-mine-tag">Your data</span>
+      </a>
+    </div>
+    <p class="start-note">Prototype · Not a medical device · You can switch any time inside the app.</p>
+  </dialog>
 
   <script src="./systems3d.js" defer></script>
   <script>
@@ -455,6 +475,51 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
           t.focus();
         });
       });
+      // Start choice pop-up for "Open the web app" and "Download for Android".
+      var dialog = document.getElementById("start-dialog");
+      var copy = {
+        web: {
+          kicker: "Open the web app",
+          mineTitle: "Start with my data",
+          mineBody: "An empty dashboard. Log readings or connect a sensor, and your personal baseline builds over 14 days. Stays in your browser.",
+          mineTag: "Your data",
+          mineHref: "./app/?data=mine",
+          download: false
+        },
+        android: {
+          kicker: "Download for Android",
+          mineTitle: "Download the app",
+          mineBody: "APK, about 24 MB. When it first opens you choose the demo or your own data. Everything stays on the phone.",
+          mineTag: "APK",
+          mineHref: "./downloads/boops-android.apk",
+          download: true
+        }
+      };
+      var mine = document.getElementById("start-mine");
+      function openStart(kind) {
+        var c = copy[kind];
+        document.getElementById("start-kicker").textContent = c.kicker;
+        document.getElementById("start-mine-title").textContent = c.mineTitle;
+        document.getElementById("start-mine-body").textContent = c.mineBody;
+        document.getElementById("start-mine-tag").textContent = c.mineTag;
+        document.getElementById("start-demo-body").textContent = kind === "android"
+          ? "Opens right here in your browser, no install. A Simulated 180-day mission with 3 crew."
+          : "A Simulated 180-day mission with 3 crew: an EVA, a solar storm and an infection caught before symptoms. Nothing to set up.";
+        mine.setAttribute("href", c.mineHref);
+        if (c.download) mine.setAttribute("download", ""); else mine.removeAttribute("download");
+        dialog.showModal();
+      }
+      if (dialog && typeof dialog.showModal === "function") {
+        document.querySelectorAll("[data-start]").forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            openStart(link.getAttribute("data-start"));
+          });
+        });
+        // Click on the dimmed backdrop closes it.
+        dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
+        mine.addEventListener("click", function () { if (mine.hasAttribute("download")) dialog.close(); });
+      }
     })();
   </script>
 </body>

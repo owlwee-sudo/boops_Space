@@ -12,7 +12,8 @@
  */
 
 import "../styles/boops.css";
-import { Activity, Bluetooth, BookOpen, ChevronsUpDown, FileDown, createElement, type IconNode } from "lucide";
+import { Activity, Bluetooth, BookOpen, ChevronsUpDown, Database, FileDown, createElement, type IconNode } from "lucide";
+import { getDataMode, personalMissionDayToday } from "../services/dataMode";
 import { h } from "../lib/dom";
 import { type DeviceHubTab, createDeviceHubModal } from "./DeviceHubModal";
 import { printDocumentWithNativeBridge } from "../services/nativeBridge";
@@ -34,6 +35,7 @@ import {
 export type BoopsUiMode = "app" | "debug";
 
 function detectInitialUiMode(): BoopsUiMode {
+  if (getDataMode() === "mine") return "app";
   try {
     const url = new URL(window.location.href);
     const qMode = url.searchParams.get("mode")?.toLowerCase();
@@ -77,6 +79,8 @@ export interface OverlayCallbacks {
   onDataIngested?: () => void;
   onOpenSettings?: () => void;
   onUiModeChange?: (mode: BoopsUiMode) => void;
+  /** Opens the demo / my-data choice (welcome step 2). */
+  onSwitchData?: () => void;
   onToast: (msg: string) => void;
 }
 
@@ -154,7 +158,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
 
   todayBtn.addEventListener("click", () => {
     const { astronautId } = cb.getContext();
-    const targetDay = uiMode === "debug" ? 96 : 45;
+    const targetDay = getDataMode() === "mine" ? personalMissionDayToday() : uiMode === "debug" ? 96 : 45;
     cb.setContext(astronautId, targetDay, false);
   });
 
@@ -213,6 +217,13 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   const sensorsBtn = sideRow("Sensors & Sync", Bluetooth);
   sensorsBtn.addEventListener("click", () => deviceHub.open("health"));
 
+  // Demo / My data switch: the badge says which data is on screen right now.
+  const dataBtn = sideRow("Data", Database, { title: "Switch between the demo mission and your own data" });
+  dataBtn.append(
+    h("span", { className: "boops-side-row-badge boops-data-badge" }, getDataMode() === "mine" ? "My data" : "Demo"),
+  );
+  dataBtn.addEventListener("click", () => cb.onSwitchData?.());
+
   const guidesBtn = sideRow("Tool Guides", BookOpen);
   guidesBtn.addEventListener("click", () => openDrawer(activeGuideId));
 
@@ -224,6 +235,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
     { className: "boops-side-actions", "data-name": "Sidebar actions" },
     statusBtn,
     sensorsBtn,
+    dataBtn,
     guidesBtn,
     exportBtn,
   );
@@ -288,7 +300,8 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
   }
 
   function mountScreenControls(artboard: HTMLElement, screenId: string) {
-    if (screenId === "SettingsProfile") mountDebugSetting(artboard);
+    // The simulated-mission debug tools make no sense on personal data.
+    if (screenId === "SettingsProfile" && getDataMode() !== "mine") mountDebugSetting(artboard);
     const sidebar = artboard.querySelector<HTMLElement>('[data-name^="Sidebar/"]');
     if (!sidebar) return;
     sidebar.querySelector<HTMLElement>('[data-name="Brand"]')?.append(brandTags);
@@ -785,7 +798,7 @@ export function createBoopsOverlays(cb: OverlayCallbacks): OverlayController {
 
     const bundle = cb.getBundle();
     const rec = getDailyRecord(bundle, astronautId, missionDay);
-    const defaultDay = uiMode === "debug" ? 96 : 45;
+    const defaultDay = getDataMode() === "mine" ? personalMissionDayToday() : uiMode === "debug" ? 96 : 45;
     dayReadout.textContent = rec?.date ? `Day ${missionDay} / 180 · ${rec.date}` : `Day ${missionDay} / 180`;
     todayBtn.textContent = "Today";
     todayBtn.title = `Jump to today (mission day ${defaultDay})`;
