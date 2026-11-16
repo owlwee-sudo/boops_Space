@@ -421,7 +421,7 @@
       "crucian2018"
     ],
     "id": "adaptation_fluid_shift",
-    "chain_text": "Mission days 1–14 → cephalad fluid shift = normal space adaptation (dampen alerts)",
+    "chain_text": "Mission days 1–14 → cephalad fluid shift = normal space adaptation (expected change removed from readings)",
     "evidence_stars": 3,
     "source_id": "crucian2018"
   },

@@ -112,7 +112,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 12,
-    "anomaly_score": 0.041,
+    "anomaly_score": 0.045,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -202,7 +202,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 21,
-    "anomaly_score": 0.067,
+    "anomaly_score": 0.054,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -272,7 +272,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 28,
-    "anomaly_score": 0.116,
+    "anomaly_score": 0.108,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -282,7 +282,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 29,
-    "anomaly_score": 0.153,
+    "anomaly_score": 0.162,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -292,17 +292,17 @@
   {
     "astronaut_id": "A1",
     "mission_day": 30,
-    "anomaly_score": 0.835,
+    "anomaly_score": 0.809,
     "is_anomaly": true,
     "point_vs_trend": "point",
     "suggested_status": "check_device",
     "reason": "Unusual reading with low signal quality: check the sensor and measure again.",
-    "top_factors": "rhr_bpm +110.8 SD;signal_quality -25.0 SD;hrv_rmssd_ms +2.2 SD"
+    "top_factors": "rhr_bpm +109.9 SD;signal_quality -25.0 SD;hrv_rmssd_ms +2.1 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 31,
-    "anomaly_score": 0.193,
+    "anomaly_score": 0.205,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -342,7 +342,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 35,
-    "anomaly_score": 0.06,
+    "anomaly_score": 0.056,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -402,17 +402,17 @@
   {
     "astronaut_id": "A1",
     "mission_day": 41,
-    "anomaly_score": 0.767,
+    "anomaly_score": 0.8,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "",
     "reason": "Unusual reading on an EVA day: expected after a spacewalk.",
-    "top_factors": "sleep_hours -4.7 SD;rhr_bpm +3.8 SD;hrv_rmssd_ms -2.8 SD"
+    "top_factors": "sleep_hours -4.7 SD;rhr_bpm +3.9 SD;hrv_rmssd_ms -2.9 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 42,
-    "anomaly_score": 0.298,
+    "anomaly_score": 0.369,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -422,7 +422,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 43,
-    "anomaly_score": 0.1,
+    "anomaly_score": 0.111,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -432,7 +432,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 44,
-    "anomaly_score": 0.164,
+    "anomaly_score": 0.133,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -472,7 +472,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 48,
-    "anomaly_score": 0.0,
+    "anomaly_score": 0.006,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -482,7 +482,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 49,
-    "anomaly_score": 0.028,
+    "anomaly_score": 0.056,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -492,7 +492,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 50,
-    "anomaly_score": 0.1,
+    "anomaly_score": 0.071,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -532,7 +532,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 54,
-    "anomaly_score": 0.026,
+    "anomaly_score": 0.013,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -612,7 +612,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 62,
-    "anomaly_score": 0.188,
+    "anomaly_score": 0.192,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -622,7 +622,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 63,
-    "anomaly_score": 0.294,
+    "anomaly_score": 0.286,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -722,7 +722,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 73,
-    "anomaly_score": 0.037,
+    "anomaly_score": 0.016,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -782,17 +782,17 @@
   {
     "astronaut_id": "A1",
     "mission_day": 79,
-    "anomaly_score": 0.5,
-    "is_anomaly": true,
-    "point_vs_trend": "point",
-    "suggested_status": "check_device",
-    "reason": "One-day spike with normal days around it: check the sensor and measure again.",
-    "top_factors": "spo2_pct -3.7 SD;sleep_hours -3.0 SD"
+    "anomaly_score": 0.461,
+    "is_anomaly": false,
+    "point_vs_trend": "",
+    "suggested_status": "",
+    "reason": "",
+    "top_factors": ""
   },
   {
     "astronaut_id": "A1",
     "mission_day": 80,
-    "anomaly_score": 0.117,
+    "anomaly_score": 0.12,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -872,17 +872,17 @@
   {
     "astronaut_id": "A1",
     "mission_day": 88,
-    "anomaly_score": 0.802,
+    "anomaly_score": 0.861,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "check_yourself",
     "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
-    "top_factors": "sleep_hours -6.1 SD;hrv_rmssd_ms -2.2 SD"
+    "top_factors": "sleep_hours -6.1 SD;hrv_rmssd_ms -2.3 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 89,
-    "anomaly_score": 0.325,
+    "anomaly_score": 0.356,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -892,7 +892,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 90,
-    "anomaly_score": 0.296,
+    "anomaly_score": 0.314,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -912,7 +912,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 92,
-    "anomaly_score": 0.286,
+    "anomaly_score": 0.318,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -922,7 +922,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 93,
-    "anomaly_score": 0.386,
+    "anomaly_score": 0.384,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -932,62 +932,62 @@
   {
     "astronaut_id": "A1",
     "mission_day": 94,
-    "anomaly_score": 0.515,
+    "anomaly_score": 0.522,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "check_yourself",
     "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
-    "top_factors": "sleep_hours -6.6 SD;hrv_rmssd_ms -3.0 SD;temp_c -2.4 SD"
+    "top_factors": "sleep_hours -6.6 SD;hrv_rmssd_ms -3.1 SD;temp_c -2.4 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 95,
-    "anomaly_score": 0.626,
+    "anomaly_score": 0.627,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "check_yourself",
     "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
-    "top_factors": "sleep_hours -5.1 SD;rhr_bpm +4.4 SD;hrv_rmssd_ms -3.0 SD"
+    "top_factors": "sleep_hours -5.1 SD;rhr_bpm +4.5 SD;hrv_rmssd_ms -3.2 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 96,
-    "anomaly_score": 0.611,
+    "anomaly_score": 0.623,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "check_yourself",
     "reason": "Unusual pattern for several days in a row: more likely the body than the device.",
-    "top_factors": "sleep_hours -5.4 SD;rhr_bpm +5.2 SD;hrv_rmssd_ms -3.4 SD"
+    "top_factors": "sleep_hours -5.4 SD;rhr_bpm +5.3 SD;hrv_rmssd_ms -3.5 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 97,
-    "anomaly_score": 0.963,
+    "anomaly_score": 0.975,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "act_now",
     "reason": "Unusual pattern together with logged symptoms: more likely the body than the device.",
-    "top_factors": "temp_c +6.8 SD;rhr_bpm +5.5 SD;sleep_hours -5.3 SD"
+    "top_factors": "temp_c +6.8 SD;rhr_bpm +5.6 SD;sleep_hours -5.3 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 98,
-    "anomaly_score": 0.828,
+    "anomaly_score": 0.871,
     "is_anomaly": true,
     "point_vs_trend": "trend",
     "suggested_status": "act_now",
     "reason": "Unusual pattern together with logged symptoms: more likely the body than the device.",
-    "top_factors": "temp_c +8.2 SD;rhr_bpm +5.7 SD;sleep_hours -5.6 SD"
+    "top_factors": "temp_c +8.2 SD;rhr_bpm +5.8 SD;sleep_hours -5.6 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 99,
-    "anomaly_score": 0.684,
+    "anomaly_score": 0.675,
     "is_anomaly": true,
     "point_vs_trend": "point",
     "suggested_status": "check_device",
     "reason": "One-day spike with normal days around it: check the sensor and measure again.",
-    "top_factors": "sleep_hours +2.2 SD;rhr_bpm -1.4 SD;spo2_pct +1.3 SD"
+    "top_factors": "sleep_hours +2.2 SD;spo2_pct +1.3 SD;rhr_bpm -1.3 SD"
   },
   {
     "astronaut_id": "A1",
@@ -1052,7 +1052,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 106,
-    "anomaly_score": 0.161,
+    "anomaly_score": 0.173,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1062,7 +1062,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 107,
-    "anomaly_score": 0.076,
+    "anomaly_score": 0.048,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1072,7 +1072,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 108,
-    "anomaly_score": 0.185,
+    "anomaly_score": 0.176,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1142,7 +1142,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 115,
-    "anomaly_score": 0.372,
+    "anomaly_score": 0.381,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1162,7 +1162,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 117,
-    "anomaly_score": 0.033,
+    "anomaly_score": 0.025,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1172,7 +1172,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 118,
-    "anomaly_score": 0.064,
+    "anomaly_score": 0.047,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1197,12 +1197,12 @@
     "point_vs_trend": "trend",
     "suggested_status": "",
     "reason": "Unusual reading on an EVA day: expected after a spacewalk.",
-    "top_factors": "sleep_hours -4.5 SD;rhr_bpm +3.8 SD;hrv_rmssd_ms -2.6 SD"
+    "top_factors": "sleep_hours -4.5 SD;rhr_bpm +3.9 SD;hrv_rmssd_ms -2.7 SD"
   },
   {
     "astronaut_id": "A1",
     "mission_day": 121,
-    "anomaly_score": 0.288,
+    "anomaly_score": 0.309,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1212,7 +1212,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 122,
-    "anomaly_score": 0.296,
+    "anomaly_score": 0.303,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1222,7 +1222,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 123,
-    "anomaly_score": 0.25,
+    "anomaly_score": 0.241,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1232,7 +1232,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 124,
-    "anomaly_score": 0.126,
+    "anomaly_score": 0.148,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1292,7 +1292,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 130,
-    "anomaly_score": 0.044,
+    "anomaly_score": 0.081,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1322,7 +1322,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 133,
-    "anomaly_score": 0.051,
+    "anomaly_score": 0.016,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1342,7 +1342,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 135,
-    "anomaly_score": 0.059,
+    "anomaly_score": 0.055,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1432,7 +1432,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 144,
-    "anomaly_score": 0.124,
+    "anomaly_score": 0.109,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1442,7 +1442,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 145,
-    "anomaly_score": 0.122,
+    "anomaly_score": 0.105,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1532,7 +1532,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 154,
-    "anomaly_score": 0.249,
+    "anomaly_score": 0.215,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1742,7 +1742,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 175,
-    "anomaly_score": 0.035,
+    "anomaly_score": 0.036,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -1762,7 +1762,7 @@
   {
     "astronaut_id": "A1",
     "mission_day": 177,
-    "anomaly_score": 0.152,
+    "anomaly_score": 0.142,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2032,7 +2032,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 24,
-    "anomaly_score": 0.052,
+    "anomaly_score": 0.06,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2082,7 +2082,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 29,
-    "anomaly_score": 0.068,
+    "anomaly_score": 0.047,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2092,7 +2092,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 30,
-    "anomaly_score": 0.008,
+    "anomaly_score": 0.0,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2142,7 +2142,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 35,
-    "anomaly_score": 0.007,
+    "anomaly_score": 0.036,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2292,7 +2292,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 50,
-    "anomaly_score": 0.792,
+    "anomaly_score": 0.848,
     "is_anomaly": true,
     "point_vs_trend": "point",
     "suggested_status": "check_device",
@@ -2302,7 +2302,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 51,
-    "anomaly_score": 0.133,
+    "anomaly_score": 0.149,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -2422,7 +2422,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 63,
-    "anomaly_score": 0.043,
+    "anomaly_score": 0.054,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -3322,7 +3322,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 153,
-    "anomaly_score": 0.148,
+    "anomaly_score": 0.154,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -3562,7 +3562,7 @@
   {
     "astronaut_id": "A2",
     "mission_day": 177,
-    "anomaly_score": 0.087,
+    "anomaly_score": 0.088,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -3792,7 +3792,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 20,
-    "anomaly_score": 0.121,
+    "anomaly_score": 0.141,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -3892,7 +3892,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 30,
-    "anomaly_score": 0.016,
+    "anomaly_score": 0.035,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4042,7 +4042,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 45,
-    "anomaly_score": 0.047,
+    "anomaly_score": 0.069,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4192,7 +4192,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 60,
-    "anomaly_score": 0.041,
+    "anomaly_score": 0.095,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4272,7 +4272,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 68,
-    "anomaly_score": 0.269,
+    "anomaly_score": 0.233,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4282,7 +4282,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 69,
-    "anomaly_score": 0.153,
+    "anomaly_score": 0.182,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4592,7 +4592,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 100,
-    "anomaly_score": 0.144,
+    "anomaly_score": 0.126,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4672,7 +4672,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 108,
-    "anomaly_score": 0.042,
+    "anomaly_score": 0.052,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4692,7 +4692,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 110,
-    "anomaly_score": 0.704,
+    "anomaly_score": 0.8,
     "is_anomaly": true,
     "point_vs_trend": "point",
     "suggested_status": "check_device",
@@ -4702,7 +4702,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 111,
-    "anomaly_score": 0.112,
+    "anomaly_score": 0.149,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4842,7 +4842,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 125,
-    "anomaly_score": 0.026,
+    "anomaly_score": 0.045,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4852,7 +4852,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 126,
-    "anomaly_score": 0.088,
+    "anomaly_score": 0.099,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -4862,7 +4862,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 127,
-    "anomaly_score": 0.166,
+    "anomaly_score": 0.159,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -5122,7 +5122,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 153,
-    "anomaly_score": 0.02,
+    "anomaly_score": 0.016,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",
@@ -5132,7 +5132,7 @@
   {
     "astronaut_id": "A3",
     "mission_day": 154,
-    "anomaly_score": 0.036,
+    "anomaly_score": 0.054,
     "is_anomaly": false,
     "point_vs_trend": "",
     "suggested_status": "",

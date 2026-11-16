@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from engine import analysis
 from engine.analysis import _to_float
 
 # ---------------------------------------------------------------------------
@@ -27,8 +28,8 @@ RISK_THRESHOLDS: dict[str, int] = {
     "act": 70,  # > 70 -> act; 40..70 -> watch; < 40 -> normal
 }
 
-ADAPTATION_DAYS = 14
-ADAPTATION_DAMPEN_FACTOR = 0.45
+ADAPTATION_DAYS = 14             # days labelled "adaptation phase" in the output
+ADAPTATION_DAMPEN_FACTOR = 0.45  # only used when analysis.ADAPTATION_MODEL == "window"
 MAX_DRIVERS = 4
 RAD_SHELTER_MSV = 1.5   # daily dose (mSv) that triggers the shelter / defer-EVA action
 
@@ -81,6 +82,30 @@ def _sanitized_z(z: dict[str, float], data_quality: dict[str, Any] | None) -> di
         for key in ("rhr_bpm", "hrv_rmssd_ms", "temp_c", "spo2_pct"):
             clean[key] = 0.0
     return clean
+
+
+def _adaptation_factor(cur_day: int) -> float:
+    """Multiplier for the final risk score during the adaptation phase.
+
+    "window" model: 0.45 on days 1-14, then a hard jump to 1.0 on day 15.
+    "curve" model:  always 1.0. The fluid shift is already removed from the
+    z-scores (``analysis.zscores``), so nothing real is hidden on days 1-14.
+    """
+    if analysis.ADAPTATION_MODEL == "window" and cur_day <= ADAPTATION_DAYS:
+        return ADAPTATION_DAMPEN_FACTOR
+    return 1.0
+
+
+def _adaptation_driver(window_chain: str, curve_chain: str) -> dict[str, Any]:
+    """The pinned "adaptation phase" note for days 1-14 (contribution is always 0)."""
+    return {
+        "factor": "adaptation_phase",
+        "z": 0.0,
+        "contribution": 0.0,
+        "chain": curve_chain if analysis.ADAPTATION_MODEL == "curve" else window_chain,
+        "evidence_stars": 3,
+        "source_id": "crucian2018",
+    }
 
 
 def _finish_risk(level: str, score: int, drivers: list[dict[str, Any]], cur_day: int) -> dict[str, Any]:
@@ -152,7 +177,11 @@ def compute_immune_risk(
     if not recent3.empty and "sleep_hours" in baseline:
         s_mean = baseline["sleep_hours"]["mean"]
         s_sd = max(baseline["sleep_hours"]["sd"], 1e-3)
-        recent_sleep_z = float((recent3["sleep_hours"].mean() - s_mean) / s_sd)
+        # Same adaptation correction as analysis.zscores (0 unless a curve lists sleep)
+        recent_sleep = recent3["sleep_hours"] - recent3["mission_day"].map(
+            lambda d: analysis.adaptation_offset("sleep_hours", d)
+        )
+        recent_sleep_z = float((recent_sleep.mean() - s_mean) / s_sd)
         eff_sleep_z = min(sleep_z, recent_sleep_z)
     else:
         eff_sleep_z = sleep_z
@@ -210,8 +239,7 @@ def compute_immune_risk(
     if (iew or symptoms_present) and stress_norm >= 0.7 and sleep_norm >= 0.7:
         raw_total = min(1.0, raw_total + 0.08)
 
-    if cur_day <= ADAPTATION_DAYS:
-        raw_total *= ADAPTATION_DAMPEN_FACTOR
+    raw_total *= _adaptation_factor(cur_day)
 
     score = int(round(float(np.clip(raw_total * 100.0, 0.0, 100.0))))
     level = level_from_score(score)
@@ -269,14 +297,10 @@ def compute_immune_risk(
 
     if cur_day <= ADAPTATION_DAYS:
         drivers.append(
-            {
-                "factor": "adaptation_phase",
-                "z": 0.0,
-                "contribution": 0.0,
-                "chain": "Mission days 1–14 → fluid shift = normal space adaptation (alerts dampened)",
-                "evidence_stars": 3,
-                "source_id": "crucian2018",
-            }
+            _adaptation_driver(
+                "Mission days 1–14 → fluid shift = normal space adaptation (alerts dampened)",
+                "Mission days 1–14 → fluid shift = normal space adaptation (expected change removed from readings)",
+            )
         )
 
     return _finish_risk(level, score, drivers, cur_day)
@@ -320,8 +344,7 @@ def compute_musculoskeletal_risk(
     time_contrib = round(MUSCULOSKELETAL_WEIGHTS["time_in_flight"] * time_norm, 3)
 
     raw_total = res_contrib + interaction_contrib + rad_contrib + time_contrib
-    if cur_day <= ADAPTATION_DAYS:
-        raw_total *= ADAPTATION_DAMPEN_FACTOR
+    raw_total *= _adaptation_factor(cur_day)
 
     score = int(round(float(np.clip(raw_total * 100.0, 0.0, 100.0))))
     level = level_from_score(score)
@@ -363,14 +386,10 @@ def compute_musculoskeletal_risk(
 
     if cur_day <= ADAPTATION_DAYS:
         drivers.append(
-            {
-                "factor": "adaptation_phase",
-                "z": 0.0,
-                "contribution": 0.0,
-                "chain": "Mission days 1–14 → unloading adaptation baseline (alerts dampened)",
-                "evidence_stars": 3,
-                "source_id": "crucian2018",
-            }
+            _adaptation_driver(
+                "Mission days 1–14 → unloading adaptation baseline (alerts dampened)",
+                "Mission days 1–14 → early adaptation to unloading (personal baseline still forming)",
+            )
         )
 
     return _finish_risk(level, score, drivers, cur_day)
@@ -412,8 +431,7 @@ def compute_cardio_risk(
     time_contrib = round(CARDIO_WEIGHTS["time_in_flight"] * time_norm, 3)
 
     raw_total = ex_contrib + autonomic_contrib + rad_contrib + time_contrib
-    if cur_day <= ADAPTATION_DAYS:
-        raw_total *= ADAPTATION_DAMPEN_FACTOR
+    raw_total *= _adaptation_factor(cur_day)
 
     score = int(round(float(np.clip(raw_total * 100.0, 0.0, 100.0))))
     level = level_from_score(score)
@@ -455,14 +473,10 @@ def compute_cardio_risk(
 
     if cur_day <= ADAPTATION_DAYS:
         drivers.append(
-            {
-                "factor": "adaptation_phase",
-                "z": 0.0,
-                "contribution": 0.0,
-                "chain": "Mission days 1–14 → cephalad fluid shift = normal space adaptation (alerts dampened)",
-                "evidence_stars": 3,
-                "source_id": "crucian2018",
-            }
+            _adaptation_driver(
+                "Mission days 1–14 → cephalad fluid shift = normal space adaptation (alerts dampened)",
+                "Mission days 1–14 → cephalad fluid shift = normal space adaptation (expected change removed from readings)",
+            )
         )
 
     return _finish_risk(level, score, drivers, cur_day)

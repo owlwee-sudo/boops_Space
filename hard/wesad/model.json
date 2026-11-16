@@ -92,6 +92,25 @@
           "true_stress_pred_nonstress": 40,
           "true_stress_pred_stress": 262
         }
+      },
+      "decision": {
+        "threshold": 0.319,
+        "miss_cost": 5.0,
+        "false_alarm_cost": 1.0,
+        "sensitivity": 0.9272,
+        "false_alarm_rate": 0.101,
+        "misses": 22,
+        "false_alarms": 72,
+        "cost": 182.0,
+        "at_0_5": {
+          "sensitivity": 0.8675,
+          "false_alarm_rate": 0.0715,
+          "misses": 40,
+          "false_alarms": 51,
+          "cost": 251.0
+        },
+        "evaluation": "leave-one-subject-out probabilities, 60 s windows",
+        "note": "Chosen for WESAD lab windows. Not calibrated for daily averages in space. The rates at the chosen threshold are slightly optimistic: it was picked on the same predictions."
       }
     },
     "daily": {
@@ -143,6 +162,25 @@
           "true_stress_pred_nonstress": 30,
           "true_stress_pred_stress": 272
         }
+      },
+      "decision": {
+        "threshold": 0.132,
+        "miss_cost": 5.0,
+        "false_alarm_cost": 1.0,
+        "sensitivity": 0.9834,
+        "false_alarm_rate": 0.1164,
+        "misses": 5,
+        "false_alarms": 83,
+        "cost": 108.0,
+        "at_0_5": {
+          "sensitivity": 0.9007,
+          "false_alarm_rate": 0.0365,
+          "misses": 30,
+          "false_alarms": 26,
+          "cost": 176.0
+        },
+        "evaluation": "leave-one-subject-out probabilities, 60 s windows",
+        "note": "Chosen for WESAD lab windows. Not calibrated for daily averages in space. The rates at the chosen threshold are slightly optimistic: it was picked on the same predictions."
       }
     }
   }

@@ -1,0 +1,105 @@
+{
+  "labels": [
+    "Simulated"
+  ],
+  "note": "Simulated data. Shows that the scores follow the body readings rather than the calendar. It does not show that the scores are medically valid.",
+  "config": {
+    "adaptation_model": "curve",
+    "n_shuffles": 20,
+    "seed": 7,
+    "reproduced_r": 0.8,
+    "day_explains_r2": 0.5
+  },
+  "scores": {
+    "stress": {
+      "model": "rules",
+      "r2_mission_day": 0.002,
+      "follows_the_day_r": -0.001,
+      "follows_the_data_r": 0.99,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "sleep": {
+      "model": "rules",
+      "r2_mission_day": 0.003,
+      "follows_the_day_r": -0.004,
+      "follows_the_data_r": 0.998,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "immune": {
+      "model": "rules",
+      "r2_mission_day": 0.052,
+      "follows_the_day_r": 0.061,
+      "follows_the_data_r": 0.798,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "musculoskeletal": {
+      "model": "rules",
+      "r2_mission_day": 0.381,
+      "follows_the_day_r": 0.419,
+      "follows_the_data_r": 0.26,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "cardio": {
+      "model": "rules",
+      "r2_mission_day": 0.197,
+      "follows_the_day_r": 0.233,
+      "follows_the_data_r": 0.621,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "infection_warning": {
+      "model": "rules",
+      "r2_mission_day": 0.002,
+      "follows_the_day_r": -0.01,
+      "follows_the_data_r": 0.282,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "wesad_stress": {
+      "model": "STRESS_MODEL = \"wesad\"",
+      "r2_mission_day": 0.012,
+      "follows_the_day_r": 0.009,
+      "follows_the_data_r": 0.905,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    },
+    "anomaly_score": {
+      "model": "Isolation Forest (H4)",
+      "r2_mission_day": 0.001,
+      "follows_the_day_r": 0.001,
+      "follows_the_data_r": 0.65,
+      "shuffle_reproduces_score": false,
+      "mission_day_explains_most": false
+    }
+  },
+  "time_in_flight_driver": {
+    "immune": {
+      "weight": 0.1,
+      "max_points": 10.0,
+      "share_of_all_risk_points": 0.265,
+      "watch_or_act_days": 23,
+      "days_lower_without_time_driver": 9
+    },
+    "musculoskeletal": {
+      "weight": 0.15,
+      "max_points": 15.0,
+      "share_of_all_risk_points": 0.58,
+      "watch_or_act_days": 16,
+      "days_lower_without_time_driver": 4
+    },
+    "cardio": {
+      "weight": 0.15,
+      "max_points": 15.0,
+      "share_of_all_risk_points": 0.447,
+      "watch_or_act_days": 23,
+      "days_lower_without_time_driver": 7
+    }
+  },
+  "infection_warning_days_real": 6,
+  "skipped": {},
+  "passes": true
+}

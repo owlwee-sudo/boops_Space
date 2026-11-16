@@ -258,6 +258,10 @@ def main():
         model_json["models"][set_name] = spec
         if set_name == MAIN["feature_set"]:
             main_pipe = pipe
+    # Harm-weighted decision threshold per exported model (see thresholds.py)
+    import thresholds
+
+    thresholds.add_decisions(model_json, table)
     (HERE / "model.json").write_text(json.dumps(model_json, indent=2) + "\n")
     WEB_MODEL.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(HERE / "model.json", WEB_MODEL)

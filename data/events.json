@@ -6,8 +6,8 @@
     "end_day": 14,
     "type": "adaptation",
     "title": "Microgravity fluid-shift adaptation",
-    "description": "Cephalad fluid shift causes slightly higher RHR, ~10 mmHg lower BP, and lower HRV; forms personal in-flight baseline.",
-    "expected_signal": "Alerts dampened; labeled adaptation phase."
+    "description": "Cephalad fluid shift causes slightly higher RHR, slightly lower BP, and lower HRV, fading over the first weeks. The personal baseline is taken from stable days 15-28.",
+    "expected_signal": "Expected change removed from readings; labeled adaptation phase."
   },
   {
     "id": "a1_glitch_rhr",

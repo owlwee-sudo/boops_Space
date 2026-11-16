@@ -1,0 +1,286 @@
+{
+  "config": {
+    "miss_cost": 5.0,
+    "false_alarm_cost": 1.0,
+    "ratio": 5.0,
+    "note": "Starting values, not clinically validated.",
+    "adaptation_model": "curve"
+  },
+  "infection_early_warning": {
+    "labels": [
+      "Simulated"
+    ],
+    "warning": "The only labels are the events planted in our own simulated mission (1 infection). The cheapest row is tuned to our story, not validated. The setting stays at 2 SD / 2 days (Mishra et al. 2020).",
+    "planted_infections": [
+      {
+        "astronaut_id": "A1",
+        "start_day": 95,
+        "symptom_day": 97,
+        "end_day": 98
+      }
+    ],
+    "current_setting": {
+      "z_threshold": 2.0,
+      "consecutive_days": 2,
+      "source_id": "mishra2020"
+    },
+    "rows": [
+      {
+        "z_threshold": 1.5,
+        "consecutive_days": 1,
+        "misses": 0,
+        "lead_days": [
+          2
+        ],
+        "false_alarms": 5,
+        "false_alarm_days": {
+          "A2": [
+            9,
+            10,
+            60,
+            61,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75
+          ],
+          "A3": [
+            5
+          ]
+        },
+        "cost": 5.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 1.5,
+        "consecutive_days": 2,
+        "misses": 0,
+        "lead_days": [
+          1
+        ],
+        "false_alarms": 4,
+        "false_alarm_days": {
+          "A2": [
+            10,
+            61,
+            64,
+            65,
+            66,
+            67,
+            68,
+            71,
+            72,
+            73,
+            74,
+            75
+          ]
+        },
+        "cost": 4.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 1.5,
+        "consecutive_days": 3,
+        "misses": 1,
+        "lead_days": [],
+        "false_alarms": 2,
+        "false_alarm_days": {
+          "A2": [
+            65,
+            66,
+            67,
+            68,
+            72,
+            73,
+            74,
+            75
+          ]
+        },
+        "cost": 7.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 2.0,
+        "consecutive_days": 1,
+        "misses": 0,
+        "lead_days": [
+          2
+        ],
+        "false_alarms": 3,
+        "false_alarm_days": {
+          "A2": [
+            60,
+            61,
+            63,
+            64,
+            72,
+            73
+          ]
+        },
+        "cost": 3.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 2.0,
+        "consecutive_days": 2,
+        "misses": 0,
+        "lead_days": [
+          1
+        ],
+        "false_alarms": 3,
+        "false_alarm_days": {
+          "A2": [
+            61,
+            64,
+            73
+          ]
+        },
+        "cost": 3.0,
+        "current_setting": true,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 2.0,
+        "consecutive_days": 3,
+        "misses": 1,
+        "lead_days": [],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 5.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 2.5,
+        "consecutive_days": 1,
+        "misses": 0,
+        "lead_days": [
+          2
+        ],
+        "false_alarms": 2,
+        "false_alarm_days": {
+          "A2": [
+            64,
+            73
+          ]
+        },
+        "cost": 2.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 2.5,
+        "consecutive_days": 2,
+        "misses": 0,
+        "lead_days": [
+          1
+        ],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 0.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": true
+      },
+      {
+        "z_threshold": 2.5,
+        "consecutive_days": 3,
+        "misses": 1,
+        "lead_days": [],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 5.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      },
+      {
+        "z_threshold": 3.0,
+        "consecutive_days": 1,
+        "misses": 0,
+        "lead_days": [
+          2
+        ],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 0.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": true
+      },
+      {
+        "z_threshold": 3.0,
+        "consecutive_days": 2,
+        "misses": 0,
+        "lead_days": [
+          1
+        ],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 0.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": true
+      },
+      {
+        "z_threshold": 3.0,
+        "consecutive_days": 3,
+        "misses": 1,
+        "lead_days": [],
+        "false_alarms": 0,
+        "false_alarm_days": {},
+        "cost": 5.0,
+        "current_setting": false,
+        "cheapest_on_this_simulation": false
+      }
+    ]
+  },
+  "wesad_stress_model": {
+    "wrist_all": {
+      "threshold": 0.319,
+      "miss_cost": 5.0,
+      "false_alarm_cost": 1.0,
+      "sensitivity": 0.9272,
+      "false_alarm_rate": 0.101,
+      "misses": 22,
+      "false_alarms": 72,
+      "cost": 182.0,
+      "at_0_5": {
+        "sensitivity": 0.8675,
+        "false_alarm_rate": 0.0715,
+        "misses": 40,
+        "false_alarms": 51,
+        "cost": 251.0
+      },
+      "evaluation": "leave-one-subject-out probabilities, 60 s windows",
+      "note": "Chosen for WESAD lab windows. Not calibrated for daily averages in space. The rates at the chosen threshold are slightly optimistic: it was picked on the same predictions."
+    },
+    "daily": {
+      "threshold": 0.132,
+      "miss_cost": 5.0,
+      "false_alarm_cost": 1.0,
+      "sensitivity": 0.9834,
+      "false_alarm_rate": 0.1164,
+      "misses": 5,
+      "false_alarms": 83,
+      "cost": 108.0,
+      "at_0_5": {
+        "sensitivity": 0.9007,
+        "false_alarm_rate": 0.0365,
+        "misses": 30,
+        "false_alarms": 26,
+        "cost": 176.0
+      },
+      "evaluation": "leave-one-subject-out probabilities, 60 s windows",
+      "note": "Chosen for WESAD lab windows. Not calibrated for daily averages in space. The rates at the chosen threshold are slightly optimistic: it was picked on the same predictions."
+    }
+  }
+}

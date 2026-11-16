@@ -67,6 +67,23 @@ def predict_proba(values, model_name=DAILY_MODEL, path=MODEL_PATH):
     return 1.0 / (1.0 + math.exp(-total))
 
 
+def decision_threshold(model_name=DAILY_MODEL, path=MODEL_PATH):
+    """Probability at or above which a window counts as "stress".
+
+    Harm-weighted: chosen by hard/wesad/thresholds.py so that a missed stress
+    window costs more than a false alarm (engine/thresholds.py). Falls back to
+    0.5 when model.json has no "decision" block. Valid for WESAD lab windows
+    only, not for the app's daily averages.
+    """
+    spec = load_model(path)["models"][model_name]
+    return float(spec.get("decision", {}).get("threshold", 0.5))
+
+
+def is_stress(probability, model_name=DAILY_MODEL, path=MODEL_PATH):
+    """True when the probability reaches the harm-weighted threshold."""
+    return probability >= decision_threshold(model_name, path)
+
+
 def wesad_stress_score(z_rhr, z_hrv, z_eda, path=MODEL_PATH):
     """Stress score 0-100 from the app's daily personal-baseline z-scores.
 

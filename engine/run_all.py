@@ -26,6 +26,7 @@ if str(ROOT_DIR) not in sys.path:
 
 import pandas as pd
 
+from engine import analysis
 from engine.analysis import (
     infection_early_warning,
     personal_baseline,
@@ -36,7 +37,7 @@ from engine.analysis import (
 from engine.data_quality import check_reading
 from engine.db import dumps_safe, init_db, insert_daily_records, save_engine_output
 from engine.export import generate_flight_surgeon_pdf
-from engine.generate_mission import ASTRONAUT_PROFILES, generate_mission_data
+from engine.generate_mission import generate_mission_data
 from engine.risk_engine import evaluate_risks, recommend_actions
 
 DATA_DIR = ROOT_DIR / "data"
@@ -53,18 +54,22 @@ def _load_json(path: Path) -> Any:
         return json.load(f)
 
 
-def run_pipeline() -> list[dict[str, Any]]:
-    """Execute Tasks 1->4, persist SQLite/JSON/CSV/PDF outputs, and sync web bundles."""
-    df, events = generate_mission_data(output_dir=DATA_DIR)
+def score_records(df: pd.DataFrame) -> list[dict[str, Any]]:
+    """Score every astronaut-day in ``df`` (Tasks 2-4). Pure: writes no files.
+
+    Also used by ``engine/confound_check.py`` and ``engine/thresholds.py`` to
+    re-score shuffled or re-configured data.
+    """
     outputs: list[dict[str, Any]] = []
 
-    for astro_id in ASTRONAUT_PROFILES:
+    for astro_id in sorted(df["astronaut_id"].dropna().unique(), key=str):
         sub = (
             df[df["astronaut_id"] == astro_id]
             .sort_values("mission_day")
             .reset_index(drop=True)
         )
         baseline = personal_baseline(df, astro_id)
+        baseline_days = analysis.baseline_days_used(df, astro_id)
 
         for idx in range(len(sub)):
             row = sub.iloc[idx]
@@ -80,21 +85,41 @@ def run_pipeline() -> list[dict[str, Any]]:
             risks = evaluate_risks(row, z, baseline, hist, flags, dq)
             actions = recommend_actions(risks, row, flags, dq)
 
-            outputs.append(
-                {
-                    "astronaut_id": astro_id,
-                    "mission_day": day,
-                    "stress_score": s_stress,
-                    "sleep_score": s_sleep,
-                    "baseline": baseline,
-                    "z": z,
-                    "risks": risks,
-                    "actions": actions,
-                    "data_quality": dq,
-                    "flags": flags,
-                    "labels": ["Simulated"],
+            out = {
+                "astronaut_id": astro_id,
+                "mission_day": day,
+                "stress_score": s_stress,
+                "sleep_score": s_sleep,
+                "baseline": baseline,
+                "z": z,
+                "risks": risks,
+                "actions": actions,
+                "data_quality": dq,
+                "flags": flags,
+                "labels": ["Simulated"],
+            }
+            if analysis.ADAPTATION_MODEL == "curve":
+                # Optional block (see AGENTS.md section 4). Left out for the
+                # "window" model so its output stays identical to the old one.
+                offsets = {
+                    metric: round(analysis.adaptation_offset(metric, day), 2)
+                    for metric in baseline
                 }
-            )
+                out["adaptation"] = {
+                    "model": "curve",
+                    "baseline_days": list(baseline_days) if baseline_days else None,
+                    "fading": analysis.adaptation_fading(day),
+                    "offsets": {m: v for m, v in offsets.items() if abs(v) >= 0.01},
+                }
+            outputs.append(out)
+
+    return outputs
+
+
+def run_pipeline() -> list[dict[str, Any]]:
+    """Execute Tasks 1->4, persist SQLite/JSON/CSV/PDF outputs, and sync web bundles."""
+    df, events = generate_mission_data(output_dir=DATA_DIR)
+    outputs = score_records(df)
 
     # Attach H4 Isolation Forest anomaly scores & write data/anomaly_scores.json
     from hard.anomaly.anomaly import score_mission

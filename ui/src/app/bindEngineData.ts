@@ -417,6 +417,17 @@ function hydrateSidebar(
 }
 
 /** Returns compact status summary label for data_quality.status. */
+/** Mission days the personal baseline came from, e.g. "15–28" (engine adaptation curve) or "1–14". */
+function baselineDays(engine: EngineDayOutput): string {
+  const days = engine.adaptation?.baseline_days;
+  return days ? `${days[0]}–${days[1]}` : "1–14";
+}
+
+/** What the engine does about fluid shift on days 1–14 (curve model vs the older 0.45 dampening). */
+function adaptationNote(engine: EngineDayOutput): string {
+  return engine.adaptation?.model === "curve" ? "expected fluid-shift change removed" : "alerts dampened";
+}
+
 function formatDqLabel(status: EngineDayOutput["data_quality"]["status"]): string {
   switch (status) {
     case "check_device":
@@ -653,8 +664,8 @@ function hydrateAlertBanner(
     onActivate = () => state.openRiskScreen(topKey);
   } else {
     title = inAdaptation
-      ? "Adaptation phase (Days 1–14): baseline learning & alerts dampened"
-      : "All body systems nominal vs your personal Day 1–14 baseline";
+      ? `Adaptation phase (Days 1–14): ${adaptationNote(engine)}`
+      : `All body systems nominal vs your personal Day ${baselineDays(engine)} baseline`;
     body = `Sensor quality ${Math.round(record.signal_quality * 100)}% · Sleep ${record.sleep_hours.toFixed(1)} h · RHR ${record.rhr_bpm.toFixed(0)} bpm`;
     actionText = "Tool guides";
   }
@@ -714,7 +725,11 @@ function hydrateHealthHome(
       `Mission Day ${state.missionDay} of 180`,
       record.date,
       `${profile.id} ${profile.name}`,
-      inAdaptation ? "Adaptation phase (alerts dampened)" : formatDqLabel(engine.data_quality.status),
+      ...(inAdaptation && engine.adaptation?.model !== "curve"
+        ? ["Adaptation phase (alerts dampened)"]
+        : inAdaptation
+          ? ["Adaptation phase", formatDqLabel(engine.data_quality.status)]
+          : [formatDqLabel(engine.data_quality.status)]),
       ...(debugMode ? ["Simulated"] : [srcLabel]),
     ];
     setParagraphs(pageHeader, [[1, subParts.join(" · ")]]);
@@ -736,10 +751,12 @@ function hydrateHealthHome(
       scoreCard,
       "Health Score",
       String(todayComposite),
-      inAdaptation ? "Baseline building (Days 1–14)" : `Status: ${formatDqLabel(engine.data_quality.status)}`,
+      inAdaptation && engine.adaptation?.model !== "curve"
+        ? "Baseline building (Days 1–14)"
+        : `Status: ${formatDqLabel(engine.data_quality.status)}`,
       compositeScores,
       srcLabel,
-      "Composite indicator comparing stress, sleep, vitals & downstream risks to YOUR Day 1–14 baseline (not a diagnosis).",
+      `Composite indicator comparing stress, sleep, vitals & downstream risks to YOUR Day ${baselineDays(engine)} baseline (not a diagnosis).`,
     );
   }
 
@@ -756,7 +773,7 @@ function hydrateHealthHome(
     const tooltipP = floatingTooltip.querySelector("p");
     if (tooltipP) {
       tooltipP.textContent =
-        "Composite indicator comparing stress, sleep, vitals & downstream risks to YOUR Day 1–14 baseline (not a diagnosis).";
+        `Composite indicator comparing stress, sleep, vitals & downstream risks to YOUR Day ${baselineDays(engine)} baseline (not a diagnosis).`;
     }
     const infoEl = scoreCard?.querySelector<HTMLElement>('[data-name="icon/info"], [data-name="Info"]');
     if (infoEl) {
@@ -1031,7 +1048,7 @@ function hydrateRiskDetail(
               h(
                 "p",
                 { className: "boops-dyn-chain" },
-                "No elevated risk drivers detected relative to Days 1–14 baseline.",
+                `No elevated risk drivers detected relative to Days ${baselineDays(engine)} baseline.`,
               ),
             ),
           ];
@@ -1225,7 +1242,7 @@ function getDetailMetricSpec(
         bigText: String(score),
         subText: `of 100 · ${formatRiskLevel(lvl)}`,
         todayStat: `${score} / 100`,
-        baselineStat: "Days 1–14 baseline",
+        baselineStat: `Days ${baselineDays(engine)} baseline`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => composite(s.engine)),
@@ -1240,7 +1257,7 @@ function getDetailMetricSpec(
         bigText: String(Math.round(record.rhr_bpm)),
         subText: `bpm · ${formatRiskLevel(lvl)}`,
         todayStat: `${Math.round(record.rhr_bpm)} bpm`,
-        baselineStat: `${baseMean} bpm (Days 1–14)`,
+        baselineStat: `${baseMean} bpm (Days ${baselineDays(engine)})`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => Math.min(115, s.record?.rhr_bpm ?? 60)),
@@ -1254,7 +1271,7 @@ function getDetailMetricSpec(
         bigText: fmtHrv(record.hrv_rmssd_ms),
         subText: hasHrv(record.hrv_rmssd_ms) ? `ms · ${formatRiskLevel(lvl)}` : "Signal unavailable",
         todayStat: hasHrv(record.hrv_rmssd_ms) ? `${fmtHrv(record.hrv_rmssd_ms)} ms` : "Signal unavailable",
-        baselineStat: `${baseMean} ms (Days 1–14)`,
+        baselineStat: `${baseMean} ms (Days ${baselineDays(engine)})`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => s.record?.hrv_rmssd_ms ?? 50),
@@ -1348,7 +1365,7 @@ function getDetailMetricSpec(
         bigText: String(engine.stress_score),
         subText: `of 100 · ${formatRiskLevel(lvl)}`,
         todayStat: `${engine.stress_score} / 100`,
-        baselineStat: "< 45 / 100 (Days 1–14)",
+        baselineStat: `< 45 / 100 (Days ${baselineDays(engine)})`,
         statusLabel: formatRiskLevel(lvl),
         statusLevel: lvl,
         series: series.map((s) => s.engine.stress_score),
@@ -1444,7 +1461,7 @@ function getDetailMetricSpec(
         bigText: String(state.missionDay),
         subText: state.missionDay <= 14 ? "of 180 · Adaptation" : "of 180 · Normal",
         todayStat: `Day ${state.missionDay} of 180`,
-        baselineStat: "Days 1–14 baseline",
+        baselineStat: `Days ${baselineDays(engine)} baseline`,
         statusLabel: "Normal",
         statusLevel: "normal",
         series: series.map((s) => s.engine.mission_day),

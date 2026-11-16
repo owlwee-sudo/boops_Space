@@ -59,6 +59,7 @@ TREND_SIMILAR = 0.33  # ...and the neighbouring day must be at least a third as 
 # suggest_status
 LOW_SIGNAL_QUALITY = 0.6
 ANOMALY_AT = 0.5  # anomaly_score at or above this = unusual
+NOT_FLAGGED_MAX = 0.49  # highest score a day that is NOT flagged can show
 
 
 # ---------------------------------------------------------------------------
@@ -133,6 +134,12 @@ def score_astronaut(days, seed=SEED):
     # (The day after a glitch shows a big jump BACK to normal: that is not odd.)
     really_off = features["worst_z"].to_numpy() >= UNUSUAL_Z
     out["is_anomaly"] = (out["anomaly_score"] >= ANOMALY_AT) & really_off & ~in_baseline.to_numpy()
+    # Keep "anomaly_score >= 0.5 means unusual" true on every day. A day the
+    # forest scores high but that is not flagged (no vital is really off, or it
+    # is a baseline day) is capped just below the line instead of showing e.g.
+    # 0.536 next to is_anomaly = False.
+    not_flagged_high = ~out["is_anomaly"] & (out["anomaly_score"] >= ANOMALY_AT)
+    out.loc[not_flagged_high, "anomaly_score"] = NOT_FLAGGED_MAX
     out["point_vs_trend"] = point_vs_trend(features, out["is_anomaly"].to_numpy())
     out["top_factors"] = [_top_factors(features.iloc[i]) if flag else "" for i, flag in enumerate(out["is_anomaly"])]
     return out

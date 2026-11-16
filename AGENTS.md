@@ -53,6 +53,7 @@ Camera check: `python3 -m http.server 8000 --directory web`, then open `http://l
 Tests for the hard features: `node --test hard/rppg/test_rppg_core.mjs hard/face/test_face_core.mjs` and `pytest tests/`. Python packages: `pip install -r hard/requirements.txt`.
 WESAD stress model (needs the dataset, see `hard/wesad/README.md`): `python hard/wesad/train.py`.
 Anomaly scores: `python hard/anomaly/run_anomaly.py --merge` after the pipeline (or `--fixture` for a demo).
+Engine checks (after the pipeline): `python engine/confound_check.py` writes `data/confound_report.md` (do the scores just track mission day?), `python engine/thresholds.py` writes `data/threshold_report.md` (cost of a miss vs a false alarm). WESAD threshold: `python hard/wesad/thresholds.py` (needs `hard/wesad/cache/`).
 
 ---
 
@@ -74,7 +75,9 @@ risks{immune|musculoskeletal|cardio:{level: normal|watch|act, score 0–100, ada
       drivers[{factor, z, contribution, chain, evidence_stars 1–3, source_id}]}},
 actions[{rank, text, targets, evidence_stars}],
 data_quality{status: ok|check_device|check_yourself|act_now, reasons[], suggested_step, anomaly_score? (0–1, ≥ 0.5 unusual), anomaly_kind? (point|trend|new)},
-flags{infection_early_warning}, labels["Simulated"]
+flags{infection_early_warning}, labels["Simulated"],
+adaptation? {model: "curve", baseline_days [start, end] | null, fading (0–1, share of the launch fluid shift still expected), offsets{metric: expected change removed before the z-score}}
+      (only present when `ADAPTATION_MODEL = "curve"`; `risks.*.adaptation_phase` and the `adaptation_phase` driver stay as before)
 ```
 
 **Camera check log entry** (H1; appended to the `localStorage` list `ahm.log_entries`, see `web/camera/log-store.js`):
@@ -91,11 +94,12 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 ---
 
 ## 5. Key formulas & thresholds
-- **Personal baseline** = mean & SD from in-flight days 1–14. **z = (value − mean) / SD.**
+- **Personal baseline** = mean & SD from stable in-flight days 15–28 (falls back to days 1–14 until 14 good stable days exist). **z = (value − (mean + δ(t))) / SD**, with **δ(t) = A · exp(−t / τ)** the expected fluid-shift change on mission day t (`ADAPTATION_CURVES` in `engine/analysis.py`; `A` and `τ` are placeholders, not literature values). `ADAPTATION_MODEL = "window"` restores the old rule: baseline days 1–14, z = (value − mean) / SD, risk scores × 0.45 on days 1–14.
 - **Immune risk** = weighted sum of drivers normalised to 0–1:
   stress (HRV z) 0.30 · sleep deficit 0.25 · EVA in last 3 days 0.15 · radiation z 0.10 · time in flight (day/180) 0.10 · resting-HR jump or symptoms 0.10
 - **Levels:** < 40 Normal · 40–70 Watch · > 70 Act
 - **Infection early warning:** resting HR ≥ 2 SD above baseline for ≥ 2 days, not explained by EVA or exercise (Mishra et al. 2020)
+- **Harm-weighted thresholds:** a miss costs 5, a false alarm costs 1 (`MISS_COST`, `FALSE_ALARM_COST` in `engine/thresholds.py`; starting values). Used to pick the WESAD probability cut (`hard/wesad/model.json` → `decision.threshold`) and to document the infection-warning setting.
 - **Evidence stars:** ⭐⭐⭐ human data · ⭐⭐ animal + some human · ⭐ hypothesis
 - **Odd-reading funnel:** signal quality → plausibility (spike = device, trend = body) → cross-sensor agreement → context + ask the human. **Safety rule:** never delete readings; dangerous-if-real → act_now.
 
@@ -104,9 +108,9 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 ## 6. Demo story (planted in simulated data)
 | Day(s) | Who | Event | The app should show |
 |---|---|---|---|
-| 1–14 | All | Adaptation (fluid shift) | Alerts dampened, "adaptation phase" |
+| 1–14 | All | Adaptation (fluid shift) | Expected change removed from readings, "adaptation phase", all risks Normal |
 | 41, 120 | A1 | EVA | Stress ↑ |
-| 60–75 | A2 | Skips resistance exercise | Musculoskeletal risk ↑ |
+| 60–75 | A2 | Skips resistance exercise | Musculoskeletal risk ↑ (Watch from day 63, Act on 66–67 and 71–73). Known false alarm: infection early warning on days 61, 64, 73 (resting HR is 2 SD up from deconditioning) |
 | 88–94 | A1 | Bad sleep | Sleep score ↓, immune risk building |
 | 92–93 | All | Solar particle event | Alert banner + shelter protocol |
 | 95–96 | A1 | Infection, no symptoms yet | Resting-HR early warning **before** symptoms |
@@ -167,7 +171,7 @@ opt-in only (H2): facial_change_z (null until 14 checks), facial_change_level (l
 | Fix plan Phase 2 (`docs/fix-plan/01,02,04`): Emergency deep links (`#screen=EmergencyFainting&id=…`), missing HRV shows "—", Mindfulness stress/mood saved apart, Sleep "Nothing" chip exclusive, device logs capped apart from crew logs, Units toggle converts dose/temp/mass, landing 3D map = A1 Day 97 + engine weights, landing/legal copy fixes, content thresholds aligned + `sources` on every protocol/guide, all knowledge links cited, evidence map generated from JSON (41/83/107, nervous-system toggle, no Google Fonts) | Claude Code | claude/fix-plan-phase0 | ✅ done (pytest 88/88, node 18/18, `ui` typecheck, `/web` + `dist-site` built; checked in browser: deep link, Units, "My data" Settings, Mindfulness save, evidence map). Not done: TS↔Python engine parity port, 8 duplicate source pairs (kept: merging changes the 107 count) |
 | Fix plan Phase 3 (`docs/fix-plan/05` + PWA steps 3–4): muted text token #4b5563 (app, camera, landing, legal), >= 44 px tap areas on phone (stepper, rating circles, chips, buttons, close buttons, icon pads), toast clears the bottom nav, camera actions clear its bottom nav, z-index order, keyboard on emergency steps, Welcome focus trap + kept day + reduced motion, landing start dialog (panel, scroll, focus, focus ring), evidence map scrolls on phones, SW `/app/camera` + offline model message, `dist-site/_headers` (strict CSP for /app/*), camera inline scripts moved to `page-shell.js`, storage persist + JSON backup/restore in Settings | Claude Code | claude/fix-plan-phase0 | ✅ done (pytest 88/88, node 18/18, `ui` typecheck + `/web` + `ui/dist` + `dist-site` built; checked at 375 px: tap sizes, toast, camera, start dialog, evidence map). Not checked: offline reload with the server stopped (servers belong to other sessions), `/app` without a slash offline (outside the SW scope), APK/iOS/Tauri rebuilds |
 | Mission-day calendar dropdown: tap the "Day N / 180 · date" readout in any page header to pick a day from a month grid (Watch/Act dots, keyboard, Esc/back closes) | Claude Code | claude/fix-plan-phase0 | ✅ done (`ui` typecheck + offline `/web` + `ui/dist` built; checked in the browser at desktop and phone width. APK / iOS / Tauri rebuilds not run) |
-| Engine upgrade: adaptation curve for fluid shift, mission-day confound check, harm-weighted thresholds (`docs/engine-upgrade-handoff.md`) | Fable 5.2 | feat/hard-engine-upgrade | ⏳ todo (plan only, nothing built) |
+| Engine upgrade (`docs/engine-upgrade-handoff.md`): adaptation curve + stable baseline (T1), mission-day confound check (T2), harm-weighted thresholds (T3), tests (T4), FiLM roadmap note (T5) | Fable 5.2 | beta | ✅ done (pytest 115/115, node 18/18, `ui` typecheck + offline `/web` built; UI label changes not checked in a browser). Not done: full TS↔Python scorer port (handoff check 9; only the z-score offset and labels are mirrored), anomaly detector still uses days 1–14, `site/` landing copy still says "days 1–14 set the baseline", APK / iOS / Tauri rebuilds |
 
 Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note)
 
@@ -199,6 +203,10 @@ Status keys: ⏳ todo · 🛠 in progress · ✅ done · ⛔ blocked (add a note
 - 2026-11-15: Fix plan Phase 3. Shared muted text colour is #4b5563 (was #6b7280, 4.4:1 on the grey page background). On touch screens (`pointer: coarse` or width <= 1023 px) every control is at least 44 x 44 px; small icon buttons get an invisible 44 px tap pad instead of a bigger look. `/app/*` is served with a strict Content-Security-Policy (no inline scripts, `connect-src 'self'`), so app pages must keep scripts in files. Settings has "Back up all local data (JSON)" / "Restore from backup"; restore accepts only `boops*` / `ahm.*` keys with string values.
 - 2026-11-15: When `docs/quick-guide.md` (older stress-and-sleep plan) and `docs/submission-answers.md` disagree, the submission answers win, because they match the built app. The landing page follows them.
 - 2026-11-15: The landing site deploys as its own static-assets Worker `boops` on the custom domain `boops.owlwee.co`, separate from the `owlwee-co` portfolio Worker. No Worker script: everything in `dist-site/` is served as files.
+- 2026-11-16: Engine upgrade built. **Adaptation default = `"curve"`**: the expected fluid-shift change is removed from each reading before the z-score, and the 0.45 multiplier with its day-15 cliff is gone (`"window"` brings it back and, with `FLUID_SHIFT_SHAPE = "linear"` in the simulator, reproduces the old output exactly; a test pins this). **Baseline window = days 15–28**, falling back to days 1–14 (curve-corrected, so the shift is not removed twice) until 14 good stable days exist. Curve `A` and `τ` are placeholders equal to what the simulator plants, so the result on days 1–14 is true by construction; no literature numbers were invented. **Threshold cost ratio = 5 : 1** (miss : false alarm), a starting value. The infection warning stays at 2 SD / 2 days: 2.5 SD would remove the three A2 false alarms on our simulated mission, but our only labels are our own planted events, so we do not tune to them.
+- 2026-11-16: What the upgrade changed in the demo. The stable baseline is closer to the truth and more sensitive: healthy-day |z| ≥ 2 flags drop from 331 to 274 (HRV 41 → 0), but A2's deconditioning (days 60–75) now crosses 2 SD, giving 3 false infection-warning days, 5 "check yourself" days and bone & muscle Act on 5 days. A1 day 42 immune moves Act → Watch, days 92–93 Watch → Act; A1 day 79 gets one new "check device" (SpO₂ dip). The handoff's "fewer false alerts on days 1–14" could not be measured (there were none before or after), so the z-flag count replaces it.
+- 2026-11-16: Confound check result (`data/confound_report.md`): stress and sleep do not track mission day at all (R² 0.00). Bone & muscle risk is the weak spot: mission day alone explains 38 % of it and the time-in-flight driver is 58 % of all its points, because on healthy days that driver is nearly the whole score.
+- 2026-11-16: `anomaly_score` ≥ 0.5 now always means flagged: a day the forest scores high but that is not flagged is capped at 0.49.
 - 2026-11-16: Engine upgrade plan written (`docs/engine-upgrade-handoff.md`). Fluid shift is currently handled by a baseline taken from days 1–14 plus a 0.45 risk multiplier with a hard cutoff at day 15. Plan: correct the z-score with an adaptation curve and a stable-window baseline. A learned FiLM correction stays on the roadmap until real analog data exists. WESAD and Isolation Forest are already wired and stay optional second opinions.
 
 ---

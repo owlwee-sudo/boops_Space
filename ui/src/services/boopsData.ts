@@ -24,7 +24,7 @@ export const CREW_PROFILES: CrewProfile[] = [
 ];
 
 export const DEMO_JUMPS: Array<{ label: string; astronautId: "A1" | "A2" | "A3"; missionDay: number; note: string }> = [
-  { label: "Day 8 Adaptation", astronautId: "A1", missionDay: 8, note: "Fluid-shift adaptation window (alerts dampened)" },
+  { label: "Day 8 Adaptation", astronautId: "A1", missionDay: 8, note: "Fluid-shift adaptation window (days 1–14)" },
   { label: "Day 30 Glitch", astronautId: "A1", missionDay: 30, note: "Optical HR spike 220 bpm -> Check device" },
   { label: "Day 41 EVA", astronautId: "A1", missionDay: 41, note: "EVA workload raises stress + RHR" },
   { label: "Day 43 Post-EVA", astronautId: "A1", missionDay: 43, note: "Post-EVA recovery Watch window" },
@@ -79,6 +79,13 @@ export interface EngineDayOutput {
   };
   flags: {
     infection_early_warning: boolean;
+  };
+  /** Present only when the engine ran with ADAPTATION_MODEL = "curve" (AGENTS.md section 4). */
+  adaptation?: {
+    model: string;
+    baseline_days: [number, number] | null;
+    fading: number;
+    offsets: Record<string, number>;
   };
   labels: string[];
 }
@@ -866,7 +873,9 @@ function recomputeEngineFromRecord(
     const val = recordLookup[metric];
     if (typeof val === "number" && Number.isFinite(val)) {
       const sd = Math.max(Number(stats.sd) || 1, 1e-3);
-      nextZ[metric] = Number(((val - Number(stats.mean)) / sd).toFixed(2));
+      // Same fluid-shift correction as engine/analysis.py zscores() (0 when the engine sent none)
+      const offset = Number(baseEngine.adaptation?.offsets?.[metric]) || 0;
+      nextZ[metric] = Number(((val - offset - Number(stats.mean)) / sd).toFixed(2));
     }
   }
 

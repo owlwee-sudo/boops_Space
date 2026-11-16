@@ -11,9 +11,15 @@ Optional live solar-proton curve loading is disabled by default so the pipeline 
 from __future__ import annotations
 
 import json
+import math
+import sys
 from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
+
+# Let `python engine/generate_mission.py` find the `engine` package
+if str(Path(__file__).resolve().parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import numpy as np
 import pandas as pd
@@ -28,6 +34,17 @@ ALLOW_NETWORK_RADIATION = False  # Offline-first default (no runtime internet)
 NOAA_GOES_PROTON_URL = (
     "https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json"
 )
+
+# Shape of the planted fluid shift:
+#   "exp"    : A * exp(-day / tau), with A and tau read from
+#              engine.analysis.ADAPTATION_CURVES ("fluid_shift"). No cutoff day.
+#   "linear" : the old straight ramp that ends on day 15 (kept so the old
+#              outputs can be reproduced with ADAPTATION_MODEL = "window").
+# Honest note: with "exp" the simulator plants exactly the curve the engine
+# later removes. A clean result on days 1-14 is therefore true by construction
+# and says nothing about real crew data.
+FLUID_SHIFT_SHAPE = "exp"
+FLUID_SHIFT_TAUS = 6  # the planted shift stops after this many time constants (tau)
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT_DIR / "data"
@@ -124,8 +141,8 @@ PLANTED_EVENTS: list[dict[str, Any]] = [
         "end_day": 14,
         "type": "adaptation",
         "title": "Microgravity fluid-shift adaptation",
-        "description": "Cephalad fluid shift causes slightly higher RHR, ~10 mmHg lower BP, and lower HRV; forms personal in-flight baseline.",
-        "expected_signal": "Alerts dampened; labeled adaptation phase.",
+        "description": "Cephalad fluid shift causes slightly higher RHR, slightly lower BP, and lower HRV, fading over the first weeks. The personal baseline is taken from stable days 15-28.",
+        "expected_signal": "Expected change removed from readings; labeled adaptation phase.",
     },
     {
         "id": "a1_glitch_rhr",
@@ -250,6 +267,24 @@ def _load_spe_multipliers() -> tuple[float, float]:
     return 4.85, 3.45
 
 
+def _fluid_shift_curve() -> dict[str, dict[str, float]]:
+    """A and tau per metric for the planted fluid shift (shared with the engine)."""
+    from engine.analysis import ADAPTATION_CURVES
+
+    return next(c["metrics"] for c in ADAPTATION_CURVES if c["id"] == "fluid_shift")
+
+
+def _planted_shift(params: dict[str, float], day: int) -> float:
+    """A * exp(-day / tau), left out once it is below 0.3 % of A (6 time constants).
+
+    Without this, a shift of 0.0001 bpm would still tip values that sit exactly
+    on a rounding edge, changing readings months after the fluid shift is gone.
+    """
+    if day > FLUID_SHIFT_TAUS * params["tau"]:
+        return 0.0
+    return params["A"] * math.exp(-day / params["tau"])
+
+
 def generate_mission_data(
     seed: int = SEED,
     output_dir: Path | None = None,
@@ -302,8 +337,14 @@ def generate_mission_data(
             symptoms = ""
             signal_quality = float(np.clip(rng.normal(0.95, 0.03), 0.85, 0.99))
 
-            # Adaptation phase (days 1-14): fluid shift shifts RHR slightly up, BP down, HRV slightly down
-            if day <= 14:
+            # Fluid shift: RHR slightly up, BP down, HRV slightly down, fading with time
+            if FLUID_SHIFT_SHAPE == "exp":
+                shift = _fluid_shift_curve()
+                rhr += _planted_shift(shift["rhr_bpm"], day)
+                hrv += _planted_shift(shift["hrv_rmssd_ms"], day)
+                sbp += _planted_shift(shift["sbp_mmhg"], day)
+                dbp += _planted_shift(shift["dbp_mmhg"], day)
+            elif day <= 14:
                 decay = (15 - day) / 14.0
                 rhr += 0.9 * decay
                 hrv -= 1.5 * decay
