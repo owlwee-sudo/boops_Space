@@ -6,6 +6,9 @@
  * while mounting:
  *   /            -> site/index.html (Landing page with GitHub & Download CTAs)
  *   /legal.html  -> site/legal.html (Disclaimers, privacy, citations, licenses)
+ *   /404.html    -> site/404.html (served by Cloudflare for any missing path, see wrangler.jsonc)
+ * Every site page outside /app/ shares site/base.css and the same header + footer links
+ * (checked below, so the pages cannot drift apart again).
  *   /downloads/  -> Bundled Android APK, Flight Surgeon Summary PDF, Simulated CSV
  *   /knowledge/  -> knowledge/web/index.html (Interactive evidence map)
  *   /app/        -> a copy of web/ (the crew app) plus pwa/ (manifest, service worker), so the
@@ -154,7 +157,8 @@ function validateLocalRefs(htmlFile) {
       raw.startsWith("https://") ||
       raw.startsWith("mailto:") ||
       raw.startsWith("#") ||
-      raw.startsWith("data:")
+      raw.startsWith("data:") ||
+      /['+$]/.test(raw) // built in a script (e.g. the evidence map's source links), not a file path
     ) {
       continue;
     }
@@ -171,11 +175,38 @@ function validateLocalRefs(htmlFile) {
   return missing;
 }
 
+/**
+ * The landing, legal and 404 pages must show the same header and footer links.
+ * Compares the link targets (normalised to the landing page's own "#section" form).
+ */
+function checkSharedChrome() {
+  const pages = ["index.html", "legal.html", "404.html"];
+  const norm = (href) => href.replace(/^\/(?=#)/, "").replace(/^\.\/index\.html(?=#)/, "").replace(/^\//, "./");
+  const linksIn = (html, cls) => {
+    const block = html.match(new RegExp(`<nav class="${cls}"[\\s\\S]*?</nav>`));
+    if (!block) return null;
+    return [...block[0].matchAll(/href="([^"]+)"/g)].map((m) => norm(m[1])).join(" ");
+  };
+  const ref = fs.readFileSync(path.join(SITE_DIR, pages[0]), "utf8");
+  for (const page of pages.slice(1)) {
+    const html = fs.readFileSync(path.join(SITE_DIR, page), "utf8");
+    for (const cls of ["nav-links", "footer-links"]) {
+      if (linksIn(html, cls) !== linksIn(ref, cls)) {
+        throw new Error(`site/${page}: .${cls} links differ from site/index.html (copy the landing header/footer)`);
+      }
+    }
+    if (!html.includes('href="./base.css"') && !html.includes('href="/base.css"')) {
+      throw new Error(`site/${page}: must link base.css`);
+    }
+  }
+}
+
 function main() {
   for (const required of [
     path.join(SITE_DIR, "index.html"),
     path.join(SITE_DIR, "legal.html"),
-    path.join(SITE_DIR, "styles.css"),
+    path.join(SITE_DIR, "base.css"),
+    path.join(SITE_DIR, "404.html"),
     path.join(WEB_DIR, "boops-logo.svg"),
     path.join(WEB_DIR, "index.html"),
     path.join(WEB_DIR, "app.js"),
@@ -271,11 +302,13 @@ function main() {
   const missing = [
     ...validateLocalRefs(path.join(DIST_DIR, "index.html")),
     ...validateLocalRefs(path.join(DIST_DIR, "legal.html")),
+    ...validateLocalRefs(path.join(DIST_DIR, "knowledge", "index.html")),
     ...APP_HTML_PAGES.flatMap((page) => validateLocalRefs(path.join(DIST_DIR, "app", page))),
   ];
   if (missing.length > 0) {
     throw new Error(`Broken local links/assets detected:\n- ${missing.join("\n- ")}`);
   }
+  checkSharedChrome();
 
   // Check Cloudflare static asset constraints
   const files = walkFiles(DIST_DIR);

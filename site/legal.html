@@ -3,87 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Legal, Privacy, Disclaimers &amp; Citations — BOOPS</title>
+  <title>Legal, Privacy, Disclaimers &amp; Citations · BOOPS</title>
   <meta
     name="description"
     content="Medical disclaimer, simulated data disclosure, on-device privacy policy, scientific citations, and open-source attributions for BOOPS."
   />
   <link rel="icon" href="./assets/boops-logo.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="preload" href="./assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./legal.css" />
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header">
-    <div class="container nav-inner">
-      <a class="brand" href="./index.html" aria-label="BOOPS Home">
-        <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="38" height="38" />
-        <span class="brand-text">
-          <span class="brand-title">BOOPS</span>
-          <span class="brand-sub">NASA Space Apps 2026 · Offline Crew Health</span>
-        </span>
+  <header class="nav is-solid" id="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="./index.html" aria-label="BOOPS home">
+        <img src="./assets/boops-logo.svg" alt="" width="26" height="26" />
+        BOOPS
       </a>
-
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a class="nav-link" href="./index.html">Home</a>
-        <a class="nav-link" href="./index.html#about">About</a>
-        <a class="nav-link" href="./index.html#scenarios">Scenarios</a>
-        <a class="nav-link" href="./index.html#conclusion">Conclusion</a>
-        <a class="nav-link" href="./index.html#download">Download</a>
-        <a class="nav-link" href="./knowledge/">Evidence Map</a>
-        <a class="nav-link" href="./legal.html" aria-current="page">Legal &amp; Privacy</a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="./index.html#app">App</a>
+        <a href="./index.html#how-it-works">How it works</a>
+        <a href="./index.html#scenarios">Scenarios</a>
+        <a href="./index.html#conclusion">Findings</a>
+        <a href="./index.html#faq">FAQ</a>
       </nav>
-
       <div class="nav-actions">
-        <a
-          class="btn btn-secondary"
-          href="https://github.com/owlwee-sudo/boops_Space"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
-        <a class="btn btn-primary btn-pill-cta" href="./index.html#download">
-          Download
-          <span class="btn-icon-circle" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14"/>
-              <path d="m19 12-7 7-7-7"/>
-            </svg>
-          </span>
-        </a>
+        <a class="btn btn-light btn-sm" href="https://github.com/owlwee-sudo/boops_Space" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn btn-dark btn-sm" href="./index.html#download">Download</a>
       </div>
     </div>
   </header>
 
-  <main id="main-content">
-    <section class="legal-hero">
-      <div class="container">
-        <div class="eyebrow-row">
-          <span class="badge badge-act">Prototype · Not a medical device</span>
-          <span class="badge">NASA Space Apps Challenge 2026</span>
-        </div>
-        <h1>Legal Notices, Medical Disclaimer, Privacy &amp; Attributions</h1>
-        <p>
-          Transparency and scientific traceability are core principles of BOOPS (Biobehavioral Observation
-          &amp; Offline Predictive System). Below are the prototype boundaries, privacy guarantees,
-          simulated-data labels, scientific references, and third-party software notices.
+  <main id="main">
+    <section class="page-hero">
+      <div class="wrap">
+        <span class="chip"><span class="chip-dot act"></span>Prototype · Not a medical device</span>
+        <h1>Legal &amp; privacy</h1>
+        <p class="lead">
+          Medical disclaimer, simulated-data labels, privacy, scientific references and third-party software notices
+          for BOOPS (Biobehavioral Observation &amp; Offline Predictive System), our NASA Space Apps Challenge 2026 prototype.
         </p>
-
-        <nav class="toc-pills" aria-label="Legal page sections">
-          <a class="toc-pill" href="#medical-disclaimer">1. Medical &amp; Safety Disclaimer</a>
-          <a class="toc-pill" href="#simulated-data">2. Simulated &amp; Reference Data</a>
-          <a class="toc-pill" href="#privacy">3. Privacy &amp; On-Device Camera</a>
-          <a class="toc-pill" href="#citations">4. Scientific Citations</a>
-          <a class="toc-pill" href="#licenses">5. Software &amp; Attributions</a>
-          <a class="toc-pill" href="#liability">6. Warranty &amp; Contact</a>
-        </nav>
       </div>
     </section>
 
-    <section class="container legal-stack">
+    <div class="wrap legal-layout">
+      <nav class="legal-toc" aria-label="On this page">
+        <p class="legal-toc-title">On this page</p>
+        <ol>
+          <li><a href="#medical-disclaimer">Medical &amp; safety disclaimer</a></li>
+          <li><a href="#simulated-data">Simulated &amp; reference data</a></li>
+          <li><a href="#privacy">Privacy &amp; on-device camera</a></li>
+          <li><a href="#citations">Scientific citations</a></li>
+          <li><a href="#licenses">Software &amp; attributions</a></li>
+          <li><a href="#liability">Warranty &amp; contact</a></li>
+        </ol>
+      </nav>
+
+      <div class="legal-body">
       <!-- 1. Medical Disclaimer -->
-      <article id="medical-disclaimer" class="callout callout-danger legal-card">
+      <article id="medical-disclaimer" class="legal-card is-danger">
         <h2>1. Medical &amp; Flight-Safety Disclaimer</h2>
         <p>
           <strong>Prototype · Not a medical device.</strong> BOOPS was created as a demonstration project for the
@@ -113,7 +93,7 @@
       </article>
 
       <!-- 2. Simulated & Reference Data -->
-      <article id="simulated-data" class="card legal-card">
+      <article id="simulated-data" class="legal-card">
         <h2>2. Simulated &amp; Reference Data Disclosure</h2>
         <p>
           Because public day-by-day astronaut longitudinal clinical telemetry is not available, the offline BOOPS
@@ -138,7 +118,7 @@
       </article>
 
       <!-- 3. Privacy & On-Device Processing -->
-      <article id="privacy" class="card legal-card">
+      <article id="privacy" class="legal-card">
         <h2>3. Privacy, Offline Storage &amp; On-Device Camera Policy</h2>
         <p>
           BOOPS is engineered around <strong>crew-first privacy</strong> and zero runtime cloud dependencies.
@@ -173,16 +153,15 @@
             emergencies default to shared.
           </li>
           <li>
-            <strong>External stylesheet note for the Evidence Map:</strong> While the home page, legal page, and offline
-            BOOPS workstation make zero external network requests, the standalone interactive knowledge graph at
-            <a class="link-inline" href="./knowledge/"><code>/knowledge/</code></a> references <code>fonts.googleapis.com</code>
-            for <em>IBM Plex Sans</em> and <em>IBM Plex Mono</em> when online and falls back gracefully to local system fonts when offline.
+            <strong>No external requests:</strong> The home page, this legal page, the
+            <a class="link-inline" href="./knowledge/">Evidence Map</a> and the offline BOOPS app load no fonts, scripts or
+            styles from other servers. The Inter font is self-hosted, and pages fall back to system fonts when it is missing.
           </li>
         </ul>
       </article>
 
       <!-- 4. Scientific Citations -->
-      <article id="citations" class="card legal-card">
+      <article id="citations" class="legal-card">
         <h2>4. Key Scientific Citations &amp; Datasets</h2>
         <p>
           BOOPS cites <strong>107 sources</strong> across <strong>41 physiological concepts</strong> and
@@ -191,7 +170,7 @@
           risk engine, rPPG module, and evaluation include:
         </p>
 
-        <div class="table-wrap" style="margin-top: 14px;">
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -247,14 +226,14 @@
       </article>
 
       <!-- 5. Open-Source Software & Attributions -->
-      <article id="licenses" class="card legal-card">
+      <article id="licenses" class="legal-card">
         <h2>5. Open-Source Software &amp; Third-Party Attributions</h2>
         <p>
           BOOPS bundles and builds upon open-source libraries and public research tooling. Specific attributions
           verified in this repository include:
         </p>
 
-        <div class="table-wrap" style="margin-top: 14px;">
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -312,7 +291,7 @@
       </article>
 
       <!-- 6. Warranty & Contact -->
-      <article id="liability" class="card legal-card">
+      <article id="liability" class="legal-card">
         <h2>6. No Warranty, Limitation of Liability &amp; Contact</h2>
         <p>
           THIS PROTOTYPE SOFTWARE AND ACCOMPANYING DOCUMENTATION ARE PROVIDED ON AN <strong>"AS IS"</strong> AND
@@ -331,48 +310,29 @@
           >https://github.com/owlwee-sudo/boops_Space</a>.
         </p>
       </article>
-    </section>
+    </div>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
+  <footer class="footer">
+    <div class="wrap">
       <div class="footer-top">
-        <a class="brand" href="./index.html">
-          <img class="brand-logo" src="./assets/boops-logo.svg" alt="" width="34" height="34" />
-          <span class="brand-text">
-            <span class="brand-title">BOOPS</span>
-            <span class="brand-sub">Biobehavioral Observation &amp; Offline Predictive System</span>
-          </span>
+        <a class="brand" href="./index.html" aria-label="BOOPS home">
+          <img src="./assets/boops-logo.svg" alt="" width="26" height="26" />
+          BOOPS
         </a>
-
-        <nav class="footer-links" aria-label="Footer navigation">
-          <a href="./index.html">Home</a>
-          <a href="./index.html#conclusion">Conclusion</a>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="./index.html#app">App</a>
+          <a href="./index.html#how-it-works">How it works</a>
+          <a href="./index.html#scenarios">Scenarios</a>
           <a href="./index.html#download">Download</a>
-          <a href="./knowledge/">Evidence Map</a>
-          <a
-            href="https://github.com/owlwee-sudo/boops_Space"
-            target="_blank"
-            rel="noopener noreferrer"
-          >GitHub Repository</a>
+          <a href="./knowledge/">Evidence map</a>
+          <a href="./legal.html" aria-current="page">Legal &amp; privacy</a>
         </nav>
-
-        <a class="btn btn-primary btn-pill-cta" href="./index.html#download">
-          Download
-          <span class="btn-icon-circle" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 5v14"/>
-              <path d="m19 12-7 7-7-7"/>
-            </svg>
-          </span>
-        </a>
       </div>
-
       <div class="footer-bottom">
-        <div>
-          <p class="footer-disclaimer">Prototype · Not a medical device · Telemetry labeled Simulated</p>
-          <span>Offline crew-first health risk indicator prototype for NASA Space Apps Challenge 2026.</span>
-        </div>
+        <span><strong>Prototype · Not a medical device.</strong> All sample data is labeled Simulated.</span>
+        <span>Biobehavioral Observation &amp; Offline Predictive System · NASA Space Apps Challenge 2026</span>
       </div>
     </div>
   </footer>

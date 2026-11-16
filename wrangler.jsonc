@@ -7,7 +7,9 @@
   "name": "boops",
   "compatibility_date": "2026-11-01",
   "assets": {
-    "directory": "./dist-site"
+    "directory": "./dist-site",
+    // Missing paths get site/404.html (same header/footer as the landing page).
+    "not_found_handling": "404-page"
   },
   "routes": [
     { "pattern": "boops.owlwee.co", "custom_domain": true }

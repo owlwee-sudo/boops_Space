@@ -1,106 +1,10 @@
-/* BOOPS landing page. Clean, flat, white. No gradients. */
+/* BOOPS landing page only. Shared theme (tokens, nav, buttons, footer) is in base.css. */
 
-@font-face {
-  font-family: "Inter Local";
-  src: url("./assets/fonts/inter-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-:root {
-  --ink: #0a0a0a;
-  --ink-2: #3f3f46;
-  --muted: #52525b; /* was #71717a: 4.4:1 on --band */
-  --faint: #a1a1aa;
-  --line: #e4e4e7;
-  --band: #f4f4f5;
-  --card: #ffffff;
-  --act: #dc2626;
-  --watch: #d97706;
-  --normal: #16a34a;
-  --radius: 20px;
-  --font: "Inter Local", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --max: 1200px;
-}
-
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-
-body {
-  margin: 0;
-  background: #ffffff;
-  color: var(--ink);
-  font-family: var(--font);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-img { max-width: 100%; display: block; }
-a { color: inherit; }
-code { font-family: var(--mono); font-size: 0.88em; background: var(--band); padding: 1px 6px; border-radius: 6px; }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
-
-.skip-link { position: absolute; left: -999px; top: 8px; }
-.skip-link:focus { left: 16px; z-index: 100; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 999px; }
-
-.wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-.band { background: var(--band); }
 .section { padding: 112px 0; }
-
-/* ---------- Nav ---------- */
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: saturate(1.4) blur(10px);
-  -webkit-backdrop-filter: saturate(1.4) blur(10px);
-  border-bottom: 1px solid transparent;
-}
-.nav.is-scrolled { border-bottom-color: var(--line); }
-.nav-inner { display: flex; align-items: center; gap: 16px; height: 64px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; letter-spacing: -0.02em; font-size: 17px; }
-.brand img { width: 26px; height: 26px; }
-.nav-links {
-  display: flex; gap: 2px; margin: 0 auto;
-  padding: 4px; border-radius: 999px; background: var(--band);
-}
-.nav-links a {
-  text-decoration: none; font-size: 13px; color: var(--ink-2);
-  padding: 6px 12px; border-radius: 999px;
-}
-.nav-links a:hover { background: #ffffff; color: var(--ink); }
-.nav-actions { display: flex; gap: 8px; }
-
-/* ---------- Buttons ---------- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 40px; padding: 0 18px; border-radius: 999px;
-  font: 500 14px/1 var(--font); text-decoration: none; white-space: nowrap;
-  border: 1px solid transparent; cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
-}
-.btn-dark { background: var(--ink); color: #ffffff; }
-.btn-dark:hover { background: #27272a; }
-.btn-light { background: #ffffff; color: var(--ink); border-color: var(--line); }
-.btn-light:hover { border-color: var(--faint); }
-.btn-sm { height: 34px; padding: 0 14px; font-size: 13px; }
-.btn svg { width: 15px; height: 15px; flex: none; }
 
 /* ---------- Hero ---------- */
 .hero { padding: 88px 0 0; overflow: hidden; }
 .hero-grid { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 28px 56px; margin-top: 36px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--ink-2);
-  padding: 5px 12px 5px 10px; border-radius: 999px;
-  border: 1px solid var(--line); background: #ffffff;
-}
-.chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--normal); }
 h1 {
   margin: 22px 0 0;
   font-size: clamp(44px, 7.4vw, 96px);
@@ -249,17 +153,8 @@ h2 {
 /* ---------- Final CTA + footer ---------- */
 .cta { text-align: center; }
 .cta .hero-actions { justify-content: center; }
-.footer { border-top: 1px solid var(--line); padding: 40px 0 48px; font-size: 13px; color: var(--muted); }
-.footer-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
-.footer-links a { text-decoration: none; color: var(--ink-2); }
-.footer-links a:hover { color: var(--ink); }
-.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; margin-top: 28px; }
-.footer strong { color: var(--ink); font-weight: 600; }
-
 /* ---------- Responsive ---------- */
 @media (max-width: 1000px) {
-  .nav-links { display: none; }
   .hero-grid, .split, .phone-row { grid-template-columns: 1fr; gap: 36px; }
   .steps { grid-template-columns: repeat(2, 1fr); }
   .phone-row { justify-items: center; text-align: left; }
@@ -267,10 +162,8 @@ h2 {
   .row { grid-template-columns: 1fr; gap: 8px; }
 }
 @media (max-width: 640px) {
-  .wrap { padding: 0 16px; }
   .section { padding: 80px 0; }
   .hero { padding-top: 56px; }
-  .nav-actions .btn-light { display: none; }
   .steps, .cards { grid-template-columns: 1fr; }
   .frame { padding: 5px; border-radius: 14px; }
   .frame img { border-radius: 10px; }
@@ -315,10 +208,6 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .discover-fill, .discover-label, .discover-arrow svg { transition: none; }
 }
-.btn-tall { height: 48px; padding: 0 22px; font-size: 15px; }
-section[id], div[id] { scroll-margin-top: 72px; }
-.nav-actions { margin-left: auto; }
-@media (min-width: 1001px) { .nav-actions { margin-left: 0; } }
 
 /* ---------- Start choice pop-up (demo or your own data) ---------- */
 .start-dialog {
