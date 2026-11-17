@@ -16,6 +16,7 @@ import {
   type DataMode,
   loadPersonalProfile,
   markWelcomeComplete,
+  personalMissionDayToday,
   savePersonalProfile,
   setDataMode,
   startDateForMissionDay,
@@ -228,7 +229,8 @@ export function showWelcome(opts: WelcomeOptions): () => void {
       inputmode: "numeric",
       min: "1",
       max: "180",
-      value: "1",
+      // Returning users keep their mission day instead of being reset to day 1.
+      value: existing ? String(personalMissionDayToday()) : "1",
     }) as HTMLInputElement;
     const error = h("p", { className: "boops-welcome-error", role: "alert" });
 
@@ -300,7 +302,28 @@ export function showWelcome(opts: WelcomeOptions): () => void {
   }
 
   layer.addEventListener("keydown", (ev) => {
-    if (ev.key === "Escape" && opts.dismissible) close();
+    if (ev.key === "Escape" && opts.dismissible) {
+      close();
+      return;
+    }
+    // Keep Tab / Shift+Tab inside the dialog (aria-modal).
+    if (ev.key !== "Tab") return;
+    const focusable = Array.from(
+      card.querySelectorAll<HTMLElement>('button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'),
+    ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (ev.shiftKey && document.activeElement === first) {
+      ev.preventDefault();
+      last.focus();
+    } else if (!ev.shiftKey && document.activeElement === last) {
+      ev.preventDefault();
+      first.focus();
+    } else if (!card.contains(document.activeElement)) {
+      ev.preventDefault();
+      first.focus();
+    }
   });
 
   document.documentElement.classList.add("boops-welcome-open");

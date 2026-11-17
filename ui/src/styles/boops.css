@@ -201,7 +201,7 @@
   gap: 8px;
   flex-wrap: wrap;
   font-size: 11px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .boops-dyn-pill {
@@ -399,7 +399,7 @@
 
 .boops-em-section-sub {
   font-size: 12px;
-  color: #6b7280;
+  color: #4b5563;
   margin: 2px 0 4px 0;
 }
 
@@ -635,7 +635,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b7280;
+  color: #4b5563;
   margin-bottom: 4px;
 }
 
@@ -683,7 +683,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b7280;
+  color: #4b5563;
   margin: 0;
 }
 
@@ -754,7 +754,7 @@
 .boops-drawer-meta {
   font-size: 11px;
   line-height: 1.45;
-  color: #6b7280;
+  color: #4b5563;
   margin: 0;
   padding-top: 2px;
 }
@@ -770,7 +770,8 @@
 .boops-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 95;
+  /* above the mobile sidebar drawer (95); below Welcome (1000) and the toast */
+  z-index: 120;
   background: rgba(17, 24, 39, 0.55);
   display: flex;
   align-items: center;
@@ -815,7 +816,7 @@
 
 .boops-modal-sub {
   font-size: 12px;
-  color: #6b7280;
+  color: #4b5563;
   margin: 2px 0 0 0;
 }
 
@@ -851,7 +852,7 @@
 .boops-modal-locked {
   font-size: 12px;
   font-weight: 600;
-  color: #059669;
+  color: #047857;
 }
 
 .boops-modal-preview-wrap {
@@ -926,7 +927,7 @@
   background: #ffffff;
   border-top: 1px solid #e5e7eb;
   font-size: 12px;
-  color: #6b7280;
+  color: #4b5563;
   font-family: "Inter Variable", "Inter", system-ui, sans-serif;
 }
 
@@ -1032,7 +1033,7 @@
   padding: 4px 8px;
   border-radius: 10px;
   background: var(--color-bg-surface, #f4f5f7);
-  color: var(--color-text-muted, #6b7280);
+  color: var(--color-text-muted, #4b5563);
   font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
@@ -1104,7 +1105,7 @@
   right: 0;
   display: flex;
   transform: translateY(-50%);
-  color: var(--color-text-muted, #9ca3af);
+  color: var(--color-text-muted, #525866);
   opacity: 0.7;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -1361,7 +1362,7 @@
 
 .boops-mind-camera-status {
   font-size: 11px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .boops-mind-camera-desc {
@@ -1449,7 +1450,7 @@ body {
     padding: 2px 0;
     border: 0;
     background: transparent;
-    color: #6b7280;
+    color: #4b5563;
     font: inherit;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -2220,7 +2221,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b7280;
+  color: #4b5563;
   margin: 2px 0 0 0;
 }
 
@@ -2262,7 +2263,7 @@ body {
 .boops-hub-empty {
   font-size: 12px;
   line-height: 1.4;
-  color: #6b7280;
+  color: #4b5563;
   margin: 0;
   word-break: break-word;
 }
@@ -2340,7 +2341,62 @@ body {
 .figma-artboard .boops-today-btn.is-current-day {
   background: transparent;
   border-color: transparent;
-  color: #9ca3af;
+  color: #6b7280; /* 4.8:1 on white (was #9ca3af, 2.5:1) */
+}
+
+/* ---- Touch targets (WCAG 2.5.5): every control gets a >= 44 x 44 px hit area ---- */
+/* Small icon buttons keep their look; an invisible ::after pad makes the hit area 44 px. */
+.boops-stepper-btn,
+.boops-mobile-drawer-close,
+.figma-artboard [data-name="icon/info"],
+.figma-artboard [data-name="icon/edit"],
+.figma-artboard [data-name="Toggle"] {
+  position: relative;
+}
+.boops-stepper-btn::after,
+.boops-mobile-drawer-close::after,
+.figma-artboard [data-name="icon/info"]::after,
+.figma-artboard [data-name="icon/edit"]::after,
+.figma-artboard [data-name="Toggle"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+@media (pointer: coarse), (max-width: 1023px) {
+  /* Fingers: real 44 px boxes, not just padding. */
+  .figma-artboard .boops-stepper-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .figma-artboard .boops-today-btn,
+  .figma-artboard .boops-day-readout,
+  .figma-artboard .boops-inline-btn,
+  .figma-artboard .boops-btn,
+  .figma-artboard [data-name="Chip"] {
+    min-height: 44px;
+  }
+  .figma-artboard [data-name="Options"] > div {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .figma-artboard [data-name="Options"] {
+    flex-wrap: wrap;
+  }
+  .figma-artboard [data-name="Chip"] {
+    align-items: center;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* Toast sits above the fixed bottom nav (Home, Vitals, Log, SOS, More), never on it. */
+  html body .figma-toast {
+    bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+  }
 }
 
 @media (max-width: 1023px) {
@@ -2390,7 +2446,7 @@ body {
 
 .boops-day-trigger-caret {
   flex: none;
-  color: #6b7280;
+  color: #4b5563;
   transition: transform 0.15s ease;
 }
 
@@ -2459,7 +2515,7 @@ body {
   text-align: center;
   font-size: 11px;
   font-weight: 500;
-  color: #6b7280;
+  color: #4b5563;
   padding-bottom: 4px;
 }
 
@@ -2530,7 +2586,7 @@ body {
   padding-top: 10px;
   border-top: 1px solid #f3f4f6;
   font-size: 11px;
-  color: #6b7280;
+  color: #4b5563;
 }
 
 .boops-cal-legend {

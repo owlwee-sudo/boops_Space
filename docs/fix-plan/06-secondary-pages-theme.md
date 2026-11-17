@@ -1,0 +1,89 @@
+# 06 · Secondary pages: bring them into the landing theme
+
+Scope: every page that is **not** the landing page (`site/index.html`) and **not** the crew app (`web/`, `/app/`).
+**Status: done 2026-11-16** (see the AGENTS.md status board). Done differently from the plan: header/footer are copied by hand (no partials), and `build-site.mjs` checks that their links match the landing page.
+
+Checked on 2026-11-16 in the browser at 1440 px and 375 px, light and dark OS theme, from `dist-site/` (`node tools/build-site.mjs`).
+
+## Reference theme (landing, `site/home.css`)
+- White page, `--band #f4f4f5` grey bands, flat colours, **no gradients**, no lime/emerald accent.
+- Ink `#0a0a0a`, muted `#52525b`, lines `#e4e4e7`, status colours only for risk (`--act/--watch/--normal`).
+- Font: self-hosted **Inter Local** (`assets/fonts/inter-latin.woff2`).
+- Header: single row, 64 px, logo + "BOOPS", pill nav group on `--band`, `GitHub` (light) + `Download` (dark) small pill buttons.
+- Footer: brand + footer links, then "Prototype · Not a medical device" line.
+- Light only (no dark mode).
+
+## Pages found
+
+| Page | Served at | In theme? |
+|---|---|---|
+| Legal & privacy | `site/legal.html` → `/legal.html` | ❌ uses the old `styles.css` |
+| Evidence map | `knowledge/web/index.html` → `/knowledge/` | ❌ its own stand-alone look |
+| Camera check | `web/camera/` → `/app/camera/` | ✅ part of the app, matches the app (no change) |
+| Debug | `web/debug.html` | dev-only, not shipped (skipped by the build), no change |
+| Downloads (`/downloads/*.apk/.pdf/.csv`) | files, no page | no change (PDF look is out of scope) |
+| 404 | none | ⚠️ Cloudflare shows its default page |
+
+## 1. Legal page (`site/legal.html`, `site/styles.css`)
+
+What is off:
+1. Links the **old 2 649-line `styles.css`** ("Figma + Cosmos Editorial" tokens): lime `#c6f432` accent, emerald buttons, different greys (`#f3f5f7`, `#111827`), different radii and shadows.
+2. **Different header**: two-line brand with "NASA Space Apps 2026 · Offline Crew Health" sub-title, 38 px logo, flat nav bar under it, `Download` button with a **lime circle arrow icon**. On phones the header is 3 rows tall (~200 px) and the nav wraps.
+3. **Nav links don't match the landing**: Home / About / Scenarios / Conclusion / Download / Evidence Map / Legal. Landing has App / How it works / Scenarios / Findings / FAQ. `#about` lands on the hero, not a section.
+4. **Font not loaded**: asks for `"Inter Variable"` with no `@font-face`, so it falls back to the system font on most machines (landing self-hosts Inter).
+5. Section 1 card is a **filled pink panel** with red border; other cards have shadows. Landing uses flat white/band cards with 1 px lines.
+6. Tags ("Prototype · Not a medical device" red pill, "NASA Space Apps Challenge 2026" grey pill) and the jump links styled as outlined pills that look like buttons.
+7. Different footer (own links "Home · Conclusion · Download · Evidence Map · GitHub Repository", green Download button).
+
+Fix:
+- [ ] Switch `legal.html` to `home.css` + a small `legal.css` (only the legal-specific bits: long-text width ~760 px, tables, section headings, table-of-contents list). Copy the **exact landing header and footer markup**, with links rewritten to `./index.html#app` etc. and `aria-current="page"` on a "Legal" footer link.
+- [ ] Hero: same kicker pill + `h1` scale as landing section titles; one muted intro paragraph.
+- [ ] Contents: a plain numbered list (or a sticky left list on ≥ 1024 px), not button-like pills.
+- [ ] Sections: white cards with `1px var(--line)` border and `--radius`, no shadow. Medical disclaimer keeps a **thin red left border + red heading** only (no pink fill) so it still stands out.
+- [ ] Tables: `--band` header row, 1 px lines, horizontal scroll wrapper on phones.
+- [ ] Delete `site/styles.css` once nothing links it (`grep -r styles.css site tools`), and drop it from `build-site.mjs` if it is copied explicitly. Update the Decisions log line that says "`legal.html` keeps `styles.css`".
+- [ ] Keep all legal text unchanged (copy work is out of scope).
+
+## 2. Evidence map (`knowledge/web/index.html`)
+
+What is off:
+1. **No BOOPS header or footer, no way back** to the landing or app (only link on the page is `?layer=all`). No favicon.
+2. Title "Astronaut Health Relationship Web" and sub-line "built from your research notes (13 Nov 2026)", which reads like an internal note.
+3. **Follows OS dark mode** (`#0e131b` navy background) while every other site page is light only. In light mode it is blue-grey `#eef1f5` with a blue `#2f5bd3` accent; landing has neither.
+4. System font instead of Inter.
+5. Panel tabs, chips and "Strongest evidence only ⭐⭐⭐" toggle use their own chip style, not the landing pills.
+6. Node category colours (stressor orange, hub purple, outcome pink, …) are data colours: **keep them**, they carry meaning.
+
+Fix (edit the template part of `knowledge/web/index.html`; the data block is generated by `node tools/build-docs.mjs`, so keep its markers intact and re-run the script after):
+- [ ] Add a slim landing-style header: logo + "BOOPS" (links to `../`), title "Evidence map", right side `Open the web app` (`../app/`) + `Legal`. When opened straight from the repo (`file://`), these links simply point at `../site/` files; acceptable.
+- [ ] Rename title to "Evidence map · BOOPS", sub-line "How stress, sleep, radiation and inactivity link to immune, bone & muscle and heart risk. 41 concepts · 83 links · 107 sources." (numbers from the generator, not hard-coded).
+- [ ] Theme tokens: `--bg #ffffff` / `--band #f4f4f5`, `--ink #0a0a0a`, `--muted #52525b`, `--line #e4e4e7`, `--accent` = ink (selected state = dark pill like landing tabs). Remove the blue accent.
+- [ ] **Drop the automatic dark theme** (remove the `prefers-color-scheme: dark` block) so it matches the rest of the site. Keep the `data-theme="dark"` override only if something uses it (check; otherwise remove).
+- [ ] Load Inter: `@font-face` pointing at `../assets/fonts/inter-latin.woff2` in the built site. Because the page is also opened from `knowledge/web/` in the repo, keep the system-font fallback.
+- [ ] Filter chips + side-panel tabs reuse the landing `.tab` / pill look (band background, dark selected pill, ≥ 44 px on touch per Phase 3).
+- [ ] Add favicon `../assets/boops-logo.svg`.
+- [ ] Add the footer line "Prototype · Not a medical device".
+- [ ] Phone: header collapses to logo + "Evidence map"; map keeps its current horizontal scroll from Phase 3.
+
+## 3. Missing 404 page
+- [ ] Add `site/404.html` using the landing header/footer: "Page not found" + buttons Home / Open the web app. Copy it in `build-site.mjs`; Cloudflare static assets serves `404.html` when `not_found_handling = "404-page"` is set in `wrangler.jsonc` (`assets` block).
+- [ ] `/app/*` must keep its own behaviour (SPA app, service worker), so check the 404 only applies outside `/app/`.
+
+## 4. Shared pieces (avoid drifting again)
+- [ ] Move the landing header + footer into one source (e.g. `site/partials/header.html`, `footer.html`) and let `build-site.mjs` inject them into `index.html`, `legal.html`, `404.html` and the knowledge page copy. Simpler alternative if time is short: copy the markup by hand and add a check in `build-site.mjs` that fails if the nav links differ between pages.
+- [ ] Split the shared tokens/base/header/footer/buttons of `home.css` into `site/base.css` that every page links; `home.css` keeps landing-only sections.
+- [ ] CSP: `/legal.html`, `/knowledge/` and `/404.html` are not under the strict `/app/*` CSP, but keep scripts in files anyway.
+
+## 5. Checks before calling it done
+- [ ] `node tools/build-docs.mjs` (evidence map data intact, ids check passes) and `node tools/build-site.mjs`.
+- [ ] Browser at 1440 px and 375 px: landing, legal, evidence map, 404 — headers identical, Inter loads (Network tab shows `inter-latin.woff2`), no lime/emerald/blue left (`grep -nE 'c6f432|0fb869|1ed760|2f5bd3' site knowledge/web`).
+- [ ] Evidence map in OS dark mode now stays light; node click, filters, `?layer=all`, Sources tab still work.
+- [ ] Contrast: muted text ≥ 4.5:1 on white and band; tap targets ≥ 44 px on phone.
+- [ ] Update `AGENTS.md` status board + Decisions log (legal no longer uses `styles.css`; evidence map is light-only and uses the site header).
+
+## Order and size
+1. Shared `base.css` + header/footer (§4): small, unblocks the rest.
+2. Legal page (§1): medium, mostly CSS + header/footer swap.
+3. Evidence map (§2): medium, careful not to break the generated block or interactions.
+4. 404 page (§3): small.
+5. Checks (§5).

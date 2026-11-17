@@ -1,0 +1,36 @@
+# BOOPS
+
+> BOOPS (Biobehavioral Observation & Offline Predictive System) is an offline, crew-first health monitoring app for astronauts, built for the NASA Space Apps Challenge 2026 challenge "Create Health Monitoring Software for Astronauts on Space Missions". It compares each astronaut's daily wearable, sleep and radiation data with their own in-flight baseline and gives early warnings for immune, bone and muscle, and heart risk. Prototype, not a medical device. All sample data is Simulated.
+
+## Key facts
+
+- Works fully offline: no cloud, no accounts, no runtime internet. Data stays on the device.
+- Personal baseline = mean and SD of flight days 1–14; each reading is scored as a z-score against it. Alerts are damped during this adaptation phase (fluid shift is normal).
+- Risk levels per body system: under 40 Normal, 40–70 Watch, over 70 Act (score 0–100).
+- Immune risk weights: stress (HRV) 0.30, sleep deficit 0.25, spacewalk (EVA) in the last 3 days 0.15, radiation 0.10, time in flight 0.10, resting-heart-rate jump or symptoms 0.10.
+- Infection early warning: resting heart rate at least 2 SD above baseline for 2 or more days, not explained by EVA or exercise (method from Mishra et al., 2020). In the simulated mission it fired on day 96, one day before symptoms.
+- Odd-reading checker decides "check device" vs "check yourself" vs "act now"; readings are never deleted.
+- Each warning shows the cause chain, evidence strength (3 stars = human data, 2 = animal plus some human, 1 = hypothesis), the source, and what to fix first.
+- Evidence base: 41 concepts, 83 graded links, 107 cited sources.
+- Machine learning is advisory only: a WESAD stress classifier (91% leave-one-subject-out accuracy, wrist) and an Isolation Forest anomaly detector. Rules stay in charge because day-by-day astronaut data is not public.
+- Camera pulse check (POS method, Wang 2017, with MediaPipe face tracking) runs on the device; no video is stored or sent; no emotion labels from faces.
+- Runs on Android, iOS, desktop and as a web app (PWA).
+
+## Pages
+
+- [Home](https://boops.owlwee.co/): what BOOPS does, app screens, how it works, simulated scenarios, findings, downloads and FAQ
+- [Web app](https://boops.owlwee.co/app/): the crew app in the browser, with a Simulated 180-day demo mission or your own data
+- [Evidence map](https://boops.owlwee.co/knowledge/): interactive map of how spaceflight stressors link to health risks, with evidence grades and sources
+- [Team & credits](https://boops.owlwee.co/team): the team and the data, research and software BOOPS builds on
+- [Legal & privacy](https://boops.owlwee.co/legal): medical disclaimer, simulated data disclosure, privacy, citations and licenses
+
+## Downloads
+
+- [Android app (APK)](https://boops.owlwee.co/downloads/boops-android.apk)
+- [Simulated mission data (CSV, 540 rows, 20 columns)](https://boops.owlwee.co/downloads/daily_records.csv)
+- [Flight surgeon summary for crew member A1 (PDF, Simulated)](https://boops.owlwee.co/downloads/flight_surgeon_summary_A1.pdf)
+- [Source code on GitHub](https://github.com/owlwee-sudo/boops_Space)
+
+## Key references
+
+Crucian 2018 (immune dysregulation in spaceflight), Mehta 2017 (latent virus reactivation), Barger 2014 (astronaut sleep), Mishra 2020 (smartwatch pre-symptomatic detection), Wadhwa 2024 (radiation and microgravity), Schmidt 2018 (WESAD), Wang 2017 (POS rPPG), NASA OSDR RadLab, NOAA SWPC GOES.

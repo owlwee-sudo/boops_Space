@@ -1,0 +1,6 @@
+# BOOPS landing site. Everything public may be crawled, including by AI search
+# crawlers (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended, ...).
+User-agent: *
+Allow: /
+
+Sitemap: https://boops.owlwee.co/sitemap.xml

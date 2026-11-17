@@ -17,7 +17,13 @@
       "personal_dosimeter",
       "wearable_hrv_fit"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "noaa_swpc",
+      "nasa_radlab",
+      "hls_spe",
+      "wadhwa2024"
+    ]
   },
   {
     "id": "fainting_dizziness",
@@ -38,7 +44,12 @@
       "pulse_oximeter",
       "wearable_hrv_fit"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "perhonen01",
+      "norsk15",
+      "vestib15"
+    ]
   },
   {
     "id": "chest_pain",
@@ -59,7 +70,12 @@
       "blood_pressure_cuff",
       "pulse_oximeter"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "jacc2023",
+      "delp16",
+      "mishra2020"
+    ]
   },
   {
     "id": "injury_bleeding",
@@ -80,7 +96,11 @@
       "thermometer",
       "wearable_hrv_fit"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "hazards",
+      "immrisk"
+    ]
   },
   {
     "id": "severe_rash_fever",
@@ -92,7 +112,7 @@
       "Inspect skin for grouped vesicles, dermatomal rash (shingles/HSV-1/VZV), or cold sores; photograph and cover lesions to avoid viral shedding in cabin air.",
       "Collect a saliva swab sample per kit instructions and store in the chilled sample slot.",
       "Avoid touching eyes after touching lesions; sanitize shared crew surfaces and headset microphones.",
-      "Initiate crew quarantine/droplet precautions if temperature ≥ 38.0 °C or rash is spreading."
+      "Start crew quarantine/droplet precautions from 38.0 °C or if the rash is spreading (escalation starts at 38.3 °C, below)."
     ],
     "why_this_happens": "High stress, sleep deficiency, and EVA workload suppress T-cell immunity, triggering reactivation of latent herpesviruses (HSV-1, EBV, VZV) documented on ISS missions.",
     "when_to_escalate": "Escalate immediately if temperature ≥ 38.3 °C, rash involves the eye/face, fever persists > 24 h, or resting HR stays ≥ 2 SD above baseline.",
@@ -101,7 +121,13 @@
       "saliva_sample_kit",
       "wearable_hrv_fit"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "mehta2017",
+      "crucian2018",
+      "shingles",
+      "mishra2020"
+    ]
   },
   {
     "id": "breathing_difficulty",
@@ -116,12 +142,16 @@
       "If CO2 pocket suspected, switch on auxiliary circulation fans and inspect CDRA scrubber status."
     ],
     "why_this_happens": "In microgravity, exhaled CO2 forms localized pockets without fans, causing headaches and air hunger; smoke, ammonia, or respiratory infection can also drop SpO2 rapidly.",
-    "when_to_escalate": "Escalate immediately if SpO2 < 90%, crew member cannot speak full sentences, cabin CO2 exceeds emergency threshold, or toxic leak is suspected.",
+    "when_to_escalate": "Escalate immediately if SpO2 < 92%, crew member cannot speak full sentences, cabin CO2 exceeds emergency threshold, or toxic leak is suspected.",
     "related_tool_guides": [
       "pulse_oximeter",
       "thermometer",
       "wearable_hrv_fit"
     ],
-    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon."
+    "disclaimer": "Simulated protocol for demo. Real procedures come from the flight surgeon.",
+    "sources": [
+      "hazards",
+      "mishra2020"
+    ]
   }
 ]

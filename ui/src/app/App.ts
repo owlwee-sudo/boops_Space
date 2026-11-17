@@ -60,11 +60,9 @@ const HEALTH_FOR_LOG: Partial<Record<ScreenId, ScreenId>> = {
 };
 
 function readScreenFromHash(): ScreenId {
-  const hash = window.location.hash;
-  if (hash.startsWith("#screen=")) {
-    const raw = decodeURIComponent(hash.slice("#screen=".length)) as ScreenId;
-    if (raw in SCREEN_MAP) return raw;
-  }
+  // "#screen=EmergencyFainting&id=chest_pain": extra params (id) must not break the lookup.
+  const raw = new URLSearchParams(window.location.hash.replace(/^#/, "")).get("screen") as ScreenId | null;
+  if (raw && raw in SCREEN_MAP) return raw;
   return "HealthHome";
 }
 
@@ -682,6 +680,22 @@ export function createApp(root: HTMLElement) {
             p.className =
               "[word-break:break-word] font-['Inter:Regular'] font-normal leading-[1.4] not-italic relative shrink-0 text-[14px] text-[color:var(--color-text-inverse,white)] whitespace-nowrap";
           }
+          // "Nothing" cannot be picked together with a real cause (and vice versa).
+          const isNothing = getCleanText(chip).toLowerCase() === "nothing";
+          for (const sib of Array.from(chip.parentElement?.children ?? [])) {
+            const el = sib as HTMLElement;
+            if (el === chip || el.getAttribute("data-name") !== "Chip") continue;
+            const sibNothing = getCleanText(el).toLowerCase() === "nothing";
+            if (isNothing !== sibNothing && el.className.includes("var(--color-bg-strong")) {
+              el.className =
+                "bg-[var(--color-bg-card,white)] border border-[var(--color-border-default,#e5e7eb)] border-solid content-stretch flex items-center px-[var(--spacing-md,12px)] py-[6px] relative rounded-[var(--radius-full,999px)] shrink-0";
+              const sp = el.querySelector("p");
+              if (sp) {
+                sp.className =
+                  "[word-break:break-word] font-['Inter:Regular'] font-normal leading-[1.4] not-italic relative shrink-0 text-[14px] text-[color:var(--color-text-secondary,#374151)] whitespace-nowrap";
+              }
+            }
+          }
         }
         return;
       }
@@ -977,9 +991,12 @@ export function createApp(root: HTMLElement) {
     }
   });
 
+  let lastHash = window.location.hash;
   window.addEventListener("hashchange", () => {
     const next = readScreenFromHash();
-    if (next !== activeScreen) {
+    const hashChanged = window.location.hash !== lastHash;
+    lastHash = window.location.hash;
+    if (next !== activeScreen || hashChanged) {
       activeScreen = next;
       setMobileNavOpen(false);
       renderActiveScreen();

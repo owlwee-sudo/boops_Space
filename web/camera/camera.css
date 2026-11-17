@@ -9,7 +9,7 @@
   --border: #e5e7eb;
   --text: #111827;
   --text-body: #374151;
-  --text-muted: #6b7280;
+  --text-muted: #4b5563;
   --ink: #111827; /* buttons, meters, stage */
   --ink-text: #ffffff;
   --lime: #c6f432; /* hero tiles */
@@ -188,8 +188,9 @@ img { display: block; }
 .bottom-nav, .sheet-scrim { display: none; }
 
 /* ---- Small screens: sidebar becomes the "More" bottom sheet, nav moves to a bottom tab bar ---- */
-@media (max-width: 1000px) {
-  .app { grid-template-columns: 1fr; gap: 12px; padding: 0 0 calc(76px + env(safe-area-inset-bottom)); }
+@media (max-width: 1023px) {
+  .app { grid-template-columns: 1fr; gap: 12px; padding: 0 0 calc(104px + env(safe-area-inset-bottom)); }
+  .result-card .actions { scroll-margin-bottom: calc(104px + env(safe-area-inset-bottom)); }
   .main { padding: 16px 16px 0; }
   .grid { grid-template-columns: 1fr; }
 
@@ -234,7 +235,7 @@ img { display: block; }
   .btab-sos:hover .btab-icon { background: #fef2f2; }
   .btab-sos .btab-label { font-weight: 600; }
 }
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .brand { font-size: 13px; }
   .main { padding: 20px 16px 0; gap: 16px; }
   h1 { font-size: 26px; }

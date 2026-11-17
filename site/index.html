@@ -3,13 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BOOPS: Biobehavioral Observation &amp; Offline Predictive System</title>
+  <title>BOOPS: Offline Astronaut Health Monitoring &amp; Early Warnings</title>
   <meta
     name="description"
-    content="BOOPS gives spaceflight crews early warnings about immune, bone and muscle, and heart risk, using each astronaut's own baseline. Works offline. Download for Android, open the web app, or read the source on GitHub."
+    content="BOOPS warns astronauts early about immune, bone and heart risk by comparing wearable, sleep and radiation data with their own baseline. Works fully offline."
   />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <link rel="canonical" href="https://boops.owlwee.co/" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="author" content="BOOPS team" />
+
+  <!-- Social cards (Open Graph is also read by Slack, Discord, LinkedIn and iMessage) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="BOOPS" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content="https://boops.owlwee.co/" />
+  <meta property="og:title" content="BOOPS: crew health warnings that work without Earth" />
+  <meta property="og:description" content="An offline app that warns astronauts about immune, bone and muscle, and heart risk from their own in-flight baseline. NASA Space Apps Challenge 2026 prototype." />
+  <meta property="og:image" content="https://boops.owlwee.co/assets/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="BOOPS crew app on Day 97 (Simulated): immune risk Act at 88 out of 100, a 30-day trend, why it matters and how to fix it." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="BOOPS: crew health warnings that work without Earth" />
+  <meta name="twitter:description" content="An offline app that warns astronauts about immune, bone and muscle, and heart risk from their own in-flight baseline." />
+  <meta name="twitter:image" content="https://boops.owlwee.co/assets/og-image.jpg" />
+  <meta name="twitter:image:alt" content="BOOPS crew app on Day 97 (Simulated): immune risk Act at 88 out of 100." />
+
   <link rel="icon" href="./assets/boops-logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./app/icons/apple-touch-icon.png" />
+  <link rel="alternate" type="text/plain" title="BOOPS summary for AI assistants" href="./llms.txt" />
+
+  <!-- Structured data for search and AI engines. Keep every claim here in sync with the visible page. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://boops.owlwee.co/#website",
+        "url": "https://boops.owlwee.co/",
+        "name": "BOOPS",
+        "alternateName": "Biobehavioral Observation & Offline Predictive System",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://boops.owlwee.co/#team" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://boops.owlwee.co/#webpage",
+        "url": "https://boops.owlwee.co/",
+        "name": "BOOPS: Offline Astronaut Health Monitoring & Early Warnings",
+        "isPartOf": { "@id": "https://boops.owlwee.co/#website" },
+        "about": { "@id": "https://boops.owlwee.co/#app" },
+        "primaryImageOfPage": { "@id": "https://boops.owlwee.co/#og-image" },
+        "datePublished": "2026-11-15",
+        "dateModified": "2026-11-17",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://boops.owlwee.co/#og-image",
+        "url": "https://boops.owlwee.co/assets/og-image.jpg",
+        "width": 1200,
+        "height": 630,
+        "caption": "BOOPS crew app on Day 97 (Simulated): immune risk Act at 88 out of 100."
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://boops.owlwee.co/#team",
+        "name": "BOOPS team",
+        "url": "https://boops.owlwee.co/team",
+        "logo": "https://boops.owlwee.co/assets/boops-logo.svg",
+        "sameAs": ["https://github.com/owlwee-sudo/boops_Space"]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://boops.owlwee.co/#app",
+        "name": "BOOPS",
+        "alternateName": "Biobehavioral Observation & Offline Predictive System",
+        "description": "An offline, crew-first health monitoring app for astronauts. It compares daily wearable, sleep and radiation data with each astronaut's own in-flight baseline (flight days 1 to 14) and gives early warnings for immune, bone and muscle, and heart risk, with the cause, the strength of the evidence, what to fix first, tool guides and offline emergency checklists. Prototype, not a medical device.",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Android, iOS, Web browser, macOS, Windows, Linux",
+        "url": "https://boops.owlwee.co/app/",
+        "downloadUrl": "https://boops.owlwee.co/downloads/boops-android.apk",
+        "installUrl": "https://boops.owlwee.co/app/",
+        "screenshot": [
+          "https://boops.owlwee.co/assets/app/app-immune.webp",
+          "https://boops.owlwee.co/assets/app/app-storm.webp",
+          "https://boops.owlwee.co/assets/app/app-emergency.webp",
+          "https://boops.owlwee.co/assets/app/app-tools.webp",
+          "https://boops.owlwee.co/assets/app/app-mobile.webp"
+        ],
+        "featureList": [
+          "Works fully offline, no cloud",
+          "Personal baseline from flight days 1 to 14",
+          "Immune, bone and muscle, and heart risk: Normal, Watch or Act",
+          "Resting heart rate early warning for infection before symptoms",
+          "Odd-reading checker: check device or check yourself",
+          "Offline emergency protocols and instrument tool guides",
+          "Camera pulse check that runs on the device",
+          "Crew-first privacy: the astronaut chooses what the ground sees"
+        ],
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@id": "https://boops.owlwee.co/#team" },
+        "image": { "@id": "https://boops.owlwee.co/#og-image" }
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://boops.owlwee.co/#source",
+        "name": "BOOPS source code",
+        "codeRepository": "https://github.com/owlwee-sudo/boops_Space",
+        "programmingLanguage": ["Python", "TypeScript", "Kotlin", "Swift"],
+        "targetProduct": { "@id": "https://boops.owlwee.co/#app" },
+        "author": { "@id": "https://boops.owlwee.co/#team" }
+      },
+      {
+        "@type": "Dataset",
+        "@id": "https://boops.owlwee.co/#dataset",
+        "name": "BOOPS simulated 180-day crew mission data",
+        "description": "Simulated daily health records for three crew members (A1, A2, A3) over a 180-day mission: 540 rows and 20 columns, including resting heart rate, HRV, sleep, blood pressure, SpO2, temperature, exercise, radiation dose, EVA days and symptoms. Generated with a fixed seed; radiation events shaped after NASA OSDR RadLab and NOAA SWPC GOES data. Every row is labeled Simulated.",
+        "isAccessibleForFree": true,
+        "creator": { "@id": "https://boops.owlwee.co/#team" },
+        "distribution": {
+          "@type": "DataDownload",
+          "encodingFormat": "text/csv",
+          "contentUrl": "https://boops.owlwee.co/downloads/daily_records.csv"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://boops.owlwee.co/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is BOOPS?",
+            "acceptedAnswer": { "@type": "Answer", "text": "BOOPS (Biobehavioral Observation & Offline Predictive System) is an offline health monitoring app for astronauts, built for NASA Space Apps Challenge 2026. It compares each crew member's daily wearable, sleep and radiation data with their own baseline from flight days 1 to 14, and gives early warnings for immune, bone and muscle, and heart risk. Each warning explains why it fired, how strong the evidence is and what to fix first." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does BOOPS diagnose infections or medical conditions?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. BOOPS is a prototype built for NASA Space Apps Challenge 2026 (Prototype, not a medical device). It gives risk indicators and early warnings based on how far a reading is from your own normal. It supports a qualified healthcare professional and does not replace one." }
+          },
+          {
+            "@type": "Question",
+            "name": "Why rules instead of a neural network?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Day-by-day astronaut health data isn't public, so a deep model would have nothing real to learn from and would invent patterns. Weighted rules can be checked line by line. Machine learning is optional and only gives a second opinion: a stress classifier trained on the public WESAD dataset and an anomaly detector." }
+          },
+          {
+            "@type": "Question",
+            "name": "Where does the data come from?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The 180-day dataset (540 records for crew A1 to A3) is Simulated by engine/generate_mission.py with a fixed seed, so it is the same every time. Radiation events are shaped after public NASA OSDR RadLab and NOAA SWPC GOES data. Every simulated row is labeled Simulated." }
+          },
+          {
+            "@type": "Question",
+            "name": "How does the camera pulse check handle privacy?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Face tracking (MediaPipe) and the pulse method (POS, Wang 2017) run on the device. No video is stored or sent. The optional face check compares you only with your own first 14 checks, answers low, medium or high, adds nothing to the score by default (15% at most), and never names an emotion." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I run BOOPS right now?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Open the web app at https://boops.owlwee.co/app/ in any browser, or install boops-android.apk on Android. On macOS, Linux or Windows, get the source from GitHub and run python engine/run_all.py, then python engine/server.py." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="preload" href="./assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./base.css" />
   <link rel="stylesheet" href="./home.css" />
 </head>
 <body>
@@ -171,7 +333,7 @@
           <h2>Body systems pull on each other.</h2>
           <p class="lead">
             Most health alerts watch one number. BOOPS links them. This is crew member A1 on day 97: poor sleep, stress,
-            a jump in resting heart rate and a radiation dose all feed the immune score. Line width is the weight in the score.
+            a jump in resting heart rate and the day 92–93 radiation dose all feed the immune score. Line width is the weight in the score, taken from the risk engine.
           </p>
           <div class="legend">
             <span><span class="dot dot-act"></span>Act</span>
@@ -182,7 +344,7 @@
         </div>
         <div class="map-card">
           <canvas id="systems3d" class="systems3d-canvas" role="img"
-            aria-label="3D map of day 97 risk drivers for crew member A1 (Simulated): stress, sleep deficit, resting heart-rate jump and radiation feed immune risk 88 (Act) and heart risk 49 (Watch); bone and muscle risk is 15 (Normal)."></canvas>
+            aria-label="3D map of day 97 risk drivers for crew member A1 (Simulated): stress, sleep deficit, resting heart-rate jump and radiation feed immune risk 88 (Act) and heart risk 47 (Watch); bone and muscle risk is 19 (Normal)."></canvas>
           <p class="systems3d-hint">Drag to turn it. Simulated data.</p>
         </div>
       </div>
@@ -199,7 +361,7 @@
           <article class="card">
             <span class="card-kicker">Days 88–98 · Crew A1 · Simulated</span>
             <h3>Poor sleep, then an infection before symptoms</h3>
-            <p>Sleep falls to 5 hours a night. On days 95–96 resting heart rate rises 2 SD above A1's normal, and BOOPS warns 1–2 days before the sore throat starts. First fix: sleep.</p>
+            <p>Sleep falls to 5 hours a night. On days 95–96 resting heart rate rises 2 SD above A1's normal. BOOPS raises the early warning on day 96, a day before the sore throat starts on day 97. First fix: sleep.</p>
             <span class="card-status"><span class="dot dot-act"></span>Immune 88 · Act</span>
           </article>
           <article class="card">
@@ -212,7 +374,7 @@
             <span class="card-kicker">Days 30, 50, 92–93, 110 · All crew · Simulated</span>
             <h3>Solar storm vs. sensor glitches</h3>
             <p>A radiation spike on days 92–93 opens the shelter checklist. On days 30, 50 and 110 the sensors report impossible values, and BOOPS says "check device" instead of raising an alarm.</p>
-            <span class="card-status"><span class="dot dot-act"></span>Radiation 4.2 mSv · Act</span>
+            <span class="card-status"><span class="dot dot-act"></span>Radiation 4.6 mSv · Act</span>
           </article>
           <article class="card">
             <span class="card-kicker">Days 1–14 · All crew · Simulated</span>
@@ -238,7 +400,7 @@
         <div class="rows">
           <div class="row">
             <h3>Warning before symptoms</h3>
-            <p>Resting heart rate flagged the infection on days 95–96, up to 2 days before symptoms (method from Mishra et al., 2020).</p>
+            <p>After two raised days (95–96), resting heart rate flagged the infection on day 96, one day before symptoms (method from Mishra et al., 2020).</p>
           </div>
           <div class="row">
             <h3>Stress makes inactivity worse</h3>
@@ -345,6 +507,15 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         </div>
         <div class="faq">
           <details open>
+            <summary>What is BOOPS?</summary>
+            <p>
+              <strong>BOOPS</strong> (Biobehavioral Observation &amp; Offline Predictive System) is an offline health monitoring app for astronauts,
+              built for NASA Space Apps Challenge 2026. It compares each crew member's daily wearable, sleep and radiation data with
+              their own baseline from flight days 1–14, and gives early warnings for immune, bone and muscle, and heart risk.
+              Each warning explains why it fired, how strong the evidence is and what to fix first.
+            </p>
+          </details>
+          <details>
             <summary>Does BOOPS diagnose infections or medical conditions?</summary>
             <p>
               <strong>No.</strong> BOOPS is a prototype built for NASA Space Apps Challenge 2026 (<em>Prototype · Not a medical device</em>).
@@ -378,6 +549,7 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
           <details>
             <summary>How do I run BOOPS right now?</summary>
             <p>
+              In any browser, <a href="./app/">open the web app</a>.
               On Android, install <a href="./downloads/boops-android.apk" download>boops-android.apk</a>.
               On macOS, Linux or Windows, get the source from
               <a href="https://github.com/owlwee-sudo/boops_Space" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -415,6 +587,7 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
           <a href="#scenarios">Scenarios</a>
           <a href="#download">Download</a>
           <a href="./knowledge/">Evidence map</a>
+          <a href="./team.html">Team &amp; credits</a>
           <a href="./legal.html">Legal &amp; privacy</a>
         </nav>
       </div>
@@ -426,7 +599,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
   </footer>
 
   <!-- Start choice: demo (simulated mission) or your own data. Opened by any [data-start] link. -->
-  <dialog class="start-dialog" id="start-dialog" aria-labelledby="start-title">
+  <dialog class="start-dialog" id="start-dialog" aria-labelledby="start-title" aria-describedby="start-note">
+    <div class="start-dialog-panel">
     <form method="dialog" class="start-close-form"><button class="start-close" aria-label="Close">✕</button></form>
     <p class="start-kicker" id="start-kicker">Open the web app</p>
     <h2 class="start-title" id="start-title">How do you want to start?</h2>
@@ -442,7 +616,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         <span class="start-tag" id="start-mine-tag">Your data</span>
       </a>
     </div>
-    <p class="start-note">Prototype · Not a medical device · You can switch any time inside the app.</p>
+    <p class="start-note" id="start-note">Prototype · Not a medical device · You can switch any time inside the app.</p>
+    </div>
   </dialog>
 
   <script src="./systems3d.js" defer></script>
@@ -497,7 +672,7 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
       };
       var mine = document.getElementById("start-mine");
       function openStart(kind) {
-        var c = copy[kind];
+        var c = copy[kind] || copy.web;
         document.getElementById("start-kicker").textContent = c.kicker;
         document.getElementById("start-mine-title").textContent = c.mineTitle;
         document.getElementById("start-mine-body").textContent = c.mineBody;
@@ -508,6 +683,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
         mine.setAttribute("href", c.mineHref);
         if (c.download) mine.setAttribute("download", ""); else mine.removeAttribute("download");
         dialog.showModal();
+        // Start on the first real choice, not on the Close button.
+        document.getElementById("start-demo").focus();
       }
       if (dialog && typeof dialog.showModal === "function") {
         document.querySelectorAll("[data-start]").forEach(function (link) {
@@ -516,7 +693,8 @@ pytest tests/ -q           <span class="c"># run the tests</span></pre>
             openStart(link.getAttribute("data-start"));
           });
         });
-        // Click on the dimmed backdrop closes it.
+        // Click on the dimmed backdrop closes it. The panel fills the dialog box, so a
+        // click on its padding lands on the panel, never on the <dialog> itself.
         dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
         mine.addEventListener("click", function () { if (mine.hasAttribute("download")) dialog.close(); });
       }

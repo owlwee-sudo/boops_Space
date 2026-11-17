@@ -24,7 +24,7 @@
   /* Colors — Text */
   --color-text-primary: #111827;
   --color-text-secondary: #374151;
-  --color-text-muted: #6b7280;
+  --color-text-muted: #4b5563; /* was #6b7280: 4.4:1 on #f4f5f7, below WCAG AA */
   --color-text-inverse: #ffffff;
   --color-text-danger: #dc2626;
 

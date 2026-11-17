@@ -53,14 +53,14 @@
       }
       .boops-pwa-notice__dot { flex: none; width: 8px; height: 8px; border-radius: 999px; background: #22c55e; }
       .boops-pwa-notice__text { flex: 1; }
-      .boops-pwa-notice__text small { display: block; color: #6b7280; font-weight: 400; font-size: 12px; }
+      .boops-pwa-notice__text small { display: block; color: #4b5563; font-weight: 400; font-size: 12px; }
       .boops-pwa-notice__btn {
         flex: none; border: 0; border-radius: 999px; padding: 8px 14px; cursor: pointer;
         background: #111827; color: #ffffff; font: inherit; font-weight: 600;
       }
       .boops-pwa-notice__close {
-        flex: none; border: 0; background: transparent; color: #6b7280; cursor: pointer;
-        width: 28px; height: 28px; border-radius: 999px; font: 400 18px/1 inherit;
+        flex: none; border: 0; background: transparent; color: #4b5563; cursor: pointer;
+        width: 44px; height: 44px; border-radius: 999px; font: 400 18px/1 inherit;
       }
       .boops-pwa-notice__btn:focus-visible, .boops-pwa-notice__close:focus-visible {
         outline: 2px solid #111827; outline-offset: 2px;

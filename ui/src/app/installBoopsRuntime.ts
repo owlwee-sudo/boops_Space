@@ -60,11 +60,18 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
   }
   const renderedMode: DataMode = getDataMode();
   document.documentElement.dataset.boopsData = renderedMode;
+  if (renderedMode === "mine") {
+    // Personal logs live only in this browser: ask it not to evict them under storage pressure.
+    void navigator.storage?.persist?.().catch(() => undefined);
+  }
 
   /** Reloads when the data mode changed, because the bundle and context depend on it. */
   const applyModeChoice = (mode: DataMode) => {
     if (mode === renderedMode) return;
-    window.location.replace(window.location.pathname + window.location.hash.replace(/screen=[^&]*/, "screen=HealthHome"));
+    // Keep other query params (e.g. ?mode=debug); only the screen goes back to Home.
+    window.location.replace(
+      window.location.pathname + window.location.search + window.location.hash.replace(/screen=[^&]*/, "screen=HealthHome"),
+    );
   };
   const openDataChoice = () =>
     showWelcome({ startAtChoice: true, dismissible: true, preselected: getDataMode(), onDone: applyModeChoice });
@@ -89,7 +96,9 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
 
   let context = loadSelectedContext();
   let sharing: SharingSettings = loadSharingSettings();
-  let activeEmergencyId = "solar_radiation_storm";
+  // Empty until a protocol is opened; the Emergency screens fall back to the
+  // hash "&id=" or their own default, so "#screen=EmergencyFainting" works on reload.
+  let activeEmergencyId = "";
   let emergencyPatientId: "A1" | "A2" | "A3" = context.astronautId;
 
   const overlays = createBoopsOverlays({
@@ -211,6 +220,12 @@ export function installBoopsRuntime(host: BoopsHostBridge): BoopsRuntimeInstance
       const targetScreen: ScreenId =
         protocolId === "solar_radiation_storm" ? "EmergencySolarRadiationStorm" : "EmergencyFainting";
       host.setScreen(targetScreen);
+      // Keep the protocol in the URL so reload / share opens the same one.
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}#screen=${targetScreen}&id=${encodeURIComponent(protocolId)}`,
+      );
     },
     openRiskScreen: (riskKey) => {
       const target: ScreenId =

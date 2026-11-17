@@ -55,6 +55,8 @@ function shellKey(url) {
   u.search = "";
   u.hash = "";
   if (u.pathname.endsWith("/index.html")) u.pathname = u.pathname.slice(0, -"index.html".length);
+  // "/app/camera" (no slash) is the camera page, not an unknown page -> dashboard.
+  if (/\/camera$/.test(u.pathname)) u.pathname += "/";
   return u.href;
 }
 
@@ -96,7 +98,15 @@ async function vendorFirst(req) {
   const cache = await caches.open(VENDOR_CACHE);
   const hit = await cache.match(req.url);
   if (hit) return hit;
-  const res = await fetch(req);
-  if (res.ok && res.type === "basic") cache.put(req.url, res.clone());
-  return res;
+  try {
+    const res = await fetch(req);
+    if (res.ok && res.type === "basic") cache.put(req.url, res.clone());
+    return res;
+  } catch {
+    // Offline before the camera model was ever downloaded: a clear answer, not a crash.
+    return new Response("Camera model not downloaded yet. Connect once, then it works offline.", {
+      status: 503,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
 }
