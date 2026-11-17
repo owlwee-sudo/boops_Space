@@ -32,6 +32,16 @@ const APP_VENDOR_DIR = "vendor"; // MediaPipe: cached on first camera use, not o
 const APP_HTML_PAGES = ["index.html", "camera/index.html"]; // pages that get the PWA tags
 const KNOWLEDGE_HTML = path.join(ROOT, "knowledge", "web", "index.html");
 const DIST_DIR = path.join(ROOT, "dist-site");
+const SITE_ORIGIN = "https://boops.owlwee.co"; // custom domain in wrangler.jsonc
+// Public pages for sitemap.xml. Cloudflare serves "/team.html" as "/team" (auto-trailing-slash),
+// so these are the final URLs; each page's <link rel="canonical"> must match.
+const SITEMAP_PAGES = [
+  { url: "/", file: "index.html", priority: "1.0" },
+  { url: "/app/", file: "app/index.html", priority: "0.8" },
+  { url: "/knowledge/", file: "knowledge/index.html", priority: "0.7" },
+  { url: "/team", file: "team.html", priority: "0.5" },
+  { url: "/legal", file: "legal.html", priority: "0.3" },
+];
 
 const DOWNLOAD_ARTIFACTS = [
   {
@@ -117,6 +127,14 @@ function buildWebApp() {
       `<meta name="apple-mobile-web-app-title" content="BOOPS" />`,
       `<script src="${up}pwa.js" defer></script>`,
     ];
+    if (page === "index.html") {
+      tags.unshift(
+        `<meta name="description" content="The BOOPS crew health app in your browser: try a Simulated 180-day mission or log your own data. Works offline; data stays in your browser." />`,
+        `<link rel="canonical" href="${SITE_ORIGIN}/app/" />`
+      );
+    } else {
+      tags.unshift(`<meta name="robots" content="noindex" />`);
+    }
     if (!html.includes("</head>")) throw new Error(`No </head> in app/${page}`);
     html = html.replace(/[ \t]*<\/head>/, `    ${tags.join("\n    ")}\n  </head>`);
     fs.writeFileSync(file, html, "utf8");
@@ -200,6 +218,41 @@ function checkSharedChrome() {
       throw new Error(`site/${page}: must link base.css`);
     }
   }
+}
+
+/**
+ * Every page in the sitemap needs a title, a description and a canonical URL that matches
+ * its sitemap entry; content pages also need an Open Graph image. Writes sitemap.xml.
+ */
+function writeSitemapAndCheckSeo() {
+  const today = new Date().toISOString().slice(0, 10);
+  const entries = [];
+  for (const page of SITEMAP_PAGES) {
+    const html = fs.readFileSync(path.join(DIST_DIR, page.file), "utf8");
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/);
+    const problems = [];
+    if (!/<title>[^<]{10,}<\/title>/.test(html)) problems.push("no <title>");
+    if (!/<meta\s+name="description"\s+content="[^"]{50,}"/.test(html)) problems.push("no meta description (50+ chars)");
+    if (!canonical || canonical[1] !== SITE_ORIGIN + page.url) problems.push(`canonical must be ${SITE_ORIGIN + page.url}`);
+    if (page.file !== "app/index.html" && !html.includes('property="og:image"')) problems.push("no og:image");
+    if (/<meta name="robots" content="noindex/.test(html)) problems.push("is noindex but listed in the sitemap");
+    if (problems.length) throw new Error(`SEO check, ${page.file}: ${problems.join("; ")}`);
+    entries.push(
+      `  <url>\n    <loc>${SITE_ORIGIN + page.url}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${page.priority}</priority>\n  </url>`
+    );
+  }
+  // JSON-LD blocks must parse, or search engines drop them silently.
+  for (const file of ["index.html", "team.html"]) {
+    const html = fs.readFileSync(path.join(DIST_DIR, file), "utf8");
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      try { JSON.parse(m[1]); } catch (err) { throw new Error(`SEO check, ${file}: JSON-LD does not parse (${err.message})`); }
+    }
+  }
+  fs.writeFileSync(
+    path.join(DIST_DIR, "sitemap.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`,
+    "utf8"
+  );
 }
 
 function main() {
@@ -312,6 +365,7 @@ function main() {
     throw new Error(`Broken local links/assets detected:\n- ${missing.join("\n- ")}`);
   }
   checkSharedChrome();
+  writeSitemapAndCheckSeo();
 
   // Check Cloudflare static asset constraints
   const files = walkFiles(DIST_DIR);
