@@ -6,6 +6,7 @@
  * while mounting:
  *   /            -> site/index.html (Landing page with GitHub & Download CTAs)
  *   /legal.html  -> site/legal.html (Disclaimers, privacy, citations, licenses)
+ *   /team.html   -> site/team.html (Team members and credits)
  *   /404.html    -> site/404.html (served by Cloudflare for any missing path, see wrangler.jsonc)
  * Every site page outside /app/ shares site/base.css and the same header + footer links
  * (checked below, so the pages cannot drift apart again).
@@ -176,11 +177,11 @@ function validateLocalRefs(htmlFile) {
 }
 
 /**
- * The landing, legal and 404 pages must show the same header and footer links.
+ * The landing, legal, team and 404 pages must show the same header and footer links.
  * Compares the link targets (normalised to the landing page's own "#section" form).
  */
 function checkSharedChrome() {
-  const pages = ["index.html", "legal.html", "404.html"];
+  const pages = ["index.html", "legal.html", "team.html", "404.html"];
   const norm = (href) => href.replace(/^\/(?=#)/, "").replace(/^\.\/index\.html(?=#)/, "").replace(/^\//, "./");
   const linksIn = (html, cls) => {
     const block = html.match(new RegExp(`<nav class="${cls}"[\\s\\S]*?</nav>`));
@@ -205,6 +206,7 @@ function main() {
   for (const required of [
     path.join(SITE_DIR, "index.html"),
     path.join(SITE_DIR, "legal.html"),
+    path.join(SITE_DIR, "team.html"),
     path.join(SITE_DIR, "base.css"),
     path.join(SITE_DIR, "404.html"),
     path.join(WEB_DIR, "boops-logo.svg"),
@@ -302,6 +304,7 @@ function main() {
   const missing = [
     ...validateLocalRefs(path.join(DIST_DIR, "index.html")),
     ...validateLocalRefs(path.join(DIST_DIR, "legal.html")),
+    ...validateLocalRefs(path.join(DIST_DIR, "team.html")),
     ...validateLocalRefs(path.join(DIST_DIR, "knowledge", "index.html")),
     ...APP_HTML_PAGES.flatMap((page) => validateLocalRefs(path.join(DIST_DIR, "app", page))),
   ];

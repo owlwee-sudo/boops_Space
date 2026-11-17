@@ -1,4 +1,4 @@
-/* Text pages (legal.html, 404.html). Needs base.css first. */
+/* Text pages (legal.html, team.html, 404.html). Needs base.css first. */
 
 h1 {
   margin: 20px 0 0;
@@ -89,3 +89,32 @@ code { overflow-wrap: anywhere; }
 
 /* ---------- 404 ---------- */
 .not-found { min-height: calc(100vh - 64px - 160px); display: flex; align-items: center; }
+
+/* ---------- Team & credits (team.html) ---------- */
+.team-section { padding-bottom: 64px; }
+.team-section:last-of-type { padding-bottom: 112px; }
+.section-title { margin: 0 0 20px; font-size: 28px; line-height: 1.2; font-weight: 700; letter-spacing: -0.03em; }
+.team-grid {
+  margin: 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+}
+.team-card {
+  display: grid; grid-template-columns: 56px minmax(0, 1fr); grid-template-rows: auto auto;
+  column-gap: 16px; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); padding: 22px;
+}
+.team-avatar {
+  grid-row: 1 / span 2; width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--ink); color: #fff;
+  font-weight: 600; font-size: 18px; letter-spacing: 0.02em;
+}
+.team-name { font-weight: 600; font-size: 17px; line-height: 1.3; overflow-wrap: anywhere; }
+.team-card:not(:has(.team-handle)) .team-name { grid-row: 1 / span 2; }
+.team-handle { font: 500 13px/1.4 var(--mono); color: var(--muted); }
+.credit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.credit-grid h3 { margin: 0 0 10px; font-size: 19px; line-height: 1.3; font-weight: 700; letter-spacing: -0.02em; }
+@media (max-width: 1000px) { .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .team-grid, .credit-grid { grid-template-columns: minmax(0, 1fr); }
+  .team-section:last-of-type { padding-bottom: 80px; }
+}
